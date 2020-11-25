@@ -1,14 +1,11 @@
-# Solutions Engineering Template Repository
-A template repository that contains all required files (LICENSE, SUPPORT, CONTRIBUTING, etc) as outlined in the org standards.  
-
-
-The sections below are recommended in your project's README.md file. 
+# F5 Digital Customer Experience Repository
+F5 Digital Experience Code Repository
 
 ## Overview
-Provide a short overview of the project.
+This project will be utilized to demo and provide reuseable configurations for our Digital Experience labs and roadshows
 
 ## Getting Started
-Provide a quick example of how to use your code.  This should provide the user with a launch point to quickly see what the project can offer them. 
+N/A
 
 ## Installation
 Outline the requirements and steps to install this project. 
