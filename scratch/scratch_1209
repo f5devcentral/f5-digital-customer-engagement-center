@@ -1,0 +1,170 @@
+Scratch for 12/9
+
+Docs Formatted
+
+Infrastructure Build out
+
+Module thoughts?
+
+UDF
+
+AWS Secrets Manager
+AWS Certificate Manager
+AWS Elastic Kubernetes System
+AWS Docker Container Registry
+AWS VPC
+AWS EC2
+AWS S3
+AWS IAM
+
+Bring your own account for #2Azure #3GCP
+
+
+User interaction
+ - UDF Jumphost
+ - Student Jumphost
+
+Quadrants
+ - Web Application Firewalls
+ - Enterprise Network Firewalls
+ - Secure Web Gateways
+ - Intrusion Detection and Prevention Systems
+ - Managed Security Services Worldwide
+
+ - Application Performance Monitoring
+
+ - Access Management Worldwide
+
+
+
+
+Security
+ - F5 Cloud Services
+  - Web Application Firewall
+  - Behavioral Web Application Firewall
+ - Shape
+  - Identity & Fingerprint
+  - Automation & Anti-bot
+  - Login Protection
+ - Silverline
+  - DDoS Protection
+  - Automation & Anti-bot
+  - Web Application Firewall
+  - Threat Intelligence
+ - NGINX
+  - Mod Security Web Application Firewall
+  - Web Application Firewall
+  - API Protection
+  - Identity Authorization
+ - BIG-IP
+  - Web Application Firewall
+  - Intrusion Detection/Intrusion Prevention
+  - Network Firewall
+  - Web Application Firewall
+  - Behavioral Web Application Firewall
+  - Login Protection
+  - DDoS Protection
+  - Anti-bot
+  - API Protection
+  - Access and Identity Management
+
+
+Telemetry
+ - F5 Cloud Services
+  - Beacon
+ - Shape
+  - Deployment Dashboards
+ - Silverline
+  - Deployment Dashboards
+ - NGINX Controller
+  - Application Dashboards
+ - BIG-IQ
+  - Application Dashboards
+ - BIG-IP
+  - Telemetry Streaming
+
+
+Delivery
+ - F5 Cloud Services
+  - DNS
+  - DNS Load Balancing
+  - CDN
+ - Silverline
+  - DNS Load Balancing
+ - NGINX
+  - Web Server
+  - Cache Server
+  - Load Balancing
+   - L4 Load Balancing
+   - L7 Load Balancing
+   - Kubernetes Ingress
+   - API Gateway
+   - Openshift Router
+ - NGINX Unit
+  - Application Server
+ - BIG-IP
+  - DNS
+  - DNS Load Balancing
+  - Load Balancing
+   - L4 Load Balancing
+   - L7 Load Balancing
+   - Kubernetes Ingress
+   - Openshift Router
+
+
+Resources
+
+
+https://github.com/alessfg/nginx-controller-automation-demo
+
+Foo-Bang:
+https://udf.f5.com/b/8c3e77e3-ab24-4a4d-9fe4-79e1ae7a2b62#documentation
+
+https://github.com/sorinboia/nginx-experience-aws
+http://aws.nginx-experience.com/070_cleanup/
+
+Matthieu:
+Controller 3.10 and BIG-IP 16.0 :
+Lab Built for customer demo : https://udf.f5.com/b/6f974b5f-ac35-4538-ab63-580100348d3d#documentation
+Lab buildout for customer/partner/SE lab and course : https://udf.f5.com/b/3cb78783-02dc-4824-aeab-23251654e06f#documentation
+New OpenAPI file for Arcadia Apps (OAS3 with Json Schema) : https://app.swaggerhub.com/apis/F5EMEASSA/Arcadia-OAS3/2.0.1-schema
+Lab guide with the new steps for APIm (DevPortal ...) : https://rtd-apim-adc-controller.readthedocs.io/en/latest/
+
+https://www.ansible.com/products/automation-services-catalog
+
+Sorins Lab notes:
+NGINX Experience
+IAM is under Security under EC2
+Cloud9 Environment
+
+
+Repo
+ - docs
+ - infrastrucuture
+  - terraform
+    - solutions
+      - Security
+       - Web Application Firewalls
+        - NGINX - Complexity (Software)
+        - BIG-IP - Complexity (Appliance)
+        - EAP - Complexity (SaaS)
+      - Delivery
+        - Application Delivery Controller
+          - Load Balancing L2-4
+            - NGINX
+            - BIG-IP
+          - Load Balancing L7
+            - NGINX
+            - BIG-IP
+      - Telemetry
+         - Application Performance Monitoring
+           - Controller
+           - BIG-IP
+           - Beacon
+    - azure
+    - gcp
+  - cloud templates
+    - aws
+    - azure
+    - gcp
+ - configuration

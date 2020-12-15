@@ -1,0 +1,41 @@
+<head>
+  {%- block analytics %}
+  {# GoogleAnalytics #}
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PPZPQ6');</script>
+  <!-- End Google Tag Manager -->
+  {%- endblock %}
+
+  {%- block htmltitle %}
+    <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
+  {%- endblock %}
+
+  {%- block metadata %}
+  {# METADATA #}
+
+  <meta charset="utf-8">
+  <!-- Twitter Bootstrap viewport setting -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- F5 metadata -->
+  <meta name="title" content="{{ title|striptags|e }}"/>
+  <meta name="product" content="{{ project|striptags|e }}"/>
+  <meta name="version" content="{{ release|striptags|e }}"/>
+  <meta name="updated_date"  content="{{ last_updated|e }}"/>
+  <meta name="archived" content="Archived documents excluded"/>
+  <meta name="doc_type" content="Manual"/>
+  <meta name="lifecycle" content="release"/>
+  <meta name="{{ project|striptags|e }}" content="{{ release|striptags|e }}"/>
+
+{% if (theme_version_selector != 'False') %}
+  <!-- Version selector meta tags-->
+  <meta name="version_meta_path" content="{{ version_meta_path }}">
+  <meta name="project_safe" content="{{ project_safe }}">
+{%- endif %}
+  {{ metatags }}
+
+  {%- endblock %}
+
+  {# FAVICON #}
+  <link href="https://cdn.f5.com/favicon.ico" rel="icon">
+
+</head>

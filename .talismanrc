@@ -1,0 +1,25 @@
+fileignoreconfig:
+- filename: .devcontainer/scripts/gcloud.sh
+  checksum: 6f729a453a79a3e2547e51ae6d027fed5e03c16761a061a4a090a4106ee16c9e
+- filename: infrastucture/aws/terraform/compute/controller.tf
+  checksum: c05ac4809d184be65bee6a151556769f69a7416c7045048672d87b821a77bac4
+- filename: infrastucture/aws/terraform/containers/eks-worker-nodes.tf
+  checksum: 16c07b018b5a4a6a79748d144f0da6e92e113cea42cce94658835c06b7a190bb
+- filename: infrastucture/aws/terraform/network/vpc.tf
+  checksum: f0aab191c37841a49981049c3e8a6a66102450b5edaf0999eedd6a4f1eefa129
+- filename: solutions/cloud_templates/aws/workspace/nginx-cft.yaml
+  checksum: aae0be1cb3201608444d91eeb7613f5f20906323a1712ec0624bc058898c4424
+- filename: solutions/workstation/workstation.tf
+  checksum: 531af6694763fef22ebb47a3d8e18ced600cfc79770982b556938f8c86c46cb1
+- filename: docs/_themes/f5_sphinx_theme/static/css/CoveoFullSearch.css
+  checksum: 61a7ccf5853b06d014c7ef353000fd6a32c6ac00951a56f6cdbc05cf933226f3
+- filename: docs/_themes/f5_sphinx_theme/layout.html
+  checksum: 54b410d2351134be1f0c26445d384efcb7ae3d701a95a7909041b32f2b091dfa
+- filename: docs/_themes/f5_sphinx_theme/searchbox.html
+  checksum: 0deef0475fb3dee5ef1baec27d896e8c9dddd9e5ea1384dfd934df55b68173f5
+- filename: docs/_themes/f5_sphinx_theme/static/js/bootstrap.js
+  checksum: 6536e6570aa8f61cbe277e92ddc61a740076645093d62619d663187a5800eb61
+- filename: docs/_themes/f5_sphinx_theme/static/js/bootstrap.min.js
+  checksum: 26ee85351ec9d42165a5b86ce5cca5841ced26752a993e0aeac9586f818ae003
+- filename: docs/_themes/f5_sphinx_theme/static/js/CoveoJsSearch.Lazy.min.js
+  checksum: 97af87aa4e26c11288d058d82c22c1dee73e7a9d5bc4328fd6e6cd4ef40344d0

@@ -1,0 +1,28 @@
+#cloud-config inline bash
+write_files:
+- path: /var/tmp/cloud-init/startup.sh
+    content: |
+    #!/bin/bash
+    # update ubuntu
+    set -ex \
+    && sudo apt-get update -y \
+    && sudo apt-get install -y apt-transport-https wget unzip jq git software-properties-common \
+    && sudo wget https://releases.hashicorp.com/terraform/${terraformVersion}/terraform_${terraformVersion}_linux_amd64.zip \
+    && sudo unzip ./terraform_${terraformVersion}_linux_amd64.zip -d /usr/local/bin/ \
+    && sudo apt-get install awscli -y \
+    && complete -C '/usr/bin/aws_completer' aws \
+    && terraform -install-autocomplete
+runcmd:
+- ["/bin/bash", "/var/tmp/cloud-init/startup.sh"]
+
+# built in
+#cloud-config
+# packages:
+#   - nginx
+# package_update: true
+# runcmd:
+#   - [systemctl, daemon-reload]
+#   - [systemctl, enable, nginx]
+#   - [systemctl, start, nginx]
+
+# /var/log/cloud-init.log
