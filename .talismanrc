@@ -23,3 +23,13 @@ fileignoreconfig:
   checksum: 26ee85351ec9d42165a5b86ce5cca5841ced26752a993e0aeac9586f818ae003
 - filename: docs/_themes/f5_sphinx_theme/static/js/CoveoJsSearch.Lazy.min.js
   checksum: 97af87aa4e26c11288d058d82c22c1dee73e7a9d5bc4328fd6e6cd4ef40344d0
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/.terraform.lock.hcl
+  checksum: 2e16c769d6fbfa53c53756c01756bf073c9a2e91bbcfa836c183ac56bebe79d9
+- filename: infrastucture/azure/terraform/aks.tf
+  checksum: c10029a6951bc53a12ac287007024640556adea7713b56f9e4d58cdacd4c25c6
+- filename: infrastucture/google/terraform/gke.tf
+  checksum: 889dc9ba42b512b7c6b0a9853f68ebdbb0b6f57a280a919c706fb3d5d3861bfb
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/admin.auto.tfvars.example
+  checksum: 6ac63847798a00aaead0c09fbd0c4f8071a8c87d0ab1cc15d94f3b282b7b7791
+- filename: solutions/telemetery/nginx/controller/controller.tf
+  checksum: d1ac57735fb357023e61ca3ac930f9d008e78d8d4d47bd0e02082bf09291b1f4

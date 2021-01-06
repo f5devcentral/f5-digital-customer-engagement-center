@@ -141,6 +141,8 @@ Cloud9 Environment
 Repo
  - docs
  - infrastrucuture
+    - Network
+    - Kubernetes
   - terraform
     - solutions
       - Security

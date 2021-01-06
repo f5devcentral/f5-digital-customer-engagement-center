@@ -1,7 +1,8 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.154.0/containers/codespaces-linux
+// base from codespaces devcontainer
 {
-	"name": "GitHub Codespaces (Default)",
+	"name": "f5-digital-customer-engagement-center",
 	"build": {
 		"dockerfile": "Dockerfile"
 	},

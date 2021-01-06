@@ -1,3 +1,5 @@
+# project specific
+cluster-config
 # Local .terraform directories
 **/.terraform/*
 
