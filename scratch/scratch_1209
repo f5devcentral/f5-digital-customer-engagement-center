@@ -142,6 +142,27 @@ Repo
  - docs
  - infrastrucuture
     - Network
+      - min
+        - vpc
+          - subnet 1 az1
+          - subnet 2 az2
+      - max
+        - vpc security
+          - internal subnet az1
+          - internal subnet az2
+          - external subnet az1
+          - external subnet az2
+        - vpc application
+          - internal subnet az1
+          - internal subnet az2
+          - external subnet az1
+          - external subnet az2
+        - vpc containers
+          - internal subnet az1
+          - internal subnet az2
+          - external subnet az1
+          - external subnet az2
+        - tgw
     - Kubernetes
   - terraform
     - solutions
