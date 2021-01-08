@@ -5,6 +5,16 @@ kubernets eks
 
 # demo setups
 
+## login
+
+option one:
+- Set AWS environment variables
+```bash
+export AWS_ACCESS_KEY_ID="dfsafsa"
+export AWS_SECRET_ACCESS_KEY="fdsafds"
+export AWS_SESSION_TOKEN="kgnfdskg"
+```
+
 ## setup
 ```bash
 cp admin.auto.tfvars.example admin.auto.tfvars
