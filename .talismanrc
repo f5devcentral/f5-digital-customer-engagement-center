@@ -33,3 +33,17 @@ fileignoreconfig:
   checksum: b731907766e9d256f115c9b06558a48a952ec12a0a1b85d087050b26eb00d39d
 - filename: solutions/telemetery/nginx/controller/controller.tf
   checksum: d1ac57735fb357023e61ca3ac930f9d008e78d8d4d47bd0e02082bf09291b1f4
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/azure/.terraform.lock.hcl
+  checksum: 9ea92b6317af32155ee80555826033c1939e6ce8d344134c6fd71fa1d702c0ef
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/nginx-ingress-install.yml
+  checksum: 5748e096b62bf6fe16800ca37727beaea511c3e55c2ce9e1d888b00bc32d8070
+- filename: infrastucture/azure/terraform/nginx-plus/templates/startup.sh.tpl
+  checksum: 852c4d201a3eb22254c88c6a68a39a26e317253d2d291b16b6a7f96c613f1bae
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/azure/main.tf
+  checksum: c8ff874822a4391abf0afbfe6539cd71dc89aa3ca087c86888cb46ecdc9c178a
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/azure/admin.auto.tfvars.example
+  checksum: 453da52e71606eac11f808b7a88b54caa3ce8f75d098b4e2811fdddc72d29911
+- filename: infrastucture/azure/terraform/nginx-plus/main.tf
+  checksum: 985871c07de4d444fb6c5d4a42023ca815719b40b9b6645f0567920445295c7a
+- filename: infrastucture/azure/terraform/nginx-plus/secrets.tf
+  checksum: 7c21e70819facb0639a3751c99900f2c39ab83627bf1c291a1ebd9d5e03b1783

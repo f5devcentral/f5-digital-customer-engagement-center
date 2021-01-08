@@ -191,3 +191,26 @@ Repo
     - azure
     - gcp
  - configuration
+
+
+
+
+
+
+infrastructure
+- cloud
+  - Network
+  - controller
+
+
+
+
+solutions
+
+main.tf
+- network Module
+- k8s module
+- f5 product module
+variables.
+outputs.
+lab readme.

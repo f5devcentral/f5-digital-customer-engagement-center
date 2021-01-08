@@ -8,7 +8,7 @@ provider "azurerm" {
 
 module "azure" {
   count      = 0
-  source     = "../../../../../../infrastucture/azure/terraform/"
+  source     = "../../../../../../infrastucture/azure/terraform/network/min"
   kubernetes = true
   providers = {
     azurerm = azurerm.azure

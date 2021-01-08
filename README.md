@@ -5,13 +5,18 @@ F5 Digital Engagement Center Code Repository
 This project will be utilized to demo and provide reuseable configurations for F5 Digital Engagement Center labs and roadshows
 
 ## Getting Started
-N/A
+This repositiry and its examples are meant to support a bring your own credentials approach.
+the credentials can be obtained through an F5 UDF course deployment, or your own cloud credentials.
 
 ## Installation
 Outline the requirements and steps to install this project.
 
 ## Usage
 Outline how the user can use your project and the various features the project offers.
+
+- each solution will explain which infrastructure it requires
+- each soltuion will contain both scripts and steps to deploy the required infrastructure
+- each soltuion will contain both scripts to destroy the required infrastructure
 
 ## Development
 Outline any requirements to setup a development environment if someone would like to contribute.  You may also link to another file for this information.

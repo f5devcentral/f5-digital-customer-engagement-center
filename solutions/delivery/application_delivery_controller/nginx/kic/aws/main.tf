@@ -1,17 +1,7 @@
 provider "aws" {
   region = var.aws_region
 }
-// module "aws" {
-//   source = "git::https://github.com/f5devcentral/terraform-aws-f5-sca//modules/awsInfrastructure/?ref=master"
-//   project = "infra"
-//   cidr-1 = "10.100.0.0/16"
-//   cidr-2 = "10.200.0.0/16"
-//   cidr-3 = "10.240.0.0/16"
-//   aws_region = var.aws_region
-//   region-az-1 = var.aws_az
-//   region-az-2 = var.aws_az1
-// }
-
+//   source = "git::https://github.com/f5devcentral/f5-digital-customer-engagement-center//infrastructure/aws/network/max/?ref=main"
 // module "aws_network" {
 //   source      = "../../../../../infrastucture/aws/terraform/network/max"
 //   project     = "infra"
@@ -19,6 +9,7 @@ provider "aws" {
 //   aws_az1 = var.aws_az
 //   aws_az2 = var.aws_az1
 // }
+// Network
 module "aws_network" {
   source       = "../../../../../../infrastucture/aws/terraform/network/min"
   project      = "infra"
@@ -28,7 +19,7 @@ module "aws_network" {
   random_id    = random_id.random-string.dec
   cluster_name = "${var.cluster_name}-${random_id.random-string.dec}"
 }
-// eks
+// EKS
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id
 }
@@ -62,8 +53,7 @@ module "eks" {
   cluster_endpoint_public_access_cidrs = [var.admin_source_cidr]
   config_output_path                   = "${path.module}/cluster-config"
 }
-
-
+// NGINX
 // module nginx {
 //   source = "./nginx"
 //   vpc = module.infa.vpc_nginx.id

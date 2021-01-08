@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arcadia-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: arcadia-main
+
+  template:
+    metadata:
+      labels:
+        app: arcadia-main
+    spec:
+      containers:
+        - name: arcadia-main
+          image: sorinboia/arcadia-main:unit
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /
+              httpHeaders:
+              - name: Host
+                value: "arcadia-main"
+            periodSeconds: 5
+            successThreshold: 2
+            failureThreshold: 3
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arcadia-app2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: arcadia-app2
+
+  template:
+    metadata:
+      labels:
+        app: arcadia-app2
+    spec:
+      containers:
+        - name: arcadia-app2
+          image: sorinboia/arcadia-app2:unit
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /
+              httpHeaders:
+              - name: Host
+                value: "arcadia-app2"
+            periodSeconds: 5
+            successThreshold: 2
+            failureThreshold: 3
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arcadia-app3
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: arcadia-app3
+
+  template:
+    metadata:
+      labels:
+        app: arcadia-app3
+    spec:
+      containers:
+        - name: arcadia-app3
+          image: sorinboia/arcadia-app3:unit
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /
+              httpHeaders:
+              - name: Host
+                value: "arcadia-app3"
+            periodSeconds: 5
+            successThreshold: 2
+            failureThreshold: 3
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: arcadia-backend
+  labels:
+    app: arcadia-backend
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: arcadia-backend

@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: arcadia
+spec:
+  rules:
+  - host: $nginx_ingress
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: arcadia-main
+          servicePort: 80
+      - path: /api/
+        backend:
+          serviceName: arcadia-app2
+          servicePort: 80
+      - path: /app3/
+        backend:
+          serviceName: arcadia-app3
+          servicePort: 80
