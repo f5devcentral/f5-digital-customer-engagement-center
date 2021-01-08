@@ -5,7 +5,12 @@ kubernets eks
 
 # demo setups
 
-run setup.sh
+## setup
+```bash
+cp admin.auto.tfvars.example admin.auto.tfvars
+# MODIFY TO YOUR SETTINGS
+. setup.sh
+```
 
 run lab steps
 ```bash
