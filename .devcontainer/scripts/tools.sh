@@ -6,6 +6,7 @@ echo "---getting tools---"
 sudo chown -R $USER:$USER /home/codespace/workspace
 # tools
 . .devcontainer/scripts/azurecli.sh
+. .devcontainer/scripts/gcloud.sh
 . .devcontainer/scripts/terraform.sh
 . .devcontainer/scripts/terraformDocs.sh
 . .devcontainer/scripts/preCommit.sh

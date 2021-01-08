@@ -47,3 +47,29 @@ fileignoreconfig:
   checksum: 985871c07de4d444fb6c5d4a42023ca815719b40b9b6645f0567920445295c7a
 - filename: infrastucture/azure/terraform/nginx-plus/secrets.tf
   checksum: 7c21e70819facb0639a3751c99900f2c39ab83627bf1c291a1ebd9d5e03b1783
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/google/.terraform.lock.hcl
+  checksum: 1c45f83a1d3affc37a50c7dca3b27bcddf0fcc6b11df832e5075e19d62a9b81b
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/aws/.terraform.lock.hcl
+  checksum: 98cd39fe116c97cf6411ff787f83d598db448ae76a2b95f273b9a7ea10a61258
+- filename: infrastucture/aws/terraform/nginx-plus/iam.tf
+  checksum: f5ee7bc7abf35e9a3671133f83c920305ce8edf3a8de75c33b9ef5c4e99467d3
+- filename: infrastucture/google/terraform/nginx-plus/main.tf
+  checksum: 2f457b7844b0104a4cd76fe83688d912072bbec23d5f0330ba8ad18d42b19a4a
+- filename: infrastucture/aws/terraform/nginx-plus/secrets.tf
+  checksum: c906939801cc430ed36d2a0b3489e14040c14de261882028e942211a074e4a24
+- filename: infrastucture/google/terraform/nginx-plus/iam.tf
+  checksum: 361ca6f665654d8a101c85a923903600e14140165e37a8fb95bbb0dc1982c9c5
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/google/admin.auto.tfvars.example
+  checksum: 2484c83ce67f67ff25caefb1a016a523e9cca1a2d6b38d104c1758e9e59b5e5e
+- filename: infrastucture/aws/terraform/nginx-plus/templates/startup.sh.tpl
+  checksum: e335b95682513a887f3f61933f8036b6c94ea76ca35751016b47ef31e0babde8
+- filename: infrastucture/google/terraform/nginx-plus/secrets.tf
+  checksum: 18bec759afefd80e0caaf3fb7823859ee92910478485b8523dc0325b8705edde
+- filename: infrastucture/aws/terraform/nginx-plus/main.tf
+  checksum: 2fe7dbe67813b202f0b9b34764ce0fd1f61c560d464efcdef9f815551d302494
+- filename: infrastucture/google/terraform/nginx-plus/templates/startup.sh.tpl
+  checksum: 91463c645ab1c4db5fd93a59be1c11baf696e3960e3d32b545080de23412b1e7
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/google/main.tf
+  checksum: 39788628120cdcbfb0657e6bde38a5159ad13b94fedc2551266d82a974d514b2
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/aws/main.tf
+  checksum: 93d9e763d26b40d1ca67829284b5e515cef56c54a0f4ff1226e42f1c3816b492

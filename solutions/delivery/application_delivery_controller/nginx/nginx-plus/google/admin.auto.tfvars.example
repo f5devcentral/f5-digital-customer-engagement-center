@@ -1,0 +1,13 @@
+# project
+prefix       = "demonginx"
+gcpProjectId = "myprojectid"
+gcpRegion    = "us-east1"
+gcpZone      = "us-east1-b"
+# admin
+adminAccount       = "notadmin"
+adminPassword      = "pleaseusevault123!"
+adminSourceAddress = ["192.168.2.1/32", "192.168.2.3/32", "192.168.4.3/32"]
+sshPublicKey    = "ssh-rsa AAAAB3NzaC1yc2EAAAA..."
+# nginx
+nginxKey           = "198rt9de8fu"
+nginxCert          = "fdsfjsakdf"

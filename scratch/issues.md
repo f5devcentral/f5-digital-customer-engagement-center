@@ -45,3 +45,19 @@ For items without programatic downloads or marketplace images.
 - eks module
   - SG rules too open 0.0.0.0/0
     - ip assigned to worker nodes is unknown and default is public
+
+## default credentials
+- random passwords?
+- ssh keys only
+
+## module variable everything
+ - instance size
+ - export all objects
+
+## naming conventions
+ - camelCase
+ - under_scores
+ - terraform variables
+ - terraform "resources"
+ - module inputs
+ - module outputs
