@@ -20,8 +20,12 @@
 - RST/read the docs vs markdown and gitdocs
 
 ## Private container registries
-
+- create a registry in the envrionment
+  - https://hub.docker.com/_/registry
+  - https://github.com/alexeadem/qbo-ctl/blob/master/conf/registry.yaml
 - cloud specific private registries
+- static registry
+  - https://github.com/psvmcc/static_docker_v2_registry
 - udf hosted private registry on jump box
 
 ## Software downloads
