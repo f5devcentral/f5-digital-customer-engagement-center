@@ -34,18 +34,20 @@
 	"overrideCommand": false,
 	"workspaceMount": "source=${localWorkspaceFolder},target=/home/codespace/workspace,type=bind,consistency=cached",
 	"workspaceFolder": "/home/codespace/workspace",
-	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
-	"runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
+  "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
+  // privileged can be dangerous, this is currently how we allow docker in docker for ansible containers.
+	"runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined", "--privileged" ],
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-    "DumpySquare.vscode-f5-fast",
+    "f5devcentral.vscode-f5",
     "hashicorp.terraform",
     "eamodio.gitlens",
     "github.vscode-pull-request-github",
     "github.github-vscode-theme",
     "ms-vsliveshare.vsliveshare",
-    "ms-vsonline.vsonline"
+    "ms-vsonline.vsonline",
+    "ms-azuretools.vscode-docker"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
