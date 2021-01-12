@@ -1,7 +1,7 @@
 # kic - unit
 network type aws min
 ansible false
-kubernets eks
+kubernetes eks
 
 # demo setups
 
@@ -22,7 +22,7 @@ cp admin.auto.tfvars.example admin.auto.tfvars
 . setup.sh
 ```
 
-run lab steps
+## run lab steps
 ```bash
 kubectl apply -f ../templates/arcadia.yml
 kubectl apply -f ../templates/nginx-ingress-install.yml

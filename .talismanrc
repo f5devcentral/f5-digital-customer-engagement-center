@@ -75,3 +75,5 @@ fileignoreconfig:
   checksum: 93d9e763d26b40d1ca67829284b5e515cef56c54a0f4ff1226e42f1c3816b492
 - filename: solutions/delivery/application_delivery_controller/nginx/kic/aws/README.md
   checksum: 1dc9f834093ccfddc8aeae622f7b31bffd311fbb45ddf2f8da05760ec26f89de
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/aws/README.md
+  checksum: 6cdeab6173ac97b1766df53858b6e8cca0c930f54ee4b6bafdca48b0ecb5f84a

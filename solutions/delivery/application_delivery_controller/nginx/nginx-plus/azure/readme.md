@@ -1,6 +1,7 @@
 # nginx-plus
-
-## ubuntu
+network type azure min
+ansible false
+ubuntu virtual machine nginx-plus
 
 ## login
 
@@ -13,6 +14,10 @@ az login
 cp admin.auto.tfvars.example admin.auto.tfvars
 # MODIFY TO YOUR SETTINGS
 . setup.sh
+```
+## run lab steps
+```
+< lab steps here>
 ```
 
 ## cleanup
