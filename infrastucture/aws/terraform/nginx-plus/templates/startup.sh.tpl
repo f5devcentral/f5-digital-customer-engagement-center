@@ -52,8 +52,10 @@ apt-get install -y nginx-plus
 # connect agent to controller
 function register() {
 # Check api Ready
-ip="$(gcloud compute instances list --filter name:controller --format json | jq -r .[0].networkInterfaces[0].networkIP)"
-zone=$(curl -s -H Metadata-Flavor:Google http://metadata/computeMetadata/v1/instance/zone | cut -d/ -f4)
+# ip="$(gcloud compute instances list --filter name:controller --format json | jq -r .[0].networkInterfaces[0].networkIP)"
+ip=${controllerAddress}
+# zone=$(curl -s -H Metadata-Flavor:Google http://metadata/computeMetadata/v1/instance/zone | cut -d/ -f4)
+zone="one"
 version="api/v1"
 loginUrl="/platform/login"
 tokenUrl="/platform/global"

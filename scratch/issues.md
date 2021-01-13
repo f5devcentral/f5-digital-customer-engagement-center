@@ -65,3 +65,5 @@ For items without programatic downloads or marketplace images.
  - terraform "resources"
  - module inputs
  - module outputs
+ - tagging style objects vms
+ - ansible group names
