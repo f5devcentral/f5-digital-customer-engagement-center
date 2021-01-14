@@ -1,4 +1,4 @@
-provider {
+provider "aws" {
 
 }
 
