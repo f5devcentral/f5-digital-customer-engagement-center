@@ -1,7 +1,7 @@
 # nginx-plus
-network type azure min
-ansible false
-ubuntu virtual machine nginx-plus
+  - network type azure min
+  - ansible false
+  - ubuntu virtual machine nginx-plus
 
 ## login
 
