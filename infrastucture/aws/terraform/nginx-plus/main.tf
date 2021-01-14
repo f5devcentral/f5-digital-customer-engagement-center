@@ -16,8 +16,8 @@ data "template_file" "nginx_user_data" {
   template = file("${path.module}/templates/startup.sh.tpl")
   vars = {
     controllerAddress = var.controllerAddress
-    region            = var.region
-    secretName        = aws_secretsmanager_secret.nginx_secrets.name
+    region            = var.aws_region
+    secretName        = aws_secretsmanager_secret.nginx_secrets.id
   }
 }
 

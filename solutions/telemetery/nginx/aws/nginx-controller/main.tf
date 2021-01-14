@@ -32,6 +32,7 @@ resource "aws_s3_bucket_object" "controllerFile" {
   source = "${path.module}/${var.controller_install_file_name}"
 }
 // controller
+#https://docs.nginx.com/nginx-controller/admin-guides/install/nginx-controller-tech-specs/#aws-ebs
 module "nginx-controller" {
   source            = "../../../../../infrastucture/aws/terraform/nginx-controller"
   vpc               = module.aws_network.vpcs["main"]
@@ -52,6 +53,7 @@ module "nginx-controller" {
 //NGINX
 module "nginx" {
   source           = "../../../../../infrastucture/aws/terraform/nginx-plus"
+  aws_region       = var.aws_region
   vpc              = module.aws_network.vpcs["main"]
   subnet           = module.aws_network.subnets["private"]
   securityGroup    = aws_security_group.nginx

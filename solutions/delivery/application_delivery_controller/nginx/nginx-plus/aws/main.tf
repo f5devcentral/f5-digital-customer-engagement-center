@@ -15,15 +15,19 @@ module "aws_network" {
 //NGINX
 module "nginx" {
   source           = "../../../../../../infrastucture/aws/terraform/nginx-plus"
+  aws_region       = var.aws_region
   vpc              = module.aws_network.vpcs["main"]
   subnet           = module.aws_network.subnets["private"]
   securityGroup    = aws_security_group.nginx
-  nginxCert        = "mycert"
-  nginxKey         = "mykey"
-  adminAccountName = "xadmin"
-  ec2KeyName       = "myec2key"
-  sshPublicKey     = "mykeyName"
+  nginxCert        = var.nginxCert
+  nginxKey         = var.nginxKey
+  adminAccountName = var.adminAccountName
+  ec2KeyName       = var.ec2KeyName
+  sshPublicKey     = var.sshPublicKey
   #sshPublicKey     = file("/home/user/mykey.pub")
+  controllerAddress = "none"
+  controllerAccount = "none"
+  controllerPass    = "none"
 }
 
 // //NGINX

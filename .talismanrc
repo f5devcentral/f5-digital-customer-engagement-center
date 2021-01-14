@@ -93,3 +93,23 @@ fileignoreconfig:
   checksum: 07cb4b933f6c3a672e58d75087ed041b036811df93311ded0319fc51b221985c
 - filename: infrastucture/aws/terraform/nginx-controller/secrets.tf
   checksum: 4c252ece9fbc5ab0be7cfa8b591c84c40b8c817de5a75d1caa09483b8edc7036
+- filename: infrastucture/aws/terraform/nginx-controller/main.tf
+  checksum: 5de14fd415ba73e122068b8a646fd6b615a62d6194f6aeea0a3620a9a2d1d9d0
+- filename: infrastucture/aws/terraform/nginx-plus/main.tf
+  checksum: a486fdadb99c74199a03d3afd4ee92eef0ee4c9664e9526d26b76e1c9c108dcb
+- filename: infrastucture/aws/terraform/nginx-controller/templates/startup.sh.tpl
+  checksum: 57f0730f1435fd95c72f4e38db773cd7c0873f2d4542aeafae3df8fcd95913e7
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/aws/main.tf
+  checksum: ab628f3eaccd52f92058bd7bc18e05bd914786c38e193bc941ef4ebfc1e856c6
+- filename: infrastucture/aws/terraform/nginx-controller/main.tf
+  checksum: 5de14fd415ba73e122068b8a646fd6b615a62d6194f6aeea0a3620a9a2d1d9d0
+- filename: infrastucture/aws/terraform/nginx-controller/templates/startup.sh.tpl
+  checksum: 57f0730f1435fd95c72f4e38db773cd7c0873f2d4542aeafae3df8fcd95913e7
+- filename: infrastucture/aws/terraform/nginx-plus/main.tf
+  checksum: a486fdadb99c74199a03d3afd4ee92eef0ee4c9664e9526d26b76e1c9c108dcb
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/aws/main.tf
+  checksum: ab628f3eaccd52f92058bd7bc18e05bd914786c38e193bc941ef4ebfc1e856c6
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-plus/aws/admin.auto.tfvars.example
+  checksum: bcb46b4f8917206817afd197d8ac1bb36bb01417b919561e5c1c0406608ac033
+- filename: infrastucture/aws/terraform/nginx-plus/templates/startup.sh.tpl
+  checksum: 9a265d241b48476e4f5f25abef48273b2388ade0be4708e40c22ee187d19239e

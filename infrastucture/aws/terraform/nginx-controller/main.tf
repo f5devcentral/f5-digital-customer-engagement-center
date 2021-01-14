@@ -21,7 +21,7 @@ data "template_file" "controller_user_data" {
     controllerInstallUrl = "https://${var.bucketId}.s3.amazonaws.com/${var.bucketFileId}"
     s3_bucket_name       = var.bucketId
     object_key           = var.bucketFileId
-    secret_name          = "controller_secrets_${random_id.id.hex}"
+    secretName           = aws_secretsmanager_secret.controller_secrets.id
     region               = var.aws_region
   }
 }

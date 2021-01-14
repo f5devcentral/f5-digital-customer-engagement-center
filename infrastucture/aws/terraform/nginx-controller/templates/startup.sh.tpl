@@ -47,7 +47,7 @@ sleep 10
 # access secret from secretsmanager
 # aws
 sudo apt install awscli -y
-secrets=$(aws secretsmanager get-secret-value --secret-id ${secret_name} --region ${region} | jq -rc .SecretString)
+secrets=$(aws secretsmanager get-secret-value --secret-id ${secretName} --region ${region} | jq -rc .SecretString)
 
 #
 cat << EOF > docker-compose.yml
@@ -113,7 +113,7 @@ echo "installing controller" >> /status.log
 #aws
 cat >> /retry.sh << 'EOF'
 local_ipv4="$(curl http://169.254.169.254/latest/meta-data/local-ipv4)"
-secrets=$(aws secretsmanager get-secret-value --secret-id ${secret_name} --region ${region} | jq -rc .SecretString)
+secrets=$(aws secretsmanager get-secret-value --secret-id ${secretName} --region ${region} | jq -rc .SecretString)
 pw="$(echo "$secrets" | jq -r .pass)"
 admin="$(echo "$secrets" | jq -r .user)"
 dbpass="$(echo "$secrets" | jq -r .dbpass)"

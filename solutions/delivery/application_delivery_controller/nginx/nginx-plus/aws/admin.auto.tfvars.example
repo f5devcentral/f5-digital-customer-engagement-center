@@ -1,0 +1,24 @@
+# admin
+adminAccountName = "xadmin"
+sshPublicKey = "keytype AAAA"
+#admin_source_cidr = "0.0.0.0/0"
+# aws
+aws_region       = "us-east-2"
+aws_az1          = "us-east-2a"
+aws_az2          = "us-east-2b"
+#controller
+controllerLicense = <<EOT
+fdsafsafdfgafsgdfg
+EOT
+controllerAccount = "zadmin@example.com"
+controllerPass    = "pleaseUseVault123!!"
+dbuser            = "dbuser"
+dbpass            = "dbpleaseUseVault123!!"
+#nginx
+nginxCert = <<EOT
+fdsafdfsd
+EOT
+nginxKey  = <<EOT
+fdsafdsaf
+EOT
+#https://github.com/hashicorp/terraform/issues/4835#issuecomment-313280534

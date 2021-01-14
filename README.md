@@ -59,6 +59,12 @@ testing pre-commit hooks:
   # test pre commit manually
   pre-commit run -a -v
   ```
+## Troubleshooting
+module not pulling in changes:
+  - force module update
+    ```bash
+    terraform get -update
+    ```
 ## Support
 For support, please open a GitHub issue.  Note, the code in this repository is community supported and is not supported by F5 Networks.  For a complete list of supported projects please reference [SUPPORT.md](SUPPORT.md).
 

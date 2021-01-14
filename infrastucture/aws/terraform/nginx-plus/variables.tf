@@ -10,7 +10,7 @@ resource "random_password" "password" {
 variable "prefix" {
   default = "nginx-demo"
 }
-variable "region" {
+variable "aws_region" {
   default = "us-east-1"
 }
 # admin
@@ -61,5 +61,5 @@ variable "controllerPass" {
 }
 variable "controllerAddress" {
   description = "ip4 address of controller to join"
-  default     = ""
+  default     = "none"
 }

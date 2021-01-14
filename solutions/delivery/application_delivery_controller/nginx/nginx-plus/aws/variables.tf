@@ -19,3 +19,32 @@ variable "aws_az1" {
 variable "aws_az2" {
   default = "us-east-2b"
 }
+# admin
+variable "adminAccountName" {
+  description = "admin account"
+  default     = "zadmin"
+}
+variable "sshPublicKey" {
+  description = "contents of admin ssh public key"
+}
+variable "ec2KeyName" {
+  default = ""
+}
+# nginx
+variable "nginxKey" {
+  description = "key for nginxplus"
+}
+variable "nginxCert" {
+  description = "cert for nginxplus"
+}
+#controller
+variable "controllerAccount" { default = "" }
+variable "controllerPass" { default = "" }
+variable "dbuser" { default = "" }
+variable "dbpass" { default = "" }
+variable "controllerLicense" {
+  type    = string
+  default = <<-EOT
+PASTE CONTROLLER LICENSE HERE
+    EOT
+}
