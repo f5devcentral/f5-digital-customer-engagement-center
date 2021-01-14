@@ -25,7 +25,7 @@ module "nginx" {
   buildSuffix          = random_pet.buildSuffix.id
   vpc                  = module.google_network.vpcs["public"]
   subnet               = module.google_network.subnets["public"]
-  adminAccountName     = "xadmin"
+  adminAccountName     = var.adminAccountName
   adminAccountPassword = random_password.password.result
   sshPublicKey         = var.sshPublicKey
   #sshPublicKey     = file("/home/user/mykey.pub")

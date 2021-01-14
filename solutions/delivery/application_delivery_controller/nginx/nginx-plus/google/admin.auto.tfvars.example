@@ -8,6 +8,14 @@ adminAccount       = "notadmin"
 adminPassword      = "pleaseusevault123!"
 adminSourceAddress = ["192.168.2.1/32", "192.168.2.3/32", "192.168.4.3/32"]
 sshPublicKey    = "ssh-rsa AAAAB3NzaC1yc2EAAAA..."
-# nginx
-nginxKey           = "198rt9de8fu"
-nginxCert          = "fdsfjsakdf"
+#controller
+controllerAccount = "zadmin@example.com"
+controllerPass    = "pleaseUseVault123!!"
+#nginx
+nginxCert = <<EOT
+fdsafdfsd
+EOT
+nginxKey  = <<EOT
+fdsafdsaf
+EOT
+#https://github.com/hashicorp/terraform/issues/4835#issuecomment-313280534

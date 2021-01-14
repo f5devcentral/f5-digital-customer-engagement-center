@@ -28,7 +28,7 @@ variable "adminSourceAddress" {
   description = "admin src address in cidr"
   default     = ["0.0.0.0/0"]
 }
-variable "adminAccount" {
+variable "adminAccountName" {
   description = "admin account"
 }
 variable "adminPassword" {
@@ -43,4 +43,11 @@ variable "nginxKey" {
 }
 variable "nginxCert" {
   description = "cert for nginxplus"
+}
+#controller
+variable "controllerAccount" { default = "" }
+variable "controllerPass" { default = "" }
+variable "controllerAddress" {
+  description = "ip4 address of controller to join"
+  default     = "none"
 }

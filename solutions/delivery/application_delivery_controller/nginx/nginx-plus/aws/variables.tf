@@ -40,11 +40,7 @@ variable "nginxCert" {
 #controller
 variable "controllerAccount" { default = "" }
 variable "controllerPass" { default = "" }
-variable "dbuser" { default = "" }
-variable "dbpass" { default = "" }
-variable "controllerLicense" {
-  type    = string
-  default = <<-EOT
-PASTE CONTROLLER LICENSE HERE
-    EOT
+variable "controllerAddress" {
+  description = "ip4 address of controller to join"
+  default     = "none"
 }

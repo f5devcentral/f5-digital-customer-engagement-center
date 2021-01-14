@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "destroying demo kic"
+echo "destroying demo nginx-plus"
 read -r -p "Are you sure? [y/N] " response
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
 then
