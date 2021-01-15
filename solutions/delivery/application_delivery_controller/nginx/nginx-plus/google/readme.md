@@ -1,7 +1,7 @@
 # gcp nginx-plus
-network type gcp min
-ansible false
-ubuntu virtual machine nginx-plus
+  - network type gcp min
+  - ansible false
+  - ubuntu virtual machine nginx-plus
 
 ## login
 ```bash

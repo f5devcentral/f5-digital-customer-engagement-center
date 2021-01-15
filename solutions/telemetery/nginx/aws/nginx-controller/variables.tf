@@ -1,3 +1,4 @@
+# variables
 resource "random_id" "random-string" {
   byte_length = 4
 }
@@ -30,17 +31,29 @@ variable "sshPublicKey" {
 variable "ec2KeyName" {
   default = ""
 }
+#controller
+variable "controllerAccount" { default = "" }
+variable "controllerPass" { default = "" }
+variable "dbuser" { default = "" }
+variable "dbpass" { default = "" }
+variable "controllerLicense" {
+  type    = string
+  default = <<-EOT
+PASTE CONTROLLER LICENSE HERE
+    EOT
+}
+variable "controller_install_file_name" {
+  default = "controller-installer-3.12.1.tar.gz"
+}
+# bucket
+variable "s3_bucket_name" {
+  default     = "demo_bucket"
+  description = "s3 bucket with controller installer"
+}
 # nginx
 variable "nginxKey" {
   description = "key for nginxplus"
 }
 variable "nginxCert" {
   description = "cert for nginxplus"
-}
-#controller
-variable "controllerAccount" { default = "" }
-variable "controllerPass" { default = "" }
-variable "controllerAddress" {
-  description = "ip4 address of controller to join"
-  default     = "none"
 }

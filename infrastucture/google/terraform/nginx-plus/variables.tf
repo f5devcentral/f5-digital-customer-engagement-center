@@ -47,7 +47,7 @@ variable "controllerPassword" {
 }
 variable "controllerAddress" {
   description = "ip4 address of controller to join"
-  default     = ""
+  default     = "none"
 }
 # network
 variable "vpc" {

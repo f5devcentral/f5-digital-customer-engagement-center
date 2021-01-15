@@ -1,4 +1,11 @@
-sshPublicKey = "keytype xxxxx"
+# admin
+adminAccountName = "xadmin"
+sshPublicKey = "keytype AAAA"
+#admin_source_cidr = "0.0.0.0/0"
+# aws
+aws_region       = "us-east-2"
+aws_az1          = "us-east-2a"
+aws_az2          = "us-east-2b"
 #controller
 controllerAccount = "zadmin@example.com"
 controllerPass    = "pleaseUseVault123!!"

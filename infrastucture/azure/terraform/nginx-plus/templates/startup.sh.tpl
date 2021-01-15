@@ -65,7 +65,7 @@ function register() {
 #zone=$(curl -s -H Metadata-Flavor:Google http://metadata/computeMetadata/v1/instance/zone | cut -d/ -f4)
 # azure
 #ip=$()
-ip="${controllerAddress}"
+ip=${controllerAddress}
 zone="myzone"
 version="api/v1"
 loginUrl="/platform/login"
@@ -96,32 +96,36 @@ zonePayload=$(cat -<<EOF
 }
 EOF
 )
-count=0
-while [ $count -le 10 ]
-do
-status=$(curl -ksi https://$ip/$version$loginUrl  | grep HTTP | awk '{print $2}')
-if [[ $status == "401" ]]; then
-    echo "ready $status"
-    # wait for controller services
-    echo "waiting 60 for controller"
-    sleep 60
-    curl -sk --header "Content-Type:application/json"  --data "$payload" --url https://$ip/$version$loginUrl --dump-header /cookie.txt
-    cookie=$(cat /cookie.txt | grep Set-Cookie: | awk '{print $2}')
-    rm /cookie.txt
-    #create location
-    curl -sk --header "Content-Type:application/json" --header "Cookie: $cookie" --data "$zonePayload" --url https://$ip/$version$locationsUri
-    # get token
-    token=$(curl -sk --header "Content-Type:application/json" --header "Cookie: $cookie" --url https://$ip/$version$tokenUrl | jq -r .desiredState.agentSettings.apiKey)
-    # agent install
-    curl -ksS -L https://$ip:8443$agentUrl > install.sh && \
-    API_KEY="$token" sh ./install.sh --location-name $zone -y
-    break
+if [[ $ip != "none" ]]; then
+  count=0
+  while [ $count -le 10 ]
+  do
+  status=$(curl -ksi https://$ip/$version$loginUrl  | grep HTTP | awk '{print $2}')
+  if [[ $status == "401" ]]; then
+      echo "ready $status"
+      # wait for controller services
+      echo "waiting 60 for controller"
+      sleep 60
+      curl -sk --header "Content-Type:application/json"  --data "$payload" --url https://$ip/$version$loginUrl --dump-header /cookie.txt
+      cookie=$(cat /cookie.txt | grep Set-Cookie: | awk '{print $2}')
+      rm /cookie.txt
+      #create location
+      curl -sk --header "Content-Type:application/json" --header "Cookie: $cookie" --data "$zonePayload" --url https://$ip/$version$locationsUri
+      # get token
+      token=$(curl -sk --header "Content-Type:application/json" --header "Cookie: $cookie" --url https://$ip/$version$tokenUrl | jq -r .desiredState.agentSettings.apiKey)
+      # agent install
+      curl -ksS -L https://$ip:8443$agentUrl > install.sh && \
+      API_KEY="$token" sh ./install.sh --location-name $zone -y
+      break
+  else
+      echo "not ready $status"
+      count=$[$count+1]
+  fi
+  sleep 60
+  done
 else
-    echo "not ready $status"
-    count=$[$count+1]
+  echo "no controller..skipping register"
 fi
-sleep 60
-done
 }
 register
 # start nginx

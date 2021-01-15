@@ -22,12 +22,29 @@ variable "prefix" {
   description = "prefix for objects in project"
   default     = "demonginx"
 }
-
+# admin
+variable "adminAccountName" {
+  description = "admin account"
+  default     = "zadmin"
+}
+variable "sshPublicKey" {
+  description = "contents of admin ssh public key"
+}
 variable "adminSourceAddress" {
   description = "admin source addresses"
   default     = ["0.0.0.0/0"]
 }
-
-variable "sshPublicKey" {
-  description = "contents of admin ssh public key"
+# nginx
+variable "nginxKey" {
+  description = "key for nginxplus"
+}
+variable "nginxCert" {
+  description = "cert for nginxplus"
+}
+#controller
+variable "controllerAccount" { default = "" }
+variable "controllerPass" { default = "" }
+variable "controllerAddress" {
+  description = "ip4 address of controller to join"
+  default     = "none"
 }

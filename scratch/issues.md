@@ -65,3 +65,71 @@ For items without programatic downloads or marketplace images.
  - terraform "resources"
  - module inputs
  - module outputs
+ - tagging style objects vms
+ - ansible group names
+
+## ownership
+
+Audience
+ - consumers  SEs/Customers
+ - builders SEs/SA
+
+Oversight:
+exe sponsor
+ mentor
+
+Cloud providers:
+- aws
+- gcp
+- azure
+
+Env:
+devcontainer
+web interface
+ansible
+
+Products:
+- bigip aws
+- bigip azure
+- bigip gcp
+- nginx
+- controller
+- bigiq
+
+Testing:
+ses
+
+modules:
+network
+nginx-controller
+nginx-plus
+
+
+soltuions:
+
+EKS-KIC
+terraform
+configuration
+documentation
+application
+
+EKS-KIC-NAP
+terraform -
+scripts -
+applicaton -
+documentation -
+traffic tester/emulation/attack -
+
+NGINX-PLUS-AWS
+NGINX-PLUS-AZURE
+NGINX-PLUS-GCP
+
+NGINX-CONTROLLER-AWS
+NGINX-CONTROLLER-AZURE
+NGINX-CONTROLLER-GCP
+
+BIGIP-AWS
+BIGIP-AZURE
+BIGIP-GCP
+
+BIGIQ-AZURE

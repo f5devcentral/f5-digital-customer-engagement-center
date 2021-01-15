@@ -50,7 +50,8 @@ apt-get install -y nginx-plus
 # connect agent to controller
 function register() {
 # Check api Ready
-ip="$(gcloud compute instances list --filter name:controller --format json | jq -r .[0].networkInterfaces[0].networkIP)"
+ip=${controllerAddress}
+#ip="$(gcloud compute instances list --filter name:controller --format json | jq -r .[0].networkInterfaces[0].networkIP)"
 zone=$(curl -s -H Metadata-Flavor:Google http://metadata/computeMetadata/v1/instance/zone | cut -d/ -f4)
 version="api/v1"
 loginUrl="/platform/login"
@@ -81,42 +82,46 @@ zonePayload=$(cat -<<EOF
 }
 EOF
 )
-count=0
-while [ $count -le 10 ]
-do
-status=$(curl -ksi https://$ip/$version$loginUrl  | grep HTTP | awk '{print $2}')
-if [[ $status == "401" ]]; then
-    echo "ready $status"
-    echo "wait 1 minute for apis"
-    sleep 60
-    # login for cookie
-    curl -sk --header "Content-Type:application/json"  --data "$payload" --url https://$ip/$version$loginUrl --dump-header /cookie.txt
-    cookie=$(cat /cookie.txt | grep Set-Cookie: | awk '{print $2}')
-    rm -f /cookie.txt
-    # locations api
-    tries=0
-    while [ $tries -le 10 ]
-    do
-    locationsApi=$(curl -sik --header "Content-Type:application/json" --header "Cookie: $cookie" --url https://$ip/$version$locationsUri  | grep HTTP | awk '{print $2}')
-    if [[ $locationsApi == "200" ]]; then
-      #create location
-      curl -sk --header "Content-Type:application/json" --header "Cookie: $cookie" --data "$zonePayload" --url https://$ip/$version$locationsUri
+if [[ $ip != "none" ]]; then
+  count=0
+  while [ $count -le 10 ]
+  do
+  status=$(curl -ksi https://$ip/$version$loginUrl  | grep HTTP | awk '{print $2}')
+  if [[ $status == "401" ]]; then
+      echo "ready $status"
+      echo "wait 1 minute for apis"
+      sleep 60
+      # login for cookie
+      curl -sk --header "Content-Type:application/json"  --data "$payload" --url https://$ip/$version$loginUrl --dump-header /cookie.txt
+      cookie=$(cat /cookie.txt | grep Set-Cookie: | awk '{print $2}')
+      rm -f /cookie.txt
+      # locations api
+      tries=0
+      while [ $tries -le 10 ]
+      do
+      locationsApi=$(curl -sik --header "Content-Type:application/json" --header "Cookie: $cookie" --url https://$ip/$version$locationsUri  | grep HTTP | awk '{print $2}')
+      if [[ $locationsApi == "200" ]]; then
+        #create location
+        curl -sk --header "Content-Type:application/json" --header "Cookie: $cookie" --data "$zonePayload" --url https://$ip/$version$locationsUri
+        break
+      fi
+      sleep 6
+      done
+      # get token
+      token=$(curl -sk --header "Content-Type:application/json" --header "Cookie: $cookie" --url https://$ip/$version$tokenUrl | jq -r .desiredState.agentSettings.apiKey)
+      # agent install
+      curl -ksS -L https://$ip:8443$agentUrl > install.sh && \
+      API_KEY="$token" sh ./install.sh --location-name $zone -y
       break
-    fi
-    sleep 6
-    done
-    # get token
-    token=$(curl -sk --header "Content-Type:application/json" --header "Cookie: $cookie" --url https://$ip/$version$tokenUrl | jq -r .desiredState.agentSettings.apiKey)
-    # agent install
-    curl -ksS -L https://$ip:8443$agentUrl > install.sh && \
-    API_KEY="$token" sh ./install.sh --location-name $zone -y
-    break
+  else
+      echo "not ready $status"
+      count=$[$count+1]
+  fi
+  sleep 60
+  done
 else
-    echo "not ready $status"
-    count=$[$count+1]
+  echo "no controller..skipping register"
 fi
-sleep 60
-done
 }
 register
 # start nginx

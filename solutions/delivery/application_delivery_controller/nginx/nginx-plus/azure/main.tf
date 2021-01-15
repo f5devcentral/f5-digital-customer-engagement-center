@@ -25,12 +25,12 @@ module "azure_network" {
 module "nginx" {
   source           = "../../../../../../infrastucture/azure/terraform/nginx-plus"
   resource_group   = azurerm_resource_group.main
-  nginxCert        = "mycert"
-  nginxKey         = "mykey"
+  nginxCert        = var.nginxCert
+  nginxKey         = var.nginxKey
   buildSuffix      = random_pet.buildSuffix.id
   subnet           = module.azure_network.subnets["mgmt"]
   adminPassword    = random_password.password.result
-  adminAccountName = "xadmin"
+  adminAccountName = var.adminAccountName
   sshPublicKey     = var.sshPublicKey
   #sshPublicKey     = file("/home/user/mykey.pub")
 }

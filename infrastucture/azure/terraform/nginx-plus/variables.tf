@@ -64,7 +64,7 @@ variable "controllerPass" {
 }
 variable "controllerAddress" {
   description = "ip4 address of controller to join"
-  default     = ""
+  default     = "none"
 }
 # tags
 variable "purpose" { default = "public" }

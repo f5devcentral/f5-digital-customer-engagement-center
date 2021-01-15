@@ -11,7 +11,7 @@ the credentials can be obtained through an F5 UDF course deployment, or your own
 ## Installation
 Outline the requirements and steps to install this project.
 
-This project can be run with or without the provided devcontainer.
+This project can be run with or without the provided [**devcontainer.**](https://code.visualstudio.com/docs/remote/containers)
 
 ### devcontainer
     - Requirements:
@@ -59,6 +59,12 @@ testing pre-commit hooks:
   # test pre commit manually
   pre-commit run -a -v
   ```
+## Troubleshooting
+module not pulling in changes:
+  - force module update
+    ```bash
+    terraform get -update
+    ```
 ## Support
 For support, please open a GitHub issue.  Note, the code in this repository is community supported and is not supported by F5 Networks.  For a complete list of supported projects please reference [SUPPORT.md](SUPPORT.md).
 

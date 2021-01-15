@@ -1,7 +1,7 @@
 # nginx-plus
-network type aws min
-ansible false
-ubuntu virtual machine nginx-plus
+  - network type aws min
+  - ansible false
+  - ubuntu virtual machine nginx-plus
 
 # demo setups
 
