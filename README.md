@@ -11,7 +11,7 @@ the credentials can be obtained through an F5 UDF course deployment, or your own
 ## Installation
 Outline the requirements and steps to install this project.
 
-This project can be run with or without the provided devcontainer.
+This project can be run with or without the provided [**devcontainer.**](https://code.visualstudio.com/docs/remote/containers)
 
 ### devcontainer
     - Requirements:
