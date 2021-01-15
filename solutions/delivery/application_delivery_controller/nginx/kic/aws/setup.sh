@@ -7,6 +7,6 @@ terraform plan
 read -p "Press enter to continue"
 terraform apply --auto-approve
 #export KUBECONFIG=$KUBECONFIG:$(echo -n "$(cat ./cluster-config)")
-mkdir ~/.kube/
-cp ./cluster-config ~/.kube/cluster-config
+mkdir -p ~/.kube/
+\cp ./cluster-config ~/.kube/cluster-config
 export KUBECONFIG=$KUBECONFIG:~/.kube/cluster-config

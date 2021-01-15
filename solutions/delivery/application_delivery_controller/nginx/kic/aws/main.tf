@@ -1,5 +1,5 @@
 provider "aws" {
-  region = var.aws_region
+  region = var.awsRegion
 }
 //   source = "git::https://github.com/f5devcentral/f5-digital-customer-engagement-center//infrastructure/aws/network/max/?ref=main"
 // module "aws_network" {
@@ -12,12 +12,12 @@ provider "aws" {
 // Network
 module "aws_network" {
   source       = "../../../../../../infrastucture/aws/terraform/network/min"
-  project      = "infra"
-  aws_region   = var.aws_region
-  aws_az1      = var.aws_az1
-  aws_az2      = var.aws_az2
-  random_id    = random_id.random-string.dec
-  cluster_name = "${var.cluster_name}-${random_id.random-string.dec}"
+  project      = "kic-aws"
+  userId       = var.userId
+  awsRegion    = var.awsRegion
+  awsAz1       = var.awsAz1
+  awsAz2       = var.awsAz2
+  sshPublicKey = var.sshPublicKey
 }
 // EKS
 data "aws_eks_cluster" "cluster" {
@@ -35,9 +35,9 @@ provider "kubernetes" {
 }
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = "${var.cluster_name}-${random_id.random-string.dec}"
+  cluster_name    = "${var.clusterName}-${random_id.randomString.dec}"
   cluster_version = "1.18"
-  subnets         = [module.aws_network.subnets["private"], module.aws_network.subnets["public"]]
+  subnets         = [module.aws_network.subnetsAz2["public"], module.aws_network.subnetsAz1["public"]]
   vpc_id          = module.aws_network.vpcs["main"]
   worker_groups = [
     {
@@ -50,9 +50,14 @@ module "eks" {
   write_kubeconfig                     = true
   cluster_endpoint_private_access      = false
   cluster_endpoint_public_access       = true
-  cluster_endpoint_public_access_cidrs = [var.admin_source_cidr]
+  cluster_endpoint_public_access_cidrs = [var.adminSourceCidr]
   config_output_path                   = "${path.module}/cluster-config"
 }
+
+
+
+
+
 // NGINX
 // module nginx {
 //   source = "./nginx"

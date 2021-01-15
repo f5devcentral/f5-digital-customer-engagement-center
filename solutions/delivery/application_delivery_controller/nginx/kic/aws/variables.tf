@@ -1,22 +1,26 @@
-resource "random_id" "random-string" {
+resource "random_id" "randomString" {
   byte_length = 4
 }
 
-variable "user_id" {
+variable "userId" {
   default = "xadmin"
 }
-variable "admin_source_cidr" {
+variable "sshPublicKey" {
+  description = "ssh key file to create an ec2 key-pair"
+  default     = "ssh-rsa AAAAB3...."
+}
+variable "adminSourceCidr" {
   default = "0.0.0.0/0"
 }
-variable "aws_region" {
+variable "awsRegion" {
   default = "eu-central-1"
 }
 
-variable "aws_az1" {
+variable "awsAz1" {
   default = "eu-central-1a"
 }
 
-variable "aws_az2" {
+variable "awsAz2" {
   default = "eu-central-1b"
 }
 
@@ -24,7 +28,7 @@ variable "kubernetes" {
   default     = true
   description = " deploy a kubernetes cluster or not"
 }
-variable "cluster_name" {
+variable "clusterName" {
   default     = "my-cluster"
   description = "eks cluster name"
 }

@@ -123,3 +123,9 @@ fileignoreconfig:
   checksum: 002c42273176206ae93a4321a7e2705d203c0fc8927a2f5ab13738300ef5d31d
 - filename: infrastucture/azure/terraform/nginx-plus/templates/startup.sh.tpl
   checksum: bb63a6b0024eef4a12eac6a1d04ba60d3c114fa5a3be493bccccd9e98961712e
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/aws/main.tf
+  checksum: a3c520fb92318bf820d70e7535b4a1190bfcd60f469e9374a41be1d98fd27b1e
+- filename: infrastucture/aws/terraform/network/min/README.md
+  checksum: d0aa082932d1f853fe0dafbec49e65b2a42c58546be58c9ca178b7e0f4e34823
+- filename: infrastucture/aws/terraform/network/min/main.tf
+  checksum: 6a6196b6f9aa333749b3e3b7bda3c4cabc6f382d4b9ef9e051ccd81e93c32a3d
