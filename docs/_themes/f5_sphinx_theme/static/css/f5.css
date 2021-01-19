@@ -6,7 +6,6 @@
   justify-content: center;
 }
 
-
 .panel-body > .list-group .btn {
   white-space: normal;
 }
@@ -657,24 +656,18 @@ footer p a {
   background: #efefef;
 }
 #MainMenu > li {
-  height: 40px;
-  padding-top: 10px;
-}
-#MainMenu > li:first-of-type {
-  border-left: 1px solid #ccc;
-  padding-left: 10px;
+  margin-top: 10px;
+  height: 42px;
 }
 #MainMenu > li:hover::after {
   content: " ";
   display: block;
-  border-top: 3px solid #e21d38;
-  height: 20px;
+  border-bottom: 3px solid #e21d38;
 }
 .main-menu {
   float: left;
-  margin: 0 0 0 0;
-  padding: 0;
-  padding-top: 10px;
+  margin: 8px 0 0 0;
+  padding: 0 0 0 20px;
   margin-left: 10px;
 }
 .main-menu .message {
@@ -708,12 +701,12 @@ footer p a {
   margin: 0px 26px 0 4px;
   line-height: 21px;
   vertical-align: text-top;
-  font-size: 18px;
+  font-size: 18px !important;
 }
 .main-menu li a {
-  color: #555;
-  font-weight: 700;
-  padding-top: 10px;
+  color: #000;
+  font-size: 16px;
+  text-transform: uppercase;
   text-decoration: none;
 }
 .main-menu li a:hover {
@@ -744,7 +737,7 @@ footer p a {
 }
 .main-menu li .arrow-up {
   position: absolute;
-  bottom: 0;
+  bottom: 2px;
   left: 45%;
   width: 0;
   height: 0;
@@ -822,7 +815,6 @@ footer p a {
   text-transform: none;
   line-height: 16px;
   padding-bottom: 4px;
-  padding-top: 4px;
 }
 .main-menu .submenu a .current {
   font-weight: bold;
@@ -865,32 +857,9 @@ footer p a {
     width: 28%;
   }
 }
-@media (max-width: 767px) {
-
-  .corp-header {
-    height: 40px;
-    background-color: #ebebeb;
-    border-bottom: 14px solid #0186be;
-  }
-
-    .pageHeader {
-      height: 80px;
-    }
-
-}
-
-@media (min-width: 768px) {
-
-  .corp-header {
-    height: 40px;
-    background-color: #ebebeb;
-  }
-
-   .pageHeader {
-      height: 80px;
-      border-bottom: 14px solid #0186be;
-   }
-
+.pageHeader {
+  height: 80px;
+  border-bottom: 4px solid #2270B3;
 }
 .section {
   width: 100%;
@@ -901,7 +870,7 @@ footer p a {
   margin-bottom: 24px;
 }
 img.logo {
-  margin: 8px 0 0 0;
+  margin: 12px 0 0 0;
   float: left;
   width: 45px;
   height: 42px;
@@ -915,8 +884,7 @@ img.logo.support {
 }
 /* ---------- corporate menu ----------  */
 .corp-header {
-  height: 40px;
-  background-color: #ebebeb;
+  height: 46px;
 }
 .corp-header .corp-menu li:before {
   content: "|";
@@ -936,10 +904,8 @@ img.logo.support {
 }
 .corp-header ul li a {
   padding: 0;
-  color: #000;
-  opacity: 0.7;
-  font-size: 12px;
-  font-weight: 700;
+  color: #808285;
+  font-size: 14px;
   text-transform: uppercase;
   transition: opacity 1s ease-in-out;
   -moz-transition: opacity 1s ease-in-out;
@@ -952,7 +918,7 @@ img.logo.support {
 .corp-header ul li {
   float: left;
   display: inline;
-  margin: 6px 6px 0 3px;
+  margin: 10px 6px 0 3px;
 }
 .corp-header ul li a:hover {
   opacity: 1;
@@ -5562,133 +5528,3 @@ body {
     background-color: #FFF;
     position: relative
 }
-
-/* Start of Coveo search bar in header */
-
-#search-toggle {
-  color: #fff;
-  background-color: #6a6c73;
-  padding: 8px;
-  margin-top: 5px;
-  border-radius: 30px;
-  font-size: 20px;
-  transition: all .4s ease;
-  transition-property: all;
-  transition-duration: 0.4s;
-  transition-timing-function: ease;
-  transition-delay: 0s;
-  cursor: pointer;
-}
-
-#search-toggle:hover {
-  background-color: #aeb0b0;
-}
-
-#search-container {
-  overflow: hidden;
-  height: 0px;
-  transition-property: height;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  background: #000 url(https://cdn.f5.com/websites/support/assets/images/hero-herculon-lg.jpg) no-repeat center right;
-}
-
-#search-container .slideable_content {
-  margin: 0px !important;
-  padding: 0px !important;
-  border: 0px;
-}
-
-#search-container .container {
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-@media (max-width: 1200px) {
-  #search-container .container {
-      width: 100%;
-  }
-}
-
-@media (min-width: 1200px) {
-  #search-container .container {
-      width: 1280px !important;
-  }
-}
-
-#search-container #blue-banner {
-  position: relative;
-}
-
-#search-container #searchbox {
-  display: block;
-  padding: 15px 0;
-  margin: auto;
-  max-width: 700px;
-}
-
-#search-container .CoveoSearchbox {
-  height: 39px !important;
-}
-
-#search-container .CoveoSearchButton {
-  background: #fff;
-  height: 40px !important;
-}
-
-#search-container .CoveoSearchbox .CoveoOmnibox .magic-box-input .magic-box-underlay,
-#search-container .CoveoSearchbox .CoveoOmnibox .magic-box-input>input,
-#search-container .CoveoSearchbox .CoveoQuerybox .magic-box-input .magic-box-underlay,
-#search-container .CoveoSearchbox .CoveoQuerybox .magic-box-input>input {
-  height: 38px;
-  line-height: 10px;
-}
-
-#search-container .magic-box {
-  position: relative;
-  text-align: left;
-  color: #212121;
-}
-
-#search-container .magic-box-input {
-  height: 38px !important;
-}
-
-#search-container .CoveoSearchbox .magic-box .magic-box-input>input {
-  font-size: 14px;
-}
-
-#search-container .CoveoSearchbox .magic-box {
-    border: thin solid #bcc3ca;
-    border-radius: 2px;
-}
-
-#search-container .search-tips {
-  display: block;
-  position: absolute;
-  top: 24px;
-  left: 1020px;
-  width: 90px;
-}
-
-#search-container .search-tips a {
-  color: #fff!important;
-  font-size: .9em!important;
-  line-height: 18px;
-  text-decoration: none!important;
-
-}
-
-@media screen and (max-width: 1160px) {
-  #search-container .search-tips {
-      position: inherit;
-      top: inherit;
-      left: inherit;
-      margin: auto;
-      padding-bottom: 10px;
-  }
-}
-
-/* End of Coveo search bar in header */

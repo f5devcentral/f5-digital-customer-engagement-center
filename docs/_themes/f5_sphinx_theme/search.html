@@ -1,0 +1,50 @@
+{%- extends "layout.html" %}
+{% set title = _('Search') %}
+{% set script_files = script_files + ['_static/searchtools.js'] %}
+{% block extrahead %}
+  <script type="text/javascript">
+    jQuery(function() { Search.loadIndex("{{ pathto('searchindex.js', 1) }}"); });
+  </script>
+  {# this is used when loading the search index using $.ajax fails,
+     such as on Chrome for documents on localhost #}
+  <script type="text/javascript" id="searchindexloader"></script>
+  {{ super() }}
+{% endblock %}
+{% block body %}
+
+<div class="search-wrapper">
+  <h1 id="search-documentation">{{ _('Search') }}</h1>
+  <div id="fallback" class="admonition warning">
+  <script type="text/javascript">$('#fallback').hide();</script>
+  <p>
+    {% trans %}Please activate JavaScript to enable the search
+    functionality.{% endtrans %}
+  </p>
+  </div>
+  <p>
+    {% trans %}Enter your search words into the box below and click "Search".
+    {% endtrans %}
+  </p>
+  <form action="" method="get">
+    <input type="text" name="q" value="" />
+    <button type="submit" class="btn btn-info navbar-btn" value="{{ _('search') }}">Search <i class="fa fa-search"></i> </button>
+    <span id="search-progress" style="padding-left: 10px"></span>
+  </form>
+  {% if search_performed %}
+    <h2>{{ _('Search Results') }}</h2>
+    {% if not search_results %}
+      <p>{{ _('Your search did not match any documents.') }}</p>
+    {% endif %}
+  {% endif %}
+  <div id="search-results">
+  {% if search_results %}
+    <ul class="search-results">
+    {% for href, caption, context in search_results %}
+      <li class="search-results"><a href="{{ pathto(item.href) }}">{{ caption }}</a>
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,1091 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-ingress
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nginx-ingress
+  namespace: nginx-ingress
+
+---
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: nginx-ingress
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - endpoints
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - create
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - list
+      - watch
+      - get
+  - apiGroups:
+      - "extensions"
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  - apiGroups:
+      - k8s.nginx.org
+    resources:
+      - virtualservers
+      - virtualserverroutes
+      - globalconfigurations
+      - transportservers
+    verbs:
+      - list
+      - watch
+      - get
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: nginx-ingress
+subjects:
+  - kind: ServiceAccount
+    name: nginx-ingress
+    namespace: nginx-ingress
+roleRef:
+  kind: ClusterRole
+  name: nginx-ingress
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: default-server-secret
+  namespace: nginx-ingress
+type: Opaque
+data:
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN2akNDQWFZQ0NRREFPRjl0THNhWFhEQU5CZ2txaGtpRzl3MEJBUXNGQURBaE1SOHdIUVlEVlFRRERCWk8KUjBsT1dFbHVaM0psYzNORGIyNTBjbTlzYkdWeU1CNFhEVEU0TURreE1qRTRNRE16TlZvWERUSXpNRGt4TVRFNApNRE16TlZvd0lURWZNQjBHQTFVRUF3d1dUa2RKVGxoSmJtZHlaWE56UTI5dWRISnZiR3hsY2pDQ0FTSXdEUVlKCktvWklodmNOQVFFQkJRQURnZ0VQQURDQ0FRb0NnZ0VCQUwvN2hIUEtFWGRMdjNyaUM3QlBrMTNpWkt5eTlyQ08KR2xZUXYyK2EzUDF0azIrS3YwVGF5aGRCbDRrcnNUcTZzZm8vWUk1Y2Vhbkw4WGM3U1pyQkVRYm9EN2REbWs1Qgo4eDZLS2xHWU5IWlg0Rm5UZ0VPaStlM2ptTFFxRlBSY1kzVnNPazFFeUZBL0JnWlJVbkNHZUtGeERSN0tQdGhyCmtqSXVuektURXUyaDU4Tlp0S21ScUJHdDEwcTNRYzhZT3ExM2FnbmovUWRjc0ZYYTJnMjB1K1lYZDdoZ3krZksKWk4vVUkxQUQ0YzZyM1lma1ZWUmVHd1lxQVp1WXN2V0RKbW1GNWRwdEMzN011cDBPRUxVTExSakZJOTZXNXIwSAo1TmdPc25NWFJNV1hYVlpiNWRxT3R0SmRtS3FhZ25TZ1JQQVpQN2MwQjFQU2FqYzZjNGZRVXpNQ0F3RUFBVEFOCkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQWpLb2tRdGRPcEsrTzhibWVPc3lySmdJSXJycVFVY2ZOUitjb0hZVUoKdGhrYnhITFMzR3VBTWI5dm15VExPY2xxeC9aYzJPblEwMEJCLzlTb0swcitFZ1U2UlVrRWtWcitTTFA3NTdUWgozZWI4dmdPdEduMS9ienM3bzNBaS9kclkrcUI5Q2k1S3lPc3FHTG1US2xFaUtOYkcyR1ZyTWxjS0ZYQU80YTY3Cklnc1hzYktNbTQwV1U3cG9mcGltU1ZmaXFSdkV5YmN3N0NYODF6cFErUyt1eHRYK2VBZ3V0NHh3VlI5d2IyVXYKelhuZk9HbWhWNThDd1dIQnNKa0kxNXhaa2VUWXdSN0diaEFMSkZUUkk3dkhvQXprTWIzbjAxQjQyWjNrN3RXNQpJUDFmTlpIOFUvOWxiUHNoT21FRFZkdjF5ZytVRVJxbStGSis2R0oxeFJGcGZnPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBdi91RWM4b1JkMHUvZXVJTHNFK1RYZUprckxMMnNJNGFWaEMvYjVyYy9XMlRiNHEvClJOcktGMEdYaVN1eE9ycXgrajlnamx4NXFjdnhkenRKbXNFUkJ1Z1B0ME9hVGtIekhvb3FVWmcwZGxmZ1dkT0EKUTZMNTdlT1l0Q29VOUZ4amRXdzZUVVRJVUQ4R0JsRlNjSVo0b1hFTkhzbysyR3VTTWk2Zk1wTVM3YUhudzFtMApxWkdvRWEzWFNyZEJ6eGc2clhkcUNlUDlCMXl3VmRyYURiUzc1aGQzdUdETDU4cGszOVFqVUFQaHpxdmRoK1JWClZGNGJCaW9CbTVpeTlZTW1hWVhsMm0wTGZzeTZuUTRRdFFzdEdNVWozcGJtdlFmazJBNnljeGRFeFpkZFZsdmwKMm82MjBsMllxcHFDZEtCRThCay90elFIVTlKcU56cHpoOUJUTXdJREFRQUJBb0lCQVFDZklHbXowOHhRVmorNwpLZnZJUXQwQ0YzR2MxNld6eDhVNml4MHg4Mm15d1kxUUNlL3BzWE9LZlRxT1h1SENyUlp5TnUvZ2IvUUQ4bUFOCmxOMjRZTWl0TWRJODg5TEZoTkp3QU5OODJDeTczckM5bzVvUDlkazAvYzRIbjAzSkVYNzZ5QjgzQm9rR1FvYksKMjhMNk0rdHUzUmFqNjd6Vmc2d2szaEhrU0pXSzBwV1YrSjdrUkRWYmhDYUZhNk5nMUZNRWxhTlozVDhhUUtyQgpDUDNDeEFTdjYxWTk5TEI4KzNXWVFIK3NYaTVGM01pYVNBZ1BkQUk3WEh1dXFET1lvMU5PL0JoSGt1aVg2QnRtCnorNTZud2pZMy8yUytSRmNBc3JMTnIwMDJZZi9oY0IraVlDNzVWYmcydVd6WTY3TWdOTGQ5VW9RU3BDRkYrVm4KM0cyUnhybnhBb0dCQU40U3M0ZVlPU2huMVpQQjdhTUZsY0k2RHR2S2ErTGZTTXFyY2pOZjJlSEpZNnhubmxKdgpGenpGL2RiVWVTbWxSekR0WkdlcXZXaHFISy9iTjIyeWJhOU1WMDlRQ0JFTk5jNmtWajJTVHpUWkJVbEx4QzYrCk93Z0wyZHhKendWelU0VC84ajdHalRUN05BZVpFS2FvRHFyRG5BYWkyaW5oZU1JVWZHRXFGKzJyQW9HQkFOMVAKK0tZL0lsS3RWRzRKSklQNzBjUis3RmpyeXJpY05iWCtQVzUvOXFHaWxnY2grZ3l4b25BWlBpd2NpeDN3QVpGdwpaZC96ZFB2aTBkWEppc1BSZjRMazg5b2pCUmpiRmRmc2l5UmJYbyt3TFU4NUhRU2NGMnN5aUFPaTVBRHdVU0FkCm45YWFweUNweEFkREtERHdObit3ZFhtaTZ0OHRpSFRkK3RoVDhkaVpBb0dCQUt6Wis1bG9OOTBtYlF4VVh5YUwKMjFSUm9tMGJjcndsTmVCaWNFSmlzaEhYa2xpSVVxZ3hSZklNM2hhUVRUcklKZENFaHFsV01aV0xPb2I2NTNyZgo3aFlMSXM1ZUtka3o0aFRVdnpldm9TMHVXcm9CV2xOVHlGanIrSWhKZnZUc0hpOGdsU3FkbXgySkJhZUFVWUNXCndNdlQ4NmNLclNyNkQrZG8wS05FZzFsL0FvR0FlMkFVdHVFbFNqLzBmRzgrV3hHc1RFV1JqclRNUzRSUjhRWXQKeXdjdFA4aDZxTGxKUTRCWGxQU05rMXZLTmtOUkxIb2pZT2pCQTViYjhibXNVU1BlV09NNENoaFJ4QnlHbmR2eAphYkJDRkFwY0IvbEg4d1R0alVZYlN5T294ZGt5OEp0ek90ajJhS0FiZHd6NlArWDZDODhjZmxYVFo5MWpYL3RMCjF3TmRKS2tDZ1lCbyt0UzB5TzJ2SWFmK2UwSkN5TGhzVDQ5cTN3Zis2QWVqWGx2WDJ1VnRYejN5QTZnbXo5aCsKcDNlK2JMRUxwb3B0WFhNdUFRR0xhUkcrYlNNcjR5dERYbE5ZSndUeThXczNKY3dlSTdqZVp2b0ZpbmNvVlVIMwphdmxoTUVCRGYxSjltSDB5cDBwWUNaS2ROdHNvZEZtQktzVEtQMjJhTmtsVVhCS3gyZzR6cFE9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
+
+---
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-config
+  namespace: nginx-ingress
+data:
+  proxy-protocol: "True"
+  real-ip-header: "proxy_protocol"
+  set-real-ip-from: "0.0.0.0/0"
+
+---
+
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: virtualservers.k8s.nginx.org
+spec:
+  group: k8s.nginx.org
+  versions:
+    - name: v1
+      served: true
+      storage: true
+  scope: Namespaced
+  names:
+    kind: VirtualServer
+    plural: virtualservers
+    singular: virtualserver
+    shortNames:
+      - vs
+  preserveUnknownFields: false
+  validation:
+    openAPIV3Schema:
+      description: VirtualServer defines the VirtualServer resource.
+      type: object
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: VirtualServerSpec is the spec of the VirtualServer resource.
+          type: object
+          properties:
+            host:
+              type: string
+            routes:
+              type: array
+              items:
+                description: Route defines a route.
+                type: object
+                properties:
+                  action:
+                    description: Action defines an action.
+                    type: object
+                    properties:
+                      pass:
+                        type: string
+                      redirect:
+                        description: ActionRedirect defines a redirect in an Action.
+                        type: object
+                        properties:
+                          code:
+                            type: integer
+                          url:
+                            type: string
+                      return:
+                        description: ActionReturn defines a return in an Action.
+                        type: object
+                        properties:
+                          body:
+                            type: string
+                          code:
+                            type: integer
+                          type:
+                            type: string
+                  errorPages:
+                    type: array
+                    items:
+                      description: ErrorPage defines an ErrorPage in a Route.
+                      type: object
+                      properties:
+                        codes:
+                          type: array
+                          items:
+                            type: integer
+                        redirect:
+                          description: ErrorPageRedirect defines a redirect for an
+                            ErrorPage.
+                          type: object
+                          properties:
+                            code:
+                              type: integer
+                            url:
+                              type: string
+                        return:
+                          description: ErrorPageReturn defines a return for an ErrorPage.
+                          type: object
+                          properties:
+                            body:
+                              type: string
+                            code:
+                              type: integer
+                            headers:
+                              type: array
+                              items:
+                                description: Header defines an HTTP Header.
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                  value:
+                                    type: string
+                            type:
+                              type: string
+                  matches:
+                    type: array
+                    items:
+                      description: Match defines a match.
+                      type: object
+                      properties:
+                        action:
+                          description: Action defines an action.
+                          type: object
+                          properties:
+                            pass:
+                              type: string
+                            redirect:
+                              description: ActionRedirect defines a redirect in an
+                                Action.
+                              type: object
+                              properties:
+                                code:
+                                  type: integer
+                                url:
+                                  type: string
+                            return:
+                              description: ActionReturn defines a return in an Action.
+                              type: object
+                              properties:
+                                body:
+                                  type: string
+                                code:
+                                  type: integer
+                                type:
+                                  type: string
+                        conditions:
+                          type: array
+                          items:
+                            description: Condition defines a condition in a MatchRule.
+                            type: object
+                            properties:
+                              argument:
+                                type: string
+                              cookie:
+                                type: string
+                              header:
+                                type: string
+                              value:
+                                type: string
+                              variable:
+                                type: string
+                        splits:
+                          type: array
+                          items:
+                            description: Split defines a split.
+                            type: object
+                            properties:
+                              action:
+                                description: Action defines an action.
+                                type: object
+                                properties:
+                                  pass:
+                                    type: string
+                                  redirect:
+                                    description: ActionRedirect defines a redirect
+                                      in an Action.
+                                    type: object
+                                    properties:
+                                      code:
+                                        type: integer
+                                      url:
+                                        type: string
+                                  return:
+                                    description: ActionReturn defines a return in
+                                      an Action.
+                                    type: object
+                                    properties:
+                                      body:
+                                        type: string
+                                      code:
+                                        type: integer
+                                      type:
+                                        type: string
+                              weight:
+                                type: integer
+                  path:
+                    type: string
+                  route:
+                    type: string
+                  splits:
+                    type: array
+                    items:
+                      description: Split defines a split.
+                      type: object
+                      properties:
+                        action:
+                          description: Action defines an action.
+                          type: object
+                          properties:
+                            pass:
+                              type: string
+                            redirect:
+                              description: ActionRedirect defines a redirect in an
+                                Action.
+                              type: object
+                              properties:
+                                code:
+                                  type: integer
+                                url:
+                                  type: string
+                            return:
+                              description: ActionReturn defines a return in an Action.
+                              type: object
+                              properties:
+                                body:
+                                  type: string
+                                code:
+                                  type: integer
+                                type:
+                                  type: string
+                        weight:
+                          type: integer
+            tls:
+              description: TLS defines TLS configuration for a VirtualServer.
+              type: object
+              properties:
+                redirect:
+                  description: TLSRedirect defines a redirect for a TLS.
+                  type: object
+                  properties:
+                    basedOn:
+                      type: string
+                    code:
+                      type: integer
+                    enable:
+                      type: boolean
+                secret:
+                  type: string
+            upstreams:
+              type: array
+              items:
+                description: Upstream defines an upstream.
+                type: object
+                properties:
+                  buffer-size:
+                    type: string
+                  buffering:
+                    type: boolean
+                  buffers:
+                    description: UpstreamBuffers defines Buffer Configuration for
+                      an Upstream.
+                    type: object
+                    properties:
+                      number:
+                        type: integer
+                      size:
+                        type: string
+                  client-max-body-size:
+                    type: string
+                  connect-timeout:
+                    type: string
+                  fail-timeout:
+                    type: string
+                  healthCheck:
+                    description: HealthCheck defines the parameters for active Upstream
+                      HealthChecks.
+                    type: object
+                    properties:
+                      connect-timeout:
+                        type: string
+                      enable:
+                        type: boolean
+                      fails:
+                        type: integer
+                      headers:
+                        type: array
+                        items:
+                          description: Header defines an HTTP Header.
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            value:
+                              type: string
+                      interval:
+                        type: string
+                      jitter:
+                        type: string
+                      passes:
+                        type: integer
+                      path:
+                        type: string
+                      port:
+                        type: integer
+                      read-timeout:
+                        type: string
+                      send-timeout:
+                        type: string
+                      statusMatch:
+                        type: string
+                      tls:
+                        description: UpstreamTLS defines a TLS configuration for an
+                          Upstream.
+                        type: object
+                        properties:
+                          enable:
+                            type: boolean
+                  keepalive:
+                    type: integer
+                  lb-method:
+                    type: string
+                  max-conns:
+                    type: integer
+                  max-fails:
+                    type: integer
+                  name:
+                    type: string
+                  next-upstream:
+                    type: string
+                  next-upstream-timeout:
+                    type: string
+                  next-upstream-tries:
+                    type: integer
+                  port:
+                    type: integer
+                  queue:
+                    description: UpstreamQueue defines Queue Configuration for an
+                      Upstream.
+                    type: object
+                    properties:
+                      size:
+                        type: integer
+                      timeout:
+                        type: string
+                  read-timeout:
+                    type: string
+                  send-timeout:
+                    type: string
+                  service:
+                    type: string
+                  sessionCookie:
+                    description: SessionCookie defines the parameters for session
+                      persistence.
+                    type: object
+                    properties:
+                      domain:
+                        type: string
+                      enable:
+                        type: boolean
+                      expires:
+                        type: string
+                      httpOnly:
+                        type: boolean
+                      name:
+                        type: string
+                      path:
+                        type: string
+                      secure:
+                        type: boolean
+                  slow-start:
+                    type: string
+                  subselector:
+                    type: object
+                    additionalProperties:
+                      type: string
+                  tls:
+                    description: UpstreamTLS defines a TLS configuration for an Upstream.
+                    type: object
+                    properties:
+                      enable:
+                        type: boolean
+
+
+---
+
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: virtualserverroutes.k8s.nginx.org
+spec:
+  group: k8s.nginx.org
+  versions:
+    - name: v1
+      served: true
+      storage: true
+  scope: Namespaced
+  names:
+    kind: VirtualServerRoute
+    plural: virtualserverroutes
+    singular: virtualserverroute
+    shortNames:
+      - vsr
+  preserveUnknownFields: false
+  validation:
+    openAPIV3Schema:
+      type: object
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+          properties:
+            host:
+              type: string
+            subroutes:
+              type: array
+              items:
+                description: Route defines a route.
+                type: object
+                properties:
+                  action:
+                    description: Action defines an action.
+                    type: object
+                    properties:
+                      pass:
+                        type: string
+                      redirect:
+                        description: ActionRedirect defines a redirect in an Action.
+                        type: object
+                        properties:
+                          code:
+                            type: integer
+                          url:
+                            type: string
+                      return:
+                        description: ActionReturn defines a return in an Action.
+                        type: object
+                        properties:
+                          body:
+                            type: string
+                          code:
+                            type: integer
+                          type:
+                            type: string
+                  errorPages:
+                    type: array
+                    items:
+                      description: ErrorPage defines an ErrorPage in a Route.
+                      type: object
+                      properties:
+                        codes:
+                          type: array
+                          items:
+                            type: integer
+                        redirect:
+                          description: ErrorPageRedirect defines a redirect for an
+                            ErrorPage.
+                          type: object
+                          properties:
+                            code:
+                              type: integer
+                            url:
+                              type: string
+                        return:
+                          description: ErrorPageReturn defines a return for an ErrorPage.
+                          type: object
+                          properties:
+                            body:
+                              type: string
+                            code:
+                              type: integer
+                            headers:
+                              type: array
+                              items:
+                                description: Header defines an HTTP Header.
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                  value:
+                                    type: string
+                            type:
+                              type: string
+                  matches:
+                    type: array
+                    items:
+                      description: Match defines a match.
+                      type: object
+                      properties:
+                        action:
+                          description: Action defines an action.
+                          type: object
+                          properties:
+                            pass:
+                              type: string
+                            redirect:
+                              description: ActionRedirect defines a redirect in an
+                                Action.
+                              type: object
+                              properties:
+                                code:
+                                  type: integer
+                                url:
+                                  type: string
+                            return:
+                              description: ActionReturn defines a return in an Action.
+                              type: object
+                              properties:
+                                body:
+                                  type: string
+                                code:
+                                  type: integer
+                                type:
+                                  type: string
+                        conditions:
+                          type: array
+                          items:
+                            description: Condition defines a condition in a MatchRule.
+                            type: object
+                            properties:
+                              argument:
+                                type: string
+                              cookie:
+                                type: string
+                              header:
+                                type: string
+                              value:
+                                type: string
+                              variable:
+                                type: string
+                        splits:
+                          type: array
+                          items:
+                            description: Split defines a split.
+                            type: object
+                            properties:
+                              action:
+                                description: Action defines an action.
+                                type: object
+                                properties:
+                                  pass:
+                                    type: string
+                                  redirect:
+                                    description: ActionRedirect defines a redirect
+                                      in an Action.
+                                    type: object
+                                    properties:
+                                      code:
+                                        type: integer
+                                      url:
+                                        type: string
+                                  return:
+                                    description: ActionReturn defines a return in
+                                      an Action.
+                                    type: object
+                                    properties:
+                                      body:
+                                        type: string
+                                      code:
+                                        type: integer
+                                      type:
+                                        type: string
+                              weight:
+                                type: integer
+                  path:
+                    type: string
+                  route:
+                    type: string
+                  splits:
+                    type: array
+                    items:
+                      description: Split defines a split.
+                      type: object
+                      properties:
+                        action:
+                          description: Action defines an action.
+                          type: object
+                          properties:
+                            pass:
+                              type: string
+                            redirect:
+                              description: ActionRedirect defines a redirect in an
+                                Action.
+                              type: object
+                              properties:
+                                code:
+                                  type: integer
+                                url:
+                                  type: string
+                            return:
+                              description: ActionReturn defines a return in an Action.
+                              type: object
+                              properties:
+                                body:
+                                  type: string
+                                code:
+                                  type: integer
+                                type:
+                                  type: string
+                        weight:
+                          type: integer
+            upstreams:
+              type: array
+              items:
+                description: Upstream defines an upstream.
+                type: object
+                properties:
+                  buffer-size:
+                    type: string
+                  buffering:
+                    type: boolean
+                  buffers:
+                    description: UpstreamBuffers defines Buffer Configuration for
+                      an Upstream.
+                    type: object
+                    properties:
+                      number:
+                        type: integer
+                      size:
+                        type: string
+                  client-max-body-size:
+                    type: string
+                  connect-timeout:
+                    type: string
+                  fail-timeout:
+                    type: string
+                  healthCheck:
+                    description: HealthCheck defines the parameters for active Upstream
+                      HealthChecks.
+                    type: object
+                    properties:
+                      connect-timeout:
+                        type: string
+                      enable:
+                        type: boolean
+                      fails:
+                        type: integer
+                      headers:
+                        type: array
+                        items:
+                          description: Header defines an HTTP Header.
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            value:
+                              type: string
+                      interval:
+                        type: string
+                      jitter:
+                        type: string
+                      passes:
+                        type: integer
+                      path:
+                        type: string
+                      port:
+                        type: integer
+                      read-timeout:
+                        type: string
+                      send-timeout:
+                        type: string
+                      statusMatch:
+                        type: string
+                      tls:
+                        description: UpstreamTLS defines a TLS configuration for an
+                          Upstream.
+                        type: object
+                        properties:
+                          enable:
+                            type: boolean
+                  keepalive:
+                    type: integer
+                  lb-method:
+                    type: string
+                  max-conns:
+                    type: integer
+                  max-fails:
+                    type: integer
+                  name:
+                    type: string
+                  next-upstream:
+                    type: string
+                  next-upstream-timeout:
+                    type: string
+                  next-upstream-tries:
+                    type: integer
+                  port:
+                    type: integer
+                  queue:
+                    description: UpstreamQueue defines Queue Configuration for an
+                      Upstream.
+                    type: object
+                    properties:
+                      size:
+                        type: integer
+                      timeout:
+                        type: string
+                  read-timeout:
+                    type: string
+                  send-timeout:
+                    type: string
+                  service:
+                    type: string
+                  sessionCookie:
+                    description: SessionCookie defines the parameters for session
+                      persistence.
+                    type: object
+                    properties:
+                      domain:
+                        type: string
+                      enable:
+                        type: boolean
+                      expires:
+                        type: string
+                      httpOnly:
+                        type: boolean
+                      name:
+                        type: string
+                      path:
+                        type: string
+                      secure:
+                        type: boolean
+                  slow-start:
+                    type: string
+                  subselector:
+                    type: object
+                    additionalProperties:
+                      type: string
+                  tls:
+                    description: UpstreamTLS defines a TLS configuration for an Upstream.
+                    type: object
+                    properties:
+                      enable:
+                        type: boolean
+
+---
+
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: transportservers.k8s.nginx.org
+spec:
+  group: k8s.nginx.org
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+  scope: Namespaced
+  names:
+    plural: transportservers
+    singular: transportserver
+    kind: TransportServer
+    shortNames:
+      - ts
+  preserveUnknownFields: false
+  validation:
+    openAPIV3Schema:
+      description: TransportServer defines the TransportServer resource.
+      type: object
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: TransportServerSpec is the spec of the TransportServer resource.
+          type: object
+          properties:
+            action:
+              description: Action defines an action.
+              type: object
+              properties:
+                pass:
+                  type: string
+            host:
+              type: string
+            listener:
+              description: TransportServerListener defines a listener for a TransportServer.
+              type: object
+              properties:
+                name:
+                  type: string
+                protocol:
+                  type: string
+            upstreamParameters:
+              description: UpstreamParameters defines parameters for an upstream.
+              type: object
+              properties:
+                udpRequests:
+                  type: integer
+                udpResponses:
+                  type: integer
+            upstreams:
+              type: array
+              items:
+                description: Upstream defines an upstream.
+                type: object
+                properties:
+                  name:
+                    type: string
+                  port:
+                    type: integer
+                  service:
+                    type: string
+
+
+---
+
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: globalconfigurations.k8s.nginx.org
+spec:
+  group: k8s.nginx.org
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+  scope: Namespaced
+  names:
+    plural: globalconfigurations
+    singular: globalconfiguration
+    kind: GlobalConfiguration
+    shortNames:
+      - gc
+  preserveUnknownFields: false
+  validation:
+    openAPIV3Schema:
+      description: GlobalConfiguration defines the GlobalConfiguration resource.
+      type: object
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: GlobalConfigurationSpec is the spec of the GlobalConfiguration
+            resource.
+          type: object
+          properties:
+            listeners:
+              type: array
+              items:
+                description: Listener defines a listener.
+                type: object
+                properties:
+                  name:
+                    type: string
+                  port:
+                    type: integer
+                  protocol:
+                    type: string
+
+---
+
+# apiVersion: k8s.nginx.org/v1alpha1
+# kind: GlobalConfiguration
+# metadata:
+#   name: nginx-configuration
+#   namespace: nginx-ingress
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-ingress
+  namespace: nginx-ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-ingress
+  template:
+    metadata:
+      labels:
+        app: nginx-ingress
+        #annotations:
+        #prometheus.io/scrape: "true"
+        #prometheus.io/port: "9113"
+    spec:
+      serviceAccountName: nginx-ingress
+      containers:
+        - image: sorinboia/nginx-plus-ingress:1.7.0
+          imagePullPolicy: Always
+          name: nginx-plus-ingress
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+            #- name: prometheus
+            #containerPort: 9113
+          securityContext:
+            allowPrivilegeEscalation: true
+            runAsUser: 101 #nginx
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          args:
+            - -nginx-plus
+            - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
+            - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
+            - -nginx-status-allow-cidrs=0.0.0.0/0
+            #- -v=3 # Enables extensive logging. Useful for troubleshooting.
+            #- -report-ingress-status
+            #- -external-service=nginx-ingress
+            #- -enable-leader-election
+            #- -enable-prometheus-metrics
+            #- -global-configuration=$(POD_NAMESPACE)/nginx-configuration
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-ingress
+  namespace: nginx-ingress
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+    - port: 443
+      targetPort: 443
+      protocol: TCP
+      name: https
+  selector:
+    app: nginx-ingress
