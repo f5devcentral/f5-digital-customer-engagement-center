@@ -44,7 +44,7 @@ Each solution will:
     - cleanup.sh
 - Accept variables
   - auto.tfvars.example
-    an example of avaliable varibles for the infrastructure
+    an example of avaliable variables for the infrastructure
 - Export variables
   - Solutions should be addressable as terraform modules, this requires they output relevant connection information in a standardized way.
 

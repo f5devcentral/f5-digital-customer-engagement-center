@@ -7,7 +7,7 @@ provider "google" {
 
 module "gcp" {
   count        = 0
-  source       = "../../../../../../infrastucture/google/terraform/network/min"
+  source       = "../../../../../../modules/google/terraform/network/min"
   kubernetes   = true
   gcpZone      = "us-east1-b"
   gcpRegion    = "us-east1"

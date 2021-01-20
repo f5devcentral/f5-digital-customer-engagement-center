@@ -16,14 +16,14 @@ resource "random_password" "password" {
 
 // Network
 module "azure_network" {
-  source         = "../../../../../../infrastucture/azure/terraform/network/min"
+  source         = "../../../../../../modules/azure/terraform/network/min"
   resource_group = azurerm_resource_group.main
   buildSuffix    = random_pet.buildSuffix.id
 }
 
 // Nginx
 module "nginx" {
-  source           = "../../../../../../infrastucture/azure/terraform/nginx-plus"
+  source           = "../../../../../../modules/azure/terraform/nginx-plus"
   resource_group   = azurerm_resource_group.main
   nginxCert        = var.nginxCert
   nginxKey         = var.nginxKey

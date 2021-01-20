@@ -3,7 +3,7 @@ provider "aws" {
 }
 //   source = "git::https://github.com/f5devcentral/f5-digital-customer-engagement-center//infrastructure/aws/network/max/?ref=main"
 // module "aws_network" {
-//   source      = "../../../../../infrastucture/aws/terraform/network/max"
+//   source      = "../../../../../modules/aws/terraform/network/max"
 //   project     = "infra"
 //   aws_region  = var.aws_region
 //   aws_az1 = var.aws_az
@@ -11,7 +11,7 @@ provider "aws" {
 // }
 // Network
 module "aws_network" {
-  source       = "../../../../../../infrastucture/aws/terraform/network/min"
+  source       = "../../../../../../modules/aws/terraform/network/min"
   project      = "kic-aws"
   userId       = var.userId
   awsRegion    = var.awsRegion

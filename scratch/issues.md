@@ -73,6 +73,7 @@ For items without programatic downloads or marketplace images.
 Audience
  - consumers  SEs/Customers
  - builders SEs/SA
+ - automation
 
 Oversight:
 exe sponsor

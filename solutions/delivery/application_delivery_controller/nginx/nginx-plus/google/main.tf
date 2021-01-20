@@ -7,7 +7,7 @@ provider "google" {
 
 // Network
 module "google_network" {
-  source       = "../../../../../../infrastucture/google/terraform/network/min"
+  source       = "../../../../../../modules/google/terraform/network/min"
   gcpProjectId = var.gcpProjectId
   gcpRegion    = var.gcpRegion
   gcpZone      = var.gcpZone
@@ -16,7 +16,7 @@ module "google_network" {
 
 // Nginx
 module "nginx" {
-  source               = "../../../../../../infrastucture/google/terraform/nginx-plus"
+  source               = "../../../../../../modules/google/terraform/nginx-plus"
   gcpProjectId         = var.gcpProjectId
   gcpRegion            = var.gcpRegion
   gcpZone              = var.gcpZone

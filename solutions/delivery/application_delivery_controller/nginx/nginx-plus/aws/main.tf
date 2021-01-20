@@ -3,7 +3,7 @@ provider "aws" {
 }
 // Network
 module "aws_network" {
-  source     = "../../../../../../infrastucture/aws/terraform/network/min"
+  source     = "../../../../../../modules/aws/terraform/network/min"
   project    = "infra"
   aws_region = var.aws_region
   aws_az1    = var.aws_az1
@@ -14,7 +14,7 @@ module "aws_network" {
 
 //NGINX
 module "nginx" {
-  source           = "../../../../../../infrastucture/aws/terraform/nginx-plus"
+  source           = "../../../../../../modules/aws/terraform/nginx-plus"
   aws_region       = var.aws_region
   vpc              = module.aws_network.vpcs["main"]
   subnet           = module.aws_network.subnets["private"]
@@ -32,7 +32,7 @@ module "nginx" {
 
 // //NGINX
 // module "nginx2" {
-//   source           = "../../../../../../infrastucture/aws/terraform/nginx-plus"
+//   source           = "../../../../../../modules/aws/terraform/nginx-plus"
 //   vpc              = module.aws_network.vpcs["main"]
 //   subnet           = module.aws_network.subnets["public"]
 //   securityGroup    = aws_security_group.nginx

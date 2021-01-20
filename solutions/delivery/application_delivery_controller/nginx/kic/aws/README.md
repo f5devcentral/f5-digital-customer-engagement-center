@@ -1,7 +1,7 @@
 # kic - unit
-network type aws min
-ansible false
-kubernetes eks
+- network type aws min
+- ansible false
+- kubernetes eks
 
 # demo setups
 

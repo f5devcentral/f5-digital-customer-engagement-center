@@ -7,7 +7,7 @@ Here's the gist of using it directly from github.
 
 ```hcl
 module "aws_network" {
-  source       = "../../../../../../infrastucture/aws/terraform/network/min"
+  source       = "../../../../../../modules/aws/terraform/network/min"
   project      = "kic-aws"
   userId       = var.userId
   awsRegion    = var.awsRegion

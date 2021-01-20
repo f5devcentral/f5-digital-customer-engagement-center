@@ -6,7 +6,7 @@ provider "aws" {
 }
 // Network
 module "aws_network" {
-  source     = "../../../../../infrastucture/aws/terraform/network/min"
+  source     = "../../../../../modules/aws/terraform/network/min"
   project    = "infra"
   aws_region = var.aws_region
   aws_az1    = var.aws_az1
@@ -34,7 +34,7 @@ resource "aws_s3_bucket_object" "controllerFile" {
 // controller
 #https://docs.nginx.com/nginx-controller/admin-guides/install/nginx-controller-tech-specs/#aws-ebs
 module "nginx-controller" {
-  source            = "../../../../../infrastucture/aws/terraform/nginx-controller"
+  source            = "../../../../../modules/aws/terraform/nginx-controller"
   vpc               = module.aws_network.vpcs["main"]
   subnet            = module.aws_network.subnets["private"]
   securityGroup     = aws_security_group.controller
@@ -52,7 +52,7 @@ module "nginx-controller" {
 }
 //NGINX
 module "nginx" {
-  source           = "../../../../../infrastucture/aws/terraform/nginx-plus"
+  source           = "../../../../../modules/aws/terraform/nginx-plus"
   aws_region       = var.aws_region
   vpc              = module.aws_network.vpcs["main"]
   subnet           = module.aws_network.subnets["private"]
