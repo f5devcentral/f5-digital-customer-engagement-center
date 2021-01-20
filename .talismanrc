@@ -23,3 +23,9 @@ fileignoreconfig:
   checksum: ee5ccda5d5ce45e3b671877f538ccc5a2fb3ae1fba04705c9db0cb2db7b48fa5
 - filename: docs/_themes/f5_sphinx_theme/static/js/bootstrap.min.js
   checksum: 0f87e6560a635d0acb17559d0966bdf2dba756354b2b41e03b0b2d9dd45d87eb
+- filename: docs/security/web_application_firewalls/nginx/kic-nap/lab01.rst
+  checksum: ef1ce22103d7e8901ed629b50d92397ebb29c1d51d0adcd5abc0e5bb6be3575f
+- filename: docs/delivery/application_delivery_controller/nginx/kic/lab01.rst
+  checksum: 246b4484203079245c5f0f6af8476127fccb6dd5cf915298f34e3fa430c85027
+- filename: docs/delivery/application_delivery_controller/nginx/kic/lab02.rst
+  checksum: d304010a7c962474b7bf05fe23f246b623dd0214f56a619b25cecdf6a0cdd84c
