@@ -21,6 +21,7 @@ These documents were authored by amazing contributions from:
    docs/delivery/delivery
    docs/security/security
    docs/telemetry/telemetry
+   docs/visual_studio_codespaces/codespaces
 
 Indices and tables
 ==================
