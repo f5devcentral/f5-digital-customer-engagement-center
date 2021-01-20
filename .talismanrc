@@ -29,3 +29,11 @@ fileignoreconfig:
   checksum: 246b4484203079245c5f0f6af8476127fccb6dd5cf915298f34e3fa430c85027
 - filename: docs/delivery/application_delivery_controller/nginx/kic/lab02.rst
   checksum: d304010a7c962474b7bf05fe23f246b623dd0214f56a619b25cecdf6a0cdd84c
+- filename: solutions/workstation/google/.terraform.lock.hcl
+  checksum: f21dc3ec164f211bd3ba5fa4ed68f8551d95045a0f45e1aaee3a0363190c6528
+- filename: solutions/workstation/google/admin.auto.tfvars.example
+  checksum: 8859146e1f4b2829f04215826b9162f8970971be18ba5284cba111e17c3c1eac
+- filename: solutions/workstation/google/main.tf
+  checksum: f3498b504506d2456ca104a74f4fd38ed527d8089c19cf799aa06b12a45b08f4
+- filename: modules/google/terraform/jumphost/main.tf
+  checksum: 2c1b501401fb2e9ae54f1b17c2970d3622837d21317807d1e86fbb74a7897983
