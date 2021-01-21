@@ -7,18 +7,15 @@ variable "userId" {
   default     = "f5-dcec"
 }
 variable "awsAz1" {
-  default = "us-east-1a"
+  default = null
+}
+variable "awsAz2" {
+  default = null
 }
 variable "awsRegion" {
   default = "us-east-1"
 }
-variable "awsAz2" {
-  default = "us-east-1b"
-}
-variable "sshPublicKey" {
-  default = "ssh-rsa AAAAB3Nza..."
-}
-
-variable "jumphostInstanceType" {
-  default = "t3.large"
+variable "map_public_ip_on_launch" {
+  description = "assigns public ip's to instances in the public subnet by default"
+  default     = false
 }

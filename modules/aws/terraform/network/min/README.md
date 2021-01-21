@@ -1,6 +1,9 @@
-# terraform-aws-f5lab-network-module
+# Description
+Single VPC network module with default ip address scheme
 
+## Diagram
 
+![AWS-single-vpc-network](AWS-single-vpc-network.png)
 ## Usage example
 
 Here's the gist of using it directly from github.
@@ -11,8 +14,6 @@ module "aws_network" {
   project      = "kic-aws"
   userId       = var.userId
   awsRegion    = var.awsRegion
-  awsAz1       = var.awsAz1
-  awsAz2       = var.awsAz2
   sshPublicKey = var.sshPublicKey
 }
 ```
@@ -21,7 +22,7 @@ module "aws_network" {
 
 ## Available features
 
-vpc, subnets, routing tables, jumphost
+vpc, subnets, routing tables, internet gateway
 ## Module Variables
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
@@ -39,45 +40,27 @@ No requirements.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| awsAz1 | n/a | `string` | `"us-east-1a"` | no |
-| awsAz2 | n/a | `string` | `"us-east-1b"` | no |
+| awsAz1 | n/a | `any` | `null` | no |
+| awsAz2 | n/a | `any` | `null` | no |
 | awsRegion | n/a | `string` | `"us-east-1"` | no |
-| jumphostInstanceType | n/a | `string` | `"t3.large"` | no |
+| map\_public\_ip\_on\_launch | assigns public ip's to instances in the public subnet by default | `bool` | `false` | no |
 | project | project name to use for tags | `string` | `"f5-dcec"` | no |
-| sshPublicKey | n/a | `string` | `"ssh-rsa AAAAB3Nza..."` | no |
 | userId | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| jumphostPublicIp | n/a |
-| securityGroups | security groups |
 | subnetsAz1 | n/a |
 | subnetsAz2 | n/a |
+| vpcMainIgw | n/a |
+| vpcMainRtb | n/a |
 | vpcs | n/a |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-## Commands
-
-<!-- START makefile-doc -->
-```
-$ make help
-hooks                          Commit hooks setup
-validate                       Validate with pre-commit hooks
-changelog                      Update changelog
-release                        Create release version
-```
-<!-- END makefile-doc -->
-
-
 ### :memo: Guidelines
 
- - :memo: Use a succinct title and description.
- - :bug: Bugs & feature requests can be be opened
- - :signal_strength: Support questions are better asked on [Stack Overflow](https://stackoverflow.com/)
- - :blush: Be nice, civil and polite ([as always](http://contributor-covenant.org/version/1/4/)).
 
 ## License
 
@@ -88,6 +71,6 @@ MIT Licensed. See [LICENSE](./LICENSE) for full details.
 Submit a pull request
 
 # Authors
+Yossi rosenboim
 
-
-## Terraform Registry
+### Terraform Registry

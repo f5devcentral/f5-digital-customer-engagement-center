@@ -12,10 +12,6 @@ locals {
     "private" = aws_subnet.vpcMainSubMgmtB.id
     "mgmt"    = aws_subnet.vpcMainSubPrivB.id
   }
-  securityGroups = {
-    "bigip" = aws_security_group.secGroupVpcMainWeb.id
-    "web"   = aws_security_group.secGroupVpcMainBigip.id
-  }
 }
 
 output "vpcs" {
@@ -30,11 +26,9 @@ output "subnetsAz2" {
   value = local.subnetsAz2
 }
 
-output "jumphostPublicIp" {
-  value = aws_instance.jumphostVpcMain.public_ip
+output "vpcMainIgw" {
+  value = aws_internet_gateway.vpcMainIgw.id
 }
-
-output "securityGroups" {
-  description = "security groups"
-  value       = local.securityGroups
+output "vpcMainRtb" {
+  value = aws_route_table.vpcMainRtb.id
 }
