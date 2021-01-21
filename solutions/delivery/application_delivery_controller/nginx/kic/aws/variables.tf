@@ -13,15 +13,15 @@ variable "adminSourceCidr" {
   default = "0.0.0.0/0"
 }
 variable "awsRegion" {
-  default = "eu-central-1"
+  default = "us-east-2"
 }
 
 variable "awsAz1" {
-  default = "eu-central-1a"
+  default = null
 }
 
 variable "awsAz2" {
-  default = "eu-central-1b"
+  default = null
 }
 
 variable "kubernetes" {

@@ -11,13 +11,11 @@ provider "aws" {
 // }
 // Network
 module "aws_network" {
-  source       = "../../../../../../modules/aws/terraform/network/min"
-  project      = "kic-aws"
-  userId       = var.userId
-  awsRegion    = var.awsRegion
-  awsAz1       = var.awsAz1
-  awsAz2       = var.awsAz2
-  sshPublicKey = var.sshPublicKey
+  source                  = "../../../../../../modules/aws/terraform/network/min"
+  project                 = "kic-aws"
+  userId                  = var.userId
+  awsRegion               = var.awsRegion
+  map_public_ip_on_launch = true
 }
 // EKS
 data "aws_eks_cluster" "cluster" {
