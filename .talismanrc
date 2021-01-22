@@ -37,3 +37,5 @@ fileignoreconfig:
   checksum: f3498b504506d2456ca104a74f4fd38ed527d8089c19cf799aa06b12a45b08f4
 - filename: modules/google/terraform/jumphost/main.tf
   checksum: 2c1b501401fb2e9ae54f1b17c2970d3622837d21317807d1e86fbb74a7897983
+- filename: docs/delivery/application_delivery_controller/nginx/kic/lab01.rst
+  checksum: 61774e28af98f039e06c559f0d921f4ca23d11aa47bc925d56c4bbc3bdade767
