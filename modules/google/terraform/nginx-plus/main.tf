@@ -5,7 +5,7 @@ data "template_file" "nginx_onboard" {
 
   vars = {
     controllerAddress = var.controllerAddress
-    secretName        = google_secret_manager_secret.nginx-secret.id
+    secretName        = google_secret_manager_secret.nginx-secret.secret_id
   }
 }
 resource "google_compute_instance_template" "nginx-template" {
@@ -17,7 +17,7 @@ resource "google_compute_instance_template" "nginx-template" {
   can_ip_forward       = false
   tags                 = var.tags
   disk {
-    source_image = "ubuntu-os-cloud/ubuntu-1804-lts"
+    source_image = var.image
     auto_delete  = true
     boot         = true
     type         = "pd-ssd"
@@ -52,7 +52,7 @@ resource "google_compute_instance_group_manager" "nginx-group" {
   name               = "${var.prefix}-nginx-instance-group-manager"
   base_instance_name = "${var.prefix}-nginx"
   zone               = var.gcpZone
-  target_size        = 1
+  target_size        = var.instanceCount
   version {
     instance_template = google_compute_instance_template.nginx-template.id
   }

@@ -21,6 +21,9 @@ variable "buildSuffix" {
 variable "instanceSize" {
   default = "n1-standard-4"
 }
+variable "instanceCount" {
+  default = 1
+}
 variable "tags" {
   default = ["nginx"]
 }
