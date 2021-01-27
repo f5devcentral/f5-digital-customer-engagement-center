@@ -1,6 +1,6 @@
 # nginx
 resource "google_service_account" "gce-nginx-sa" {
-  account_id   = "gce-nginx-sa"
+  account_id   = "${var.prefix}-gce-nginx-sa"
   display_name = "nginx service account for secret access"
 }
 # add service account read permissions to secret

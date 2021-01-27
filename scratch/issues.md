@@ -27,6 +27,7 @@
 - static registry
   - https://github.com/psvmcc/static_docker_v2_registry
 - udf hosted private registry on jump box
+- [github container registry](https://docs.github.com/en/packages/guides/about-github-container-registry)
 
 ## Software downloads
 

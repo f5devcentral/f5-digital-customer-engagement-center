@@ -1,7 +1,7 @@
 # nginx
 # create secret
 resource "google_secret_manager_secret" "nginx-secret" {
-  secret_id = "nginx-secret"
+  secret_id = "${var.prefix}-nginx-secret"
   labels = {
     label = "nginx"
   }

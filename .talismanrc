@@ -39,3 +39,9 @@ fileignoreconfig:
   checksum: 2c1b501401fb2e9ae54f1b17c2970d3622837d21317807d1e86fbb74a7897983
 - filename: docs/delivery/application_delivery_controller/nginx/kic/lab01.rst
   checksum: 61774e28af98f039e06c559f0d921f4ca23d11aa47bc925d56c4bbc3bdade767
+- filename: modules/google/terraform/nginx-plus/secrets.tf
+  checksum: 3d7cbc64fb283f5c556c64626a7f09d1805c2da3b87ec313726bb85e52fe6550
+- filename: modules/google/terraform/nginx-plus/main.tf
+  checksum: b8f2159e20f7c76f79585a3aeb63c4c0b6ca196ca46615865ef226476cfbf8bc
+- filename: modules/google/terraform/nginx-plus/templates/startup.sh.tpl
+  checksum: d9f5d2638e4126f61f95ebb3c4d1cb813bf727f4f88cc5161a18bb7aa20ef12e

@@ -18,6 +18,16 @@ variable "buildSuffix" {
   description = "random build suffix for resources"
   default     = "random-cat"
 }
+variable "instanceSize" {
+  default = "n1-standard-4"
+}
+variable "tags" {
+  default = ["nginx"]
+}
+variable "image" {
+  #source_image = "ubuntu-os-cloud/ubuntu-1804-lts"
+  default = "/projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20200810"
+}
 # admin
 variable "adminAccountName" {
   description = "admin account"

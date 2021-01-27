@@ -5,16 +5,17 @@ data "template_file" "nginx_onboard" {
 
   vars = {
     controllerAddress = var.controllerAddress
+    secretName        = "${var.prefix}-nginx-secret"
   }
 }
 resource "google_compute_instance_template" "nginx-template" {
-  name_prefix = "nginx-template-"
+  name_prefix = "nginx-"
   description = "This template is used to create runner server instances."
 
   instance_description = "nginx"
-  machine_type         = "n1-standard-4"
+  machine_type         = var.instanceSize
   can_ip_forward       = false
-
+  tags                 = var.tags
   disk {
     source_image = "ubuntu-os-cloud/ubuntu-1804-lts"
     auto_delete  = true
