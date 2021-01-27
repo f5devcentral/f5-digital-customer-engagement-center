@@ -125,5 +125,5 @@ fi
 }
 register
 # start nginx
-nginx
+systemctl start nginx
 echo "done"
