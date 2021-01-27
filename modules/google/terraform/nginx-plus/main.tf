@@ -5,7 +5,7 @@ data "template_file" "nginx_onboard" {
 
   vars = {
     controllerAddress = var.controllerAddress
-    secretName        = "${var.prefix}-nginx-secret"
+    secretName        = google_secret_manager_secret.nginx-secret.id
   }
 }
 resource "google_compute_instance_template" "nginx-template" {

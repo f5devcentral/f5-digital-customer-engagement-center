@@ -45,3 +45,5 @@ fileignoreconfig:
   checksum: b8f2159e20f7c76f79585a3aeb63c4c0b6ca196ca46615865ef226476cfbf8bc
 - filename: modules/google/terraform/nginx-plus/templates/startup.sh.tpl
   checksum: d9f5d2638e4126f61f95ebb3c4d1cb813bf727f4f88cc5161a18bb7aa20ef12e
+- filename: modules/google/terraform/nginx-plus/main.tf
+  checksum: 79c78d7da14c3650df2a1c72b65aa85d30f315592b083018d9a87f88bfacf141
