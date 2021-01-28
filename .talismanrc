@@ -2,9 +2,3 @@ fileignoreconfig:
 - filename: docs/_themes/f5_sphinx_theme/static/css/bootstrap-theme.css
   checksum: 4e6890929a36b43d558586b68e34335b8e989e5db9fe7930219cd1fbaa7c2953
 threshold: high
-allowed_patterns:
-- key_name
-- userId
-- public_key
-- sshPublicKey
-- keyName
