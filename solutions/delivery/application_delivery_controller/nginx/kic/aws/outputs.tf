@@ -1,3 +1,3 @@
-// output "eks_config" {
-//   value = try(module.aws.kubeconfig)
-// }
+output "jumphostPublicIp" {
+  value = module.jumphost.workspaceManagementAddress
+}
