@@ -1,25 +1,28 @@
 variable "instanceType" {
-  default = "m4.xlarge"
+  default = "t3.large"
 }
 
 variable "securityGroup" {
+  default = null
 }
 
-variable "mgmt_vpc" {
+variable "vpc" {
 }
 
-variable "mgmt_subnet" {
+variable "mgmtSubnet" {
 }
 
-variable "key_name" {
+variable "keyName" {
 }
 
-variable "projectPrefix" {
-  default = "workspace-"
+variable "project" {
+  default = "f5-dcec"
 }
 
-variable "buildSuffix" {
+variable "userId" {
+  default = "f5-dcec-user"
 }
+
 variable "onboardScript" {
   description = "URL to userdata onboard script"
   default     = "https://raw.githubusercontent.com/vinnie357/workspace-onboard-bash-templates/master/terraform/aws/sca/onboard.sh"

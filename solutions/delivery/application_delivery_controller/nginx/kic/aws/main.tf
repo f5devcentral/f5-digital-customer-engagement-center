@@ -53,7 +53,19 @@ module "eks" {
 }
 
 
-
+#resource "aws_key_pair" "deployer" {
+#  key_name   = "${var.userId}-kic-aws"
+#  public_key = var.sshPublicKey
+#}
+#
+#module "jumphost" {
+#  source       = "../../../../../../modules/aws/terraform/workstation"
+#  project      = "kic-aws"
+#  userId       = var.userId
+#  vpc          = module.aws_network.vpcs["main"]
+#  keyName      = aws_key_pair.deployer.id
+#  mgmtSubnet   = module.aws_network.subnetsAz1["mgmt"]
+#}
 
 
 // NGINX

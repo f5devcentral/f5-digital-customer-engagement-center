@@ -13,49 +13,14 @@ fi
 exec 1>$LOG_FILE 2>&1
 
 # repos"
+## variables
 repositories="${repositories}"
-# install terraform locally
-# jq
-# curl
-# awscli
-# f5 cli
-# auto complete
+user="ubuntu"
+#tool versions
+terraformVersion="0.14.5"
+terragruntVersion="0.27.3"
 
-# ubuntu 18.04
-# terraform 12.23?
-# awscli
-# f5 cli
-# terragrunt
-#
-# tests
-# terraform -version
-# inspec version
-# terragrunt -version
-# f5 --version
-# aws --version
-#
-## vscode settings
-## /repo/.vscode/extensions.json
-# {
-# 	// See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
-# 	// Extension identifier format: $${publisher}.$${name}. Example: vscode.csharp
-# 	// List of extensions which should be recommended for users of this workspace.
-# 	"recommendations": [
-# 		"mauve.terraform"
-# 	],
-# 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
-# 	"unwantedRecommendations": [
-# 	]
-# }
-#install-extensions:
-#    cat extensions.txt | xargs -L 1 code --install-extension
-## /home/ubuntu/.vscode-server/data/Machine/settings.json
-# {
-#     "files.eol": "\n",
-#     "editor.tabSize": 4,
-#     "editor.insertSpaces": true
-# }
-#
+
 set -ex \
 && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - \
 && sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
@@ -65,14 +30,14 @@ set -ex \
 && sudo usermod -aG docker ubuntu \
 && sudo chown -R ubuntu: /var/run/docker.sock \
 && echo "terraform" \
-&& sudo wget https://releases.hashicorp.com/terraform/${terraformVersion}/terraform_${terraformVersion}_linux_amd64.zip \
-&& sudo unzip ./terraform_${terraformVersion}_linux_amd64.zip -d /usr/local/bin/ \
+&& sudo wget https://releases.hashicorp.com/terraform/"$terraformVersion"/terraform_"$terraformVersion"_linux_amd64.zip \
+&& sudo unzip ./terraform_"$terraformVersion"_linux_amd64.zip -d /usr/local/bin/ \
 && echo "awscli" \
 && sudo apt-get install awscli -y \
 && echo "f5 cli" \
 && pip3 install f5-cli \
 && echo "terragrunt" \
-&& sudo wget https://github.com/gruntwork-io/terragrunt/releases/download/v${terragruntVersion}/terragrunt_linux_amd64 \
+&& sudo wget https://github.com/gruntwork-io/terragrunt/releases/download/v"$terragruntVersion"/terragrunt_linux_amd64 \
 && sudo mv ./terragrunt_linux_amd64 /usr/local/bin/terragrunt \
 && sudo chmod +x /usr/local/bin/terragrunt \
 && echo "chef Inspec" \
