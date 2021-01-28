@@ -1,0 +1,8 @@
+name: bigip-ready
+title: InSpec Profile
+maintainer: Ravinder Reddy CHINTHALAPALLI,Dinesh PAPINENI
+license: Apache-2.0
+summary: BIG-IP Automation Toolchain testing profile
+version: 0.1.0
+supports:
+  platform: os

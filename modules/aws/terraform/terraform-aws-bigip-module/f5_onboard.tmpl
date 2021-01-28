@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# Send output to log file and serial console
+mkdir -p  /var/log/cloud /config/cloud /var/config/rest/downloads
+LOG_FILE=/var/log/cloud/startup-script.log
+[[ ! -f $LOG_FILE ]] && touch $LOG_FILE || { echo "Run Only Once. Exiting"; exit; }
+npipe=/tmp/$$.tmp
+trap "rm -f $npipe" EXIT
+mknod $npipe p
+tee <$npipe -a $LOG_FILE /dev/ttyS0 &
+exec 1>&-
+exec 1>$npipe
+exec 2>&1
+
+# # create user
+# tmsh create auth user ${bigip_username} password ${bigip_password} shell tmsh partition-access replace-all-with { all-partitions { role admin } }
+
+# save config
+tmsh save sys config
+
+mkdir -p /config/cloud
+
+if ${aws_secretmanager_auth}
+then
+   cat << 'EOF' > /config/cloud/runtime-init-conf.yaml
+---
+runtime_parameters:
+  - name: USER_NAME
+    type: static
+    value: ${bigip_username}
+  - name: ADMIN_PASS
+    type: secret
+    secretProvider:
+      environment: aws
+      type: SecretsManager
+      version: AWSCURRENT
+      secretId: ${bigip_password}
+pre_onboard_enabled:
+  - name: provision_rest
+    type: inline
+    commands:
+      - /usr/bin/setdb provision.extramb 500
+      - /usr/bin/setdb restjavad.useextramb true
+extension_packages:
+  install_operations:
+    - extensionType: do
+      extensionVersion: ${DO_VER}
+      extensionUrl: ${DO_URL}
+    - extensionType: as3
+      extensionVersion: ${AS3_VER}
+      extensionUrl: ${AS3_URL}
+extension_services:
+  service_operations:
+    - extensionType: do
+      type: url
+      value: https://raw.githubusercontent.com/f5devcentral/terraform-aws-bigip-module/master/config/onboard_do.json
+    - extensionType: as3
+      type: url
+      value: https://raw.githubusercontent.com/f5devcentral/terraform-aws-bigip-module/master/config/as3.json
+post_onboard_enabled: []
+
+EOF
+
+else
+   cat << 'EOF' > /config/cloud/runtime-init-conf.yaml
+---
+runtime_parameters:
+  - name: USER_NAME
+    type: static
+    value: ${bigip_username}
+  - name: ADMIN_PASS
+    type: static
+    value: ${bigip_password}
+pre_onboard_enabled:
+  - name: provision_rest
+    type: inline
+    commands:
+      - /usr/bin/setdb provision.extramb 500
+      - /usr/bin/setdb restjavad.useextramb true
+extension_packages:
+  install_operations:
+    - extensionType: do
+      extensionVersion: ${DO_VER}
+      extensionUrl: ${DO_URL}
+    - extensionType: as3
+      extensionVersion: ${AS3_VER}
+      extensionUrl: ${AS3_URL}
+extension_services:
+  service_operations:
+    - extensionType: do
+      type: url
+      value: https://raw.githubusercontent.com/f5devcentral/terraform-aws-bigip-module/master/config/onboard_do.json
+    - extensionType: as3
+      type: url
+      value: https://raw.githubusercontent.com/f5devcentral/terraform-aws-bigip-module/master/config/as3.json
+post_onboard_enabled: []
+
+EOF
+
+fi
+
+# # Download
+PACKAGE_URL='https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.1.0/dist/f5-bigip-runtime-init-1.1.0-1.gz.run'
+for i in {1..30}; do
+    curl -fv --retry 1 --connect-timeout 5 -L $PACKAGE_URL -o "/var/config/rest/downloads/f5-bigip-runtime-init-1.1.0-1.gz.run" && break || sleep 10
+done
+# Install
+bash /var/config/rest/downloads/f5-bigip-runtime-init-1.1.0-1.gz.run -- '--cloud aws'
+# Run
+f5-bigip-runtime-init --config-file /config/cloud/runtime-init-conf.yaml
