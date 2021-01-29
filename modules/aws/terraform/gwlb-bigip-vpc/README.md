@@ -3,33 +3,24 @@ VPC with GWLB and 2 inspection devices
 
 ## Diagram
 
-![AWS-single-vpc-network](AWS-single-vpc-network.png)
+![gwlb-bigip-vpc](gwlb-bigip-vpc.png)
 ## Usage example
 
-Here's the gist of using it directly from github.
+quick example
 
 ```hcl
-module "aws_network" {
-  source       = "../../../../../../modules/aws/terraform/network/min"
-  project      = "kic-aws"
-  userId       = var.userId
-  awsRegion    = var.awsRegion
-  sshPublicKey = var.sshPublicKey
+module "gwlb-bigip-vpc" {
+  source        = "../../../modules/aws/terraform/gwlb-bigip-vpc"
+  project       = "some project name"
+  userId        = "some user name"
+  awsRegion     = "us-west-2"
+  keyName       = "ec2_key_name"
 }
 ```
 
-## Assumptions
-
 ## Available features
 
-vpc, subnets, routing tables, internet gateway
-## Module Variables
-
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Requirements
-
-No requirements.
-
+vpc, GWLB, GENEVE proxies with FW rules, GWLB endpoint ## Requirements
 ## Providers
 
 | Name | Version |
@@ -42,26 +33,27 @@ No requirements.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| allowedMgmtIps | n/a | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
-| awsAz1 | n/a | `any` | `null` | no |
-| awsAz2 | n/a | `any` | `null` | no |
-| awsRegion | n/a | `string` | `"us-east-1"` | no |
-| instanceCount | n/a | `number` | `1` | no |
-| keyName | n/a | `any` | `null` | no |
-| map\_public\_ip\_on\_launch | assigns public ip's to instances in the public subnet by default | `bool` | `false` | no |
-| project | project name to use for tags | `string` | `"f5-dcec"` | no |
-| userId | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |
+| keyName | EC2 key_pair name | `string` | `null` | yes |
+| allowedMgmtIps | list of cidr's that can access FW management | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| awsAz1 | will use a dynamic az if left empty | `string` | `null` | no |
+| awsAz2 | will use a dynamic az if left empty | `string` | `null` | no |
+| awsRegion | n/a | `string` | us-west-2 | no |
+| project | project name to use for tags | `string` | f5-dcec | no |
+| userId | owner of the deployment, for tagging purposes | `string` | f5-dcec | no |
+| vpcCidr | cidr range for the vpc | `string` | 10.252.0.0/16 | no |
+| vpcGwlbSubPubACidr | cidr range for the vpcGwlbSubPubA | `string` | 10.252.10.0/24 | no |
+| vpcGwlbSubPubBCidr | cidr range for the vpcGwlbSubPubB | `string` | 10.252.110.0/24 | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| account\_id | n/a |
-| geneveProxyIp | n/a |
-| gwlbEndpointService | n/a |
-| subnetsAz1 | n/a |
-| subnetsAz2 | n/a |
-| vpcs | n/a |
+| geneveProxyIpAz1 | public ip of the GENEVE proxy |
+| geneveProxyIpAz2 | public ip of the GENEVE proxy |
+| gwlbEndpointService | endpoint service name to be used by consumers of the FW service |
+| subnetsAz1 | dictionary of subnets in Az1 |
+| subnetsAz2 | dictionary of subnets in Az2 |
+| vpcs | dictionary of vpc's |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

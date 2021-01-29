@@ -7,17 +7,15 @@ variable "userId" {
   default     = "f5-dcec"
 }
 variable "awsAz1" {
-  default = null
+  description = "will use a dynamic az if left empty"
+  default     = null
 }
 variable "awsAz2" {
-  default = null
+  description = "will use a dynamic az if left empty"
+  default     = null
 }
 variable "awsRegion" {
-  default = "us-east-1"
-}
-variable "map_public_ip_on_launch" {
-  description = "assigns public ip's to instances in the public subnet by default"
-  default     = false
+  default = "us-west-2"
 }
 variable "keyName" {
   default = null
@@ -27,4 +25,17 @@ variable "allowedMgmtIps" {
 }
 variable "instanceCount" {
   default = 1
+}
+variable "vpcCidr" {
+  default = "10.252.0.0/16"
+}
+variable "vpcGwlbSubPubACidr" {
+  default = "10.252.10.0/24"
+}
+variable "vpcGwlbSubPubBCidr" {
+  default = "10.252.110.0/24"
+}
+variable "repositories" {
+  description = "comma seperated list of git repositories to clone"
+  default     = "https://github.com/vinnie357/aws-tf-workspace.git,https://github.com/f5devcentral/terraform-aws-f5-sca.git"
 }

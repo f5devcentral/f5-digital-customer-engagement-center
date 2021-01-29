@@ -1,4 +1,8 @@
 
+resource "random_id" "id" {
+  byte_length = 2
+}
+
 ###############
 # VPC Section #
 ###############
@@ -16,9 +20,9 @@ locals {
   awsAz2 = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
 }
 resource "aws_vpc" "vpcGwlb" {
-  cidr_block = "10.252.0.0/16"
+  cidr_block = var.vpcCidr
   tags = {
-    Name  = "${var.project}-vpcGwlb"
+    Name  = format("%s-vpcGwlb-%s", var.userId, random_id.id.hex)
     Owner = var.userId
   }
 }
@@ -26,47 +30,23 @@ resource "aws_vpc" "vpcGwlb" {
 # Subnets
 
 resource "aws_subnet" "vpcGwlbSubPubA" {
-  vpc_id                  = aws_vpc.vpcGwlb.id
-  cidr_block              = "10.252.10.0/24"
-  map_public_ip_on_launch = var.map_public_ip_on_launch
-  availability_zone       = local.awsAz1
+  vpc_id            = aws_vpc.vpcGwlb.id
+  cidr_block        = var.vpcGwlbSubPubACidr
+  availability_zone = local.awsAz1
 
   tags = {
-    Name  = "${var.project}-vpcGwlbSubPubA"
+    Name  = format("%s-vpcGwlbSubPubA-%s", var.userId, random_id.id.hex)
     Owner = var.userId
   }
 }
 
 resource "aws_subnet" "vpcGwlbSubPubB" {
-  vpc_id                  = aws_vpc.vpcGwlb.id
-  cidr_block              = "10.252.110.0/24"
-  map_public_ip_on_launch = var.map_public_ip_on_launch
-  availability_zone       = local.awsAz2
-
-  tags = {
-    Name  = "${var.project}-vpcGwlbSubPubB"
-    Owner = var.userId
-  }
-}
-
-resource "aws_subnet" "vpcGwlbSubMgmtA" {
   vpc_id            = aws_vpc.vpcGwlb.id
-  cidr_block        = "10.252.1.0/24"
-  availability_zone = local.awsAz1
-
-  tags = {
-    Name  = "${var.project}-vpcGwlbSubMgmtA"
-    Owner = var.userId
-  }
-}
-
-resource "aws_subnet" "vpcGwlbSubMgmtB" {
-  vpc_id            = aws_vpc.vpcGwlb.id
-  cidr_block        = "10.252.101.0/24"
+  cidr_block        = var.vpcGwlbSubPubBCidr
   availability_zone = local.awsAz2
 
   tags = {
-    Name  = "${var.project}-vpcGwlbSubMgmtB"
+    Name  = format("%s-vpcGwlbSubPubB-%s", var.userId, random_id.id.hex)
     Owner = var.userId
   }
 }
@@ -77,17 +57,14 @@ resource "aws_internet_gateway" "vpcGwlbIgw" {
   vpc_id = aws_vpc.vpcGwlb.id
 
   tags = {
-    Name  = "${var.project}-vpcGwlbIgw"
+    Name  = format("%s-vpcGwlbIgw-%s", var.userId, random_id.id.hex)
     Owner = var.userId
   }
 }
 
 # Main Route Tables Associations
-## Forcing our Route Tables to be the main ones for our VPCs,
-## otherwise AWS automatically will create a main Route Table
-## for each VPC, leaving our own Route Tables as secondary
 
-resource "aws_main_route_table_association" "mainRtbAssovpcGwlb" {
+resource "aws_main_route_table_association" "mainRtbAssoVpcGwlb" {
   vpc_id         = aws_vpc.vpcGwlb.id
   route_table_id = aws_route_table.vpcGwlbRtb.id
 }
@@ -103,7 +80,7 @@ resource "aws_route_table" "vpcGwlbRtb" {
   }
 
   tags = {
-    Name  = "${var.project}-vpcGwlbRtb"
+    Name  = format("%s-vpcGwlbRtb-%s", var.userId, random_id.id.hex)
     Owner = var.userId
   }
 }
@@ -137,9 +114,14 @@ resource "aws_lb_target_group" "bigipTargetGroup" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachment" {
+resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachmentAz1" {
   target_group_arn = aws_lb_target_group.bigipTargetGroup.arn
-  target_id        = "10.252.10.10"
+  target_id        = aws_instance.GeneveProxyAz1.private_ip
+}
+
+resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachmentAz2" {
+  target_group_arn = aws_lb_target_group.bigipTargetGroup.arn
+  target_id        = aws_instance.GeneveProxyAz2.private_ip
 }
 
 resource "aws_vpc_endpoint_service" "gwlbEndpointService" {
@@ -158,12 +140,6 @@ resource "aws_lb_listener" "gwlbListener" {
 
 ##########BIGIP################
 #
-# Create a random id
-#
-resource "random_id" "id" {
-  byte_length = 1
-}
-
 #
 # Create random password for BIG-IP
 #
@@ -288,6 +264,13 @@ data "aws_ami" "ubuntu" {
 }
 
 # bash script template
+data "template_file" "onboard" {
+  template = file("${path.module}/files/onboard.sh")
+  vars = {
+    repositories = var.repositories
+  }
+}
+
 data "template_cloudinit_config" "GeneveProxy" {
   gzip          = true
   base64_encode = true
@@ -298,20 +281,39 @@ data "template_cloudinit_config" "GeneveProxy" {
     content_type = "text/cloud-config"
     content      = file("${path.module}/files/cloud-config-base.yaml")
   }
+  part {
+    content_type = "text/x-shellscript"
+    content      = data.template_file.onboard.rendered
+  }
+
 }
 
-resource "aws_instance" "GeneveProxy" {
+resource "aws_instance" "GeneveProxyAz1" {
   ami                         = data.aws_ami.ubuntu.id
   user_data                   = data.template_cloudinit_config.GeneveProxy.rendered
   instance_type               = "t3.large"
   subnet_id                   = aws_subnet.vpcGwlbSubPubA.id
   vpc_security_group_ids      = [module.mgmt-network-security-group.this_security_group_id]
   key_name                    = var.keyName
-  private_ip                  = "10.252.10.10"
   associate_public_ip_address = true
 
   tags = {
-    Name  = "GeneveProxy"
+    Name  = format("%s-GeneveProxyAz1-%s", var.project, random_id.id.hex)
+    Owner = var.userId
+  }
+}
+
+resource "aws_instance" "GeneveProxyAz2" {
+  ami                         = data.aws_ami.ubuntu.id
+  user_data                   = data.template_cloudinit_config.GeneveProxy.rendered
+  instance_type               = "t3.large"
+  subnet_id                   = aws_subnet.vpcGwlbSubPubB.id
+  vpc_security_group_ids      = [module.mgmt-network-security-group.this_security_group_id]
+  key_name                    = var.keyName
+  associate_public_ip_address = true
+
+  tags = {
+    Name  = format("%s-GeneveProxyAz2-%s", var.project, random_id.id.hex)
     Owner = var.userId
   }
 }

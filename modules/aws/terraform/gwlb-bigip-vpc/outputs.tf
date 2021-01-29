@@ -22,11 +22,11 @@ output "subnetsAz2" {
   value = local.subnetsAz2
 }
 
-output "account_id" {
-  value = data.aws_caller_identity.current.account_id
+output "geneveProxyAz1Ip" {
+  value = aws_instance.GeneveProxyAz1.public_ip
 }
-output "geneveProxyIp" {
-  value = aws_instance.GeneveProxy.public_ip
+output "geneveProxyAz2Ip" {
+  value = aws_instance.GeneveProxyAz2.public_ip
 }
 output "gwlbEndpointService" {
   value = aws_vpc_endpoint_service.gwlbEndpointService.service_name
