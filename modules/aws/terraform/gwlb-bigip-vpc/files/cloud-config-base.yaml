@@ -1,0 +1,10 @@
+#cloud-config
+runcmd:
+- apt-get update
+- apt-get install -y python3-pip && pip3 install PyYAML
+- apt-get install -y software-properties-common apt-transport-https wget unzip jq git
+- cd /home/ubuntu
+- git clone https://github.com/yossi-r/geneve-proxy.git
+- chown -R ubuntu geneve-proxy
+- cd geneve-proxy
+- python3 main.py

@@ -1,5 +1,5 @@
 # Description
-Single VPC network module with default ip address scheme
+VPC with GWLB and 2 inspection devices
 
 ## Diagram
 

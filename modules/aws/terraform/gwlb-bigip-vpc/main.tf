@@ -128,6 +128,13 @@ resource "aws_lb_target_group" "bigipTargetGroup" {
   protocol    = "GENEVE"
   target_type = "ip"
   vpc_id      = aws_vpc.vpcGwlb.id
+
+  health_check {
+    protocol = "HTTP"
+    path     = "/"
+    port     = 80
+    matcher  = "200-399"
+  }
 }
 
 resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachment" {
@@ -281,13 +288,21 @@ data "aws_ami" "ubuntu" {
 }
 
 # bash script template
-data "template_file" "onboard" {
-  template = file("${path.module}/templates/onboard.sh")
+data "template_cloudinit_config" "GeneveProxy" {
+  gzip          = true
+  base64_encode = true
+
+  # Main cloud-config configuration file.
+  part {
+    filename     = "init.cfg"
+    content_type = "text/cloud-config"
+    content      = file("${path.module}/files/cloud-config-base.yaml")
+  }
 }
 
 resource "aws_instance" "GeneveProxy" {
   ami                         = data.aws_ami.ubuntu.id
-  user_data                   = data.template_file.onboard.rendered
+  user_data                   = data.template_cloudinit_config.GeneveProxy.rendered
   instance_type               = "t3.large"
   subnet_id                   = aws_subnet.vpcGwlbSubPubA.id
   vpc_security_group_ids      = [module.mgmt-network-security-group.this_security_group_id]

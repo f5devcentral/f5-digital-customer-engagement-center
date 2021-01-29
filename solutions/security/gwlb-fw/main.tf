@@ -63,7 +63,7 @@ resource "aws_subnet" "vpcMainSubPubB" {
   }
 }
 
-resource "aws_subnet" "vpcMainGwlbeA" {
+resource "aws_subnet" "vpcMainSubGwlbeA" {
   vpc_id            = aws_vpc.vpcMain.id
   cidr_block        = "10.1.52.0/24"
   availability_zone = local.awsAz1
@@ -83,6 +83,22 @@ resource "aws_subnet" "vpcMainSubGwlbeB" {
     Name  = "${var.project}-vpcMainSubGwlbeB"
     Owner = var.userId
   }
+}
+
+#vpc endpoints for GWLB
+
+resource "aws_vpc_endpoint" "vpcMainGwlbeA" {
+  service_name      = module.gwlb-bigip-vpc.gwlbEndpointService
+  subnet_ids        = [aws_subnet.vpcMainSubGwlbeA.id]
+  vpc_endpoint_type = "GatewayLoadBalancer"
+  vpc_id            = aws_vpc.vpcMain.id
+}
+
+resource "aws_vpc_endpoint" "vpcMainGwlbeB" {
+  service_name      = module.gwlb-bigip-vpc.gwlbEndpointService
+  subnet_ids        = [aws_subnet.vpcMainSubGwlbeB.id]
+  vpc_endpoint_type = "GatewayLoadBalancer"
+  vpc_id            = aws_vpc.vpcMain.id
 }
 
 # Internet Gateway
@@ -112,15 +128,79 @@ resource "aws_route_table" "vpcMainRtb" {
   vpc_id = aws_vpc.vpcMain.id
 
   route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.vpcMainIgw.id
+    cidr_block      = "0.0.0.0/0"
+    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeA.id
   }
 
   tags = {
     Name  = "${var.project}-vpcMainRtb"
-    env   = "shared"
     Owner = var.userId
   }
+}
+
+resource "aws_route_table" "vpcMainIgwRtb" {
+  vpc_id = aws_vpc.vpcMain.id
+
+  route {
+    cidr_block      = "10.1.10.0/24"
+    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeA.id
+  }
+
+  route {
+    cidr_block      = "10.1.110.0/24"
+    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeB.id
+  }
+
+}
+
+resource "aws_route_table" "vpcMainSubGwlbeRtb" {
+  vpc_id = aws_vpc.vpcMain.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.vpcMainIgw.id
+  }
+
+}
+
+#GWLB relate route table associations
+
+resource "aws_main_route_table_association" "vpcMainRtbAssociation" {
+  vpc_id         = aws_vpc.vpcMain.id
+  route_table_id = aws_route_table.vpcMainRtb.id
+}
+
+resource "aws_route_table_association" "vpcMainIgwRtbAssociation" {
+  gateway_id     = aws_internet_gateway.vpcMainIgw.id
+  route_table_id = aws_route_table.vpcMainIgwRtb.id
+}
+
+resource "aws_route_table_association" "vpcMainSubGwlbeRtbAssociationA" {
+  subnet_id      = aws_subnet.vpcMainSubGwlbeA.id
+  route_table_id = aws_route_table.vpcMainSubGwlbeRtb.id
+}
+
+resource "aws_route_table_association" "vpcMainSubGwlbeRtbAssociationB" {
+  subnet_id      = aws_subnet.vpcMainSubGwlbeB.id
+  route_table_id = aws_route_table.vpcMainSubGwlbeRtb.id
+}
+
+# security groups
+
+module "jumphost-security-group" {
+  source = "terraform-aws-modules/security-group/aws"
+
+  name        = format("%s-jumphost-nsg-%s", var.project, random_id.id.hex)
+  description = "Security group for jumphost"
+  vpc_id      = aws_vpc.vpcMain.id
+
+  ingress_cidr_blocks = ["0.0.0.0/0"]
+  ingress_rules       = ["http-80-tcp", "https-443-tcp", "https-8443-tcp", "ssh-tcp"]
+
+  # Allow ec2 instances outbound Internet connectivity
+  egress_cidr_blocks = ["0.0.0.0/0"]
+  egress_rules       = ["all-all"]
+
 }
 
 data "aws_ami" "ubuntu" {
@@ -147,9 +227,10 @@ resource "aws_instance" "ubuntuVpcMainSubnetA" {
   key_name                    = aws_key_pair.deployer.id
   private_ip                  = "10.1.10.100"
   associate_public_ip_address = true
+  vpc_security_group_ids      = [module.jumphost-security-group.this_security_group_id]
 
   tags = {
-    Name  = "GeneveProxy"
+    Name  = "ubuntuVpcMainSubnetA"
     Owner = var.userId
   }
 }
