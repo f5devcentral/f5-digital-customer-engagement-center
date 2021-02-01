@@ -1,61 +1,87 @@
 # vpc
-resource "google_compute_network" "vpc_network_mgmt" {
-  name                    = "mgmt-network-${var.buildSuffix}"
-  auto_create_subnetworks = "false"
-  routing_mode            = "REGIONAL"
-}
-resource "google_compute_subnetwork" "vpc_network_mgmt_sub" {
-  name          = "mgmt-subnet-${var.buildSuffix}"
-  ip_cidr_range = "10.0.10.0/24"
-  region        = var.gcpRegion
-  network       = google_compute_network.vpc_network_mgmt.self_link
 
-}
-resource "google_compute_network" "vpc_network_int" {
-  name                    = "internal-network-${var.buildSuffix}"
-  auto_create_subnetworks = "false"
-  routing_mode            = "REGIONAL"
-}
-resource "google_compute_subnetwork" "vpc_network_int_sub" {
-  name          = "internal-subnet-${var.buildSuffix}"
-  ip_cidr_range = "10.0.20.0/24"
-  region        = var.gcpRegion
-  network       = google_compute_network.vpc_network_int.self_link
-
-}
-resource "google_compute_network" "vpc_network_ext" {
-  name                    = "external-network-${var.buildSuffix}"
-  auto_create_subnetworks = "false"
-  routing_mode            = "REGIONAL"
-}
-resource "google_compute_subnetwork" "vpc_network_ext_sub" {
-  name          = "external-subnet-${var.buildSuffix}"
-  ip_cidr_range = "10.0.30.0/24"
-  region        = var.gcpRegion
-  network       = google_compute_network.vpc_network_ext.self_link
-
+module "mgmt" {
+  source                                 = "terraform-google-modules/network/google"
+  version                                = "3.0.1"
+  project_id                             = var.gcpProjectId
+  network_name                           = format("mgmt-network-%s", var.buildSuffix)
+  description                            = "Management VPC"
+  auto_create_subnetworks                = false
+  delete_default_internet_gateway_routes = false
+  mtu                                    = 1460
+  routing_mode                           = "REGIONAL"
+  subnets = [
+    {
+      subnet_name                            = format("mgmt-subnet-%s", var.buildSuffix)
+      subnet_ip                              = "10.0.10.0/24"
+      subnet_region                          = var.gcpRegion
+      delete_default_internet_gateway_routes = false
+      subnet_private_access                  = false
+    }
+  ]
 }
 
-#https://www.terraform.io/docs/providers/google/r/compute_router_nat.html
-resource "google_compute_router" "router" {
-  name    = "${var.prefix}-int-router"
-  region  = google_compute_subnetwork.vpc_network_int_sub.region
-  network = google_compute_network.vpc_network_int.id
+module "int" {
+  source       = "terraform-google-modules/network/google"
+  version      = "3.0.1"
+  project_id   = var.gcpProjectId
+  network_name = format("internal-network-%s", var.buildSuffix)
 
-  bgp {
-    asn = 64514
-  }
+  description                            = "Internal VPC"
+  auto_create_subnetworks                = false
+  delete_default_internet_gateway_routes = false
+  mtu                                    = 1460
+  routing_mode                           = "REGIONAL"
+  subnets = [
+    {
+      subnet_name                            = format("internal-subnet-%s", var.buildSuffix)
+      subnet_ip                              = "10.0.20.0/24"
+      subnet_region                          = var.gcpRegion
+      delete_default_internet_gateway_routes = false
+      subnet_private_access                  = false
+    }
+  ]
 }
 
-resource "google_compute_router_nat" "nat" {
-  name                               = "${var.prefix}-int-router-nat"
-  router                             = google_compute_router.router.name
-  region                             = google_compute_router.router.region
-  nat_ip_allocate_option             = "AUTO_ONLY"
-  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+module "ext" {
+  source       = "terraform-google-modules/network/google"
+  version      = "3.0.1"
+  project_id   = var.gcpProjectId
+  network_name = format("external-network-%s", var.buildSuffix)
 
-  log_config {
-    enable = true
-    filter = "ERRORS_ONLY"
-  }
+  description                            = "External VPC"
+  auto_create_subnetworks                = false
+  delete_default_internet_gateway_routes = false
+  mtu                                    = 1460
+  routing_mode                           = "REGIONAL"
+  subnets = [
+    {
+      subnet_name                            = format("external-subnet-%s", var.buildSuffix)
+      subnet_ip                              = "10.0.30.0/24"
+      subnet_region                          = var.gcpRegion
+      delete_default_internet_gateway_routes = false
+      subnet_private_access                  = false
+    }
+  ]
+}
+
+# TODO: @memes - why NAT on internal? Software installation? Review.
+# TODO: @memes - multi-nic BIG-IP often needs NAT on management to install software
+module "int-nat" {
+  source                             = "terraform-google-modules/cloud-nat/google"
+  version                            = "1.3.0"
+  project_id                         = var.gcpProjectId
+  region                             = var.gcpRegion
+  name                               = format("%s-int-router-nat", var.buildSuffix)
+  router                             = format("%s-int-router", var.buildSuffix)
+  create_router                      = true
+  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+  network                            = module.int.network_self_link
+  subnetworks = [
+    {
+      name                     = element(module.int.subnets_self_links, 0)
+      source_ip_ranges_to_nat  = ["ALL_IP_RANGES"]
+      secondary_ip_range_names = []
+    },
+  ]
 }
