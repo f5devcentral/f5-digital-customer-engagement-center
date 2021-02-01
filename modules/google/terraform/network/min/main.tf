@@ -1,5 +1,12 @@
 # vpc
 
+terraform {
+  required_version = "> 0.12"
+  required_providers {
+    google = "~> 3.54"
+  }
+}
+
 module "mgmt" {
   source                                 = "terraform-google-modules/network/google"
   version                                = "3.0.1"
