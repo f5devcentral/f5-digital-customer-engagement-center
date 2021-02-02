@@ -13,9 +13,9 @@ locals {
   awsAz2 = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
 }
 resource "aws_vpc" "vpcMain" {
-  cidr_block = "10.1.0.0/16"
+  cidr_block = var.vpcMainCidr
   tags = {
-    Name  = "${var.project}-vpcMain"
+    Name  = "${var.project}-vpcMain-${var.userId}"
     Owner = var.userId
   }
 }
@@ -24,68 +24,68 @@ resource "aws_vpc" "vpcMain" {
 
 resource "aws_subnet" "vpcMainSubPubA" {
   vpc_id                  = aws_vpc.vpcMain.id
-  cidr_block              = "10.1.10.0/24"
+  cidr_block              = var.vpcMainSubPubACidr
   map_public_ip_on_launch = var.map_public_ip_on_launch
   availability_zone       = local.awsAz1
 
   tags = {
-    Name  = "${var.project}-vpcMainSubPubA"
+    Name  = "${var.project}-vpcMainSubPubA-${var.userId}"
     Owner = var.userId
   }
 }
 
 resource "aws_subnet" "vpcMainSubPubB" {
   vpc_id                  = aws_vpc.vpcMain.id
-  cidr_block              = "10.1.110.0/24"
+  cidr_block              = var.vpcMainSubPubBCidr
   map_public_ip_on_launch = true
   availability_zone       = local.awsAz2
 
   tags = {
-    Name  = "${var.project}-vpcMainSubPubB"
+    Name  = "${var.project}-vpcMainSubPubB-${var.userId}"
     Owner = var.userId
   }
 }
 
 resource "aws_subnet" "vpcMainSubMgmtA" {
   vpc_id            = aws_vpc.vpcMain.id
-  cidr_block        = "10.1.1.0/24"
+  cidr_block        = var.vpcMainSubMgmtACidr
   availability_zone = local.awsAz1
 
   tags = {
-    Name  = "${var.project}-vpcMainSubMgmtA"
+    Name  = "${var.project}-vpcMainSubMgmtA-${var.userId}"
     Owner = var.userId
   }
 }
 
 resource "aws_subnet" "vpcMainSubMgmtB" {
   vpc_id            = aws_vpc.vpcMain.id
-  cidr_block        = "10.1.101.0/24"
+  cidr_block        = var.vpcMainSubMgmtBCidr
   availability_zone = local.awsAz2
 
   tags = {
-    Name  = "${var.project}-vpcMainSubMgmtB"
+    Name  = "${var.project}-vpcMainSubMgmtB-${var.userId}"
     Owner = var.userId
   }
 }
 
 resource "aws_subnet" "vpcMainSubPrivA" {
   vpc_id            = aws_vpc.vpcMain.id
-  cidr_block        = "10.1.20.0/24"
+  cidr_block        = var.vpcMainSubPrivACidr
   availability_zone = local.awsAz1
 
   tags = {
-    Name  = "${var.project}-vpcMainSubPrivA"
+    Name  = "${var.project}-vpcMainSubPrivA-${var.userId}"
     Owner = var.userId
   }
 }
 
 resource "aws_subnet" "vpcMainSubPrivB" {
   vpc_id            = aws_vpc.vpcMain.id
-  cidr_block        = "10.1.120.0/24"
+  cidr_block        = var.vpcMainSubPrivBCidr
   availability_zone = local.awsAz2
 
   tags = {
-    Name  = "${var.project}-vpcMainSubPrivB"
+    Name  = "${var.project}-vpcMainSubPrivB-${var.userId}"
     Owner = var.userId
   }
 }
@@ -96,15 +96,12 @@ resource "aws_internet_gateway" "vpcMainIgw" {
   vpc_id = aws_vpc.vpcMain.id
 
   tags = {
-    Name  = "${var.project}-vpcMainIgw"
+    Name  = "${var.project}-vpcMainIgw-${var.userId}"
     Owner = var.userId
   }
 }
 
 # Main Route Tables Associations
-## Forcing our Route Tables to be the main ones for our VPCs,
-## otherwise AWS automatically will create a main Route Table
-## for each VPC, leaving our own Route Tables as secondary
 
 resource "aws_main_route_table_association" "mainRtbAssoVpcMain" {
   vpc_id         = aws_vpc.vpcMain.id
@@ -122,8 +119,7 @@ resource "aws_route_table" "vpcMainRtb" {
   }
 
   tags = {
-    Name  = "${var.project}-vpcMainRtb"
-    env   = "shared"
+    Name  = "${var.project}-vpcMainRtb-${var.userId}"
     Owner = var.userId
   }
 }

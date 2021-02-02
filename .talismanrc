@@ -58,3 +58,5 @@ fileignoreconfig:
   checksum: 88a9093e72d89d49ec48e621fe238c70df948bbce3e2c7b1f5ad040db09a5b23
 - filename: modules/aws/terraform/gwlb-bigip-vpc/README.md
   checksum: 6421bdfd74e6b8a121c90b49febc9cbbc1644f108e2454d08dca3b603aa6e4b2
+- filename: modules/aws/terraform/network/min/examples/.terraform.lock.hcl
+  checksum: f79ce46f45decf76862a66590b90ff5dc9705bb91ed93711c93e8157ad0e2344
