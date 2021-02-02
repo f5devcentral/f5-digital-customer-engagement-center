@@ -1,18 +1,11 @@
 provider "aws" {
   region = var.awsRegion
 }
-//   source = "git::https://github.com/f5devcentral/f5-digital-customer-engagement-center//infrastructure/aws/network/max/?ref=main"
-// module "aws_network" {
-//   source      = "../../../../../modules/aws/terraform/network/max"
-//   project     = "infra"
-//   aws_region  = var.aws_region
-//   aws_az1 = var.aws_az
-//   aws_az2 = var.aws_az1
-// }
+
 // Network
 module "aws_network" {
   source                  = "../../../../../../modules/aws/terraform/network/min"
-  project                 = "kic-aws"
+  project                 = var.projectPrefix
   userId                  = var.userId
   awsRegion               = var.awsRegion
   map_public_ip_on_launch = true
@@ -29,7 +22,7 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
-  load_config_file       = false
+  #load_config_file       = false
 }
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
@@ -52,20 +45,22 @@ module "eks" {
   config_output_path                   = "${path.module}/cluster-config"
 }
 
+// jumphost
+resource "aws_key_pair" "deployer" {
+  key_name   = "${var.userId}-${var.projectPrefix}"
+  public_key = var.sshPublicKey
+}
 
-#resource "aws_key_pair" "deployer" {
-#  key_name   = "${var.userId}-kic-aws"
-#  public_key = var.sshPublicKey
-#}
-#
-#module "jumphost" {
-#  source       = "../../../../../../modules/aws/terraform/workstation"
-#  project      = "kic-aws"
-#  userId       = var.userId
-#  vpc          = module.aws_network.vpcs["main"]
-#  keyName      = aws_key_pair.deployer.id
-#  mgmtSubnet   = module.aws_network.subnetsAz1["mgmt"]
-#}
+module "jumphost" {
+  source               = "../../../../../../modules/aws/terraform/workstation"
+  project              = var.projectPrefix
+  userId               = var.userId
+  coderAccountPassword = random_password.password.result
+  vpc                  = module.aws_network.vpcs["main"]
+  keyName              = aws_key_pair.deployer.id
+  mgmtSubnet           = module.aws_network.subnetsAz1["mgmt"]
+  securityGroup        = aws_security_group.secGroupWorkstation.id
+}
 
 
 // NGINX

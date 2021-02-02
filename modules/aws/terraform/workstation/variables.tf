@@ -18,11 +18,15 @@ variable "keyName" {
 variable "project" {
   default = "f5-dcec"
 }
-
+variable "terraformVersion" {
+  default = "0.14.0"
+}
 variable "userId" {
   default = "f5-dcec-user"
 }
-
+variable "coderAccountPassword" {
+  default = "pleaseUseVault123!!"
+}
 variable "onboardScript" {
   description = "URL to userdata onboard script"
   default     = "https://raw.githubusercontent.com/vinnie357/workspace-onboard-bash-templates/master/terraform/aws/sca/onboard.sh"

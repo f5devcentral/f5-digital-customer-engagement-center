@@ -60,3 +60,13 @@ fileignoreconfig:
   checksum: 6421bdfd74e6b8a121c90b49febc9cbbc1644f108e2454d08dca3b603aa6e4b2
 - filename: modules/aws/terraform/network/min/examples/.terraform.lock.hcl
   checksum: f79ce46f45decf76862a66590b90ff5dc9705bb91ed93711c93e8157ad0e2344
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/aws/.terraform.lock.hcl
+  checksum: d0c727834feff839a334936efd2e9fe76d1255dcd353374713cac86dc1b87d1e
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/aws/admin.auto.tfvars.example
+  checksum: db85cbe391d3530aeae77f43562b97135302669cf08bbcd238398e313b9f9407
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/aws/main.tf
+  checksum: 5f7cb47a2bc5cd66de27a4e065d60f93f7a2b46c23ca2a2dd74a202ae22cce87
+- filename: modules/aws/terraform/workstation/templates/startup.sh.tpl
+  checksum: 296576d6c29232bf4b2168f2eaa1afe8c835035b23a51369c4b1202628f3043e
+- filename: modules/aws/terraform/workstation/main.tf
+  checksum: 0c46185b90ab9dd29e92ac48a9e3c9030bf88d0690b217d6703ab2a04e28a816
