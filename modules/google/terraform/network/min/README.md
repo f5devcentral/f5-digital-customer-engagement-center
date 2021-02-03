@@ -34,9 +34,9 @@ No provider.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| buildSuffix | random build suffix for resources | `any` | n/a | yes |
-| gcpProjectId | gcp project id | `any` | n/a | yes |
-| gcpRegion | region where gke is deployed | `any` | n/a | yes |
+| buildSuffix | random build suffix for resources | `string` | n/a | yes |
+| gcpProjectId | gcp project id | `string` | n/a | yes |
+| gcpRegion | region where gke is deployed | `string` | n/a | yes |
 | projectPrefix | prefix for resources | `string` | `"demo"` | no |
 
 ## Outputs
