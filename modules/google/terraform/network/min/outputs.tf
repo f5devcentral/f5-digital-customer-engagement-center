@@ -15,9 +15,15 @@ locals {
 }
 
 output "vpcs" {
-  value = local.vpcs
+  value       = local.vpcs
+  description = <<EOD
+A map of VPC networks created by module, keyed by usage context.
+EOD
 }
 
 output "subnets" {
-  value = local.subnets
+  value       = local.subnets
+  description = <<EOD
+A map of subnetworks created by module, keyed by usage context.
+EOD
 }
