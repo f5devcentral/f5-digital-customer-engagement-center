@@ -21,6 +21,12 @@ module "gwlb-bigip-vpc" {
 ## Available features
 
 vpc, GWLB, GENEVE proxies with FW rules, GWLB endpoint ## Requirements
+
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+No requirements.
+
 ## Providers
 
 | Name | Version |
@@ -33,27 +39,29 @@ vpc, GWLB, GENEVE proxies with FW rules, GWLB endpoint ## Requirements
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| keyName | EC2 key_pair name | `string` | `null` | yes |
-| allowedMgmtIps | list of cidr's that can access FW management | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
-| awsAz1 | will use a dynamic az if left empty | `string` | `null` | no |
-| awsAz2 | will use a dynamic az if left empty | `string` | `null` | no |
-| awsRegion | n/a | `string` | us-west-2 | no |
-| project | project name to use for tags | `string` | f5-dcec | no |
-| userId | owner of the deployment, for tagging purposes | `string` | f5-dcec | no |
-| vpcCidr | cidr range for the vpc | `string` | 10.252.0.0/16 | no |
-| vpcGwlbSubPubACidr | cidr range for the vpcGwlbSubPubA | `string` | 10.252.10.0/24 | no |
-| vpcGwlbSubPubBCidr | cidr range for the vpcGwlbSubPubB | `string` | 10.252.110.0/24 | no |
+| allowedMgmtIps | n/a | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| awsAz1 | will use a dynamic az if left empty | `any` | `null` | no |
+| awsAz2 | will use a dynamic az if left empty | `any` | `null` | no |
+| awsRegion | n/a | `string` | `"us-west-2"` | no |
+| instanceCount | n/a | `number` | `1` | no |
+| keyName | n/a | `any` | `null` | no |
+| project | project name to use for tags | `string` | `"f5-dcec"` | no |
+| repositories | comma seperated list of git repositories to clone | `string` | `"https://github.com/vinnie357/aws-tf-workspace.git,https://github.com/f5devcentral/terraform-aws-f5-sca.git"` | no |
+| userId | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |
+| vpcCidr | n/a | `string` | `"10.252.0.0/16"` | no |
+| vpcGwlbSubPubACidr | n/a | `string` | `"10.252.10.0/24"` | no |
+| vpcGwlbSubPubBCidr | n/a | `string` | `"10.252.110.0/24"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| geneveProxyIpAz1 | public ip of the GENEVE proxy |
-| geneveProxyIpAz2 | public ip of the GENEVE proxy |
-| gwlbEndpointService | endpoint service name to be used by consumers of the FW service |
-| subnetsAz1 | dictionary of subnets in Az1 |
-| subnetsAz2 | dictionary of subnets in Az2 |
-| vpcs | dictionary of vpc's |
+| geneveProxyAz1Ip | n/a |
+| geneveProxyAz2Ip | n/a |
+| gwlbEndpointService | n/a |
+| subnetsAz1 | n/a |
+| subnetsAz2 | n/a |
+| vpcs | n/a |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

@@ -1,26 +1,28 @@
 # startup script
 data "http" "template_onboard" {
-  url = var.onboardScript
+  url = var.onboardScript != "none" ? var.onboardScript : "https://raw.githubusercontent.com/vinnie357/bash-onboard-templates/master/nginx/gcp/onboard.sh.tpl"
 }
 
 data "template_file" "vm_onboard" {
-  template = data.http.template_onboard.body
+  template = var.onboardScript != "none" ? data.http.template_onboard.body : file("${path.module}/templates/startup.sh.tpl")
 
   vars = {
-    repositories = var.repositories
-    user         = var.adminAccountName
+    repositories         = var.repositories
+    user                 = var.adminAccountName
+    terraformVersion     = var.terraformVersion
+    coderAccountPassword = var.coderAccountPassword
   }
 }
 # disk
 resource "google_compute_disk" "workspace_disk" {
-  name                      = "${var.prefix}workspace-disk${var.buildSuffix}"
+  name                      = "${var.projectPrefix}workspace-disk${var.buildSuffix}"
   type                      = "pd-ssd"
   image                     = var.deviceImage
   physical_block_size_bytes = 4096
   size                      = "20"
 }
 resource "google_compute_image" "workspace_image" {
-  name         = "${var.prefix}workspace${var.buildSuffix}"
+  name         = "${var.projectPrefix}workspace${var.buildSuffix}"
   family       = "ubuntu-2004-lts"
   disk_size_gb = "20"
   project      = var.gcpProjectId
@@ -32,7 +34,7 @@ resource "google_compute_image" "workspace_image" {
 # GCE instance
 resource "google_compute_instance" "vm_instance" {
   count            = var.vm_count
-  name             = "${var.prefix}${var.name}-${count.index + 1}-instance${var.buildSuffix}"
+  name             = "${var.projectPrefix}${var.name}-${count.index + 1}-instance${var.buildSuffix}"
   machine_type     = var.machineType
   min_cpu_platform = "Intel Haswell"
 

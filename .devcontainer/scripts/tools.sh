@@ -7,9 +7,9 @@ sudo chown -R $USER:$USER /home/codespace/workspace
 # tools
 . .devcontainer/scripts/azurecli.sh
 . .devcontainer/scripts/gcloud.sh
-. .devcontainer/scripts/terraform.sh
-. .devcontainer/scripts/terraformDocs.sh
-. .devcontainer/scripts/preCommit.sh
+# . .devcontainer/scripts/terraform.sh
+# . .devcontainer/scripts/terraformDocs.sh
+# . .devcontainer/scripts/preCommit.sh
 . .devcontainer/scripts/tflint.sh
 . .devcontainer/scripts/awsiam.sh
 echo "---tools done---"

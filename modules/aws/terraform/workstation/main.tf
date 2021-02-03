@@ -1,41 +1,3 @@
-
-locals {
-  securityGroup = var.securityGroup != null ? var.securityGroup : aws_security_group.secGroupWorkstation.id
-}
-
-#security group
-resource "aws_security_group" "secGroupWorkstation" {
-  name        = "secGroupWorkstation"
-  description = "Jumphost workstation security group"
-  vpc_id      = var.vpc
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 5800
-    to_port     = 5800
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name  = "${var.project}-secGroupWorkstation"
-    Owner = var.userId
-  }
-}
-
 # AMI
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -55,16 +17,18 @@ data "aws_ami" "ubuntu" {
 
 # bash script template
 data "template_file" "onboard" {
-  template = file("${path.module}/templates/onboard.sh")
+  template = file("${path.module}/templates/startup.sh.tpl")
   vars = {
-    repositories = var.repositories
+    repositories         = var.repositories
+    coderAccountPassword = var.coderAccountPassword
+    terraformVersion     = var.terraformVersion
   }
 }
 
 # interface external
 resource "aws_network_interface" "mgmtNic" {
   subnet_id       = var.mgmtSubnet
-  security_groups = [local.securityGroup]
+  security_groups = [var.securityGroup]
   tags = {
     Name  = "${var.project}-workstation-interface"
     Owner = var.userId

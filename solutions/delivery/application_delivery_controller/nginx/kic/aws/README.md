@@ -2,6 +2,7 @@
 - network type aws min
 - ansible false
 - kubernetes eks
+- jumphost aws
 
 # demo setups
 

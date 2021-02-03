@@ -11,7 +11,7 @@ module "mgmt" {
   source                                 = "terraform-google-modules/network/google"
   version                                = "3.0.1"
   project_id                             = var.gcpProjectId
-  network_name                           = format("mgmt-network-%s", var.buildSuffix)
+  network_name                           = format("%s-mgmt-network-%s", var.projectPerfix, var.buildSuffix)
   description                            = "Management VPC"
   auto_create_subnetworks                = false
   delete_default_internet_gateway_routes = false
@@ -19,7 +19,7 @@ module "mgmt" {
   routing_mode                           = "REGIONAL"
   subnets = [
     {
-      subnet_name                            = format("mgmt-subnet-%s", var.buildSuffix)
+      subnet_name                            = format("%s-mgmt-subnet-%s", var.projectPrefix, var.buildSuffix)
       subnet_ip                              = "10.0.10.0/24"
       subnet_region                          = var.gcpRegion
       delete_default_internet_gateway_routes = false
@@ -32,7 +32,7 @@ module "int" {
   source       = "terraform-google-modules/network/google"
   version      = "3.0.1"
   project_id   = var.gcpProjectId
-  network_name = format("internal-network-%s", var.buildSuffix)
+  network_name = format("%s-internal-network-%s", var.projectPerfix, var.buildSuffix)
 
   description                            = "Internal VPC"
   auto_create_subnetworks                = false
@@ -41,7 +41,7 @@ module "int" {
   routing_mode                           = "REGIONAL"
   subnets = [
     {
-      subnet_name                            = format("internal-subnet-%s", var.buildSuffix)
+      subnet_name                            = format("%s-internal-subnet-%s", var.projectPrefix, var.buildSuffix)
       subnet_ip                              = "10.0.20.0/24"
       subnet_region                          = var.gcpRegion
       delete_default_internet_gateway_routes = false
@@ -63,7 +63,7 @@ module "ext" {
   routing_mode                           = "REGIONAL"
   subnets = [
     {
-      subnet_name                            = format("external-subnet-%s", var.buildSuffix)
+      subnet_name                            = format("%s-external-subnet-%s", var.projectPrefix, var.buildSuffix)
       subnet_ip                              = "10.0.30.0/24"
       subnet_region                          = var.gcpRegion
       delete_default_internet_gateway_routes = false
@@ -79,8 +79,8 @@ module "int-nat" {
   version                            = "1.3.0"
   project_id                         = var.gcpProjectId
   region                             = var.gcpRegion
-  name                               = format("%s-int-router-nat", var.buildSuffix)
-  router                             = format("%s-int-router", var.buildSuffix)
+  name                               = format("%s-int-router-nat-%s", var.projectPrefix, var.buildSuffix)
+  router                             = format("%s-int-router-%s", var.projectPrefix, var.buildSuffix)
   create_router                      = true
   source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
   network                            = module.int.network_self_link
