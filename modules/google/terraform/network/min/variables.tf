@@ -1,15 +1,15 @@
 # project
 resource "random_pet" "buildSuffix" {
   keepers = {
-    prefix = var.prefix
+    prefix = var.projectPrefix
   }
   length    = 2
   separator = "-"
 }
 
-variable "prefix" {
+variable "projectPrefix" {
   description = "prefix for resources"
-  default     = "demo-"
+  default     = "demo"
 }
 variable "buildSuffix" {
   description = "random build suffix for resources"

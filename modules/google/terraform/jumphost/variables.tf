@@ -1,12 +1,13 @@
 # project
-variable "prefix" {
+variable "projectPrefix" {
   description = "prefix for resources"
 }
 variable "gcpZone" {
-  description = "zone where gke is deployed"
+  description = "zone where resource is deployed"
+  default     = "us-east1-b"
 }
 variable "gcpRegion" {
-  description = "region where gke is deployed"
+  description = "region where resource is deployed"
   default     = "us-east2"
 }
 variable "gcpProjectId" {
@@ -17,6 +18,7 @@ variable "buildSuffix" {
 }
 variable "onboardScript" {
   description = "url for onboard script"
+  default     = "none"
 }
 
 variable "name" {
@@ -58,5 +60,12 @@ variable "sshPublicKey" {
 }
 
 variable "repositories" {
-  default = "none"
+  description = "comma seperated list of repositories to clone"
+  default     = "https://github.com/vinnie357/f5-devops-workspace-gcp.git,https://github.com/f5devcentral/terraform-gcp-f5-sca.git"
+}
+variable "coderAccountPassword" {
+  default = "pleaseUseVault123!!"
+}
+variable "terraformVersion" {
+  default = "0.14.0"
 }
