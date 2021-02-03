@@ -11,7 +11,7 @@ module "mgmt" {
   source                                 = "terraform-google-modules/network/google"
   version                                = "3.0.1"
   project_id                             = var.gcpProjectId
-  network_name                           = format("%s-mgmt-network-%s", var.projectPerfix, var.buildSuffix)
+  network_name                           = format("%s-mgmt-network-%s", var.projectPrefix, var.buildSuffix)
   description                            = "Management VPC"
   auto_create_subnetworks                = false
   delete_default_internet_gateway_routes = false
@@ -32,7 +32,7 @@ module "int" {
   source       = "terraform-google-modules/network/google"
   version      = "3.0.1"
   project_id   = var.gcpProjectId
-  network_name = format("%s-internal-network-%s", var.projectPerfix, var.buildSuffix)
+  network_name = format("%s-internal-network-%s", var.projectPrefix, var.buildSuffix)
 
   description                            = "Internal VPC"
   auto_create_subnetworks                = false
