@@ -11,13 +11,13 @@ provider "aws" {
 // }
 // Network
 module "aws_network" {
-  source       = "../../../../../../modules/aws/terraform/network/min"
-  projectPrefix      = "infra"
-  aws_region   = var.aws_region
-  aws_az1      = var.aws_az1
-  aws_az2      = var.aws_az2
-  random_id    = random_id.random-string.dec
-  cluster_name = "${var.cluster_name}-${random_id.random-string.dec}"
+  source        = "../../../../../../modules/aws/terraform/network/min"
+  projectPrefix = "infra"
+  aws_region    = var.aws_region
+  aws_az1       = var.aws_az1
+  aws_az2       = var.aws_az2
+  random_id     = random_id.random-string.dec
+  cluster_name  = "${var.cluster_name}-${random_id.random-string.dec}"
 }
 // EKS
 data "aws_eks_cluster" "cluster" {

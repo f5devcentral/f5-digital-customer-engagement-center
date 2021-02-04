@@ -30,10 +30,10 @@ run the setup script to deploy all of the components into your AWS account (reme
 
 using your ssh key, connect to the UbuntuJumpHost
 ```bash
-ssh ubuntu@x.y.z.p 
+ssh ubuntu@x.y.z.p
 ```
 
-connect to the two inspection devices and check that you can see the ssh traffic between you and the jumphost 
+connect to the two inspection devices and check that you can see the ssh traffic between you and the jumphost
 ## Requirements
 
 No requirements.
