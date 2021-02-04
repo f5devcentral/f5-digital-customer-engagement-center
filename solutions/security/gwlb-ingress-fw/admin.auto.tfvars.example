@@ -1,4 +1,3 @@
-aws_region = "us-east-2"
-aws_az1     = "us-east-2a"
-aws_az2    = "us-east-2b"
-ssh_public_key = "keytype xxxxx"
+resourceOwner = "fred"
+awsRegion     = "us-west-2"
+sshPublicKey  = "ssh-rsa AAA"
