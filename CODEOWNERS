@@ -3,6 +3,6 @@
 * @jmcalalang @vinnie357
 
 # Network module owners
-/aws/terraform/network/ @yossi-r
-/azure/terraform/network/ @JeffGiroux
-/google/terraform/network/ @memes
+/modules/aws/terraform/network/ @yossi-r
+/modules/azure/terraform/network/ @JeffGiroux
+/modules/google/terraform/network/ @memes
