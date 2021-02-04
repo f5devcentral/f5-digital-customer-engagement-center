@@ -15,8 +15,8 @@ locals {
 resource "aws_vpc" "vpcMain" {
   cidr_block = var.vpcMainCidr
   tags = {
-    Name  = "${var.project}-vpcMain-${var.userId}"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcMain-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -29,20 +29,20 @@ resource "aws_subnet" "vpcMainSubPubA" {
   availability_zone       = local.awsAz1
 
   tags = {
-    Name  = "${var.project}-vpcMainSubPubA-${var.userId}"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcMainSubPubA-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
 resource "aws_subnet" "vpcMainSubPubB" {
   vpc_id                  = aws_vpc.vpcMain.id
   cidr_block              = var.vpcMainSubPubBCidr
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = var.map_public_ip_on_launch
   availability_zone       = local.awsAz2
 
   tags = {
-    Name  = "${var.project}-vpcMainSubPubB-${var.userId}"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcMainSubPubB-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -52,8 +52,8 @@ resource "aws_subnet" "vpcMainSubMgmtA" {
   availability_zone = local.awsAz1
 
   tags = {
-    Name  = "${var.project}-vpcMainSubMgmtA-${var.userId}"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcMainSubMgmtA-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -63,8 +63,8 @@ resource "aws_subnet" "vpcMainSubMgmtB" {
   availability_zone = local.awsAz2
 
   tags = {
-    Name  = "${var.project}-vpcMainSubMgmtB-${var.userId}"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcMainSubMgmtB-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -74,8 +74,8 @@ resource "aws_subnet" "vpcMainSubPrivA" {
   availability_zone = local.awsAz1
 
   tags = {
-    Name  = "${var.project}-vpcMainSubPrivA-${var.userId}"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcMainSubPrivA-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -85,8 +85,8 @@ resource "aws_subnet" "vpcMainSubPrivB" {
   availability_zone = local.awsAz2
 
   tags = {
-    Name  = "${var.project}-vpcMainSubPrivB-${var.userId}"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcMainSubPrivB-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -96,8 +96,8 @@ resource "aws_internet_gateway" "vpcMainIgw" {
   vpc_id = aws_vpc.vpcMain.id
 
   tags = {
-    Name  = "${var.project}-vpcMainIgw-${var.userId}"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcMainIgw-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -119,7 +119,7 @@ resource "aws_route_table" "vpcMainRtb" {
   }
 
   tags = {
-    Name  = "${var.project}-vpcMainRtb-${var.userId}"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcMainRtb-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }

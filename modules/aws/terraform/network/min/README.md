@@ -11,8 +11,8 @@ Here's the gist of using it directly from github.
 ```hcl
 module "aws_network" {
   source       = "../../../../../../modules/aws/terraform/network/min"
-  project      = "single-vpc-example"
-  userId       = var.userId
+  projectPrefix      = "single-vpc-example"
+  resourceOwner       = var.resourceOwner
 }
 ```
 
@@ -33,12 +33,13 @@ No requirements.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| projectPrefix | project name, will be used as prefix for resource names | `string` | f5-dcec | no |
+| buildSuffix | random build suffix for tagging | `string` | YY | no |
+| resourceOwner | owner of the deployment, for tagging purposes | `string` | f5-user | no |
 | awsAz1 | availability zone 1 | `any` | `null` | no |
 | awsAz2 | availability zone 2 | `any` | `null` | no |
 | awsRegion | aws region | `string` | us-east-1 | no |
 | map\_public\_ip\_on\_launch | assigns public ip's to instances in the public subnet by default | `bool` | `false` | no |
-| project | project name for tags | `string` | f5-dcec | no |
-| userId | user name for tags | `string` | f5-user | no |
 | vpcMainCidr | cidr for vpcMain | `string` | 10.1.0.0/16 | no |
 | vpcMainSubPubACidr | cidr for vpc Main public subnet in Az1 | `string` | 10.1.10.0/24 | no |
 | vpcMainSubPubBCidr | cidr for vpc Main public subnet in Az2 | `string` | 10.1.110.0/24 | no |

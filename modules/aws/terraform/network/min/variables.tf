@@ -1,10 +1,14 @@
-variable "project" {
-  description = "project name to use for tags"
+variable "projectPrefix" {
+  description = "projectPrefix name to use for tags"
   default     = "f5-dcec"
 }
-variable "userId" {
+variable "resourceOwner" {
   description = "owner of the deployment, for tagging purposes"
   default     = "f5-user"
+}
+variable "buildSuffix" {
+  description = "random string for tagging purposes"
+  default     = "YY"
 }
 variable "awsAz1" {
   default = null

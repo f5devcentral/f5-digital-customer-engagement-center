@@ -15,6 +15,8 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
+#security group
+
 # bash script template
 data "template_file" "onboard" {
   template = file("${path.module}/templates/startup.sh.tpl")
@@ -30,8 +32,8 @@ resource "aws_network_interface" "mgmtNic" {
   subnet_id       = var.mgmtSubnet
   security_groups = [var.securityGroup]
   tags = {
-    Name  = "${var.project}-workstation-interface"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-workstation-interface"
+    Owner = var.resourceOwner
   }
 }
 # public address
@@ -39,8 +41,8 @@ resource "aws_eip" "mgmtEip" {
   vpc               = true
   network_interface = aws_network_interface.mgmtNic.id
   tags = {
-    Name  = "${var.project}-workstation-eip"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-workstation-eip"
+    Owner = var.resourceOwner
   }
 }
 resource "aws_eip_association" "mgmtEipAssoc" {
@@ -63,7 +65,7 @@ resource "aws_instance" "workstation" {
   root_block_device { delete_on_termination = true }
 
   tags = {
-    Name  = "${var.project}-workstation"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-workstation"
+    Owner = var.resourceOwner
   }
 }

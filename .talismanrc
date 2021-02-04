@@ -80,3 +80,13 @@ fileignoreconfig:
   checksum: 275af116d999e7aa08484e3d46ab650dc38a51229396ebf4afcb989b1bca8ca9
 - filename: modules/google/terraform/jumphost/templates/startup.sh.tpl
   checksum: 684df516e5fcbc3861a9bff4088506ba505d752fe78ad504bfd639b1be9b2442
+- filename: modules/aws/terraform/network/min/examples/.terraform.lock.hcl
+  checksum: 97888113655843d1777410e82b6bfe2f7ef2dce5bac47e0b8fcd1de4a5f06d4d
+- filename: modules/aws/terraform/workstation/examples/.terraform.lock.hcl
+  checksum: c2ad6c08414a673aa16492008ccb8ed9929978004c6e6fde942ad2c7203f824f
+- filename: modules/aws/terraform/workstation/examples/admin.auto.tfvars.example
+  checksum: 39cd07ea63f0a9ecd93f3b6c274be0b8f350fd6627f6ef6ee58f9a50afe7afa9
+- filename: modules/aws/terraform/network/min/examples/admin.auto.tfvars.example
+  checksum: fd8d80e4441d112edff0c16fd01f03138908ba59194f6d59a2ec3c57e60907dd
+- filename: modules/aws/terraform/workstation/examples/main.tf
+  checksum: 5e209b9a4a48044d4c5763fe574b45eeae8cd4eb24e03c2fbfe60b07a9f5fbc5
