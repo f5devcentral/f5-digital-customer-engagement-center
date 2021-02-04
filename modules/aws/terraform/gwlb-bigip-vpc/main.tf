@@ -1,8 +1,3 @@
-
-resource "random_id" "id" {
-  byte_length = 2
-}
-
 ###############
 # VPC Section #
 ###############
@@ -22,8 +17,8 @@ locals {
 resource "aws_vpc" "vpcGwlb" {
   cidr_block = var.vpcCidr
   tags = {
-    Name  = format("%s-vpcGwlb-%s", var.userId, random_id.id.hex)
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcGwlb-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -35,8 +30,8 @@ resource "aws_subnet" "vpcGwlbSubPubA" {
   availability_zone = local.awsAz1
 
   tags = {
-    Name  = format("%s-vpcGwlbSubPubA-%s", var.userId, random_id.id.hex)
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcGwlbSubPubA-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -46,8 +41,8 @@ resource "aws_subnet" "vpcGwlbSubPubB" {
   availability_zone = local.awsAz2
 
   tags = {
-    Name  = format("%s-vpcGwlbSubPubB-%s", var.userId, random_id.id.hex)
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcGwlbSubPubB-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -57,8 +52,8 @@ resource "aws_internet_gateway" "vpcGwlbIgw" {
   vpc_id = aws_vpc.vpcGwlb.id
 
   tags = {
-    Name  = format("%s-vpcGwlbIgw-%s", var.userId, random_id.id.hex)
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcGwlbIgw-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -80,27 +75,25 @@ resource "aws_route_table" "vpcGwlbRtb" {
   }
 
   tags = {
-    Name  = format("%s-vpcGwlbRtb-%s", var.userId, random_id.id.hex)
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-vpcGwlbRtb-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
 ##################GWLB#################
 
 resource "aws_lb" "gwlb" {
-  name               = format("%s-gwlb-%s", var.project, random_id.id.hex)
   internal           = false
   load_balancer_type = "gateway"
   subnets            = [aws_subnet.vpcGwlbSubPubA.id, aws_subnet.vpcGwlbSubPubB.id]
 
   tags = {
-    Name  = "${var.project}-vpcGwlbRtb"
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-gwlb-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
 resource "aws_lb_target_group" "bigipTargetGroup" {
-  name        = format("%s-bipTG-%s", var.project, random_id.id.hex)
   port        = 6081
   protocol    = "GENEVE"
   target_type = "ip"
@@ -111,6 +104,10 @@ resource "aws_lb_target_group" "bigipTargetGroup" {
     path     = "/"
     port     = 80
     matcher  = "200-399"
+  }
+  tags = {
+    Name  = "${var.projectPrefix}-bigipTargetGroup-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -143,16 +140,8 @@ resource "aws_lb_listener" "gwlbListener" {
 #
 # Create random password for BIG-IP
 #
-resource "random_string" "password" {
-  length      = 16
-  min_upper   = 1
-  min_lower   = 1
-  min_numeric = 1
-  special     = false
-}
-
 resource "aws_iam_role" "main" {
-  name               = format("%s-iam-role-%s", var.project, random_id.id.hex)
+  name               = "${var.projectPrefix}-iam-role-${var.buildSuffix}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -218,14 +207,14 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = format("%s-iam-profile-%s", var.project, random_id.id.hex)
+  name = "${var.projectPrefix}-iam-profile-${var.buildSuffix}"
   role = aws_iam_role.main.id
 }
 
 module "mgmt-network-security-group" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name        = format("%s-mgmt-nsg-%s", var.project, random_id.id.hex)
+  name        = "${var.projectPrefix}-mgmt-nsg-${var.buildSuffix}"
   description = "Security group for BIG-IP Management"
   vpc_id      = aws_vpc.vpcGwlb.id
 
@@ -298,8 +287,8 @@ resource "aws_instance" "GeneveProxyAz1" {
   associate_public_ip_address = true
 
   tags = {
-    Name  = format("%s-GeneveProxyAz1-%s", var.project, random_id.id.hex)
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-GeneveProxyAz1-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -313,8 +302,8 @@ resource "aws_instance" "GeneveProxyAz2" {
   associate_public_ip_address = true
 
   tags = {
-    Name  = format("%s-GeneveProxyAz2-%s", var.project, random_id.id.hex)
-    Owner = var.userId
+    Name  = "${var.projectPrefix}-GeneveProxyAz2-${var.buildSuffix}"
+    Owner = var.resourceOwner
   }
 }
 
@@ -324,7 +313,7 @@ resource "aws_instance" "GeneveProxyAz2" {
 #module bigipAz1 {
 #  source       = "../terraform-aws-bigip-module"
 #  count        = var.instanceCount
-#  prefix       = format("%s-1nic", var.project)
+#  prefix       = format("%s-1nic", var.projectPrefix)
 #  ec2_key_name = var.keyName
 #  //aws_secretmanager_auth      = false
 #  //aws_secretmanager_secret_id = aws_secretsmanager_secret.bigip.id

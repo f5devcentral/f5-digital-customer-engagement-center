@@ -1,10 +1,18 @@
-variable "project" {
-  description = "project name to use for tags"
+variable "projectPrefix" {
+  description = "projectPrefix name to use for tags"
   default     = "f5-dcec"
 }
-variable "userId" {
+variable "resourceOwner" {
   description = "owner of the deployment, for tagging purposes"
   default     = "f5-dcec"
+}
+variable "buildSuffix" {
+  description = "random build suffix for tagging"
+  default     = "f5-dcec"
+}
+variable "bigipPassword" {
+  description = "password for the bigip admin account"
+  default     = null
 }
 variable "awsAz1" {
   description = "will use a dynamic az if left empty"
