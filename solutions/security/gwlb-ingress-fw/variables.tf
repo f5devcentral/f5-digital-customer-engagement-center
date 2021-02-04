@@ -1,38 +1,42 @@
-resource "random_id" "randomString" {
-  byte_length = 4
+resource "random_id" "buildSuffix" {
+  byte_length = 2
 }
-
-variable "userId" {
-  default = "xadmin"
-}
-variable "project" {
-  description = "project name for tagging"
+variable "projectPrefix" {
+  description = "projectPrefix name for tagging"
   default     = "gwlb-fw"
+}
+variable "resourceOwner" {
+  default = "elsa"
 }
 variable "sshPublicKey" {
   description = "ssh key file to create an ec2 key-pair"
   default     = "ssh-rsa AAAAB3...."
 }
 variable "adminSourceCidr" {
-  default = "0.0.0.0/0"
+  description = "cidr range allowed to access the jumpHost"
+  default     = "0.0.0.0/0"
 }
 variable "awsRegion" {
   default = "us-east-2"
 }
-
 variable "awsAz1" {
   default = null
 }
-
 variable "awsAz2" {
   default = null
 }
-
-variable "kubernetes" {
-  default     = true
-  description = " deploy a kubernetes cluster or not"
+variable "vpcMainCidr" {
+  default = "10.1.0.0/16"
 }
-variable "clusterName" {
-  default     = "my-cluster"
-  description = "eks cluster name"
+variable "vpcMainSubPubACidr" {
+  default = "10.1.10.0/24"
+}
+variable "vpcMainSubPubBCidr" {
+  default = "10.1.110.0/24"
+}
+variable "vpcMainSubGwlbeACidr" {
+  default = "10.1.52.0/24"
+}
+variable "vpcMainSubGwlbeBCidr" {
+  default = "10.1.152.0/24"
 }

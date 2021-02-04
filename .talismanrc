@@ -90,3 +90,9 @@ fileignoreconfig:
   checksum: fd8d80e4441d112edff0c16fd01f03138908ba59194f6d59a2ec3c57e60907dd
 - filename: modules/aws/terraform/workstation/examples/main.tf
   checksum: 5e209b9a4a48044d4c5763fe574b45eeae8cd4eb24e03c2fbfe60b07a9f5fbc5
+- filename: modules/aws/terraform/gwlb-bigip-vpc/examples/.terraform.lock.hcl
+  checksum: a5a123d097108ec04ca3b860c979bd5c53b8fd633c8fc4eefa21be3280ba1fb8
+- filename: modules/aws/terraform/gwlb-bigip-vpc/examples/admin.auto.tfvars.example
+  checksum: 4370cd1d284117133a6df5f4997dc911528039d6faa1ef4ab5859bb4266221d2
+- filename: modules/aws/terraform/gwlb-bigip-vpc/examples/main.tf
+  checksum: 76b1f640e79acce2f9fdb049b44dfdd3acde30db0ba538864e2a9fefe73c38e5

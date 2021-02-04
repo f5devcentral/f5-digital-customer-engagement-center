@@ -32,7 +32,6 @@ No requirements.
 | Name | Version |
 |------|---------|
 | aws | n/a |
-| random | n/a |
 | template | n/a |
 
 ## Inputs
@@ -43,6 +42,8 @@ No requirements.
 | awsAz1 | will use a dynamic az if left empty | `any` | `null` | no |
 | awsAz2 | will use a dynamic az if left empty | `any` | `null` | no |
 | awsRegion | n/a | `string` | `"us-west-2"` | no |
+| bigipPassword | password for the bigip admin account | `any` | `null` | no |
+| buildSuffix | random build suffix for tagging | `string` | `"f5-dcec"` | no |
 | instanceCount | n/a | `number` | `1` | no |
 | keyName | n/a | `any` | `null` | no |
 | projectPrefix | projectPrefix name to use for tags | `string` | `"f5-dcec"` | no |

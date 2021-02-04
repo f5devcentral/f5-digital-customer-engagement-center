@@ -4,7 +4,7 @@ provider "aws" {
 //   source = "git::https://github.com/f5devcentral/f5-digital-customer-engagement-center//infrastructure/aws/network/max/?ref=main"
 // module "aws_network" {
 //   source      = "../../../../../modules/aws/terraform/network/max"
-//   project     = "infra"
+//   projectPrefix     = "infra"
 //   aws_region  = var.aws_region
 //   aws_az1 = var.aws_az
 //   aws_az2 = var.aws_az1
@@ -12,7 +12,7 @@ provider "aws" {
 // Network
 module "aws_network" {
   source       = "../../../../../../modules/aws/terraform/network/min"
-  project      = "infra"
+  projectPrefix      = "infra"
   aws_region   = var.aws_region
   aws_az1      = var.aws_az1
   aws_az2      = var.aws_az2
