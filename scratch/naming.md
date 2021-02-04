@@ -42,10 +42,6 @@ gcpZone type string
 
 awsRegion type string
 
-awsAz1 type string
-
-awsAz2 type string
-
 azureRegion type string
 
 azureLocation type string
