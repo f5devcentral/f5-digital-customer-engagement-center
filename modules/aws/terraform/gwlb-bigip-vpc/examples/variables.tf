@@ -17,5 +17,5 @@ resource "random_id" "buildSuffix" {
 
 variable "sshPublicKey" {
   description = "ssh public key material to create an EC2 key pair"
-  default = null
+  default     = null
 }
