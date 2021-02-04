@@ -6,11 +6,7 @@
 Welcome to F5 Digital Customer Engagement Centers documentation!
 =================================================================
 
-These documents were authored by amazing contributions from:
 
-(Alphabetical)
-
-- Jon Calalang (jmcalalang_)
 
 .. toctree::
    :maxdepth: 2
@@ -21,7 +17,7 @@ These documents were authored by amazing contributions from:
    docs/delivery/delivery
    docs/security/security
    docs/telemetry/telemetry
-   docs/visual_studio_codespaces/codespaces
+   docs/contributions/contributions
 
 Indices and tables
 ==================

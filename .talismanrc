@@ -80,6 +80,14 @@ fileignoreconfig:
   checksum: 275af116d999e7aa08484e3d46ab650dc38a51229396ebf4afcb989b1bca8ca9
 - filename: modules/google/terraform/jumphost/templates/startup.sh.tpl
   checksum: 684df516e5fcbc3861a9bff4088506ba505d752fe78ad504bfd639b1be9b2442
+- filename: .devcontainer/scripts/docker-debian.sh
+  checksum: 3109be3be53c3dad4a7cfcd0c07c87cd41ab26cc24e1fd4110fe69ecb955ae9a
+- filename: .devcontainer/scripts/common-debian.sh
+  checksum: 33e856a9f3209a266b483ed83115ed52b3acca217b0c63b31f4acbcbf62f3f74
+- filename: .devcontainer/scripts/setup-user.sh
+  checksum: 8f386bef564e7a1c866ca34e29ee37e06972ada3912c7b3dc2c62bff8a609212
+- filename: .devcontainer/scripts/azcli-debian.sh
+  checksum: e783074cc0c0cbb11a3914d811f5aa6527f423ce7d2bf9957daa17da02defed6
 - filename: modules/aws/terraform/network/min/examples/.terraform.lock.hcl
   checksum: 97888113655843d1777410e82b6bfe2f7ef2dce5bac47e0b8fcd1de4a5f06d4d
 - filename: modules/aws/terraform/workstation/examples/.terraform.lock.hcl
