@@ -1,9 +1,10 @@
 provider "aws" {
-  region = "us-west-2"
+  region = var.awsRegion
 }
 module "aws_network" {
   source                  = "../"
-  project                 = "singleVpc"
-  userId                  = "sasha"
+  projectPrefix           = var.projectPrefix
+  buildSuffix             = random_id.buildSuffix.hex
+  resourceOwner           = var.resourceOwner
   map_public_ip_on_launch = true
 }

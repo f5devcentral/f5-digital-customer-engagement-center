@@ -1,0 +1,3 @@
+resourceOwner    = "fred"
+awsRegion = "us-west-2"
+sshPublicKey = "ssh-rsa AA"

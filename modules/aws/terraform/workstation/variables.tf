@@ -15,13 +15,13 @@ variable "mgmtSubnet" {
 variable "keyName" {
 }
 
-variable "project" {
+variable "projectPrefix" {
   default = "f5-dcec"
 }
 variable "terraformVersion" {
   default = "0.14.0"
 }
-variable "userId" {
+variable "resourceOwner" {
   default = "f5-dcec-user"
 }
 variable "coderAccountPassword" {

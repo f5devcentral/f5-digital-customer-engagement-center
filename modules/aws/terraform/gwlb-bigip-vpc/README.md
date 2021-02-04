@@ -11,8 +11,8 @@ quick example
 ```hcl
 module "gwlb-bigip-vpc" {
   source        = "../../../modules/aws/terraform/gwlb-bigip-vpc"
-  project       = "some project name"
-  userId        = "some user name"
+  projectPrefix       = "some projectPrefix name"
+  resourceOwner        = "some user name"
   awsRegion     = "us-west-2"
   keyName       = "ec2_key_name"
 }
@@ -32,7 +32,6 @@ No requirements.
 | Name | Version |
 |------|---------|
 | aws | n/a |
-| random | n/a |
 | template | n/a |
 
 ## Inputs
@@ -43,11 +42,13 @@ No requirements.
 | awsAz1 | will use a dynamic az if left empty | `any` | `null` | no |
 | awsAz2 | will use a dynamic az if left empty | `any` | `null` | no |
 | awsRegion | n/a | `string` | `"us-west-2"` | no |
+| bigipPassword | password for the bigip admin account | `any` | `null` | no |
+| buildSuffix | random build suffix for tagging | `string` | `"f5-dcec"` | no |
 | instanceCount | n/a | `number` | `1` | no |
 | keyName | n/a | `any` | `null` | no |
-| project | project name to use for tags | `string` | `"f5-dcec"` | no |
+| projectPrefix | projectPrefix name to use for tags | `string` | `"f5-dcec"` | no |
 | repositories | comma seperated list of git repositories to clone | `string` | `"https://github.com/vinnie357/aws-tf-workspace.git,https://github.com/f5devcentral/terraform-aws-f5-sca.git"` | no |
-| userId | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |
+| resourceOwner | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |
 | vpcCidr | n/a | `string` | `"10.252.0.0/16"` | no |
 | vpcGwlbSubPubACidr | n/a | `string` | `"10.252.10.0/24"` | no |
 | vpcGwlbSubPubBCidr | n/a | `string` | `"10.252.110.0/24"` | no |
