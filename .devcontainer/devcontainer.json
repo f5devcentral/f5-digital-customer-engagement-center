@@ -1,43 +1,22 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.154.0/containers/codespaces-linux
-// base from codespaces devcontainer
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.155.1/containers/ubuntu
 {
 	"name": "f5-digital-customer-engagement-center",
 	"build": {
-		"dockerfile": "Dockerfile"
+		"dockerfile": "Dockerfile",
+		// Update 'VARIANT' to pick an Ubuntu version: focal, bionic$
+		"args": { "VARIANT": "focal" }
 	},
+	// Set *default* container specific settings.json values on container create.
 	"settings": {
-		"terminal.integrated.shell.linux": "/bin/bash",
-		"go.useGoProxyToCheckForToolUpdates": false,
-		"go.useLanguageServer": true,
-		"go.gopath": "/go",
-		"go.goroot": "/usr/local/go",
-		"go.toolsGopath": "/go/bin",
-		"python.pythonPath": "/opt/python/latest/bin/python",
-		"python.linting.enabled": true,
-		"python.linting.pylintEnabled": true,
-		"python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
-		"python.formatting.blackPath": "/usr/local/py-utils/bin/black",
-		"python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
-		"python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
-		"python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
-		"python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
-		"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
-		"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
-		"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
-		"lldb.executable": "/usr/bin/lldb",
-		"files.watcherExclude": {
-			"**/target/**": true
-		}
+    "terminal.integrated.shell.linux": "/bin/bash",
 	},
-	"remoteUser": "codespace",
-	"overrideCommand": false,
+	// "overrideCommand": false,
 	"workspaceMount": "source=${localWorkspaceFolder},target=/home/codespace/workspace,type=bind,consistency=cached",
 	"workspaceFolder": "/home/codespace/workspace",
   "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
   // privileged can be dangerous, this is currently how we allow docker in docker for ansible containers.
 	"runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined", "--privileged" ],
-
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
     "f5devcentral.vscode-f5",
@@ -49,12 +28,12 @@
     "ms-vsonline.vsonline",
     "ms-azuretools.vscode-docker"
 	],
-
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
-	// "oryx build" will automatically install your dependencies and attempt to build your project
-  // "postCreateCommand": "oryx build || echo 'Could not auto-build. Skipping.'"
-  // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "/bin/bash ./.devcontainer/scripts/tools.sh 2>&1 | tee -a ~/post-create-tools.log"
+	// Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "/bin/bash ./.devcontainer/scripts/tools.sh 2>&1 | tee -a ~/post-create-tools.log",
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "codespace"
 }
