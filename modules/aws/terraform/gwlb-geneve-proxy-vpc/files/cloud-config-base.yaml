@@ -1,0 +1,14 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+ - pwgen
+ - pastebinit
+ - [python3-pip, software-properties-common]
+runcmd:
+- pip3 install PyYAML
+- cd /home/ubuntu
+- git clone https://github.com/yossi-r/geneve-proxy.git
+- chown -R ubuntu geneve-proxy
+- cd geneve-proxy
+- python3 main.py

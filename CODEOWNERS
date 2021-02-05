@@ -1,8 +1,15 @@
 # This file defines the ownership of modules in the repo for PR reviewing purposes.
 
-* @jmcalalang @vinnie357
+* @jmcalalang @vinnie357 @yossi-r
+
+# solution owners
+/solutions/security/gwlb-ingress-fw @yossi-r
+/solutions/delivery/application_delivery_controller/nginx/kic/aws @jmcalalang
 
 # Network module owners
 /modules/aws/terraform/network/ @yossi-r
 /modules/azure/terraform/network/ @JeffGiroux
 /modules/google/terraform/network/ @memes
+
+#modules owners 
+/modules/aws/terraform/workstation @yossi-r

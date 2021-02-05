@@ -193,7 +193,7 @@ data "aws_ami" "f5_ami" {
 
   filter {
     name   = "name"
-    values = ["${var.f5_ami_search_name}"]
+    values = [var.f5_ami_search_name]
   }
 }
 
