@@ -1,8 +1,9 @@
 # F5 Digital Customer Engagement Center Repository
 F5 Digital Engagement Center Code Repository
 
+[Project Documentation in ReadTheDocs](https://f5-digital-customer-engagement-center.readthedocs.io/en/latest/index.html)
 ## Overview
-This project will be utilized to demo and provide reuseable configurations for F5 Digital Engagement Center labs and roadshows
+This project will be utilized to demo and provide reusable configurations for F5 Digital Engagement Center labs and roadshows
 
 ## Getting Started
 This repository and its examples are meant to support a bring your own credentials approach.
@@ -10,7 +11,7 @@ the credentials can be obtained through an F5 UDF course deployment, or your own
 
 ## Installation
 
-This project can be run with or without the provided [**devcontainer.**](https://code.visualstudio.com/docs/remote/containers)
+This project can be run with or without the provided container for development or [**devcontainer.**](https://code.visualstudio.com/docs/remote/containers)
 
 ### Devcontainer TLDR
   - Requirements:
@@ -23,7 +24,7 @@ This project can be run with or without the provided [**devcontainer.**](https:/
       - >Remote-Containers: Rebuild and Reopen in Container
 ## Usage
 
-The project is meant to deliver a framework for creation soltutions using common or customized modules.
+The project is meant to deliver a framework for creation solutions using common or customized modules.
 
 
 ### Solutions
@@ -37,28 +38,28 @@ The project is meant to deliver a framework for creation soltutions using common
       - setup.sh
     - Create the required configuration
       - demo.sh
-          - demo script is meant to be a wrapper for the scripts you want to use to configure your deployed soltuion infrastructure.
-          the most common senario of using ansible through a docker container, is permitted by the privaged devcontainer.
+          - demo script is meant to be a wrapper for the scripts you want to use to configure your deployed solution infrastructure.
+          the most common scenario of using ansible through a docker container, is permitted by the privileged devcontainer.
     - Destroy the required infrastructure
       - cleanup.sh
   - Accept variables
     - auto.tfvars.example
-      an example of avaliable variables for the infrastructure
+      an example of available variables for the infrastructure
   - Export variables
     - Solutions should be addressable as terraform modules, this requires they output relevant connection information in a standardized way.
-  - Be responisble for any IAM objects needed
-  - Create and manage any securitygroups/firewall rules needed by the solution.
+  - Be responsible for any IAM objects needed
+  - Create and manage any security groups/firewall rules needed by the solution.
   - Include defaults not present in the auto.tvfars when using terraform
   - Provide an auto.tfvars example when using terraform
 
-a sample solution template is avaliable in **~/solutions/solution_template**
+a sample solution template is available in **~/solutions/solution_template**
 
 ---
 ### Modules
 Each module will:
 - Attempt to use community or vendor supported modules first
 - Export consistent outputs following project naming [standards](contributing.md)
-- Include stand alone examples
+- Include standalone examples
 - Work with existing networks
 ---
 ### Devcontainer
@@ -74,7 +75,7 @@ The container will:
 ---
 ## Development
 
-checking for secrets as well as linting is preformed by git pre-commit with the module requirements handled in the devcontainer.
+checking for secrets as well as linting is performed by git pre-commit with the module requirements handled in the devcontainer.
 
 testing pre-commit hooks:
   ```bash
