@@ -22,12 +22,12 @@ output "subnetsAz2" {
   value = local.subnetsAz2
 }
 
-output "bigipAz1Ip" {
-  value = module.bigipAz1.public_addresses
+output "geneveProxyAz1Ip" {
+  value = aws_instance.GeneveProxyAz1.public_ip
 }
-#output "bigipAz2Ip" {
-#  value = aws_instance.GeneveProxyAz2.public_ip
-#}
+output "geneveProxyAz2Ip" {
+  value = aws_instance.GeneveProxyAz2.public_ip
+}
 output "gwlbEndpointService" {
   value = aws_vpc_endpoint_service.gwlbEndpointService.service_name
 }

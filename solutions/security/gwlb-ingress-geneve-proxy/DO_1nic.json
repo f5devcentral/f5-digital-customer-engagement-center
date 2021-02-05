@@ -7,7 +7,7 @@
         "class": "Tenant",
         "mySystem": {
             "class": "System",
-            "hostname": "ec2-35-161-148-24.us-west-2.compute.amazonaws.com"
+            "hostname": "ec2-44-237-4-81.us-west-2.compute.amazonaws.com"
         },
         "myDns": {
             "class": "DNS",
@@ -27,4 +27,3 @@
         }
     }
 }
-
