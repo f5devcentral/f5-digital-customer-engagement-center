@@ -334,15 +334,15 @@ resource "aws_secretsmanager_secret_version" "bigip-pwd" {
   secret_string = random_password.password.result
 }
 
-module bigipAz1 {
+module "bigipAz1" {
   source       = "../terraform-aws-bigip-module"
   prefix       = var.projectPrefix
   ec2_key_name = var.keyName
-#  aws_secretmanager_auth      = aws_secretsmanager_secret.bigip.id
-  aws_iam_instance_profile    = aws_iam_instance_profile.instance_profile.name
-  mgmt_subnet_ids        = [{ "subnet_id" = aws_subnet.vpcGwlbSubPubA.id, "public_ip" = true, "private_ip_primary" = "" }]
-  mgmt_securitygroup_ids = [module.mgmt-network-security-group.this_security_group_id]
-  f5_ami_search_name     = "*F5 BIGIP-16.0.1-0.0.3* PAYG-Best 200Mbps*"
+  #  aws_secretmanager_auth      = aws_secretsmanager_secret.bigip.id
+  aws_iam_instance_profile = aws_iam_instance_profile.instance_profile.name
+  mgmt_subnet_ids          = [{ "subnet_id" = aws_subnet.vpcGwlbSubPubA.id, "public_ip" = true, "private_ip_primary" = "" }]
+  mgmt_securitygroup_ids   = [module.mgmt-network-security-group.this_security_group_id]
+  f5_ami_search_name       = "*F5 BIGIP-16.0.1-0.0.3* PAYG-Best 200Mbps*"
 }
 
 resource "null_resource" "clusterDO" {
