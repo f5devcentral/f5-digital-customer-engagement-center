@@ -1,12 +1,11 @@
 locals {
   vpcs = {
-    "main" = azurerm_virtual_network.main
-    "mgmt" = azurerm_virtual_network.main
+    "main" = azurerm_virtual_network.main.id
   }
   subnets = {
-    "mgmt"    = azurerm_subnet.mgmt
-    "public"  = ""
-    "private" = ""
+    "mgmt"    = azurerm_subnet.mgmt.id
+    "public"  = azurerm_subnet.ext.id
+    "private" = azurerm_subnet.int.id
   }
 }
 
