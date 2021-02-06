@@ -62,7 +62,7 @@ Each module will:
 - Include a 'tests' folder with code to deploy the module. this should be used by the module developer and not to be used externally.
 - README file which details the inputs/outputs and usage
 - Work with existing networks
-a sample solution template is available in **~/modules/aws/terraform/network/min**
+a sample module template is available in **~/modules/aws/terraform/network/min**
 ---
 ### Devcontainer
 The container will:
