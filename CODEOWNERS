@@ -11,5 +11,5 @@
 /modules/azure/terraform/network/ @JeffGiroux
 /modules/google/terraform/network/ @memes
 
-#modules owners 
+#modules owners
 /modules/aws/terraform/workstation @yossi-r
