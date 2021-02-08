@@ -43,6 +43,6 @@ resource "aws_security_group" "secGroupWorkstation" {
 
   tags = {
     Name  = "${var.projectPrefix}-secGroupWorkstation"
-    Owner = var.userId
+    Owner = var.resourceOwner
   }
 }

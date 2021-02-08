@@ -65,7 +65,7 @@ fileignoreconfig:
 - filename: solutions/delivery/application_delivery_controller/nginx/kic/aws/admin.auto.tfvars.example
   checksum: db85cbe391d3530aeae77f43562b97135302669cf08bbcd238398e313b9f9407
 - filename: solutions/delivery/application_delivery_controller/nginx/kic/aws/main.tf
-  checksum: 5f7cb47a2bc5cd66de27a4e065d60f93f7a2b46c23ca2a2dd74a202ae22cce87
+  checksum: d1244991509b4b4fff87bd0f77dac5dcbf07b3f467433d3cf0cbcc233fd5d933
 - filename: modules/aws/terraform/workstation/templates/startup.sh.tpl
   checksum: 296576d6c29232bf4b2168f2eaa1afe8c835035b23a51369c4b1202628f3043e
 - filename: modules/aws/terraform/workstation/main.tf

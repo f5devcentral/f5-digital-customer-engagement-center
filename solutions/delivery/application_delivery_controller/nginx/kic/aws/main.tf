@@ -5,8 +5,7 @@ provider "aws" {
 // Network
 module "aws_network" {
   source                  = "../../../../../../modules/aws/terraform/network/min"
-  project                 = var.projectPrefix
-  userId                  = var.userId
+  projectPrefix           = var.projectPrefix
   awsRegion               = var.awsRegion
   map_public_ip_on_launch = true
 }
@@ -47,14 +46,14 @@ module "eks" {
 
 // jumphost
 resource "aws_key_pair" "deployer" {
-  key_name   = "${var.userId}-${var.projectPrefix}"
+  key_name   = "${var.adminAccountName}-${var.projectPrefix}"
   public_key = var.sshPublicKey
 }
 
 module "jumphost" {
   source               = "../../../../../../modules/aws/terraform/workstation"
-  project              = var.projectPrefix
-  userId               = var.userId
+  projectPrefix        = var.projectPrefix
+  adminAccountName     = var.adminAccountName
   coderAccountPassword = random_password.password.result
   vpc                  = module.aws_network.vpcs["main"]
   keyName              = aws_key_pair.deployer.id
