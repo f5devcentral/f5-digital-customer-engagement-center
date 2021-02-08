@@ -15,7 +15,8 @@ ENV USERNAME="codespace" \
     PRECOMMITVERSION="latest" \
     TERRAFORMVERSION="0.14.0" \
     TERRAFORMDOCSVERSION="0.9.1" \
-    ANSIBLEVERSION="2.10.5"
+    ANSIBLEVERSION="2.10.5" \
+    VESCTL_VERSION="0.2.15"
 
 COPY scripts/* /tmp/scripts/
 
@@ -62,10 +63,10 @@ RUN set -ex \
   && bash /tmp/scripts/kubectl-helm-debian.sh
 # terraform
 RUN set -ex \
-  && terraformVersion="${TERRAFORMVERSION}" \
-  && wget https://releases.hashicorp.com/terraform/$terraformVersion/terraform_"$terraformVersion"_linux_amd64.zip \
-  && unzip -o ./terraform_"$terraformVersion"_linux_amd64.zip -d /usr/local/bin/ \
-  && rm ./terraform_"$terraformVersion"_linux_amd64.zip
+  && bash /tmp/scripts/terraform-debian.sh "${TERRAFORMVERSION}"
+# vesctl
+RUN set -ex \
+  && bash /tmp/scripts/vesctl-debian.sh "${VESCTL_VERSION}"
 # ansible
 RUN set -ex \
   && pip3 install --upgrade pip \
