@@ -22,11 +22,10 @@ variable "offsets" {
     external = number
     management = number
   })
-  default = [
-    {
-      internal = 20
-      external = 0
-      management = 10
-    }
-  ]
+
+  default = {
+    internal = 20
+    external = 0
+    management = 10
+  }
 }
