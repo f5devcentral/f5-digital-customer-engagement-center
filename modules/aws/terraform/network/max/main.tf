@@ -2,6 +2,32 @@
 # Create the VPC 
 # using directions from https://clouddocs.f5.com/cloud/public/v1/aws/AWS_multiNIC.html
 #
+# Set minimum Terraform version and Terraform Cloud backend
+terraform {
+  required_version = ">= 0.12"
+}
+
+# Create a random id
+resource "random_id" "id" {
+  byte_length = 2
+}
+
+# Create Local object for modules
+locals {
+  context = {
+    prefix  = var.context.prefix
+    random  = tostring(random_id.id.id)
+  }
+}
+
+locals {
+  aws_vpc = {
+    cidr   = var.aws_vpc.cidr
+    azs    = var.aws_vpc.azs
+    region = var.aws_vpc.region
+  }
+}
+
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 

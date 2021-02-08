@@ -1,0 +1,3 @@
+aws  = { cidr = "10.0.0.0/16", azs = ["ap-southeast-2a", "ap-southeast-2b"],
+         region = "ap-southeast-2"}
+context = { prefix = "testClient", random = "somePrefix" }
