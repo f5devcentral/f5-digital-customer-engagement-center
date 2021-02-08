@@ -23,7 +23,7 @@ variable "awsAz2" {
   default = null
 }
 # admin
-variable "userId" {
+variable "adminAccountName" {
   default = "xadmin"
 }
 variable "sshPublicKey" {
@@ -32,6 +32,10 @@ variable "sshPublicKey" {
 }
 variable "adminSourceCidr" {
   default = "0.0.0.0/0"
+}
+variable "resourceOwner" {
+  description = "tag used to mark instance owner"
+  default     = "dcec-kic-user"
 }
 # eks
 variable "kubernetes" {

@@ -1,3 +1,5 @@
+adminAccountName = "zadmin"
+resourceOwner = "yourname"
 awsRegion = "us-east-2"
 awsAz1    = "us-east-2a"
 awsAz2    = "us-east-2b"
