@@ -1,16 +1,16 @@
 # AWS VPC Inputs
-variable "aws_vpc" {
+variable "awsVpc" {
   type = object({
     cidr    = string
-    azs     = list(string)
-    region  = string
+    awsZones     = list(string)
+    awsRegion  = string
   })
 }
 
 # Project Tagging
 variable "context" {
   type = object({
-    prefix  = string
+    resourceOwner  = string
     random  = string
   })
 }

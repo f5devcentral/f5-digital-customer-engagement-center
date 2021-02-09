@@ -1,10 +1,10 @@
-output "aws_infra" {
+output "awsInfra" {
   description = "AWS VPC ID for the created VPC"
   value = {
-    vpc_id          = module.vpc.vpc_id,
-    vpc_cidr_block  = module.vpc.vpc_cidr_block,
-    mgmt_subnets    = module.vpc.database_subnets,
-    public_subnets  = module.vpc.private_subnets,
-    private_subnets = module.vpc.private_subnets
+    vpcId          = module.vpc.awsVpcId,
+    vpcCidrBlock  = module.vpc.awsVpcCidr,
+    mgmtSubnets    = module.vpc.awsManagementSubnets,
+    publicSubnets  = module.vpc.awsPublicSubnets,
+    privateSubnets = module.vpc.awsPrivateSubnets
   }
 }

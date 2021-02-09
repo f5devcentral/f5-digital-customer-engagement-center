@@ -1,14 +1,14 @@
-variable "aws_vpc" {
+variable "awsVpc" {
   type = object({
-    region  = string
-    azs     = list(string)
-    cidr    = string
+    awsRegion  = string
+    awsZones   = list(string)
+    cidr       = string
   })
 }
 
 variable "context" {
   type = object({
-    prefix      = string
-    random      = string
+    resourceOwner = string
+    random        = string
   })
 }
