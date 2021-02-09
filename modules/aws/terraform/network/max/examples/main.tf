@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "../"
+  source  = "../"
   aws_vpc = var.aws_vpc
   context = var.context
 }

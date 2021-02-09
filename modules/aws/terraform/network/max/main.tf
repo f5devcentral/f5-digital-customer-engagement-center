@@ -15,8 +15,8 @@ resource "random_id" "id" {
 # Create Local object for modules
 locals {
   context = {
-    prefix  = var.context.resourceOwner
-    random  = tostring(random_id.id.id)
+    prefix = var.context.resourceOwner
+    random = tostring(random_id.id.id)
   }
 }
 
@@ -59,7 +59,7 @@ module "vpc" {
   create_database_internet_gateway_route = true
 
   tags = {
-    Name        = format("%s-vpc-%s", var.context.resourceOwner, var.context.random)
-    Terraform   = "true"
+    Name      = format("%s-vpc-%s", var.context.resourceOwner, var.context.random)
+    Terraform = "true"
   }
 }

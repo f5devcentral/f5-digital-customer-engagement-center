@@ -1,8 +1,8 @@
 variable "awsVpc" {
   type = object({
-    awsRegion  = string
-    awsZones   = list(string)
-    cidr       = string
+    awsRegion = string
+    awsZones  = list(string)
+    cidr      = string
   })
 }
 

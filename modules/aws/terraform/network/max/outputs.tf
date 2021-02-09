@@ -6,7 +6,7 @@ output "awsVpcId" {
 
 output "awsVpcCidr" {
   description = "The CIDR block of the VPC"
-  value       = concat(module.vpc.*.vpc_cidr_block,[""])[0]
+  value       = concat(module.vpc.*.vpc_cidr_block, [""])[0]
 }
 
 # Subnets
