@@ -11,26 +11,24 @@ About the framework
 -------------------
 The f5-dcec framework is built from the following components: 
 
- - Development container 
-  - runs the tools we use and their dependencies (for example - terraform, aws cli, Volterra cli )
-   
- - Full solutions
- - automation modules
+- Development container  
+- Full solutions
+- Automation modules
 
-	
-	
+
+
 Tools 
 ----------------
 The framework leverages several automation tools
 
 - Terraform is used as the main automation tool to create and update cloud componenets. 
    - More info on terraform https://www.terraform.io/intro/index.html
-- Ansible modules are used to control BIGIP configuration (Profiles, waf policy upload, iApp) 
- - more info on F5 supported ansible modules http://clouddocs.f5.com/products/orchestration/ansible/devel/ 
-- F5 REST API calls are used when no ansible module is available (for example, update a DOSL7 profile) 
- - more info on F5 iControl REST, https://devcentral.f5.com/Wiki/Default.aspx?Page=HomePage&NS=iControlREST
+- Ansible modules may be used to control BIGIP configuration (Profiles, waf policy upload) 
+   - more info on F5 supported ansible modules http://clouddocs.f5.com/products/orchestration/ansible/devel/ 
+- F5 REST API calls are used when no ansible module is available 
+   - more info on F5 iControl REST, https://devcentral.f5.com/Wiki/Default.aspx?Page=HomePage&NS=iControlREST
 - Github is used as the SCM
- - A single repo is used for the modules, solutions and documentation
+   - A single repo is used for the modules, solutions and documentation
 
 
 	
@@ -43,5 +41,5 @@ You can run the container from any docker host, follow the instructions here:
    :maxdepth: 1
    :glob:
 
-   local
+   getting_started
 

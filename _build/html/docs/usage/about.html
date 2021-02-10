@@ -385,20 +385,11 @@ The intent is to make it easier and faster to test the advanced security/ADC ser
 <div class="section" id="about-the-framework">
 <h2>About the framework<a class="headerlink" href="#about-the-framework" title="Permalink to this headline">¶</a></h2>
 <p>The f5-dcec framework is built from the following components:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Development container</p></li>
-</ul>
-<blockquote>
-<div><ul class="simple">
-<li><p>runs the tools we use and their dependencies (for example - terraform, aws cli, Volterra cli )</p></li>
-</ul>
-</div></blockquote>
 <ul class="simple">
+<li><p>Development container</p></li>
 <li><p>Full solutions</p></li>
-<li><p>automation modules</p></li>
+<li><p>Automation modules</p></li>
 </ul>
-</div></blockquote>
 </div>
 <div class="section" id="tools">
 <h2>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h2>
@@ -411,34 +402,36 @@ The intent is to make it easier and faster to test the advanced security/ADC ser
 </dd>
 </dl>
 </li>
-<li><p>Ansible modules are used to control BIGIP configuration (Profiles, waf policy upload, iApp)</p></li>
-</ul>
-<blockquote>
-<div><ul class="simple">
+<li><dl class="simple">
+<dt>Ansible modules may be used to control BIGIP configuration (Profiles, waf policy upload)</dt><dd><ul>
 <li><p>more info on F5 supported ansible modules <a class="reference external" href="http://clouddocs.f5.com/products/orchestration/ansible/devel/">http://clouddocs.f5.com/products/orchestration/ansible/devel/</a></p></li>
 </ul>
-</div></blockquote>
-<ul class="simple">
-<li><p>F5 REST API calls are used when no ansible module is available (for example, update a DOSL7 profile)</p></li>
-</ul>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>F5 REST API calls are used when no ansible module is available</dt><dd><ul>
 <li><p>more info on F5 iControl REST, <a class="reference external" href="https://devcentral.f5.com/Wiki/Default.aspx?Page=HomePage&amp;NS=iControlREST">https://devcentral.f5.com/Wiki/Default.aspx?Page=HomePage&amp;NS=iControlREST</a></p></li>
 </ul>
-</div></blockquote>
-<ul class="simple">
-<li><p>Github is used as the SCM</p></li>
-</ul>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Github is used as the SCM</dt><dd><ul>
 <li><p>A single repo is used for the modules, solutions and documentation</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
+</li>
+</ul>
 </div>
 <div class="section" id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
 <p>You can run the container from any docker host, follow the instructions here:</p>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+</ul>
 </div>
 </div>
 </div>
