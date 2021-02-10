@@ -8,9 +8,9 @@ locals {
     "private" = module.int.network
   }
   subnets = {
-    "mgmt"    = lookup(module.mgmt.subnets, format("%s/mgmt-subnet-%s", var.gcpRegion, var.buildSuffix), {})
-    "public"  = lookup(module.ext.subnets, format("%s/external-subnet-%s", var.gcpRegion, var.buildSuffix), {})
-    "private" = lookup(module.int.subnets, format("%s/internal-subnet-%s", var.gcpRegion, var.buildSuffix), {})
+    "mgmt"    = element(values(module.mgmt.subnets), 0)
+    "public"  = element(values(module.ext.subnets), 0)
+    "private" = element(values(module.int.subnets), 0)
   }
 }
 
