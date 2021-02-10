@@ -1,16 +1,21 @@
 # GCP minimal network
 
-This module will create a single VPC network in a single GCE [Region] for single-leg
-deployments. A NAT is not included in this module, so instances are required to
-have a public IP address to access the internet.
+# GCP maximum network
+
+This module will create three [VPC networks](https://cloud.google.com/vpc/docs/vpc) in a single GCE [Region](https://cloud.google.com/compute/docs/regions-zones)
+that isolates public facing, private internal/services, and management traffic
+for a standard three-leg deployment.
+
+A NAT is included on `mgmt` network to allow BIG-IP and other resources to access
+internet.
 
 ![gcp-min.png](gcp-min.png)
 
 To use this module within a solutions context:
 
 ```hcl
-module "network_min" {
-    source = "../../../../../google/terraform/network/min/"
+module "network" {
+    source = "../../../../../google/terraform/network/max/"
     gcpProjectId = var.gcpProjectId
     gcpRegion = var.gcpRegion
     projectPrefix = var.projectPrefix

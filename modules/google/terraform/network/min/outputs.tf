@@ -2,11 +2,15 @@
 # should be sufficient
 locals {
   vpcs = {
-    "main"   = module.ext.network.network
-    "public" = module.ext.network.network
+    "main"    = module.mgmt.network
+    "mgmt"    = module.mgmt.network
+    "public"  = module.ext.network
+    "private" = module.int.network
   }
   subnets = {
-    "public" = lookup(module.ext.subnets, format("%s/%s-external-subnet-%s", var.gcpRegion, var.projectPrefix, var.buildSuffix), {})
+    "mgmt"    = lookup(module.mgmt.subnets, format("%s/mgmt-subnet-%s", var.gcpRegion, var.buildSuffix), {})
+    "public"  = lookup(module.ext.subnets, format("%s/external-subnet-%s", var.gcpRegion, var.buildSuffix), {})
+    "private" = lookup(module.int.subnets, format("%s/internal-subnet-%s", var.gcpRegion, var.buildSuffix), {})
   }
 }
 

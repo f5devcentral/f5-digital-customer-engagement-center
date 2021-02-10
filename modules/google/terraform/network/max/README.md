@@ -1,8 +1,8 @@
 # GCP maximum network
 
-This module will create three VPC networks in a single GCE [Region] that isolates
-public facing, private internal/services, and management traffic for a three-leg
-deployment.
+This module will create three [VPC networks](https://cloud.google.com/vpc/docs/vpc) in a single GCE [Region](https://cloud.google.com/compute/docs/regions-zones)
+that isolates public facing, private internal/services, and management traffic
+for a standard three-leg deployment.
 
 A NAT is included on `mgmt` network to allow BIG-IP and other resources to access
 internet.
@@ -12,7 +12,7 @@ internet.
 To use this module within a solutions context:
 
 ```hcl
-module "network_min" {
+module "network" {
     source = "../../../../../google/terraform/network/max/"
     gcpProjectId = var.gcpProjectId
     gcpRegion = var.gcpRegion
