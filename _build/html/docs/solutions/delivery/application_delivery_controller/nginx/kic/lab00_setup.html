@@ -371,25 +371,58 @@
     
   <div class="section" id="nginx-kubernetes-ingress-controller-lab-setup">
 <h1>Nginx - Kubernetes Ingress Controller | Lab setup<a class="headerlink" href="#nginx-kubernetes-ingress-controller-lab-setup" title="Permalink to this headline">¶</a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You are responsible for the correct storing and protection of private keys and credentials that are used in the lab.</p>
+</div>
 <ol class="arabic simple">
-<li><p>Complete the steps in the ‘Getting started’ page. the following instructions will be perfromed on the dev container terminal</p></li>
-<li><dl class="simple">
-<dt>Set your AWS credentials as environment variables</dt><dd></dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Create the vars file and update it with your settings</dt><dd></dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Open the solution directory in the terminal</dt><dd></dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Run the setup script - this will create objects in your AWS account.</dt><dd></dd>
-</dl>
-</li>
+<li><p>Complete the steps in the Getting started page. the following instructions will be perfromed on the dev container terminal</p></li>
+<li><p>Set your AWS credentials as environment variables</p></li>
 </ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">&quot;your_access_ID&quot;</span>
+<span class="nb">export</span> <span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="s2">&quot;Your_access_secret_key&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Open the solution directory in the terminal</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /home/codespace/workspace/solutions/delivery/application_delivery_controller/nginx/kic/aws/
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Create the vars file and update it with your settings</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp admin.auto.tfvars.example admin.auto.tfvars
+code -r admin.auto.tfvars
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 93%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable Name</p></th>
+<th class="head"><p>Variable Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>resourceOwner</p></td>
+<td><p>Name of the person deploying the solution, used in tags (i.e. johnc)</p></td>
+</tr>
+<tr class="row-odd"><td><p>awsRegion</p></td>
+<td><p>The AWS region in which you deploy the solution (i.e. us-west-2)</p></td>
+</tr>
+<tr class="row-even"><td><p>sshPublicKey</p></td>
+<td><p>SSH public key material in an AWS supported format - <a class="reference external" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws</a></p></td>
+</tr>
+</tbody>
+</table>
+<p>5. Run the setup script - this will create objects in your AWS account.
+.. code-block:: bash</p>
+<blockquote>
+<div><p>./setup.sh</p>
+</div></blockquote>
 </div>
 
 
