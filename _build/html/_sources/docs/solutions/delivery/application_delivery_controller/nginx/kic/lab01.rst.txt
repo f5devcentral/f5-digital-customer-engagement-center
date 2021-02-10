@@ -7,7 +7,7 @@ We need to be able to route the requests to the relevant service.
 
 Nginx Kubernetes Ingress to save the day! :) The NGINX Ingress Controller for Kubernetes provides enterprise‑grade delivery services for Kubernetes applications, with benefits for users of both NGINX Open Source and NGINX Plus. With the NGINX Ingress Controller for Kubernetes, you get basic load balancing, SSL/TLS termination, support for URI rewrites, and upstream SSL/TLS encryption. NGINX Plus users additionally get session persistence for stateful applications and JSON Web Token (JWT) authentication for APIs.
 
-Let's start with the Nginx deployment.
+Start with the Nginx deployment.
 ''''''''''''''''''''''''''''''''''''''
 
 We are going to use the Nginx installation manifests based on the Nginx Ingress Controller installation guide <https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-manifests/>`__. For simplicity - we have already prepared the installation in a single yaml file.

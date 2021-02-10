@@ -2,7 +2,7 @@
 Getting started - Public access 
 ------------------------------------------
 
-In order to maintain a consistent deployment environemnt the solutions should all be deployed from the project's provided container
+In order to maintain a consistent deployment environemnt the solutions should all be deployed from the project provided container
 the container will run locally on your machine, it inculdes the automation tools required to run the soltuions. 
 most of the solutions are using terraform to create the cloud componenets that are required, the container also maintain the terraform state files. 
 
@@ -33,11 +33,9 @@ Here are the requirements for deploying solutions from this project:
 
 1.  Clone the repo
 
-
-.. code-block:: terminal
-   git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center.git
+    .. code-block:: terminal
+       git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center.git
     
-
 2.  Open the repo in visual studio code 
 
 
