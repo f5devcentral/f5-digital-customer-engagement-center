@@ -1,15 +1,17 @@
-variable "region" {
-  default = "East US 2"
+# Azure VNet Inputs
+variable "azureVnet" {
+  type = object({
+    cidr          = string
+    azureZones    = list(string)
+    azureRegion   = string
+    azureLocation = string
+  })
 }
 
-variable "location" {
-  default = "eastus2"
-}
-
-variable "prefix" {
-  default = "azureDemo"
-}
-
-resource "random_id" "buildSuffix" {
-  byte_length = 2
+# Project Tagging
+variable "context" {
+  type = object({
+    resourceOwner = string
+    random        = string
+  })
 }

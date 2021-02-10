@@ -1,7 +1,8 @@
-output "subnets" {
-  value = module.azure_network.subnets
-}
-
-output "vpc_id" {
-  value = module.azure_network.vpcs
+output "azureInfra" {
+  description = "Azure Vnet and subnet IDs for the created Vnet"
+  value = {
+    vnetId        = module.network.azureVNetId,
+    vnetCidrBlock = module.network.azureVnetCidr,
+    vnetSubnets   = module.network.azureSubnets
+  }
 }

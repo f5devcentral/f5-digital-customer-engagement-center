@@ -1,3 +1,4 @@
+# Set minimum Terraform version and Terraform Cloud backend
 terraform {
   required_version = "~> 0.14"
   required_providers {
@@ -5,35 +6,30 @@ terraform {
   }
 }
 
-# Network
-resource "azurerm_virtual_network" "main" {
-  name                = "${var.prefix}-network-${var.buildSuffix}"
-  address_space       = [var.cidr]
-  resource_group_name = var.resource_group
-  location            = var.location
+# Create a random id
+resource "random_id" "id" {
+  byte_length = 2
 }
 
-# Subnets
-# Management Subnet
-resource "azurerm_subnet" "mgmt" {
-  name                 = "${var.prefix}-mgmt-${var.buildSuffix}"
-  virtual_network_name = azurerm_virtual_network.main.name
-  resource_group_name  = var.resource_group
-  address_prefixes     = [var.subnets["subnet1"]]
+# Create locals for module
+locals {
+  subnetPrefixes = {
+    management = cidrsubnet(var.azureVnet.cidr, 8, var.offsets.management)
+    external   = cidrsubnet(var.azureVnet.cidr, 8, var.offsets.external)
+    internal   = cidrsubnet(var.azureVnet.cidr, 8, var.offsets.internal)
+  }
 }
 
-# External Subnet
-resource "azurerm_subnet" "ext" {
-  name                 = "${var.prefix}-ext-${var.buildSuffix}"
-  virtual_network_name = azurerm_virtual_network.main.name
-  resource_group_name  = var.resource_group
-  address_prefixes     = [var.subnets["subnet2"]]
-}
+module "network" {
+  source              = "Azure/network/azurerm"
+  resource_group_name = var.azureResourceGroup
+  vnet_name           = format("%s-vnet-%s", var.context.resourceOwner, var.context.random)
+  address_space       = var.azureVnet.cidr
+  subnet_prefixes     = [local.subnetPrefixes.management, local.subnetPrefixes.external, local.subnetPrefixes.internal]
+  subnet_names        = ["management", "external", "internal"]
 
-# Internal Subnet
-resource "azurerm_subnet" "int" {
-  name                 = "${var.prefix}-int-${var.buildSuffix}"
-  virtual_network_name = azurerm_virtual_network.main.name
-  resource_group_name  = var.resource_group
-  address_prefixes     = [var.subnets["subnet3"]]
+  tags = {
+    Name      = format("%s-vnet-%s", var.context.resourceOwner, var.context.random)
+    Terraform = "true"
+  }
 }

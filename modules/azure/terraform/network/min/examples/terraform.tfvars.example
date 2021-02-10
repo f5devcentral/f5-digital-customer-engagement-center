@@ -1,3 +1,11 @@
-prefix   = "myDemo"
-region   = "East US 2"
-location = "eastus2"
+azureVnet = {
+  cidr          = "10.1.0.0/16",
+  azureZones    = ["1", "2"],
+  azureRegion   = "West US 2"
+  azureLocation = "westus2"
+}
+
+context = {
+  resourceOwner = "testClient",
+  random        = "somePrefix"
+}

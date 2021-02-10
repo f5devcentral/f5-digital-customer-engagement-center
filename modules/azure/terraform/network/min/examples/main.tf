@@ -3,18 +3,18 @@ provider "azurerm" {
   features {}
 }
 
-# Resource Group
+# Create Resource Group
 resource "azurerm_resource_group" "main" {
-  name     = "${var.prefix}-rg-${random_id.buildSuffix.hex}"
-  location = var.location
+  name     = format("%s-rg-%s", var.context.resourceOwner, var.context.random)
+  location = var.azureVnet.azureLocation
 }
 
 # Network Module
-module "azure_network" {
-  source         = "../"
-  prefix         = var.prefix
-  buildSuffix    = random_id.buildSuffix.hex
-  region         = var.region
-  location       = var.location
-  resource_group = azurerm_resource_group.main.name
+module "network" {
+  source              = "../"
+  azureVnet           = var.azureVnet
+  context             = var.context
+  azureResourceGroup  = azurerm_resource_group.main.name
+
+  depends_on = [azurerm_resource_group.main]
 }

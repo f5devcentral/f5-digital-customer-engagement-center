@@ -1,34 +1,36 @@
-variable "region" {
-  default = "East US 2"
+# Azure VNet Inputs
+variable "azureVnet" {
+  type = object({
+    cidr          = string
+    azureZones    = list(string)
+    azureRegion   = string
+    azureLocation = string
+  })
 }
 
-variable "location" {
-  default = "eastus2"
-}
-
-variable "prefix" {
-  description = "prefix for objects in project"
-  default     = "azureDemo"
-}
-
-variable "cidr" {
-  default = "10.1.0.0/16"
-}
-
-variable "subnets" {
-  type = map(string)
-  default = {
-    "subnet1" = "10.1.1.0/24",
-    "subnet2" = "10.1.10.0/24",
-    "subnet3" = "10.1.20.0/24"
-  }
-}
-
-variable "resource_group" {
+variable "azureResourceGroup" {
   description = "resource group to create objects in"
 }
 
-variable "buildSuffix" {
-  description = "random build suffix for resources"
-  default     = "random-cat"
+# Project Tagging
+variable "context" {
+  type = object({
+    resourceOwner = string
+    random        = string
+  })
+}
+
+# Offsets use for the calculated subnet ranges
+variable "offsets" {
+  type = object({
+    management = number
+    external   = number
+    internal   = number
+  })
+
+  default = {
+    management = 1
+    external   = 10
+    internal   = 20
+  }
 }

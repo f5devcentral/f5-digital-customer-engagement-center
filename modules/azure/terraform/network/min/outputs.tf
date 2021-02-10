@@ -1,18 +1,16 @@
-locals {
-  vpcs = {
-    "main" = azurerm_virtual_network.main.id
-  }
-  subnets = {
-    "mgmt"    = azurerm_subnet.mgmt.id
-    "public"  = azurerm_subnet.ext.id
-    "private" = azurerm_subnet.int.id
-  }
+# Vnet
+output "azureVNetId" {
+  description = "The ID of the Vnet"
+  value       = module.network.vnet_id
 }
 
-output "vpcs" {
-  value = local.vpcs
+output "azureVnetCidr" {
+  description = "The CIDR block of the Vnet"
+  value       = concat(module.network.*.vnet_address_space, [""])[0]
 }
 
-output "subnets" {
-  value = local.subnets
+# Subnets
+output "azureSubnets" {
+  description = "List of IDs of subnets"
+  value       = module.network.vnet_subnets
 }
