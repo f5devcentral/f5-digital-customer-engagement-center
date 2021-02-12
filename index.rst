@@ -14,6 +14,7 @@ Welcome to F5 Digital Customer Engagement Centers documentation!
    :glob:
 
    docs/intro/intro
+   docs/intro/udf_jumphost
    docs/delivery/delivery
    docs/security/security
    docs/telemetry/telemetry
