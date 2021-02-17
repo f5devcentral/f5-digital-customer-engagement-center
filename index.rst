@@ -45,12 +45,3 @@ Designed to provide a common framework for deploying and developing F5 solutions
 
 
 
-
-
-
-Indices and tables
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
