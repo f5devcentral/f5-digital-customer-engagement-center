@@ -9,11 +9,19 @@ module "aws_network" {
   awsRegion               = var.awsRegion
   map_public_ip_on_launch = true
 }
+// ECR
+resource "aws_ecr_repository" "ecr" {
+  name                 = "${var.clusterName}-ecr-${random_id.randomString.dec}"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
 // EKS
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id
 }
-
 data "aws_eks_cluster_auth" "cluster" {
   name = module.eks.cluster_id
 }
@@ -31,8 +39,9 @@ module "eks" {
   vpc_id          = module.aws_network.vpcs["main"]
   worker_groups = [
     {
-      instance_type = "t3.xlarge"
-      asg_max_size  = 4
+      instance_type    = "t3.xlarge"
+      asg_max_size     = 4
+      root_volume_type = "standard"
     }
   ]
   create_eks                           = true
