@@ -41,10 +41,18 @@ Variable Name   Variable Value
 
 
 5. Run the setup script - this will create objects in your AWS account.
+
 .. code-block:: bash
 
    ./setup.sh
 
+
+6. Move to Lab1 - :doc:`lab01`
+
+
+
+
+#
 
 
 

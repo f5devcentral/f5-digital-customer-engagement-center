@@ -327,16 +327,9 @@
         <span class="nav-sidebartoc">
             <ul>
 <li><a class="reference internal" href="#">How to get involved</a><ul>
+<li><a class="reference internal" href="#areas-of-work">Areas of work</a></li>
 <li><a class="reference internal" href="#developing-and-supporting-your-module">Developing and supporting your module</a></li>
-<li><a class="reference internal" href="#what-to-work-on">What to work on</a><ul>
-<li><a class="reference internal" href="#documentation">Documentation</a></li>
-<li><a class="reference internal" href="#unit-tests">Unit tests</a></li>
-<li><a class="reference internal" href="#new-modules">New modules</a></li>
-<li><a class="reference internal" href="#new-functionality-for-an-existing-module">New functionality for an existing module</a></li>
-<li><a class="reference internal" href="#postman-collections">Postman collections</a></li>
-<li><a class="reference internal" href="#bugs">Bugs</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#what-to-work-on">What to work on</a></li>
 </ul>
 </li>
 </ul>
@@ -353,7 +346,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Solutions</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../solutions/delivery/delivery_index.html">Application Delivery controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solutions/delivery/delivery_index.html">Application Delivery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../solutions/security/security_index.html">Security</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Developer's Guide</span></p>
@@ -386,48 +379,20 @@
 <p>Thank you for getting involved with this project.</p>
 <p>You can contribute in a number of different ways.</p>
 <p>Here is some information that can help set your expectations.</p>
+<div class="section" id="areas-of-work">
+<h2>Areas of work<a class="headerlink" href="#areas-of-work" title="Permalink to this headline">¶</a></h2>
+<p>We break down the work into 3 main themes:</p>
+<ol class="arabic simple">
+<li><p>Solutions</p></li>
+<li><p>Modules</p></li>
+<li><p>Framework</p></li>
+</ol>
+</div>
 <div class="section" id="developing-and-supporting-your-module">
 <h2>Developing and supporting your module<a class="headerlink" href="#developing-and-supporting-your-module" title="Permalink to this headline">¶</a></h2>
-<p>When you develop a module, it goes through review before F5 accepts it. This review process may be difficult at times, but it ensures the published modules are good quality.</p>
-<p>You should <em>stay up to date</em> with this site’s documentation about module development. As time goes on, things change and F5 and the industry adopt new practices; F5 tries to keep the documentation updated to reflect these changes.</p>
-<p>If you develop a module that uses an out-of-date convention, F5 will let you know, and you should take the initiative to fix it.</p>
 </div>
 <div class="section" id="what-to-work-on">
 <h2>What to work on<a class="headerlink" href="#what-to-work-on" title="Permalink to this headline">¶</a></h2>
-<p>While module/solution development is the primary focus of most contributors, it’s understandable that you may not know how to create modules, or may not have any interest in creating modules to begin with.</p>
-<p>That’s OK. Here are some things you can do to assist.</p>
-<div class="section" id="documentation">
-<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h3>
-<p>Documentation help is always needed. F5 encourages you to submit documentation improvements.</p>
-</div>
-<div class="section" id="unit-tests">
-<h3>Unit tests<a class="headerlink" href="#unit-tests" title="Permalink to this headline">¶</a></h3>
-<p>The unit tests in the <cite>test/</cite> directory can always use work. Unit tests run fast and are not a burden on the test runner.</p>
-<p>F5 encourages you to add more test cases for your particular usage scenarios or any other scenarios that are missing tests.</p>
-<p>F5 adds enough unit tests to be reasonably comfortable that the code will execute correctly. This, unfortunately, does not cover many of the functional test cases. Writing unit test versions of functional tests is hugely beneficial.</p>
-</div>
-<div class="section" id="new-modules">
-<h3>New modules<a class="headerlink" href="#new-modules" title="Permalink to this headline">¶</a></h3>
-<p>Modules do not cover all of the ways you might use F5 products. If you find that a module is missing from the repo and you think F5 should add it, put those ideas on the Github Issues page.</p>
-</div>
-<div class="section" id="new-functionality-for-an-existing-module">
-<h3>New functionality for an existing module<a class="headerlink" href="#new-functionality-for-an-existing-module" title="Permalink to this headline">¶</a></h3>
-<p>If a module is missing a parameter that you think it should have, raise the issue and F5 will consider it.</p>
-</div>
-<div class="section" id="postman-collections">
-<h3>Postman collections<a class="headerlink" href="#postman-collections" title="Permalink to this headline">¶</a></h3>
-<p>The Ansible modules make use of the F5 Python SDK. In the SDK, all work is via the product REST APIs. This just happens to fit in perfectly with the Postman tool.</p>
-<p>If you want to work on new modules without involving yourself in ansible, a great way to start is to write Postman collections for the APIs that configure BIG-IP.</p>
-<p>If you provide F5 with the Postman collections, F5 can easily write the module itself.</p>
-<p>And you get bonus points for collections that address differences in APIs between versions of BIG-IP.</p>
-</div>
-<div class="section" id="bugs">
-<h3>Bugs<a class="headerlink" href="#bugs" title="Permalink to this headline">¶</a></h3>
-<p>Using the modules is the best way to iron out bugs. Using the modules in the way that <strong>you</strong> expect them to work is a great way to find bugs.</p>
-<p>During the development process, F5 writes tests with specific user personas in mind. Your usage patterns may not reflect those personas.</p>
-<p>Using the modules is the best way to get good code and documentation. If the documentation isn’t clear to you, it’s probably not clear to others.</p>
-<p>Righting those wrongs helps you and future users.</p>
-</div>
 </div>
 </div>
 
