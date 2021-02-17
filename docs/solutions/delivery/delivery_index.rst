@@ -1,5 +1,5 @@
 Application Delivery
-----------------------------------------
+---------------------
 
 
 Here are the F5 application delivery solutions that are available to deploy:
