@@ -1,4 +1,3 @@
-
 Getting started - Public access 
 ------------------------------------------
 
