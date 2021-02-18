@@ -9,7 +9,7 @@ Common dev container
 ---------------
 
 
-Detials on the devcontainer here:
+Details on the devcontainer here:
 
 1. tools that are included:
 
