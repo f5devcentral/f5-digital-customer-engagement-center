@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'F5 Digital Customer Engagement Center'
-copyright = '2020, Jon Calalang, Vinne Mazza, Armand Sultantono, Doug Gallarda, James Jones, Gee Chow, Cameron Delano, Mark Menger'
-author = 'Jon Calalang, Vinne Mazza, Armand Sultantono, Doug Gallarda, James Jones, Gee Chow, Cameron Delano, Mark Menger'
+copyright = '2020, Jon Calalang, Vinne Mazza, Yossi rosenboim, Armand Sultantono, Doug Gallarda, James Jones, Gee Chow, Cameron Delano, Mark Menger'
+author = 'Jon Calalang, Vinne Mazza, Yossi rosenboim, Armand Sultantono, Doug Gallarda, James Jones, Gee Chow, Cameron Delano, Mark Menger'
 
 # The full version, including alpha/beta/rc tags
 release = '0.1'

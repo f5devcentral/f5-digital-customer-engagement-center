@@ -3,29 +3,45 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to F5 Digital Customer Engagement Centers documentation!
+Welcome to F5 Digital Customer Engagement Center documentation!
 =================================================================
+
+This is a community project. Use at your own responsability ! 
+
+Designed to provide a common framework for deploying and developing F5 solutions as code. 
+
 
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
+   :includehidden:
+   :caption: User Guide
    :glob:
 
-   docs/intro/intro
-   docs/intro/udf_jumphost
-   docs/delivery/delivery
-   docs/security/security
-   docs/telemetry/telemetry
-   docs/contributions/contributions
+   /docs/usage/about
+   /docs/usage/getting_started
+   /docs/usage/filing-issues
 
-Indices and tables
-==================
+.. toctree::
+   :maxdepth: 1
+   :caption: Solutions
+   :glob:
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   /docs/solutions/*/*_index
+   
+.. toctree::
+   :maxdepth: 1
+   :caption: Module Reference
+
+   /modules/modules_by_category
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Developer's Guide
+
+   /docs/development/getting-involved
+   /docs/development/guidelines
 
 
-.. _jmcalalang: https://www.github.com/jmcalalang
+
