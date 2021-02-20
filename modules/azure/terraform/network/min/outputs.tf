@@ -1,11 +1,11 @@
 # Vnet
-output "azureVNetId" {
+output "azureVnetId" {
   description = "The ID of the Vnet"
   value       = module.network.vnet_id
 }
 
 output "azureVnetCidr" {
-  description = "The CIDR block of the Vnet"
+  description = "The CIDR block of the VNet"
   value       = concat(module.network.*.vnet_address_space, [""])[0]
 }
 

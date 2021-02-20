@@ -1,17 +1,29 @@
-# Azure VNet Inputs
-variable "azureVnet" {
-  type = object({
-    cidr          = string
-    azureZones    = list(string)
-    azureRegion   = string
-    azureLocation = string
-  })
+#project
+variable "projectPrefix" {
+  type        = string
+  description = "prefix for resources"
+}
+variable "buildSuffix" {
+  type        = string
+  description = "random build suffix for resources"
+}
+variable "resourceOwner" {
+  description = "name of the person or customer running the solution"
 }
 
-# Project Tagging
-variable "context" {
+#Azure VNet Inputs
+variable "azureLocation" {
+  type        = string
+  description = "location where Azure resources are deployed (abbreviated Azure Region name)"
+}
+variable "azureCidr" {
+  type        = string
+  description = "VNet CIDR range"
+}
+variable "azureSubnets" {
   type = object({
-    resourceOwner = string
-    random        = string
+    management = string
+    external   = string
+    internal   = string
   })
 }

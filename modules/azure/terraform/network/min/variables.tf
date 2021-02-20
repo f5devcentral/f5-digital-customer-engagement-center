@@ -1,36 +1,37 @@
-# Azure VNet Inputs
-variable "azureVnet" {
-  type = object({
-    cidr          = string
-    azureZones    = list(string)
-    azureRegion   = string
-    azureLocation = string
-  })
+#project
+variable "projectPrefix" {
+  type        = string
+  description = "prefix for resources"
+  default     = "demo"
+}
+variable "buildSuffix" {
+  type        = string
+  description = "random build suffix for resources"
+}
+variable "resourceOwner" {
+  description = "name of the person or customer running the solution"
 }
 
+#Azure Resource Group
 variable "azureResourceGroup" {
   description = "resource group to create objects in"
 }
 
-# Project Tagging
-variable "context" {
-  type = object({
-    resourceOwner = string
-    random        = string
-  })
+#Azure VNet Inputs
+variable "azureCidr" {
+  type        = string
+  description = "VNet CIDR range"
+  default     = "10.1.0.0/16"
 }
-
-# Offsets use for the calculated subnet ranges
-variable "offsets" {
+variable "azureSubnets" {
   type = object({
-    management = number
-    external   = number
-    internal   = number
+    management = string
+    external   = string
+    internal   = string
   })
-
   default = {
-    management = 1
-    external   = 10
-    internal   = 20
+    management = "10.1.1.0/24"
+    external   = "10.1.10.0/24"
+    internal   = "10.1.20.0/24"
   }
 }

@@ -1,11 +1,13 @@
-azureVnet = {
-  cidr          = "10.1.0.0/16",
-  azureZones    = ["1", "2"],
-  azureRegion   = "West US 2"
-  azureLocation = "westus2"
-}
+projectPrefix = "demo"
+buildSuffix   = "dev"
+resourceOwner = "user1"
 
-context = {
-  resourceOwner = "testClient",
-  random        = "somePrefix"
+azureLocation = "westus2"
+
+azureCidr = "10.1.0.0/16"
+
+azureSubnets = {
+  management = "10.1.1.0/24",
+  external   = "10.1.10.0/24",
+  internal   = "10.1.20.0/24"
 }

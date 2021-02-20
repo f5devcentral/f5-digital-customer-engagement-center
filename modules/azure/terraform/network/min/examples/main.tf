@@ -5,16 +5,24 @@ provider "azurerm" {
 
 # Create Resource Group
 resource "azurerm_resource_group" "main" {
-  name     = format("%s-rg-%s", var.context.resourceOwner, var.context.random)
-  location = var.azureVnet.azureLocation
+  name     = format("%s-rg-%s", var.projectPrefix, var.buildSuffix)
+  location = var.azureLocation
+
+  tags = {
+    Name      = format("%s-rg-%s", var.resourceOwner, var.buildSuffix)
+    Terraform = "true"
+  }
 }
 
 # Network Module
-module "network" {
-  source              = "../"
-  azureVnet           = var.azureVnet
-  context             = var.context
-  azureResourceGroup  = azurerm_resource_group.main.name
+module "network_min" {
+  source             = "../"
+  projectPrefix      = var.projectPrefix
+  buildSuffix        = var.buildSuffix
+  resourceOwner      = var.resourceOwner
+  azureResourceGroup = azurerm_resource_group.main.name
+  azureCidr          = var.azureCidr
+  azureSubnets       = var.azureSubnets
 
   depends_on = [azurerm_resource_group.main]
 }
