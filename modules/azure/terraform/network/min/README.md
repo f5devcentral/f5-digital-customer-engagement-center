@@ -42,7 +42,7 @@ No provider.
 | resourceOwner | name of the person or customer running the solution | `string` | n/a | yes |
 | azureResourceGroup | resource group to create objects in | `string` | n/a | yes |
 | azureCidr | VNet CIDR range | `string` | `"10.1.0.0/16"` | no |
-| azureSubnets | subnets to create within the VNet | `object` | `management = "10.1.1.0/24", external = "10.1.10.0/24", internal = "10.1.20.0/24"` | no |
+| azureSubnets | subnets to create within the VNet | `object` | `management = "10.1.1.0/24"`<br>`external = "10.1.10.0/24"`<br>`internal = "10.1.20.0/24"` | no |
 
 ## Outputs
 
