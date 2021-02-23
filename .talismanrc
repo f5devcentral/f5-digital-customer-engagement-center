@@ -138,3 +138,17 @@ fileignoreconfig:
   checksum: d26184fabd4352e651dcf7f42c252647e41ac9796672250e6084a6c051f9a580
 - filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/nginx-ingress-install.yml
   checksum: d9884dedf80dcffd0a58d48ad578a19e9d500ba6bef4ad80d77540cd6361d7b6
+- filename: solutions/telemetery/nginx/aws/nginx-controller/admin.auto.tfvars.example
+  checksum: d21acd9712d2d6cb1554020da2f803e3ab730007392792a833411d2320c1a0b1
+- filename: solutions/telemetery/nginx/aws/nginx-controller/readme.md
+  checksum: feec89b5a3c76020b8275da2e6918ba52d69e84ba0a880f9b519d43283d317e4
+- filename: solutions/telemetery/nginx/aws/nginx-controller/main.tf
+  checksum: a5ee34f2384e8993cc89089f221cbf0a76cd971ca63893d73c1563b80a7e1b88
+- filename: modules/aws/terraform/nginx-controller/secrets.tf
+  checksum: af866e3e513c15042192c3922ec5ace892edf5787f3d0e6f159640684bc12020
+- filename: modules/aws/terraform/nginx-controller/iam.tf
+  checksum: cac08b70c3d86077ebb588510ff5d7a7ef5dcda4752fb2efe4dae3448d6b581d
+- filename: modules/aws/terraform/nginx-controller/main.tf
+  checksum: 4aadc2d989a255a50f72561e10ee99dc9ea343f59917f44cd15ef0af88e3b92e
+- filename: modules/aws/terraform/nginx-controller/templates/startup.sh.tpl
+  checksum: 0241c4a820b4d5aae36be131f3a0d75b67563d87a90e116e7a2c6c25150b9a9a

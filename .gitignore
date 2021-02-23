@@ -1,6 +1,7 @@
 # project specific
 cluster-config
 controller-installer-*
+.terraform.lock.hcl
 # Local .terraform directories
 **/.terraform/*
 
