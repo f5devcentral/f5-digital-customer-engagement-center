@@ -24,9 +24,9 @@ This solution requires the following products and services.
    * GNU Make
    * git
    * OpenSSL, optionally, if you would like to generate a self-signed certificate and a key for the default server.
-   * For NGINX Plus, you must have the NGINX Plus license – the certificate (nginx-repo.crt) and the key (nginx-repo.key).
+   * For NGINX Plus, you must have the NGINX Plus license - the certificate (nginx-repo.crt) and the key (nginx-repo.key).
 
-1.  VSCode is our preferred IDE. This allows an editor and terminal within a single pane, open VSCode, and a new Terminal. If you are in the UDF environment, you can access VSCode through the **coder** access method on the **ubuntuHost** resource. Also, see "F5 UDF Environment Access".
+1.  VSCode is our preferred IDE. This allows an editor and terminal within a single pane, open VSCode, and a new Terminal. If you are in the UDF environment, you can access VSCode through the **coder** access method on the **ubuntuHost** resource. Also, see `F5 UDF Environment Access`_.
 
    Example:
 
@@ -34,7 +34,7 @@ This solution requires the following products and services.
 
 2.  Set or verify your AWS credentials
 
-   .. note:: AWS Access and Secret keys for the UDF environment are located under "cloud accounts"
+   .. note:: AWS Access and Secret keys for the UDF environment are located under **cloud accounts**
    .. warning:: For UDF users, the region must be ``us-west-2``
 
    In the terminal window, copy the below text and paste+enter:
@@ -194,7 +194,7 @@ This solution requires the following products and services.
          --resources publicSubnetAZ1 publicSubnetAZ2 \
          --tags Key=kubernetes.io/cluster/my-cluster-3820603181,Value=shared   Key=kubernetes.io/role/elb,Value=1
 
-   For EKS to create an Elastic Load Balancer for our Ingress solution, two tags need to be placed on the public subnets. Ideally, Terraform would add the tags. However, the EKS module from Terraform does not manipulate those. So, we're doing it manually. These issues can be tracked here.
+   For EKS to create an Elastic Load Balancer for our Ingress solution, two tags need to be placed on the public subnets. Ideally, Terraform would add the tags. However, the EKS module from Terraform does not manipulate those. So, we are doing it manually. These issues can be tracked here.
 
    - issue01_
    - issue02_
@@ -259,3 +259,4 @@ This solution requires the following products and services.
 .. _Terraform: https://www.terraform.io/
 .. _`Visual Studio Code`: https://code.visualstudio.com/
 .. _`NGINX Kubernetes Ingress Controller | Deployment`: lab01.html
+.. _`F5 UDF Environment Access`: ../../../../../docs/usage/f5_udf_getting_started.html

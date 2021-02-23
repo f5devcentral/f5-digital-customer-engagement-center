@@ -74,7 +74,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
 3. HTTPS with Active Monitors
 
-   NGINX Plus can periodically check the health of upstream servers by sending special health‑check requests to each server and verifying the correct response.
+   NGINX Plus can periodically check the health of upstream servers by sending special health-check requests to each server and verifying the correct response.
 
    Create NGINX Ingress Controller with Https with Active Monitors:
 
@@ -101,7 +101,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
 4. HTTPS with Active Monitors, Cacheing
 
-   A content cache sits in between a client and an “origin server”, and saves copies of all the content it sees. If a client requests content that the cache has stored, it returns the content directly without contacting the origin server. This improves performance as the content cache is closer to the client and more efficiently uses the application servers because they don’t have to generate pages from scratch each time.
+   A content cache sits in between a client and an **origin server**, and saves copies of all the content it sees. If a client requests content that the cache has stored, it returns the content directly without contacting the origin server. This improves performance as the content cache is closer to the client and more efficiently uses the application servers because they do not have to generate pages from scratch each time.
 
    Step 1. Create NGINX Ingress Controller Cacheing Path:
 
@@ -139,9 +139,9 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    NGINX Ingress Controller can participate in the mTLS cert exchange with services.
 
-   By default, the TLS protocol only proves the identity of the server to the client using X.509 certificates, and the authentication of the client to the server is left to the application layer. TLS also offers client-to-server authentication using client-side X.509 authentication.[14] As it requires provisioning of the certificates to the clients and involves a less user-friendly experience, it's rarely used in end-user applications.
+   By default, the TLS protocol only proves the identity of the server to the client using X.509 certificates, and the authentication of the client to the server is left to the application layer. TLS also offers client-to-server authentication using client-side X.509 authentication.[14] As it requires provisioning of the certificates to the clients and involves a less user-friendly experience, it is rarely used in end-user applications.
 
-   Mutual TLS authentication ('''mTLS''') is much more widespread in business-to-business (B2B) applications, where a limited number of programmatic and homogeneous clients are connecting to specific web services, the operational burden is limited, and security requirements are usually much higher as compared to consumer environments.
+   Mutual TLS authentication (**mTLS**) is much more widespread in business-to-business (B2B) applications, where a limited number of programmatic and homogeneous clients are connecting to specific web services, the operational burden is limited, and security requirements are usually much higher as compared to consumer environments.
 
    Step 1. Create the Arcadia mTLS secret in Kubernetes:
 

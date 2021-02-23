@@ -1,7 +1,7 @@
 Arcadia Application | Deployment
 --------------------------------
 
-For this workshop, we are going to use the "Arcadia Financial" application.
+For this workshop, we are going to use the **Arcadia Financial** application.
 The application is built with four different microservices that are deployed in the Kubernetes environment.
 
 - **Main** - provides access to the web GUI of the application for use by browsers
@@ -12,7 +12,7 @@ The application is built with four different microservices that are deployed in 
 All of our pods are created based on the `NGINX Unit`_ application server.
 
 
-NGINX Unit is a dynamic application server capable of running beside NGINX Plus and NGINX Open Source or standalone. NGINX Unit supports a RESTful JSON API, deploys configuration changes without service disruptions, and runs apps built with multiple languages and frameworks. Designed from scratch around your distributed applications' needs, it lays the foundation for your service mesh.
+NGINX Unit is a dynamic application server capable of running beside NGINX Plus and NGINX Open Source or standalone. NGINX Unit supports a RESTful JSON API, deploys configuration changes without service disruptions, and runs apps built with multiple languages and frameworks. Designed from scratch around your distributed applications needs, it lays the foundation for your service mesh.
 
 |image50|
 
