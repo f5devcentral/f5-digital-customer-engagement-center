@@ -2,7 +2,7 @@ Getting started - Public access
 ------------------------------------------
 
 In order to maintain a consistent deployment environemnt the solutions should all be deployed from the project provided container
-the container will run locally on your machine, it inculdes the automation tools required to run the soltuions.
+the container will run locally on your machine, it inculdes the automation tools required to run the solutions.
 most of the solutions are using terraform to create the cloud componenets that are required, the container also maintain the terraform state files.
 
 
