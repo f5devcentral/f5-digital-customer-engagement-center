@@ -18,6 +18,37 @@ resource "aws_ecr_repository" "ecr" {
     scan_on_push = true
   }
 }
+resource "aws_ecr_repository_policy" "ecr-policy" {
+  depends_on = [
+    aws_ecr_repository.ecr,
+  ]
+  repository = "${var.clusterName}-ecr-${random_id.randomString.dec}"
+  policy     = <<EOF
+  {
+    "Version": "2008-10-17",
+    "Statement": [
+      {
+        "Sid": "adds full ecr access to the demo repository",
+        "Effect": "Allow",
+        "Principal": "*",
+        "Action": [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:BatchGetImage",
+          "ecr:CompleteLayerUpload",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetLifecyclePolicy",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:UploadLayerPart"
+        ]
+      }
+    ]
+  }
+  EOF
+}
+
+
 // EKS
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id

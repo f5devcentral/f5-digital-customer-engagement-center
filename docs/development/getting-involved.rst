@@ -8,16 +8,16 @@ You can contribute in a number of different ways.
 Here is some information that can help set your expectations.
 
 
-Areas of work 
+Areas of work
 -------------------------------------
 
 We break down the work into 3 main themes:
 
-1. Solutions 
+1. Solutions
 
-2. Modules 
+2. Modules
 
-3. Framework 
+3. Framework
 
 
 Developing and supporting your solution
@@ -64,6 +64,4 @@ What to work on
 
 Work is organized in github, https://github.com/f5devcentral/f5-digital-customer-engagement-center/projects
 
-please review the existing items and check if there is already some work in progress on the desired solution/module 
-
-
+please review the existing items and check if there is already some work in progress on the desired solution/module

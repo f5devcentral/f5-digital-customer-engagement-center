@@ -112,3 +112,29 @@ fileignoreconfig:
   checksum: 2fae9d558fb0a8ea08ee9ce46f7f68d18e2cacd441b40c15aa42c831b76f179f
 - filename: modules/aws/terraform/gwlb-bigip-vpc/main.tf
   checksum: a2f3c9486258417a870e5f46fac5cf61b71a741750319375394b2e99db3888e0
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/client-cert.pem
+  checksum: 3660b5d63310fbd321ccdab9a7669c4e40f1da52cb0a4e65ef0b73de642e939d
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/client-key.pem
+  checksum: 9ede6dac3926187d9dafcdca214817a63525e02eb8c434ba074a665c93c6ae4d
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/arcadiaMTLSSecret.yml
+  checksum: 2a49c7e1b97ba6831c5460f3a599e815f6a72505d3838d0c46b291633f9f24d6
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/arcadiaSecret.yml
+  checksum: 2cd3abb9526f47942bee59774d9b891f375282a511cc99fa78570bd9a4ebe427
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/arcadiaMTLSPolicy.yml
+  checksum: 5f4c6559c1c67ba9150ee18a7cd48b6c1aa61087ac058454a0b5e9d66dff7bba
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/ingress-arcadia-https-monitor.yml
+  checksum: 34037b487bb7bfb6f353669ded1093720dc3c32bd76396454dee0dcbb08ddfac
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/ingress-arcadia-https.yml
+  checksum: 53fdf461fe54a64dec429029cf6cc55fdb4c666fb0270242f81416292f507814
+- filename: docs/solutions/delivery/application_delivery_controller/nginx/kic/labSetupAWS.rst
+  checksum: 465bf4043f7f0f659129f29bb8436e030b0f9a89cbaff999dbea596ae47eeeb2
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/ingress-arcadia-cache.yml
+  checksum: c9faeebb54c3ef7c398caad5b83d3a02dc0da84d82f55b987d8fbbc353086abb
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/ingress-arcadia-mtls.yml
+  checksum: adb851a50d028cee564555e1956157f70cdcd95b1ee151592fe230bf21ac61be
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/ingress-arcadia.yml
+  checksum: b28a402931716f2f15c3c04d879f5b95d8e7cb4d4a55bc32994651d9b3b4f003
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/nginx-config-cache.yml
+  checksum: d26184fabd4352e651dcf7f42c252647e41ac9796672250e6084a6c051f9a580
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/templates/nginx-ingress-install.yml
+  checksum: d9884dedf80dcffd0a58d48ad578a19e9d500ba6bef4ad80d77540cd6361d7b6

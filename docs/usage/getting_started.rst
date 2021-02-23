@@ -1,4 +1,4 @@
-Getting started 
+Getting started
 ------------------------------------------
 
 There are two options to use the soltions in this project

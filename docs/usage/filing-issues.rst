@@ -15,7 +15,7 @@ Please provide as much information as possible.
 Some things we need to know:
 
 - Which solution
-- What is your environment 
+- What is your environment
 
 
 The Issue template asks these questions.
@@ -34,5 +34,3 @@ Do not comment on closed issues
 -------------------------------
 
 **Important:** Please do not comment on closed issues.
-
-

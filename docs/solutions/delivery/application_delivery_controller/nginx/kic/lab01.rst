@@ -1,292 +1,219 @@
-Nginx - Kubernetes Ingress Controller | Part 1
-----------------------------------------------
+NGINX Kubernetes Ingress Controller | Deployment
+------------------------------------------------
 
-Through Terraform and the deployment scripts, we have deployed the applications but did not expose the services.
+NGINX Ingress Controller provides a robust feature set to secure, strengthen, and scale your containerized apps, including:
 
-We need to be able to route the requests to the relevant service.
+- Advanced app‑centric configuration – Use role‑based access control (RBAC) and self‑service to set up security guardrails (not gates), so your teams can manage their apps securely and with agility. Enable multi‑tenancy, reusability, simpler configs, and more.
+- Visibility and performance monitoring – Pinpoint undesirable behaviors and performance bottlenecks to simplify troubleshooting and make fixes faster.
 
-Nginx Kubernetes Ingress to save the day! :) The NGINX Ingress Controller for Kubernetes provides enterprise‑grade delivery services for Kubernetes applications, with benefits for users of both NGINX Open Source and NGINX Plus. With the NGINX Ingress Controller for Kubernetes, you get basic load balancing, SSL/TLS termination, support for URI rewrites, and upstream SSL/TLS encryption. NGINX Plus users additionally get session persistence for stateful applications and JSON Web Token (JWT) authentication for APIs.
+|image00|
 
-Start with the Nginx deployment.
-''''''''''''''''''''''''''''''''''''''
+1. Change the directory into the NGINX Ingress cloned repository.
 
-We are going to use the Nginx installation manifests based on the Nginx Ingress Controller installation guide <https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-manifests/>`__. For simplicity - we have already prepared the installation in a single yaml file.
+   In the terminal window, copy the below text and paste+enter:
 
-1. Run the command bellow:
+   .. code-block::
 
-.. raw:: html
+      cd ~/Desktop/Kubernetes-ingress/
 
-  <pre>
-  Command:
-  kubectl apply -f files/5ingress/nginx-ingress-install.yaml
+   Example:
 
-  Output:
-  namespace/nginx-ingress created
-  serviceaccount/nginx-ingress created
-  clusterrole.rbac.authorization.k8s.io/nginx-ingress created
-  clusterrolebinding.rbac.authorization.k8s.io/nginx-ingress created
-  secret/default-server-secret created
-  configmap/nginx-config created
-  deployment.apps/nginx-ingress created
-  service/nginx-ingress created
-  </pre>
+   |image16|
 
-2. Expose the Nginx Ingress Dashboard (copy and paste in the command line the bellow).
+2. Copy NGINX repository Certificate and Key
 
-.. raw:: html
+   NGNIX Ingress Controller has two offerings, an open-source edition and a purchased supported solution. Both solutions come from NGINX; however, there are features and performance differences between the two offerings. Below are popular features and use cases.
 
-  <pre>
-  cat << EOF \| kubectl apply -f - apiVersion: v1 kind: Service
-  metadata: name: dashboard-nginx-ingress namespace: nginx-ingress
-  annotations:
-  service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
-  spec: type: LoadBalancer ports:
+   |image49|
 
-  port: 80 targetPort: 8080 protocol: TCP name: http selector: app:
-  nginx-ingress EOF
-  </pre>
+   This solution uses the purchased NGINX Ingress Controller. Through your account team, workshop registration, or an instructor, you should have received an NGINX certificate and key to access the NGINX registry. Access to the registry allows for building current NGINX products.
 
-3. Check what we did so far is actually working:
+   VSCode Coder will allow you to drag files into the interface. Drag your two files to the **root** of the `Kubernetes-ingress` folder.
 
-.. raw:: html
+   Example:
 
-   <pre>
-   Command:
-   kubectl get svc --namespace=nginx-ingress
+   |image17|
 
-   Output:
-   NAME                      TYPE           CLUSTER-IP      EXTERNAL-IP                                                                 PORT(S)                      AGE
-   dashboard-nginx-ingress   LoadBalancer   172.20.36.60    aeb592ad4011544219c0bc49581baa13-421891138.eu-central-1.elb.amazonaws.com   80:32044/TCP                 11m
-   nginx-ingress             LoadBalancer   172.20.14.206   ab21b88fec1f445d98c79398abc2cd5d-961716132.eu-central-1.elb.amazonaws.com   80:30284/TCP,443:31110/TCP   5h35m
-   </pre>
+3. Verify that you have your certificate and key
 
-.. ::note the EXTERNAL-IP of the "dashboard-nginx-ingress".
+   In the terminal window, copy the below text and paste+enter:
 
-This is the hostname that we are going to use in order to view the Nginx Dashboard. Browse to the following location and verify you can see the dashboard:
-``http://<DASHBOARD-EXTERNAL-IP>/dashboard.html``
+   .. code-block::
 
-Note the EXTERNAL-IP of the "nginx-ingress". This is the hostname that we are going to use in order to publish the Arcadia web application. Browse to the following location and verify that you receive a 404
-status code: ``http://<INGRESS-EXTERNAL-IP>/``
+      ls nginx-repo.*
 
-.. ::warning Please note that it might take some time for the DNS names to become available.
+   Example:
 
-Now we can get to the interesting part
-''''''''''''''''''''''''''''''''''''''
+   |image18|
 
-Expose all the application services and route traffic based on the HTTP
-path. We will start with a basic configuration.
+4. Create the NGINX Ingress Controller Docker image
 
-4. Create a new file (for example ``files/5ingress/arcadia-vs.yaml``) using the configuration bellow.
+   .. warning:: NGINX Ingress Controller should NEVER be uploaded into a public registry, this would allow for stealing intellectual property, country software agreements, and the owner would be responsible.
 
-.. ::warning Please use the following folder: ``files/5ingress/`` for all future K8s config files in this guide.
+   .. note:: Building the image will take a few minutes (3-5)
 
-.. ::warning: Please note: you need to replace the ``host`` value with the EXTERNAL-IP of the ``nginx-ingress`` service.
+   Within the Kubernetes-ingress repository are all the needed files to create our nginx ingress controller docker image. With the certificate and key in place, we can **make** our image. After the image is created, our local installation of docker will push our image to the ECR we created with Terraform earlier. When Terraform applied our ECR object, it output the name of our registry. Its output was a prefix and looked like a URL.
 
-.. raw:: yaml
+   Example of Terraform outputs:
 
-   <pre>
-   apiVersion: extensions/v1beta1
-   kind: Ingress
-   metadata:
-     name: arcadia
-   spec:
-     rules:
-     - host: MUST BE REPLACED WITH "EXTERNAL-IP" OF THE "nginx-ingress" SERVICE
-       http:
-         paths:
-         - path: /
-           backend:
-             serviceName: arcadia-main
-             servicePort: 80
-         - path: /api/
-           backend:
-             serviceName: arcadia-app2
-             servicePort: 80
-         - path: /app3/
-           backend:
-             serviceName: arcadia-app3
-             servicePort: 80
-   </pre>
-
-Note how the various HTTP paths (``/, /api/, /app3/``) are routed by Ingress to the relevant K8s services.
-
-5. Apply the configuration. Click here for detailed instructions.
-
-.. code:: bash
-
-    kubectl apply -f files/5ingress/arcadia-vs.yaml
-
-    </details>
-
-At this stage the basic install is finished and all that's left is to check the connectivity to the Arcadia web application. Get the public hostname of the exposed `nginx-ingress` service.
-
-6. Browse to the following location and verify that you can access the site: `http://<INGRESS-EXTERNAL-IP>/`
-
-7. Login to the application using the following credentials:
-
-Username: admin Password: **iloveblue**
-
-At the moment we still have two key features missing: - We are serving
-only http, not https. We want our site to be fully secured therefore all
-communications need to be encrypted - We are not actively monitoring the
-health of the pods through the data path
-
-8.  Take a look at the ``files/5ingress/2arcadia.yaml`` file. It increases the number of pods for our services to two - and also defines how the http health checks will looks like.
-
-9.  Apply this new configuration. Click here for detailed instructions.
-
-.. raw:: html
-
-    <pre>
-    Command:
-    kubectl apply -f files/5ingress/2arcadia.yaml
-    </pre>
-
-10. Look at the Nginx dashboard, you can see that right now that two
-    HTTP upstreams have 2 members but no health checks are being done.
-    In our next step we will finish this part of the configuration, we
-    will implement the following:
-
--  Enable health checks
--  Enable https for the application and redirect http requests to https
-
-11. Create ``ingress-arcadia.yaml`` to reflect the bellow and apply the
-    configuration.
-    :warning: Please note: you need to replace the ``host`` value with
-    the EXTERNAL-IP of the ``nginx-ingress`` service.
-
-.. raw:: html
-
-   <pre>
-   apiVersion: v1
-   kind: Secret
-   metadata:
-     name: arcadia-tls
-     namespace: default
-   data:
-     tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZWRENDQkR5Z0F3SUJBZ0lTQTZmZXlEYXhUUFc4eFdlLys2K1h0eUhOTUEwR0NTcUdTSWIzRFFFQkN3VUEKTUVveEN6QUpCZ05WQkFZVEFsVlRNUll3RkFZRFZRUUtFdzFNWlhRbmN5QkZibU55ZVhCME1TTXdJUVlEVlFRRApFeHBNWlhRbmN5QkZibU55ZVhCMElFRjFkR2h2Y21sMGVTQllNekFlRncweU1EQTBNVGd4TURJNU1qUmFGdzB5Ck1EQTNNVGN4TURJNU1qUmFNQmt4RnpBVkJnTlZCQU1NRGlvdWMyOXlhVzVpTG1Oc2IzVmtNSUlCSWpBTkJna3EKaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFtLzI0WDZpb0gybWhWUjJSQlhCQXd1KzlFMkxTZldMRwpldEtJbU1RdTN2Mzh5NDZJbnZubmpDNis1VDFqdk1INEVIY1Bmcy9qUS8zbDRjUWtiRWhQYUEwVXluRmEwbEUvClNidmJmbVdsOUlBZmc0eXc0cWxmTW5GNFdXVEFWQlhwVDhpZFZnc2tQaDVuMVdQUDdBSVJxNXFhUkR3YWVZMUEKOE5VREY1T3RsYXNvYitxdTBOTnJnSUZvQ0ZVODQ4cUJEWllLODhXalYyQStxVG5xSko0U3ZoMFNOUDBYWmRoQgo2TkRKT3RBWDlYbWdybTlxWFBFMXE0QU0yazNTNFllb1ZvRWNnQnRMdTRocWRxMlhhQWhOc1RHcVYzaXgvNkhFCjRFMU5iMElEdmxGdHlhVFl6ZXhTRHRKOGx4OEIwa0Jwa2xoaG93MjBQS3R2NjhkOUE0TGc5UUlEQVFBQm80SUMKWXpDQ0FsOHdEZ1lEVlIwUEFRSC9CQVFEQWdXZ01CMEdBMVVkSlFRV01CUUdDQ3NHQVFVRkJ3TUJCZ2dyQmdFRgpCUWNEQWpBTUJnTlZIUk1CQWY4RUFqQUFNQjBHQTFVZERnUVdCQlFaS3M4Q1FJRmd6NWFQQXJKWE13aDVhNW4yCkR6QWZCZ05WSFNNRUdEQVdnQlNvU21wakJIM2R1dWJST2JlbVJXWHY4Nmpzb1RCdkJnZ3JCZ0VGQlFjQkFRUmoKTUdFd0xnWUlLd1lCQlFVSE1BR0dJbWgwZEhBNkx5OXZZM053TG1sdWRDMTRNeTVzWlhSelpXNWpjbmx3ZEM1dgpjbWN3THdZSUt3WUJCUVVITUFLR0kyaDBkSEE2THk5alpYSjBMbWx1ZEMxNE15NXNaWFJ6Wlc1amNubHdkQzV2CmNtY3ZNQmtHQTFVZEVRUVNNQkNDRGlvdWMyOXlhVzVpTG1Oc2IzVmtNRXdHQTFVZElBUkZNRU13Q0FZR1o0RU0KQVFJQk1EY0dDeXNHQVFRQmd0OFRBUUVCTUNnd0pnWUlLd1lCQlFVSEFnRVdHbWgwZEhBNkx5OWpjSE11YkdWMApjMlZ1WTNKNWNIUXViM0puTUlJQkJBWUtLd1lCQkFIV2VRSUVBZ1NCOVFTQjhnRHdBSFlBc2g0RnpJdWl6WW9nClRvZG0rU3U1aWlVZ1oydmErbkRuc2tsVExlK0xrRjRBQUFGeGpRemx3UUFBQkFNQVJ6QkZBaUFLdDdienBvcEcKUjd6MFNFajdES0xxUjFoTFhMVElrZWJkNEFqaE04dHg4UUloQUxXNTFJVFd2WFMyV09DZkRUcEF2WWFZaEMyVApyWlM5K1ZtTzBLL0dsMnBuQUhZQWIxTjJyREh3TVJuWW1RQ2tVUlgvZHhVY0Vka0N3UUFwQm8yeUNKbzMyUk1BCkFBRnhqUXptaWdBQUJBTUFSekJGQWlCejZxbWF4UDNlWTVNOHh4S0hsL25nTlhsNU40SlhHdXhZNGFEY1BqNW4KZVFJaEFJNzMwd2oxS3BwbXRTOXhkb3JOdTdTaGJROGVFZFhXZXF2SnRrWVMvVlgyTUEwR0NTcUdTSWIzRFFFQgpDd1VBQTRJQkFRQTZiQkR4ZUVyaXJ3NmNTK2RwVGV5dVo4bTZsbWUyMmxrN3dMaENtUlJWL25LMURVVGJVdlFWCitEK290ZjlNTEU0TjZMUll5RTlVeHZrTTc2SkVpMHpLVjdEKzhuaUI5SkV1ZTFqL1dwcTJSdXZwRnVmYTVUZVgKL01pVXJNU2tXc0Q3dkx4MWNqdHhoa2FCZk1GUUd6ek9ma0FialBRdTRQTk1tNW03bWdHV1pTT0VxQTNQVE5XSwpuUzZSTEtTSjlIWUZuZ3MzTFhleERzTTNNd1d3TmJyMktJNUFPU3oyellYbzN2Uzh5Y25rWDU2QzJTOEYvaGRSCjVmVUsxZXdHN1RHTk9rRmhKckQwTUhYbzR4c28rVXRCY0k1Z3lHVFcwM3dwMmNTVHcraFhrczQyVUJVS3BIQkgKSjlHQkY5SDRJUXV3aHAyalZzR1pXRVBYelg2R2lVYzAKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
-     tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2d0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktrd2dnU2xBZ0VBQW9JQkFRQ2IvYmhmcUtnZmFhRlYKSFpFRmNFREM3NzBUWXRKOVlzWjYwb2lZeEM3ZS9mekxqb2llK2VlTUxyN2xQV084d2ZnUWR3OSt6K05EL2VYaAp4Q1JzU0U5b0RSVEtjVnJTVVQ5SnU5dCtaYVgwZ0IrRGpMRGlxVjh5Y1hoWlpNQlVGZWxQeUoxV0N5UStIbWZWClk4L3NBaEdybXBwRVBCcDVqVUR3MVFNWGs2MlZxeWh2NnE3UTAydUFnV2dJVlR6anlvRU5sZ3J6eGFOWFlENnAKT2Vva25oSytIUkkwL1JkbDJFSG8wTWs2MEJmMWVhQ3ViMnBjOFRXcmdBemFUZExoaDZoV2dSeUFHMHU3aUdwMgpyWmRvQ0UyeE1hcFhlTEgvb2NUZ1RVMXZRZ08rVVczSnBOak43RklPMG55WEh3SFNRR21TV0dHakRiUThxMi9yCngzMERndUQxQWdNQkFBRUNnZ0VBQnFJMGpBVGRHWERoaG9BYVliUFRYVGJhd0k5TVNqN0FHQXNKK2cwbHZSL3AKOXpJWmgwRXpZcGUrVUh0YTJYVWFPb0VGckt2a2kwaXAxUDhGV1lGOXR2d1BiVWlDeHp6alJ4eHhDaUFDZmJKUgpKTVAvNWJPME02MzFveitRbWtMUVNDOU0yWkxodUs2TVZkdkh4TTZWdDhsOFUvaUdXN0x4Rnd6SDgrRzQyUXQ4ClRCeDUzUWdDZGgxcDVFNC9sSFNzUmdIRlRRbUZXWmE0M3NkVlA1VUs4VHhtcElpdXBid0JrUG1TQ2JDUXoxM0YKTlRGQSs2aXIrQjdETzJUaGxJMytXNEdoYVdPaXBUYk5xTGFMR2xXOEhrZFhzRFlDRXRHRFRnWEtVSDBBUFZzTgpUTnYxYkhTS0hhc1UwejlaNk5IdmU1THdPK214K1RYUE42bXRURURnUlFLQmdRRE96R1B1TGd4a1dwYWxHNDRHClJhcHhqa1pUMnNRbjdWa1IzMXQveElOZGNIV3JZMG8xaWxpYVdBdDA5NDhmUGJKT3JCOFNSdDVkTGN3MlBzMUwKR2UyQTUxUFlpeTRGVkR6S3laSmNqMFczMEVZMG5kSWM5UHh3ME1oMUtqZndJTEJJTlFaSDBJQWtiWC9GU0EyYQpOaWVXRDNiL000NklGUTl5eFlIY1JLeGEvd0tCZ1FEQkdzWnBEU2hCMVFFVTRxbEhkRTdXOGFxM0hZWG15RnRGCm9xREhQNmNiUEtFVEpTcEc4NWkwRHo0ZUMxbTUvTFZiR3lvR1FGdlFEem03Q1ZtdGxYMExSOTBzNWpuSmZwWGEKc1FtY1VPdmc3RVI0YmhUM1FDUzRVUy9CamsrTFJTVnpIVWFpbG94ZDdVVGtlS21BbEI2dFdEaVNsTXZod3NXKwpYbjg1Z2IwSUN3S0JnUUNzYTNtK01xS2VZWEZOQkNac1VGV0dER3ZTcW9uMkNFekZQQWRjQmdySk0yVElteVphCmNaamlSeHAyVVpvQklEMjBub25oZ1RrUlU0ZjZpbTQ4ZWNldVBER0tVTEQwUElIYlNpbEFCeXpIejExWnJXUnMKUkU3ZCtSWEpxb090TUhRS0lEdTJVTDhtb0MxeDNWdUtBakVMU3FXYXJlL2V3a0I1SHZmaElWamJIUUtCZ1FDcgovdkk4ZllpZTRsODlRQW53NkFxVTd0blVrZ3BESGJBV0hSMUJlMU9YTWZCeVFnY2UvVGZGSVZKOXBqUjhNVGRECmQ3VjlyZk5aSlVhUmJtbWU3K2habE4vT2J4MkhlQ1YzalhwMjdhaTdSUlpUZ2hGUWpLUm9PMy9pMGFQTjgzL0EKd1pHNW5ZaFczTkFoQTh4T0J5QXYyOFUvNGlLYTZrWUJJdUFFMDZjUU13S0JnUUNMYTBSaHV5MEl1T2k5djBacgpwTjdWd1FaK2JwVWhBQmtXaEg5SGJWTndpclYvaTZBWElTT2JFbjRZdU1zN2w2ZkhCdDJDSlVicENlM2JCUS9nCjdCMG9VR0xMMVdOOG0xVHlKaWhXaC9WZk5sMUlNTTJEZkc3L1FpaFNKZWUxaW04RnlVZUx4TGVjYnllUmZHRDMKUXlTMlVIL2orYnZOYStMekF3SmJTNmN0UkE9PQotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==
-   type: kubernetes.io/tls
-
-   ---
-
-   apiVersion: extensions/v1beta1
-   kind: Ingress
-   metadata:
-     name: arcadia
-     annotations:
-       nginx.com/health-checks: "true"
-       ingress.kubernetes.io/ssl-redirect: "true"
-   spec:
-     tls:
-     - hosts:
-       - MUST BE REPLACED WITH "EXTERNAL-IP" OF THE "nginx-ingress" SERVICE
-       secretName: arcadia-tls
-     rules:
-     - host: MUST BE REPLACED WITH "EXTERNAL-IP" OF THE "nginx-ingress" SERVICE
-       http:
-         paths:
-         - path: /
-           backend:
-             serviceName: arcadia-main
-             servicePort: 80
-         - path: /api/
-           backend:
-             serviceName: arcadia-app2
-             servicePort: 80
-         - path: /app3/
-           backend:
-             serviceName: arcadia-app3
-             servicePort: 80
-   </pre>
-
- Click here for detailed instructions.
-
-.. raw:: html
-
-   <pre>
-   Command:
-   kubectl apply -f files/5ingress/ingress-arcadia.yaml
-   </pre>
-
-12. Browse to the Arcadia website with http and you will be automatically redirected to https. Look at the Nginx dashboard and observe that Nginx has started monitoring the pods.
-
-Speed up application performance and enable caching.
-
-13. Create a new file ``nginx-config.yaml`` that reflects the bellow configuration and apply it. We are telling Nginx to create a caching entity that will be used by our Ingress.
-
-.. raw:: html
-
-   <pre>
-   kind: ConfigMap
-   apiVersion: v1
-   metadata:
-     name: nginx-config
-     namespace: nginx-ingress
-   data:
-     proxy-protocol: "True"
-     real-ip-header: "proxy_protocol"
-     set-real-ip-from: "0.0.0.0/0"
-     http-snippets  : |
-       proxy_cache_path /var/tmp/a levels=1:2 keys_zone=my_cache:10m max_size=100m inactive=60m use_temp_path=off;
-   </pre>
-
- Click here for detailed instructions.
-
-``bash kubectl apply -f files/5ingress/nginx-config.yaml``
-
-Configure the Nginx Ingress to start using it and start caching.
-
-14. Create a new file ``nginx-ingress-update.yaml`` with the configuration below and apply it.
-
-.. ::warning Please note: you need to replace the ``host`` value with the EXTERNAL-IP of the ``nginx-ingress`` service.
-
-.. raw:: html
-
-   <pre>
-   apiVersion: extensions/v1beta1
-   kind: Ingress
-   metadata:
-     name: arcadia
-     annotations:
-       nginx.com/health-checks: "true"
-       ingress.kubernetes.io/ssl-redirect: "true"
-       nginx.org/server-snippets: |
-         proxy_ignore_headers X-Accel-Expires Expires Cache-Control;
-         proxy_cache_valid any 30s;
-       nginx.org/location-snippets: |
-         proxy_cache my_cache;
-         add_header X-Cache-Status $upstream_cache_status;
-
-   spec:
-     tls:
-     - hosts:
-       - MUST BE REPLACED WITH "EXTERNAL-IP" OF THE "nginx-ingress" SERVICE
-       secretName: arcadia-tls
-     rules:
-     - host: MUST BE REPLACED WITH "EXTERNAL-IP" OF THE "nginx-ingress" SERVICE
-       http:
-         paths:
-         - path: /
-           backend:
-             serviceName: arcadia-main
-             servicePort: 80
-         - path: /api/
-           backend:
-             serviceName: arcadia-app2
-             servicePort: 80
-         - path: /app3/
-           backend:
-             serviceName: arcadia-app3
-             servicePort: 80
-   </pre>
-
- Click here for detailed instructions.
-
-``bash kubectl apply -f files/5ingress/nginx-ingress-update.yaml``
-
-15. We have two simple indicators to check that all is working:
-
-  -  First if we open the browser developer tools we can see a new http header in the response called "X-Cache-Status". If the response was taken from the cache it will have a value of "HIT" otherwise if it was server by the server the value will be "MISS"
-
-  -  The second options is to look at the Nginx Dashboard -> Caches and observe the HIT ration and traffic served
+   |image12|
+
+   Step 1. In the terminal window, **replace** ``ecrRepositoryURL`` with your output and copy the below text and paste+enter:
+
+   .. code-block::
+
+      make DOCKERFILE=DockerfileForPlus PREFIX=ecrRepositoryURL
+
+   Example:
+
+   |image19|
+
+   After the image is built, docker will publish the image into ECR.
+
+   Example:
+
+   |image20|
+
+5. Verify that the docker image was created
+
+   In the terminal window, copy the below text and paste+enter:
+
+   .. code-block::
+
+      docker images
+
+   Example:
+
+   |image21|
+
+6.  Modify the NGINX Kubernetes Ingress Controller manifest
+
+   .. warning:: Failure to update the manifest with your image:tag location will stop the deployment. Change Line ``1791``
+
+   Kubernetes deployments are typically maintained through manifest files. The deployment of the NGINX Ingress Controller will be created through manifests. Kubernetes resources can be made through a single file. The to-be-created resources are declared in the ``nginx-ingress-install.yml`` file.
+
+   When executed, Kubernetes will build all the resources. For resources it doesnt know about the newly created NGINX Ingress Controller container, it will reach out to the create ECR registry and pull down the image we created. If you ever needed to update the container, publish a new one to ECR, change the tag and rerun the deployment. Declarative nature systems will replace with what has been defined.
+
+   - Kubernetes namespace
+   - Kubernetes service account
+   - Kubernetes cluster role
+   - Kubernetes clusterrolebinding
+   - Kubernetes secret
+   - Kubernetes configmap
+   - Kubernetes ingressclass
+   - Kubernetes customresourcedefinitions
+   - NGINX Ingress Controller deployment
+   - NGINX Ingress Controller service
+
+   Step 1. Modify the manifests file on line ``1791`` for your ``image:tag``
+
+   .. note:: Docker images and tags can be found by running the docker command ``docker images``
+
+   .. code-block::
+
+      sudo vi /home/ubuntu/Desktop/f5-digital-customer-engagement-center/solutions/delivery/application_delivery_controller/nginx/kic/templates/nginx-ingress-install.yml
+
+   save and exit file with ``:wq``
+
+   Example:
+
+   |image23|
+
+7. Deploy the NGINX Kubernetes Ingress Controller
+
+   In the terminal window copy the below text and paste+enter:
+
+   .. code-block::
+
+      kubectl apply -f /home/ubuntu/Desktop/f5-digital-customer-engagement-center/solutions/delivery/application_delivery_controller/nginx/kic/templates/nginx-ingress-install.yml
+
+   Example:
+
+   |image24|
+
+8. Expose the NGINX Ingress Controller Dashboard
+
+   NGINX Ingress Controller (all purchased editions) has an internal dashboard that can be exposed. The Dashboard presents analytic stats of services deployed on NGINX. These same stats can also be exposed for stats collection systems like Prometheus.
+
+   In the terminal window copy the below text and paste+enter:
+
+   .. code-block::
+
+      kubectl apply -f /home/ubuntu/Desktop/f5-digital-customer-engagement-center/solutions/delivery/application_delivery_controller/nginx/kic/templates/nginx-ingress-dashboard.yml
+
+   Example:
+
+   |image26|
+
+9. See the NGINX Ingress Controller services
+
+   The deployment of NGINX Controller Ingress contains two Kubernetes services: Ingress and the other for Dashboard.
+
+   In the terminal window, copy the below text and paste+enter:
+
+   .. code-block::
+
+      kubectl get svc --namespace=nginx-ingress
+
+   Example:
+
+   |image27|
+
+10. Export the NGINX Ingress Controller services
+
+    Interacting with the NGINX Ingress Controller is more comfortable with exporting the service External IPs into system variables. This allows for templating to take place when we expose our applications.
+
+   In the terminal window copy the below text and paste+enter:
+
+   .. code-block::
+
+      export dashboard_nginx_ingress=$(kubectl get svc dashboard-nginx-ingress --namespace=nginx-ingress | tr -s " " | cut -d' ' -f4 | grep -v "EXTERNAL-IP")
+      export nginx_ingress=$(kubectl get svc nginx-ingress --namespace=nginx-ingress | tr -s " " | cut -d' ' -f4 | grep -v "EXTERNAL-IP")
+
+11. Browse to the exposed NGINX Ingress Controller services
+
+    There is nothing yet deployed on NGINX Ingress Controller. However, the Dashboard and the Ingress are active. When the services were created in Kubernetes, Kubernetes created an AWS ELB. These ELBs allow for access to the services, and if the NGINX services ever scale, they will dynamically be added.
+
+    NGINX Dashboard URL (replace with your dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
+
+    Example:
+
+    |image28|
+
+    NGINX Ingress Controller URL (replace with your nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/``
+
+    Example:
+
+    |image29|
+
+12. The NGINX Ingress Controller services have been created and exposed
+
+   At this point, we can deploy our applications, and provide access through NGINX!
+
+   Proceed to `Arcadia Application | Deployment`_
+
+
+
+.. |image00| image:: images/image00.png
+  :width: 75%
+  :align: middle
+.. |image12| image:: images/image12.png
+.. |image16| image:: images/image16.png
+.. |image17| image:: images/image17.png
+.. |image18| image:: images/image18.png
+.. |image19| image:: images/image19.png
+.. |image20| image:: images/image20.png
+.. |image21| image:: images/image21.png
+.. |image23| image:: images/image23.png
+.. |image24| image:: images/image24.png
+.. |image26| image:: images/image26.png
+.. |image27| image:: images/image27.png
+.. |image28| image:: images/image28.png
+.. |image29| image:: images/image29.png
+.. |image48| image:: images/image48.png
+  :width: 75%
+  :align: middle
+.. |image49| image:: images/image49.png
+  :width: 50%
+
+.. _`Arcadia Application | Deployment`: lab02.html
