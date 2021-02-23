@@ -1,0 +1,62 @@
+cat << EOF | kubectl apply -f -
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: arcadia
+spec:
+  server-snippets: |
+    proxy_ignore_headers X-Accel-Expires Expires Cache-Control;
+    proxy_cache_valid any 30s;
+  host: $nginx_ingress
+  tls:
+    secret: arcadia-secret
+    redirect:
+      enable: true
+  upstreams:
+  - name: arcadia-main
+    service: arcadia-main
+    port: 80
+    healthCheck:
+      enable: true
+      port: 8080
+      interval: 20s
+      jitter: 3s
+      fails: 5
+      passes: 5
+      statusMatch: "! 500"
+  - name: arcadia-app2
+    service: arcadia-app2
+    port: 80
+    healthCheck:
+      enable: true
+      port: 8080
+      interval: 20s
+      jitter: 3s
+      fails: 5
+      passes: 5
+      statusMatch: "! 500"
+  - name: arcadia-app3
+    service: arcadia-app3
+    port: 80
+    healthCheck:
+      enable: true
+      port: 8080
+      interval: 20s
+      jitter: 3s
+      fails: 5
+      passes: 5
+      statusMatch: "! 500"
+  routes:
+  - path: /
+    location-snippets: |
+      proxy_cache my_cache;
+      add_header X-Cache-Status \$upstream_cache_status;
+    action:
+      pass: arcadia-main
+  - path: /api/
+    action:
+      pass: arcadia-app2
+  - path: /app3/
+    action:
+      pass: arcadia-app3
+EOF

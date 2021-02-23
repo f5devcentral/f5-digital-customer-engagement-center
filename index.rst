@@ -6,9 +6,9 @@
 Welcome to F5 Digital Customer Engagement Center documentation!
 =================================================================
 
-This is a community project. Use at your own responsability ! 
+This is a community project. Use at your own responsability !
 
-Designed to provide a common framework for deploying and developing F5 solutions as code. 
+Designed to provide a common framework for deploying and developing F5 solutions as code.
 
 
 
@@ -29,7 +29,7 @@ Designed to provide a common framework for deploying and developing F5 solutions
    :glob:
 
    /docs/solutions/*/*_index
-   
+
 .. toctree::
    :maxdepth: 1
    :caption: Module Reference
@@ -42,6 +42,3 @@ Designed to provide a common framework for deploying and developing F5 solutions
 
    /docs/development/getting-involved
    /docs/development/guidelines
-
-
-
