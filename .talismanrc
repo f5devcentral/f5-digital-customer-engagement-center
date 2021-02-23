@@ -112,3 +112,13 @@ fileignoreconfig:
   checksum: 2fae9d558fb0a8ea08ee9ce46f7f68d18e2cacd441b40c15aa42c831b76f179f
 - filename: modules/aws/terraform/gwlb-bigip-vpc/main.tf
   checksum: a2f3c9486258417a870e5f46fac5cf61b71a741750319375394b2e99db3888e0
+- filename: solutions/workshop/google/.terraform.lock.hcl
+  checksum: 95f2298b43d581cb7a9a1204a882c65bee7c502fb3540341dc0c6c7954b60529
+- filename: solutions/workshop/aws/.terraform.lock.hcl
+  checksum: 623a8b10bc273b921a2904267c58659cb82a593149356ee7a8154a52b3749072
+- filename: solutions/workshop/aws/main.tf
+  checksum: 297eb8dad7b89763a96d57b2badce8aa18bf6240927d3ba2f905a74d3381780e
+- filename: solutions/workshop/aws/readme.md
+  checksum: 0e2c4a7061eedaae890f86d76bd81eaf41be388966d1d9a58f3439d3d4c27848
+- filename: solutions/workshop/google/main.tf
+  checksum: 67a7602d5dd44ea8afef400b29718f2aaf05eef2ba3c8bcc4dc9bbacb381f01f

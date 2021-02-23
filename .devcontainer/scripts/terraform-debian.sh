@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "---installing terraform---"
-VERSION=${1:-"0.14.0"}
+VERSION=${1:-"0.14.6"}
 set -e
 
 if [ "$(id -u)" -ne 0 ]; then

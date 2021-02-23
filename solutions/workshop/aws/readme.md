@@ -1,21 +1,22 @@
-# Google workshop
+# aws workshop
 
 Example workshop for students to connect and run labs with coder as the web interface
 
 instructor can deploy the lab then hand out ips/credentials to students.
 
 ## requirements
- - network google min
+ - network aws min
  - kubernetes no
- - jumphost gcp
+ - jumphost aws
 
 ## authentication
 
+option one:
+- Set AWS environment variables
 ```bash
-PROJECT_ID="myprojectid"
-gcloud auth login
-gcloud config set project $PROJECT_ID
-gcloud auth application-default login
+export AWS_ACCESS_KEY_ID="dfsafsa"
+export AWS_SECRET_ACCESS_KEY="fdsafds"
+export AWS_SESSION_TOKEN="kgnfdskg"
 ```
 
 ## setup
@@ -51,7 +52,7 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| google | n/a |
+| aws | n/a |
 | random | n/a |
 | tls | n/a |
 
@@ -59,21 +60,20 @@ No requirements.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| adminAccountName | admin account | `any` | n/a | yes |
-| adminPassword | admin password | `any` | n/a | yes |
-| adminSourceAddress | admin src address in cidr | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
-| gcpProjectId | gcp project id | `any` | n/a | yes |
-| gcpRegion | region where gke is deployed | `string` | `"us-east1"` | no |
-| gcpZone | zone where gke is deployed | `string` | `"us-east1-b"` | no |
-| projectPrefix | prefix for resources | `string` | `"workshop"` | no |
-| sshPublicKey | contents of admin ssh public key | `any` | n/a | yes |
+| adminAccountName | admin | `string` | `"xadmin"` | no |
+| adminSourceCidr | n/a | `string` | `"0.0.0.0/0"` | no |
+| awsAz1 | n/a | `any` | `null` | no |
+| awsAz2 | n/a | `any` | `null` | no |
+| awsRegion | n/a | `string` | `"us-east-2"` | no |
+| clusterName | eks cluster name | `string` | `"my-cluster"` | no |
+| kubernetes | deploy a kubernetes cluster or not | `bool` | `true` | no |
+| projectPrefix | cloud | `string` | `"kic-aws"` | no |
+| resourceOwner | tag used to mark instance owner | `string` | `"dcec-kic-user"` | no |
+| sshPublicKey | ssh key file to create an ec2 key-pair | `string` | `"ssh-rsa AAAAB3...."` | no |
 | students | Map of student names | `map(any)` | <pre>{<br>  "student1": {<br>    "projectPrefix": "workshop-student-1",<br>    "resourceOwner": "student1"<br>  },<br>  "student2": {<br>    "projectPrefix": "workshop-student-2",<br>    "resourceOwner": "student2"<br>  }<br>}</pre> | no |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| coderAccountPassword | n/a |
-| student | n/a |
+No output.
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
