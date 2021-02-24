@@ -16,6 +16,10 @@ variable "resourceOwner" {
 variable "azureResourceGroup" {
   description = "resource group to create objects in"
 }
+variable "azureLocation" {
+  type        = string
+  description = "location where Azure resources are deployed (abbreviated Azure Region name)"
+}
 
 #Azure VNet Inputs
 variable "azureCidr" {

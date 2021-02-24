@@ -21,6 +21,7 @@ module "network_min" {
   buildSuffix        = var.buildSuffix
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.main.name
+  azureLocation      = var.azureLocation
   azureCidr          = var.azureCidr
   azureSubnets       = var.azureSubnets
 
