@@ -15,6 +15,7 @@ module "network_min" {
     buildSuffix         = var.buildSuffix
     resourceOwner       = var.resourceOwner
     azureResourceGroup  = var.azureResourceGroup
+    azureLocation       = var.azureLocation
     azureCidr           = var.azureCidr
     azureSubnets        = var.azureSubnets
 }
@@ -41,6 +42,7 @@ No provider.
 | buildSuffix | random build suffix for resources | `string` | n/a | yes |
 | resourceOwner | name of the person or customer running the solution | `string` | n/a | yes |
 | azureResourceGroup | resource group to create objects in | `string` | n/a | yes |
+| azureLocation | location where Azure resources are deployed (abbreviated Azure Region name) | `string` | n/a | yes |
 | azureCidr | VNet CIDR range | `string` | `"10.1.0.0/16"` | no |
 | azureSubnets | subnets to create within the VNet | `object` | `management = "10.1.1.0/24"`<br>`external = "10.1.10.0/24"`<br>`internal = "10.1.20.0/24"` | no |
 
@@ -49,8 +51,10 @@ No provider.
 | Name | Description |
 |------|-------------|
 | azureVnetId | The ID of the Vnet |
+| azureVnetName | The Name of the Vnet |
 | azureVnetCidr | The CIDR block of the VNet |
 | azureSubnets | List of IDs of subnets |
+| azureNatId | The ID of the NAT Gateway |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->
