@@ -21,11 +21,13 @@ module "network" {
   }
 }
 
-# Retreive management subnet info
+# Retrieve management subnet info
 data "azurerm_subnet" "mgmt" {
   name                 = "management"
   virtual_network_name = module.network.vnet_name
   resource_group_name  = var.azureResourceGroup
+
+  depends_on = [module.network]
 }
 
 # Create NAT gateway
