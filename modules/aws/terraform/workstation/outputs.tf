@@ -7,5 +7,6 @@
 #   }
 # }
 output "workspaceManagementAddress" {
-  value = aws_instance.workstation.public_ip
+  description = "public or private ip address of the instance"
+  value       = var.associateEIP ? aws_instance.workstation.public_ip : aws_instance.workstation.private_ip
 }
