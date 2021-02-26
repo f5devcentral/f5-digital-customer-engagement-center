@@ -1,5 +1,5 @@
-Nginx - Kubernetes Ingress Controller | AWS Environment
--------------------------------------------------------
+NGINX Kubernetes Ingress Controller | AWS Environment
+-----------------------------------------------------
 
 Terraform_ is an open-source infrastructure as code software tool that provides a consistent CLI workflow to manage hundreds of cloud services. Terraform codifies cloud APIs into declarative configuration files.
 
@@ -26,6 +26,8 @@ This solution requires the following products and services.
    * OpenSSL, optionally, if you would like to generate a self-signed certificate and a key for the default server.
    * For NGINX Plus, you must have the NGINX Plus license - the certificate (nginx-repo.crt) and the key (nginx-repo.key).
 
+.. note:: Double-clicking in the empty space of VSCode will create a new file that can be used as a digital notepad
+
 1.  VSCode is our preferred IDE. This allows an editor and terminal within a single pane, open VSCode, and a new Terminal. If you are in the UDF environment, you can access VSCode through the **coder** access method on the **ubuntuHost** resource. Also, see `F5 UDF Environment Access`_.
 
    Example:
@@ -47,7 +49,7 @@ This solution requires the following products and services.
 
    |image02|
 
-3.  ``git clone`` the public repositories containing all code.
+3.  git clone the public repositories containing all code.
 
    .. note:: Examples are shown pulling the repositories down to the **Desktop** folder. If you choose to change the clone location, be aware of the path
 
@@ -259,4 +261,4 @@ This solution requires the following products and services.
 .. _Terraform: https://www.terraform.io/
 .. _`Visual Studio Code`: https://code.visualstudio.com/
 .. _`NGINX Kubernetes Ingress Controller | Deployment`: lab01.html
-.. _`F5 UDF Environment Access`: ../../../../../docs/usage/f5_udf_getting_started.html
+.. _`F5 UDF Environment Access`: ../../../../../usage/f5_udf_getting_started.html

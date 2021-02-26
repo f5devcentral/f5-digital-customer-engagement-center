@@ -1,5 +1,5 @@
-NGINX Ingress Controller | Examples
------------------------------------
+NGINX Kubernetes Ingress Controller | Examples
+----------------------------------------------
 
 Included below are several examples of how NGINX Ingress Controller deployments. It is recommended that you progress through building on top of each other. Going this way highlights the lifecycle of container-based services that will evolve.
 
@@ -16,8 +16,8 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 - Basic: This is a simple layer 7 routing ingress, taking our EXTERNAL-IP address and moving clients to Arcadia Application
 - Https: Layer 7 routing ingress with TLS, TLS secret is stored in Kubernetes as a TLS secret
 - Https with Active Monitors: Https + Active Health Monitors to Pods
-- Https with Active Monitors, Cacheing: Https + Active Health Monitors + Cacheing for site content
-- Https with Active Monitors, Cacheing, mTLS: Https + Active Health Monitors + Cacheing + mTLS for client ca challenge
+- Https with Active Monitors, Caching: Https + Active Health Monitors + Caching for site content
+- Https with Active Monitors, Caching, mTLS: Https + Active Health Monitors + Caching + mTLS for client ca challenge
 
 1. Basic
 
@@ -80,7 +80,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    In the terminal window, copy the below text and paste+enter:
 
-   .. literalinclude :: ../../../../../../solutions/delivery/application_delivery_controller/nginx/kic/templates/ingress-arcadia-https.yml
+   .. literalinclude :: ../../../../../../solutions/delivery/application_delivery_controller/nginx/kic/templates/ingress-arcadia-https-monitor.yml
       :language: text
 
    Example:
@@ -99,11 +99,11 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    NGINX Ingress Controller URL (replace with your nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/``
 
-4. HTTPS with Active Monitors, Cacheing
+4. HTTPS with Active Monitors, Caching
 
    A content cache sits in between a client and an **origin server**, and saves copies of all the content it sees. If a client requests content that the cache has stored, it returns the content directly without contacting the origin server. This improves performance as the content cache is closer to the client and more efficiently uses the application servers because they do not have to generate pages from scratch each time.
 
-   Step 1. Create NGINX Ingress Controller Cacheing Path:
+   Step 1. Create NGINX Ingress Controller Caching Path:
 
    In the terminal window, copy the below text and paste+enter:
 
@@ -120,7 +120,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    |image38|
 
-   Step 3. Create NGINX Ingress Controller with Https with Active Monitors, Cacheing:
+   Step 3. Create NGINX Ingress Controller with Https with Active Monitors, Caching:
 
    In the terminal window, copy the below text and paste+enter:
 
@@ -135,7 +135,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    NGINX Ingress Controller URL (replace with your nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/``
 
-4. Https with Active Monitors, Cacheing, mTLS
+4. Https with Active Monitors, Caching, mTLS
 
    NGINX Ingress Controller can participate in the mTLS cert exchange with services.
 
@@ -157,7 +157,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
    .. literalinclude :: ../../../../../../solutions/delivery/application_delivery_controller/nginx/kic/templates/arcadiaMTLSPolicy.yml
       :language: text
 
-   Step 3. Create NGINX Ingress Controller with Https with Active Monitors, Cacheing:
+   Step 3. Create NGINX Ingress Controller with Https with Active Monitors, Caching:
 
    In the terminal window, copy the below text and paste+enter:
 

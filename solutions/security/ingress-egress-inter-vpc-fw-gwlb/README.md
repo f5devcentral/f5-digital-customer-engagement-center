@@ -42,14 +42,14 @@ connect to BIGIP, install the required version and complete the setup:
 4. Create a pool with 10.131.0.2 as the member
 5. Configure a virtual server performance L4, transparent virtual server, assign the pool from previous step.
 6. Configure AFM on the virtual server
-7. connect to the internet jumphost 
-8. ssh from it to one of the spoke jumphosts 
-9. monitor the traffic in AFM 
+7. connect to the internet jumphost
+8. ssh from it to one of the spoke jumphosts
+9. monitor the traffic in AFM
 
 
 
 ## Clenaup
-use the following command to destroy all of the resources 
+use the following command to destroy all of the resources
 
 ```bash
 ssh ubuntu@x.y.z.p
