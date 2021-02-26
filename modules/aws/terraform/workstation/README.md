@@ -42,13 +42,13 @@ No requirements.
 | repositories | comma seperated list of git repositories to clone | `string` | `"https://github.com/vinnie357/aws-tf-workspace.git,https://github.com/f5devcentral/terraform-aws-f5-sca.git"` | no |
 | securityGroup | security group for the instance | `string` | the module will create one with port 22 and 5800 open to 0.0.0.0/0 | no |
 | resourceOwner | user name for tagging | `string` | f5-dcec-user | no |
-
+| associateEIP | choose if you want to associate an EIP to the instance | `bool` | true | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| workspaceManagementAddress | public ip address of the instance |
+| workspaceManagementAddress | public or private ip address of the instance |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

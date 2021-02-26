@@ -22,6 +22,7 @@ variable "resourceOwner" {
 # admin
 variable "adminAccountName" {
   description = "admin account name used with instance"
+  default     = null
 }
 variable "keyName" {
   description = "instance key pair name"
@@ -40,4 +41,10 @@ variable "repositories" {
 }
 variable "terraformVersion" {
   default = "0.14.0"
+}
+
+variable "associateEIP" {
+  description = "choose if you want to associate an EIP to the instance"
+  type        = bool
+  default     = true
 }
