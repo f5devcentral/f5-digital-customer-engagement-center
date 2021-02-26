@@ -1,0 +1,5 @@
+projectPrefix = "demo"
+buildSuffix   = "dev"
+resourceOwner = "user1"
+
+azureLocation = "westus2"
