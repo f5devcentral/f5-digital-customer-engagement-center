@@ -29,7 +29,7 @@ The following steps will get your UDF jumphost configured.
 
   |image05|
 
-5. Every time a UDF blueprint is brought online with Cloud Accounts, and the ephemeral account is created. This account has access to resources highlighted either programmatically or through an AWS console. These resources are located on the "Cloud Accounts" tab.
+5. Every time a UDF blueprint is brought online with Cloud Accounts, and the ephemeral account is created. This account has access to resources highlighted either programmatically or through an AWS console. These resources are located on the **Cloud Accounts** tab.
 
   |image06|
 
