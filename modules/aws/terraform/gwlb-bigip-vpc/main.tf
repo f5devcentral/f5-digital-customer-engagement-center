@@ -46,6 +46,31 @@ resource "aws_subnet" "vpcGwlbSubPubB" {
   }
 }
 
+resource "aws_subnet" "subnetGwlbeAz1" {
+  count             = var.createGwlbEndpoint ? 1 : 0
+  vpc_id            = aws_vpc.vpcGwlb.id
+  cidr_block        = var.subnetGwlbeAz1
+  availability_zone = local.awsAz1
+
+  tags = {
+    Name  = "${var.projectPrefix}-subnetGwlbeAz1-${var.buildSuffix}"
+    Owner = var.resourceOwner
+  }
+}
+
+resource "aws_subnet" "subnetGwlbeAz2" {
+  count             = var.createGwlbEndpoint ? 1 : 0
+  vpc_id            = aws_vpc.vpcGwlb.id
+  cidr_block        = var.subnetGwlbeAz2
+  availability_zone = local.awsAz2
+
+  tags = {
+    Name  = "${var.projectPrefix}-subnetGwlbeAz2-${var.buildSuffix}"
+    Owner = var.resourceOwner
+  }
+}
+
+
 # Internet Gateway
 
 resource "aws_internet_gateway" "vpcGwlbIgw" {
@@ -118,7 +143,7 @@ resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachmentAz1" {
 
 #resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachmentAz2" {
 #  target_group_arn = aws_lb_target_group.bigipTargetGroup.arn
-#  target_id        = module.bigipAz2.private_addresses[0]
+#  target_id        = aws_instance.GeneveProxyAz2.private_ip
 #}
 
 resource "aws_vpc_endpoint_service" "gwlbEndpointService" {
@@ -135,6 +160,21 @@ resource "aws_lb_listener" "gwlbListener" {
   }
 }
 
+resource "aws_vpc_endpoint" "vpcGwlbeAz1" {
+  count             = var.createGwlbEndpoint ? 1 : 0
+  service_name      = aws_vpc_endpoint_service.gwlbEndpointService.service_name
+  subnet_ids        = [aws_subnet.subnetGwlbeAz1[0].id]
+  vpc_endpoint_type = "GatewayLoadBalancer"
+  vpc_id            = aws_vpc.vpcGwlb.id
+}
+
+resource "aws_vpc_endpoint" "vpcGwlbeAz2" {
+  count             = var.createGwlbEndpoint ? 1 : 0
+  service_name      = aws_vpc_endpoint_service.gwlbEndpointService.service_name
+  subnet_ids        = [aws_subnet.subnetGwlbeAz2[0].id]
+  vpc_endpoint_type = "GatewayLoadBalancer"
+  vpc_id            = aws_vpc.vpcGwlb.id
+}
 ##########BIGIP################
 #
 #
@@ -160,7 +200,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "BigIpPolicy" {
-  name   = "${var.projectPrefix}-BigIpPolicy-${var.buildSuffix}"
+  //name = "aws-iam-role-policy-${module.utils.env_prefix}"
   role   = aws_iam_role.main.id
   policy = <<EOF
 {
@@ -235,114 +275,18 @@ module "mgmt-network-security-group" {
 
 }
 
-
-#data "aws_ami" "ubuntu" {
-#  most_recent = true
-#
-#  filter {
-#    name   = "name"
-#    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
-#  }
-#
-#  filter {
-#    name   = "virtualization-type"
-#    values = ["hvm"]
-#  }
-#
-#  owners = ["099720109477"] # Canonical
-#}
-#
-## bash script template
-#data "template_file" "onboard" {
-#  template = file("${path.module}/files/onboard.sh")
-#  vars = {
-#    repositories = var.repositories
-#  }
-#}
-#
-#data "template_cloudinit_config" "GeneveProxy" {
-#  gzip          = true
-#  base64_encode = true
-#
-#  # Main cloud-config configuration file.
-#  part {
-#    filename     = "init.cfg"
-#    content_type = "text/cloud-config"
-#    content      = file("${path.module}/files/cloud-config-base.yaml")
-#  }
-#  part {
-#    content_type = "text/x-shellscript"
-#    content      = data.template_file.onboard.rendered
-#  }
-#
-#}
-#
-#resource "aws_instance" "GeneveProxyAz1" {
-#  ami                         = data.aws_ami.ubuntu.id
-#  user_data                   = data.template_cloudinit_config.GeneveProxy.rendered
-#  instance_type               = "t3.large"
-#  subnet_id                   = aws_subnet.vpcGwlbSubPubA.id
-#  vpc_security_group_ids      = [module.mgmt-network-security-group.this_security_group_id]
-#  key_name                    = var.keyName
-#  associate_public_ip_address = true
-#
-#  tags = {
-#    Name  = "${var.projectPrefix}-GeneveProxyAz1-${var.buildSuffix}"
-#    Owner = var.resourceOwner
-#  }
-#}
-#
-#resource "aws_instance" "GeneveProxyAz2" {
-#  ami                         = data.aws_ami.ubuntu.id
-#  user_data                   = data.template_cloudinit_config.GeneveProxy.rendered
-#  instance_type               = "t3.large"
-#  subnet_id                   = aws_subnet.vpcGwlbSubPubB.id
-#  vpc_security_group_ids      = [module.mgmt-network-security-group.this_security_group_id]
-#  key_name                    = var.keyName
-#  associate_public_ip_address = true
-#
-#  tags = {
-#    Name  = "${var.projectPrefix}-GeneveProxyAz2-${var.buildSuffix}"
-#    Owner = var.resourceOwner
-#  }
-#}
-
-
 # Create BIG-IP
-
-resource "random_id" "id" {
-  byte_length = 2
-}
-
-#
-# Create random password for BIG-IP
-#
-resource "random_password" "password" {
-  length           = 16
-  special          = true
-  override_special = " #%*+,-./:=?@[]^_~"
-}
-
-#
-# Create Secret Store and Store BIG-IP Password
-#
-resource "aws_secretsmanager_secret" "bigip" {
-  name = "${var.projectPrefix}-bigip-secret-${var.buildSuffix}"
-}
-resource "aws_secretsmanager_secret_version" "bigip-pwd" {
-  secret_id     = aws_secretsmanager_secret.bigip.id
-  secret_string = random_password.password.result
-}
 
 module "bigipAz1" {
   source       = "../terraform-aws-bigip-module"
-  prefix       = var.projectPrefix
+  prefix       = format("%s-1nic", var.projectPrefix)
   ec2_key_name = var.keyName
-  #  aws_secretmanager_auth      = aws_secretsmanager_secret.bigip.id
-  aws_iam_instance_profile = aws_iam_instance_profile.instance_profile.name
-  mgmt_subnet_ids          = [{ "subnet_id" = aws_subnet.vpcGwlbSubPubA.id, "public_ip" = true, "private_ip_primary" = "" }]
-  mgmt_securitygroup_ids   = [module.mgmt-network-security-group.this_security_group_id]
-  f5_ami_search_name       = "*F5 BIGIP-16.0.1-0.0.3* PAYG-Best 200Mbps*"
+  //aws_secretmanager_auth      = false
+  //aws_secretmanager_secret_id = aws_secretsmanager_secret.bigip.id
+  //aws_iam_instance_profile    = aws_iam_instance_profile.instance_profile.name
+  mgmt_subnet_ids        = [{ "subnet_id" = aws_subnet.vpcGwlbSubPubA.id, "public_ip" = true, "private_ip_primary" = "" }]
+  mgmt_securitygroup_ids = [module.mgmt-network-security-group.this_security_group_id]
+  f5_ami_search_name     = "*F5 BIGIP-15.1.2.1* PAYG-Best 200Mbps*"
 }
 
 resource "null_resource" "clusterDO" {

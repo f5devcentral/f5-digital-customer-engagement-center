@@ -47,3 +47,14 @@ variable "repositories" {
   description = "comma seperated list of git repositories to clone"
   default     = "https://github.com/vinnie357/aws-tf-workspace.git,https://github.com/f5devcentral/terraform-aws-f5-sca.git"
 }
+variable "subnetGwlbeAz1" {
+  default = "10.252.54.0/24"
+}
+variable "subnetGwlbeAz2" {
+  default = "10.252.154.0/24"
+}
+variable "createGwlbEndpoint" {
+  default     = false
+  type        = bool
+  description = "Controls the creation of gwlb endpoints in the provided vpc, if true creates subnets and endpoints"
+}
