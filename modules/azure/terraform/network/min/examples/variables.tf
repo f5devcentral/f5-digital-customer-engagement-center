@@ -16,14 +16,3 @@ variable "azureLocation" {
   type        = string
   description = "location where Azure resources are deployed (abbreviated Azure Region name)"
 }
-variable "azureCidr" {
-  type        = string
-  description = "VNet CIDR range"
-}
-variable "azureSubnets" {
-  type = object({
-    management = string
-    external   = string
-    internal   = string
-  })
-}

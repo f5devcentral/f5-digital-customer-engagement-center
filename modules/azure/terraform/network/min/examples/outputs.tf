@@ -1,10 +1,11 @@
 output "azureInfra" {
   description = "Azure Vnet and subnet IDs for the created Vnet"
   value = {
-    vnetId        = module.network_min.azureVnetId,
-    vnetName      = module.network_min.azureVnetName,
-    vnetCidrBlock = module.network_min.azureVnetCidr,
-    vnetSubnets   = module.network_min.azureSubnets,
-    natId         = module.network_min.azureNatId
+    vnetId        = module.azure_network.azureVnetId,
+    vnetName      = module.azure_network.azureVnetName,
+    vnetCidrBlock = module.azure_network.azureVnetCidr,
+    natId         = module.azure_network.azureNatId,
+    vpcs          = module.azure_network.vpcs,
+    subnets       = module.azure_network.subnets
   }
 }

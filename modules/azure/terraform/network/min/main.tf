@@ -12,8 +12,8 @@ module "network" {
   resource_group_name = var.azureResourceGroup
   vnet_name           = format("%s-vnet-%s", var.projectPrefix, var.buildSuffix)
   address_space       = var.azureCidr
-  subnet_prefixes     = [var.azureSubnets.management, var.azureSubnets.external, var.azureSubnets.internal]
-  subnet_names        = ["management", "external", "internal"]
+  subnet_prefixes     = [var.azureSubnets.mgmt, var.azureSubnets.external, var.azureSubnets.internal]
+  subnet_names        = ["mgmt", "external", "internal"]
 
   tags = {
     Name      = format("%s-vnet-%s", var.resourceOwner, var.buildSuffix)
@@ -21,9 +21,9 @@ module "network" {
   }
 }
 
-# Retrieve management subnet info
+# Retrieve subnet info
 data "azurerm_subnet" "mgmt" {
-  name                 = "management"
+  name                 = "mgmt"
   virtual_network_name = module.network.vnet_name
   resource_group_name  = var.azureResourceGroup
 

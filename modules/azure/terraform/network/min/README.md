@@ -16,8 +16,6 @@ module "network_min" {
     resourceOwner       = var.resourceOwner
     azureResourceGroup  = var.azureResourceGroup
     azureLocation       = var.azureLocation
-    azureCidr           = var.azureCidr
-    azureSubnets        = var.azureSubnets
 }
 ```
 
@@ -27,34 +25,37 @@ module "network_min" {
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.14.5 |
-| azurerm | ~> 2.48 |
+| terraform | ~> 0.14 |
+| azurerm | ~> 2 |
 
 ## Providers
 
-No provider.
+| Name | Version |
+|------|---------|
+| azurerm | ~> 2 |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| projectPrefix | prefix for resources | `string` | `"demo"` | no |
-| buildSuffix | random build suffix for resources | `string` | n/a | yes |
-| resourceOwner | name of the person or customer running the solution | `string` | n/a | yes |
-| azureResourceGroup | resource group to create objects in | `string` | n/a | yes |
-| azureLocation | location where Azure resources are deployed (abbreviated Azure Region name) | `string` | n/a | yes |
 | azureCidr | VNet CIDR range | `string` | `"10.1.0.0/16"` | no |
-| azureSubnets | subnets to create within the VNet | `object` | `management = "10.1.1.0/24"`<br>`external = "10.1.10.0/24"`<br>`internal = "10.1.20.0/24"` | no |
+| azureLocation | location where Azure resources are deployed (abbreviated Azure Region name) | `string` | n/a | yes |
+| azureResourceGroup | resource group to create objects in | `any` | n/a | yes |
+| azureSubnets | n/a | <pre>object({<br>    mgmt     = string<br>    external = string<br>    internal = string<br>  })</pre> | <pre>{<br>  "external": "10.1.10.0/24",<br>  "internal": "10.1.20.0/24",<br>  "mgmt": "10.1.1.0/24"<br>}</pre> | no |
+| buildSuffix | random build suffix for resources | `string` | n/a | yes |
+| projectPrefix | prefix for resources | `string` | `"demo"` | no |
+| resourceOwner | name of the person or customer running the solution | `any` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| azureNatId | The ID of the NAT Gateway |
+| azureVnetCidr | The CIDR block of the VNet |
 | azureVnetId | The ID of the Vnet |
 | azureVnetName | The Name of the Vnet |
-| azureVnetCidr | The CIDR block of the VNet |
-| azureSubnets | List of IDs of subnets |
-| azureNatId | The ID of the NAT Gateway |
+| subnets | A map of subnetworks created by module, keyed by usage context. |
+| vpcs | A map of VPC networks created by module, keyed by usage context. |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

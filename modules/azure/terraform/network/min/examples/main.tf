@@ -15,15 +15,13 @@ resource "azurerm_resource_group" "main" {
 }
 
 # Network Module
-module "network_min" {
+module "azure_network" {
   source             = "../"
   projectPrefix      = var.projectPrefix
   buildSuffix        = var.buildSuffix
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.main.name
   azureLocation      = var.azureLocation
-  azureCidr          = var.azureCidr
-  azureSubnets       = var.azureSubnets
 
   depends_on = [azurerm_resource_group.main]
 }

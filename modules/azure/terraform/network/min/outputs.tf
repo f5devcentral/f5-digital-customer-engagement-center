@@ -1,4 +1,28 @@
-# Vnet
+locals {
+  vpcs = {
+    "main" = module.network.vnet_id
+  }
+  subnets = {
+    "mgmt"    = element(module.network.vnet_subnets, 0)
+    "public"  = element(module.network.vnet_subnets, 1)
+    "private" = element(module.network.vnet_subnets, 2)
+  }
+}
+
+output "vpcs" {
+  value       = local.vpcs
+  description = <<EOD
+A map of VPC networks created by module, keyed by usage context.
+EOD
+}
+
+output "subnets" {
+  value       = local.subnets
+  description = <<EOD
+A map of subnetworks created by module, keyed by usage context.
+EOD
+}
+
 output "azureVnetId" {
   description = "The ID of the Vnet"
   value       = module.network.vnet_id
@@ -14,13 +38,6 @@ output "azureVnetCidr" {
   value       = concat(module.network.*.vnet_address_space, [""])[0]
 }
 
-# Subnets
-output "azureSubnets" {
-  description = "List of IDs of subnets"
-  value       = module.network.vnet_subnets
-}
-
-# NAT Gateway
 output "azureNatId" {
   description = "The ID of the NAT Gateway"
   value       = azurerm_nat_gateway.mgmt_nat.id

@@ -29,13 +29,13 @@ variable "azureCidr" {
 }
 variable "azureSubnets" {
   type = object({
-    management = string
-    external   = string
-    internal   = string
+    mgmt     = string
+    external = string
+    internal = string
   })
   default = {
-    management = "10.1.1.0/24"
-    external   = "10.1.10.0/24"
-    internal   = "10.1.20.0/24"
+    mgmt     = "10.1.1.0/24"
+    external = "10.1.10.0/24"
+    internal = "10.1.20.0/24"
   }
 }
