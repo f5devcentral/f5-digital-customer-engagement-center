@@ -28,13 +28,13 @@ This solution requires the following products and services.
 
 .. note:: Double-clicking in the empty space of VSCode will create a new file that can be used as a digital notepad
 
-1.  VSCode is our preferred IDE. This allows an editor and terminal within a single pane, open VSCode, and a new Terminal. If you are in the UDF environment, you can access VSCode through the **coder** access method on the **ubuntuHost** resource. Also, see `F5 UDF Environment Access`_.
+1. VSCode is our preferred IDE. This allows an editor and terminal within a single pane, open VSCode, and a new Terminal. If you are in the UDF environment, you can access VSCode through the **coder** access method on the **ubuntuHost** resource. Also, see `F5 UDF Environment Access`_.
 
    Example:
 
    |image01|
 
-2.  Set or verify your AWS credentials
+2. Set or verify your AWS credentials
 
    .. note:: AWS Access and Secret keys for the UDF environment are located under **cloud accounts**
    .. warning:: For UDF users, the region must be ``us-west-2``
@@ -49,7 +49,7 @@ This solution requires the following products and services.
 
    |image02|
 
-3.  git clone the public repositories containing all code.
+3. git clone the public repositories containing all code.
 
    .. note:: Examples are shown pulling the repositories down to the **Desktop** folder. If you choose to change the clone location, be aware of the path
 
@@ -156,60 +156,60 @@ This solution requires the following products and services.
 
    |image12|
 
-10. All of the Terraform-created objects are dynamic, so up until they didnt exist. Now that the resources are created, we need to apply access to those services.
+10. All of the Terraform-created objects are dynamic, so until running the Terraform template they didn’t exist. Now that the resources are created, we need to apply access to those services.
 
-   Step 1: Log in to ECR. Change the ``ecrRepositoryURL`` to the terraform output.
+    Step 1: Log in to ECR. Change the ``ecrRepositoryURL`` to the terraform output.
 
-   In the terminal window copy the below text and paste+enter:
+    In the terminal window copy the below text and paste+enter:
 
-   .. code-block::
+    .. code-block::
 
-      aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ecrRepositoryURL
+       aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin  ecrRepositoryURL
 
-   ECR is used as our registry for the Kubernetes environment. Registries are used to keep container images for lifecycle and deployments. NGINX Ingress Controller is a contain.
+    ECR is used as our registry for the Kubernetes environment. Registries are used to keep container images for  lifecycle and deployments. NGINX Ingress Controller is a container.
 
-   Example:
+    Example:
 
-   |image13|
+    |image13|
 
-   Step 2: Log in to EKS. Change the ``kubernetesClusterName`` to the terraform output.
+    Step 2: Log in to EKS. Change the ``kubernetesClusterName`` to the terraform output.
 
-   In the terminal window copy the below text and paste+enter:
+    In the terminal window copy the below text and paste+enter:
 
-   .. code-block::
+    .. code-block::
 
-      aws eks --region us-west-2 update-kubeconfig --name kubernetesClusterName
+       aws eks --region us-west-2 update-kubeconfig --name kubernetesClusterName
 
-   Kubernetes in this environment will host our application, and we will be using NGINX Ingress Controller to expose that application.
+    Kubernetes in this environment will host our application, and we will be using NGINX Ingress Controller to  expose that application.
 
-   Example:
+    Example:
 
-   |image14|
+    |image14|
 
-   Step 3: Update the Subnet Tags for the EKS cluster. Change the ``publicSubnetAZ1`` and ``publicSubnetAZ2`` to the terraform output.
+    Step 3: Update the Subnet Tags for the EKS cluster. Change the ``publicSubnetAZ1`` and ``publicSubnetAZ2`` to  the terraform output.
 
-   In the terminal window copy the below text and paste+enter:
+    In the terminal window copy the below text and paste+enter:
 
-   .. code-block::
+    .. code-block::
 
-      aws ec2 create-tags \
-         --resources publicSubnetAZ1 publicSubnetAZ2 \
-         --tags Key=kubernetes.io/cluster/my-cluster-3820603181,Value=shared   Key=kubernetes.io/role/elb,Value=1
+       aws ec2 create-tags \
+          --resources publicSubnetAZ1 publicSubnetAZ2 \
+          --tags Key=kubernetes.io/cluster/my-cluster-3820603181,Value=shared   Key=kubernetes.io/role/elb,Value=1
 
-   For EKS to create an Elastic Load Balancer for our Ingress solution, two tags need to be placed on the public subnets. Ideally, Terraform would add the tags. However, the EKS module from Terraform does not manipulate those. So, we are doing it manually. These issues can be tracked here.
+    For EKS to create an Elastic Load Balancer for our Ingress solution, two tags need to be placed on the public  subnets. Ideally, Terraform would add the tags. However, the EKS module from Terraform does not manipulate  those. So, we are doing it manually. These issues can be tracked here.
 
-   - issue01_
-   - issue02_
+    - issue01_
+    - issue02_
 
-   Example:
+    Example:
 
-   |image15|
+    |image15|
 
 11. The environment has been created, all access has been set.
 
-   At this point, we can deploy our services and provide access.
+    At this point, we can deploy our services and provide access.
 
-   Proceed to `NGINX Kubernetes Ingress Controller | Deployment`_
+    Proceed to `NGINX Kubernetes Ingress Controller | Deployment`_
 
 
 

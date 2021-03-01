@@ -1,7 +1,7 @@
 NGINX Kubernetes Ingress Controller | Examples
 ----------------------------------------------
 
-Included below are several examples of how NGINX Ingress Controller deployments. It is recommended that you progress through building on top of each other. Going this way highlights the lifecycle of container-based services that will evolve.
+Included below are several examples of NGINX Ingress Controller deployments. It is recommended that you progress through building on top of each other. Going this way highlights the lifecycle of container-based services that will evolve.
 
 |image51|
 
@@ -89,7 +89,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    NGINX Dashboard should be updated reflecting the active monitors
 
-   NGINX Dashboard URL (replace with your dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
+   NGINX Dashboard URL (replace with your dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/dashboard.html#upstreams``
 
    Example:
 
