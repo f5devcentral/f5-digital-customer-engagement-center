@@ -1,9 +1,9 @@
 NGINX Kubernetes Ingress Controller | Deployment
 ------------------------------------------------
 
-NGINX Ingress Controller provides a robust feature set to secure, strengthen, and scale your containerized apps, including:
+NGINX Ingress Controller provides a robust feature set to secure, strengthen, and scale containerized apps, including:
 
-- Advanced app centric configuration - Use role-based access control (RBAC) and self service to set up security guardrails (not gates), so your teams can manage their apps securely and with agility. Enable multi tenancy, reusability, simpler configs, and more.
+- Advanced app centric configuration - Use role-based access control (RBAC) and self service to set up security guardrails (not gates), so teams can manage their apps securely and with agility. Enable multi tenancy, reusability, simpler configs, and more.
 - Visibility and performance monitoring - Pinpoint undesirable behaviors and performance bottlenecks to simplify troubleshooting and make fixes faster.
 
 |image00|
@@ -26,9 +26,9 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    |image49|
 
-   This solution uses the purchased NGINX Ingress Controller. Through your account team, workshop registration, or an instructor, you should have received an NGINX certificate and key to access the NGINX registry. Access to the registry allows for building current NGINX products.
+   This solution uses the purchased NGINX Ingress Controller. Through an account team, workshop registration, or an instructor, you should have received an NGINX certificate and key to access the NGINX registry. Access to the registry allows for building current NGINX products.
 
-   VSCode Coder will allow you to drag files into the interface. Drag your two files to the **root** of the `Kubernetes-ingress` folder.
+   VSCode Coder will allow you to drag files into the interface. Drag the cert and key files to the **root** of the `Kubernetes-ingress` folder.
 
    Example:
 
@@ -42,7 +42,7 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
       cat nginx-repo.*
 
-3. Verify that you have your certificate and key
+3. Verify that you have a certificate and key
 
    In the terminal window, copy the below text and paste+enter:
 
@@ -60,13 +60,13 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    .. note:: Building the image will take a few minutes (3-5)
 
-   Within the Kubernetes-ingress repository are all the needed files to create our nginx ingress controller docker image. With the certificate and key in place, we can **make** our image. After the image is created, our local installation of docker will push our image to the ECR we created with Terraform earlier. When Terraform applied our ECR object, it output the name of our registry. Its output was a prefix and looked like a URL.
+   Within the Kubernetes-ingress repository are all the needed files to create our NGINX Ingress Controller docker image. With the certificate and key in place, we can **make** our image. After the image is created, our local installation of docker will push our image to the ECR we created with Terraform. When Terraform applied our ECR object, it output the name of our registry. Its output was a prefix and looked like a URL.
 
    Example of Terraform outputs:
 
    |image12|
 
-   Step 1. In the terminal window, **replace** ``ecrRepositoryURL`` with your output and copy the below text and paste+enter:
+   Step 1. In the terminal window, **replace** ``ecrRepositoryURL`` with the output value and copy the below text and paste+enter:
 
    .. code-block::
 
@@ -96,7 +96,7 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
 6. Modify the NGINX Kubernetes Ingress Controller manifest
 
-   .. warning:: Failure to update the manifest with your image:tag location will result in a failed deployment. Change Line ``1791``
+   .. warning:: Failure to update the manifest with a valid image:tag location will result in a failed deployment. Change Line ``1791``
 
    Kubernetes deployments are typically maintained through manifest files. The deployment of the NGINX Ingress Controller will be created through manifests. Multiple Kubernetes resources can be made through a single file. This environments to-be-created resources are declared in the ``nginx-ingress-install.yml`` file.
 
@@ -115,7 +115,7 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
     - NGINX Ingress Controller deployment
     - NGINX Ingress Controller service
 
-   Step 1. Modify the manifests file on line ``1791`` for your ``image:tag``
+   Step 1. Modify the manifests file on line ``1791`` for the ``image:tag`` value
 
    .. note:: Docker images and tags can be found by running the docker command ``docker images``
 
@@ -137,11 +137,19 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
 7. Deploy the NGINX Kubernetes Ingress Controller
 
+   .. note:: If the NGINX Ingress Controller Pod is not in a **running** state, verify the **image:tag** value is correct from deployment manifest
+
    In the terminal window copy the below text and paste+enter:
 
    .. code-block::
 
       kubectl apply -f /home/ubuntu/Desktop/f5-digital-customer-engagement-center/solutions/delivery/application_delivery_controller/nginx/kic/templates/nginx-ingress-install.yml
+
+   Validate that the NGINX Ingress Controller is running:
+
+   .. code-block::
+
+      kubectl -n nginx-ingress get pods -o wide
 
    Example:
 
@@ -163,7 +171,7 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
 9. See the NGINX Ingress Controller services
 
-   .. note:: The **EXTERNAL-IP** values will be used during several parts of the lab. It is recommended to copy these to an easily referenceable location like a clipboard/digital notepad
+   .. warning:: The **EXTERNAL-IP** values will be used during several parts of the lab, in AWS this is an FQDN. It is recommended to copy these to an easily referenceable location like a clipboard/digital notepad
 
    The deployment of NGINX Controller Ingress contains two Kubernetes services: Ingress and the other for Dashboard.
 
@@ -190,15 +198,17 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
 11. Browse to the exposed NGINX Ingress Controller services
 
+   .. note:: The Dashboard and the Ingress websites will take a few minutes to become available (1-3 Minutes)
+
     There is nothing yet deployed on NGINX Ingress Controller. However, the Dashboard and the Ingress are active. When the services were created in Kubernetes, Kubernetes created an AWS ELB. These ELBs allow for access to the services, and if the NGINX services ever scale, they will dynamically be added.
 
-    NGINX Dashboard URL (replace with your dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
+    NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
 
     Example:
 
     |image28|
 
-    NGINX Ingress Controller URL (replace with your nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/``
+    NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/``
 
     Example:
 

@@ -5,8 +5,7 @@ Terraform_ is an open-source infrastructure as code software tool that provides 
 
 `Visual Studio Code`_ is a streamlined code editor with support for development operations like debugging, task running, and version control.
 
-
-This solution requires the following products and services.
+This solution is leveraging Terraform to create and manage the following products and services.
 
 - Amazon Elastic Container Registry (ECR)
 - Amazon Elastic Kubernetes Service (EKS)
@@ -26,7 +25,7 @@ This solution requires the following products and services.
    * OpenSSL, optionally, if you would like to generate a self-signed certificate and a key for the default server.
    * For NGINX Plus, you must have the NGINX Plus license - the certificate (nginx-repo.crt) and the key (nginx-repo.key).
 
-.. note:: Double-clicking in the empty space of VSCode will create a new file that can be used as a digital notepad
+.. note:: Double-clicking in the empty space to the right of **Welcome** tab in VSCode will create a new file that can be used as a digital notepad
 
 1. VSCode is our preferred IDE. This allows an editor and terminal within a single pane, open VSCode, and a new Terminal. If you are in the UDF environment, you can access VSCode through the **coder** access method on the **ubuntuHost** resource. Also, see `F5 UDF Environment Access`_.
 
@@ -34,7 +33,7 @@ This solution requires the following products and services.
 
    |image01|
 
-2. Set or verify your AWS credentials
+2. Set or verify environment AWS credentials
 
    .. note:: AWS Access and Secret keys for the UDF environment are located under **cloud accounts**
    .. warning:: For UDF users, the region must be ``us-west-2``
@@ -44,6 +43,17 @@ This solution requires the following products and services.
    .. code-block::
 
       aws configure
+
+   Variables Table for awscli to UDF Cloud Accounts:
+
+   ===================== ===========================================================
+   Variable Name         Cloud Account Variable Value
+   ===================== ===========================================================
+   AWS Access Key ID     API Key
+   AWS Secret Access Key API Secret
+   Default region name   us-west-2
+   Default ouput format  json
+   ===================== ===========================================================
 
    Example:
 
@@ -89,7 +99,7 @@ This solution requires the following products and services.
 
       cat ~/udf_user.pub
 
-   Copy the output to be used in the next step, or provide your SSH key.
+   Copy the output to be used in the next step, or provide an SSH key.
 
    Example:
 
@@ -124,7 +134,9 @@ This solution requires the following products and services.
    |image08|
    |image09|
 
-7. Run the setup script - this will create objects in your AWS account.
+7. Run the setup script - **This will create AWS resource objects**
+
+
 
    In the terminal window copy the below text and paste+enter:
 
@@ -156,7 +168,7 @@ This solution requires the following products and services.
 
    |image12|
 
-10. All of the Terraform-created objects are dynamic, so until running the Terraform template they didn’t exist. Now that the resources are created, we need to apply access to those services.
+10. All of the Terraform-created objects are dynamic, so until running the Terraform template they did not exist. Now that the resources are created, we need to apply access to those services.
 
     Step 1: Log in to ECR. Change the ``ecrRepositoryURL`` to the terraform output.
 
@@ -164,7 +176,7 @@ This solution requires the following products and services.
 
     .. code-block::
 
-       aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin  ecrRepositoryURL
+       aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ecrRepositoryURL
 
     ECR is used as our registry for the Kubernetes environment. Registries are used to keep container images for  lifecycle and deployments. NGINX Ingress Controller is a container.
 

@@ -34,7 +34,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    NGINX Dashboard should be updated reflecting the new services discovered
 
-   NGINX Dashboard URL (replace with your dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
+   NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
 
    Example:
 
@@ -42,7 +42,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    Arcadia application is now exposed through the NGINX Ingress Controller on HTTP!
 
-   NGINX Ingress Controller URL (replace with your nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/``
+   NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/``
 
    Example:
 
@@ -70,7 +70,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    Arcadia application is now exposed through the NGINX Ingress Controller on HTTP!
 
-   NGINX Ingress Controller URL (replace with your nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/`` or ``https://EXTERNAL-IP/``
+   NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/`` or ``https://EXTERNAL-IP/``
 
 3. HTTPS with Active Monitors
 
@@ -89,7 +89,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    NGINX Dashboard should be updated reflecting the active monitors
 
-   NGINX Dashboard URL (replace with your dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/dashboard.html#upstreams``
+   NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/dashboard.html#upstreams``
 
    Example:
 
@@ -97,7 +97,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    Arcadia application is now exposed through the NGINX Ingress Controller only on HTTP with monitors!
 
-   NGINX Ingress Controller URL (replace with your nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/``
+   NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/``
 
 4. HTTPS with Active Monitors, Caching
 
@@ -133,13 +133,13 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    Arcadia application is now exposed through the NGINX Ingress Controller only on HTTP with monitors and caching!
 
-   NGINX Ingress Controller URL (replace with your nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/``
+   NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/``
 
 4. Https with Active Monitors, Caching, mTLS
 
    NGINX Ingress Controller can participate in the mTLS cert exchange with services.
 
-   By default, the TLS protocol only proves the identity of the server to the client using X.509 certificates, and the authentication of the client to the server is left to the application layer. TLS also offers client-to-server authentication using client-side X.509 authentication.[14] As it requires provisioning of the certificates to the clients and involves a less user-friendly experience, it is rarely used in end-user applications.
+   By default, the TLS protocol only proves the identity of the server to the client using X.509 certificates, and the authentication of the client to the server is left to the application layer. TLS also offers client-to-server authentication using client-side X.509 authentication. As it requires provisioning of the certificates to the clients and involves a less user-friendly experience, it is rarely used in end-user applications.
 
    Mutual TLS authentication (**mTLS**) is much more widespread in business-to-business (B2B) applications, where a limited number of programmatic and homogeneous clients are connecting to specific web services, the operational burden is limited, and security requirements are usually much higher as compared to consumer environments.
 
