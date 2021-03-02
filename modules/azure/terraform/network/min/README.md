@@ -38,13 +38,13 @@ module "network_min" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| azureCidr | VNet CIDR range | `string` | `"10.1.0.0/16"` | no |
 | azureLocation | location where Azure resources are deployed (abbreviated Azure Region name) | `string` | n/a | yes |
 | azureResourceGroup | resource group to create objects in | `any` | n/a | yes |
-| azureSubnets | n/a | <pre>object({<br>    mgmt     = string<br>    external = string<br>    internal = string<br>  })</pre> | <pre>{<br>  "external": "10.1.10.0/24",<br>  "internal": "10.1.20.0/24",<br>  "mgmt": "10.1.1.0/24"<br>}</pre> | no |
 | buildSuffix | random build suffix for resources | `string` | n/a | yes |
-| projectPrefix | prefix for resources | `string` | `"demo"` | no |
 | resourceOwner | name of the person or customer running the solution | `any` | n/a | yes |
+| azureCidr | VNet CIDR range | `string` | `"10.1.0.0/16"` | no |
+| azureSubnets | n/a | <pre>object({<br>    mgmt     = string<br>    external = string<br>    internal = string<br>  })</pre> | <pre>{<br>  "external": "10.1.10.0/24",<br>  "internal": "10.1.20.0/24",<br>  "mgmt": "10.1.1.0/24"<br>}</pre> | no |
+| projectPrefix | prefix for resources | `string` | `"demo"` | no |
 
 ## Outputs
 

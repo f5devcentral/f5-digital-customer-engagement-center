@@ -6,17 +6,26 @@ variable "projectPrefix" {
   default     = "fw-inter-vpc"
 }
 variable "resourceOwner" {
-  default = "elsa"
+  description = "Owner of the deployment for tagging purposes"
+  default     = "elsa"
 }
 variable "awsRegion" {
-  default = "us-east-2"
+  description = "aws region"
+  type        = string
+  default     = "us-east-2"
 }
 variable "sshPublicKey" {
-  default = null
+  description = "SSH public key used to create an EC2 keypair"
+  type        = string
+  default     = null
 }
 variable "awsAz1" {
-  default = null
+  description = "Availability zone, will dynamically choose one if left empty"
+  type        = string
+  default     = null
 }
 variable "awsAz2" {
-  default = null
+  description = "Availability zone, will dynamically choose one if left empty"
+  type        = string
+  default     = null
 }
