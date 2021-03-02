@@ -1,10 +1,9 @@
-# GCP minimal network
+# GCP minimum network
 
-# GCP maximum network
-
-This module will create three [VPC networks](https://cloud.google.com/vpc/docs/vpc) in a single GCE [Region](https://cloud.google.com/compute/docs/regions-zones)
-that isolates public facing, private internal/services, and management traffic
-for a standard three-leg deployment.
+This module will create three VPC networks in a single GCE
+[Region](https://cloud.google.com/compute/docs/regions-zones#available) that
+isolates public facing, private internal/services, and management traffic for a
+three-leg deployment.
 
 A NAT is included on `mgmt` network to allow BIG-IP and other resources to access
 internet.
@@ -14,8 +13,8 @@ internet.
 To use this module within a solutions context:
 
 ```hcl
-module "network" {
-    source = "../../../../../google/terraform/network/max/"
+module "network_min" {
+    source = "../../../../../google/terraform/network/min/"
     gcpProjectId = var.gcpProjectId
     gcpRegion = var.gcpRegion
     projectPrefix = var.projectPrefix
@@ -30,11 +29,24 @@ module "network" {
 | Name | Version |
 |------|---------|
 | terraform | ~> 0.14.5 |
-| google | ~> 3.54 |
+| google | >= 3.54 |
 
 ## Providers
 
 No provider.
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| mgmt | terraform-google-modules/network/google | 3.0.1 |
+| nat | terraform-google-modules/cloud-router/google | 0.4.0 |
+| private | terraform-google-modules/network/google | 3.0.1 |
+| public | terraform-google-modules/network/google | 3.0.1 |
+
+## Resources
+
+No resources.
 
 ## Inputs
 
@@ -44,6 +56,7 @@ No provider.
 | gcpProjectId | gcp project id | `string` | n/a | yes |
 | gcpRegion | region where gke is deployed | `string` | n/a | yes |
 | projectPrefix | prefix for resources | `string` | `"demo"` | no |
+| resourceOwner | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |
 
 ## Outputs
 
@@ -51,6 +64,5 @@ No provider.
 |------|-------------|
 | subnets | A map of subnetworks created by module, keyed by usage context. |
 | vpcs | A map of VPC networks created by module, keyed by usage context. |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

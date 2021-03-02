@@ -2,7 +2,6 @@
 variable "projectPrefix" {
   type        = string
   description = "prefix for resources"
-  default     = "demo"
 }
 variable "buildSuffix" {
   type        = string
@@ -15,4 +14,9 @@ variable "gcpRegion" {
 variable "gcpProjectId" {
   type        = string
   description = "gcp project id"
+}
+variable "resourceOwner" {
+  type        = string
+  default     = "f5-dcec"
+  description = "owner of GCP resources"
 }

@@ -16,3 +16,8 @@ variable "gcpProjectId" {
   type        = string
   description = "gcp project id"
 }
+
+variable "resourceOwner" {
+  description = "owner of the deployment, for tagging purposes"
+  default     = "f5-dcec"
+}
