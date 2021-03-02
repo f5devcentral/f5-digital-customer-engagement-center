@@ -14,10 +14,10 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 **NGINX Ingress Controller Examples**:
 
 - Basic: This is a simple layer 7 routing ingress, taking our EXTERNAL-IP address and moving clients to Arcadia Application
-- Https: Layer 7 routing ingress with TLS, TLS secret is stored in Kubernetes as a TLS secret
-- Https with Active Monitors: Https + Active Health Monitors to Pods
-- Https with Active Monitors, Caching: Https + Active Health Monitors + Caching for site content
-- Https with Active Monitors, Caching, mTLS: Https + Active Health Monitors + Caching + mTLS for client ca challenge
+- HTTPS: Layer 7 routing ingress with TLS, TLS secret is stored in Kubernetes as a TLS secret
+- HTTPS with Active Monitors: HTTPS + Active Health Monitors to Pods
+- HTTPS with Active Monitors, Caching: HTTPS + Active Health Monitors + Caching for site content
+- HTTPS with Active Monitors, Caching, mTLS: HTTPS + Active Health Monitors + Caching + mTLS for client ca challenge
 
 1. Basic
 
@@ -48,7 +48,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    |image33|
 
-2. Https
+2. HTTPS
 
    .. note:: There is no change to the Dashboard when using HTTPS. However, the Ingress will now listen on both port 80 and port 443
 
@@ -70,13 +70,13 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    Arcadia application is now exposed through the NGINX Ingress Controller on HTTP!
 
-   NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/`` or ``https://EXTERNAL-IP/``
+   NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/`` or ``http://EXTERNAL-IP/``
 
 3. HTTPS with Active Monitors
 
    NGINX Plus can periodically check the health of upstream servers by sending special health-check requests to each server and verifying the correct response.
 
-   Create NGINX Ingress Controller with Https with Active Monitors:
+   Create NGINX Ingress Controller with HTTPS with Active Monitors:
 
    In the terminal window, copy the below text and paste+enter:
 
@@ -120,7 +120,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    |image38|
 
-   Step 3. Create NGINX Ingress Controller with Https with Active Monitors, Caching:
+   Step 3. Create NGINX Ingress Controller with HTTPS with Active Monitors, Caching:
 
    In the terminal window, copy the below text and paste+enter:
 
@@ -135,7 +135,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/``
 
-4. Https with Active Monitors, Caching, mTLS
+4. HTTPS with Active Monitors, Caching, mTLS
 
    NGINX Ingress Controller can participate in the mTLS cert exchange with services.
 
@@ -157,7 +157,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
    .. literalinclude :: ../../../../../../solutions/delivery/application_delivery_controller/nginx/kic/templates/arcadiaMTLSPolicy.yml
       :language: text
 
-   Step 3. Create NGINX Ingress Controller with Https with Active Monitors, Caching:
+   Step 3. Create NGINX Ingress Controller with HTTPS with Active Monitors, Caching:
 
    In the terminal window, copy the below text and paste+enter:
 

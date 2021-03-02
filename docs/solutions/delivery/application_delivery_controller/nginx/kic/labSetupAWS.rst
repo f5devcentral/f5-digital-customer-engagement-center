@@ -35,7 +35,8 @@ This solution is leveraging Terraform to create and manage the following product
 
 2. Set or verify environment AWS credentials
 
-   .. note:: AWS Access and Secret keys for the UDF environment are located under **cloud accounts**
+   .. note:: AWS Access and Secret keys for the UDF environment are located in the Blueprint or Course Documentation, under section **cloud accounts**
+
    .. warning:: For UDF users, the region must be ``us-west-2``
 
    In the terminal window, copy the below text and paste+enter:
@@ -75,7 +76,7 @@ This solution is leveraging Terraform to create and manage the following product
    |image03|
    |image04|
 
-4. Change directory to the f5 digital customer engagement center repository
+4. Change directory to the F5 Digital Customer Engagement Center repository
 
    In the terminal window copy the below text and paste+enter:
 
@@ -160,7 +161,7 @@ This solution is leveraging Terraform to create and manage the following product
 
    .. warning:: Terraform is building several services, this can take 10-15 minutes
 
-   The outputs from our Terraform run are in Green. We will need this information to access our services and create/publish NGINX into the environment.
+   The outputs from our Terraform run are in green. We will need this information to access our services and create/publish NGINX into the environment.
 
    Save the outputs for the next few steps.
 
