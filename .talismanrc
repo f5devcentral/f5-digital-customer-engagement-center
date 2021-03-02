@@ -140,3 +140,5 @@ fileignoreconfig:
   checksum: d9884dedf80dcffd0a58d48ad578a19e9d500ba6bef4ad80d77540cd6361d7b6
 - filename: docs/solutions/delivery/application_delivery_controller/nginx/kic/labSetupAWS.rst
   checksum: fafd6af57c6f67439afaf5e9493fb8e393a4a2fbe30252944c644264871e88a8
+- filename: solutions/security/ingress-egress-inter-vpc-fw-gwlb/README.md
+  checksum: 5ed655b3812b7993ac0a6d074abece9ab2fc99c58f843d11376e9c7c10422814

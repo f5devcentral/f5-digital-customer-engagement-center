@@ -119,16 +119,16 @@ resource "aws_lb" "gwlb" {
 }
 
 resource "aws_lb_target_group" "bigipTargetGroup" {
+  name        = "bigipTG-${var.buildSuffix}"
   port        = 6081
   protocol    = "GENEVE"
   target_type = "instance"
   vpc_id      = aws_vpc.vpcGwlb.id
 
   health_check {
-    protocol = "HTTP"
-    path     = "/"
-    port     = 80
-    matcher  = "200-399"
+    protocol = "TCP"
+    port     = 8443
+    #    matcher  = "200-399"
   }
   tags = {
     Name  = "${var.projectPrefix}-bigipTargetGroup-${var.buildSuffix}"
