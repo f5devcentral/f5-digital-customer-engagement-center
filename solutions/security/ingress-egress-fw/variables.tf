@@ -35,21 +35,21 @@ variable "adminSourceCidr" {
 }
 variable "vpcMainCidr" {
   description = "cidr range for vpcMain"
-  default = "10.1.0.0/16"
+  default     = "10.1.0.0/16"
 }
 variable "vpcMainSubPubACidr" {
   description = "cidr range for public subnetA"
-  default = "10.1.10.0/24"
+  default     = "10.1.10.0/24"
 }
 variable "vpcMainSubPubBCidr" {
   description = "cidr range for public subnetB"
-  default = "10.1.110.0/24"
+  default     = "10.1.110.0/24"
 }
 variable "vpcMainSubGwlbeACidr" {
   description = "cidr range for GWLBE subnet A"
-  default = "10.1.52.0/24"
+  default     = "10.1.52.0/24"
 }
 variable "vpcMainSubGwlbeBCidr" {
   description = "cidr range for GWLBE subnet B"
-  default = "10.1.152.0/24"
+  default     = "10.1.152.0/24"
 }
