@@ -60,7 +60,7 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    .. note:: Building the image will take a few minutes (3-5)
 
-   Within the Kubernetes-ingress repository are all the needed files to create our NGINX Ingress Controller docker image. With the certificate and key in place, we can **make** our image. After the image is created, our local installation of docker will push our image to the ECR we created with Terraform. When Terraform applied our ECR object, it output the name of our registry. Its output was a prefix and looked like a URL.
+   Within the Kubernetes-ingress repository are all the needed files to create our NGINX Ingress Controller Docker image. With the certificate and key in place, we can **make** our image. After the image is created, our local installation of docker will push our image to the ECR we created with Terraform. When Terraform applied our ECR object, it output the name of our registry. Its output was a prefix and looked like a URL.
 
    Example of Terraform outputs:
 
@@ -194,6 +194,9 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
     .. code-block::
 
        export dashboard_nginx_ingress=$(kubectl get svc dashboard-nginx-ingress --namespace=nginx-ingress | tr -s " " | cut -d' ' -f4 | grep -v "EXTERNAL-IP")
+
+    .. code-block::
+
        export nginx_ingress=$(kubectl get svc nginx-ingress --namespace=nginx-ingress | tr -s " " | cut -d' ' -f4 | grep -v "EXTERNAL-IP")
 
 11. Browse to the exposed NGINX Ingress Controller services
