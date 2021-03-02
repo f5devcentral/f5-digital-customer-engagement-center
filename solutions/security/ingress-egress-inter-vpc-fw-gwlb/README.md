@@ -140,7 +140,7 @@ ssh from it to one of the spoke jumphosts (get the private ip from terraform out
 
 monitor the traffic in AFM
 
-## Clenaup
+## Cleanup
 use the following command to destroy all of the resources
 
 ```bash
