@@ -206,3 +206,5 @@ fileignoreconfig:
   checksum: 7388b32e8ad7a467d9817011a270a57eadd10762f4df45df5d90d0d621962d24
 - filename: solutions/security/ingress-egress-inter-vpc-fw-gwlb/README.md
   checksum: d32462c3b49b2c49aa4bedb513ec601f978f990f9cbfbb594744dffc3f9e59cd
+- filename: test/integration/gcp-network-min/controls/subnets.rb
+  checksum: 9b01f27cef74d3c010371707e331869bc7a8376a38dfe99d11657e0ea53c5984
