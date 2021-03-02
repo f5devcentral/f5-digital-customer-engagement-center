@@ -8,4 +8,4 @@ There are two options to use the soltions in this project
    :glob:
 
    public_getting_started
-   f5_udf_getting_started
+   f5_udf_*
