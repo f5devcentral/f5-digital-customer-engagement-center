@@ -1,9 +1,11 @@
 # Description
-ingress-egress and inter-vpc firewall in AWS using AFM and GWLB
+ingress-egress firewall to a single VPC using GWLB
 
 ## Diagram
 
-![ingress-egress firewall to a single VPC using GWLB](ingress-egress-inter-vpc-fw.png)
+![ingress-egress firewall to a single VPC using GWLB](gwlb-fw.png)
+
+![logical-diagram - Follow the packet](logical-diagram.png)
 
 
 ## Requirements
@@ -124,21 +126,14 @@ Create your AFM policy and logging configuration
 
 ## TEST your setup:
 
-SCP your ssh keys to the jumphost (For Testing only, don't use long lived SSH keys)
 
-```bash
-scp ~/.ssh/id_rsa ~/.ssh/id_rsa.pub ubuntu@44.230.225.53:~/.ssh/
-```
-
-using your ssh key, connect to the Internet Vpc Jumphost - internetVpcData (workspaceManagementAddress)
+using your ssh key, connect to the  Jumphost - ubuntuJumpHostAz1
 
 ```bash
 ssh ubuntu@x.y.z.p
 ```
 
-ssh from it to one of the spoke jumphosts (get the private ip from terraform output)
-
-monitor the traffic in AFM
+monitor the traffic in AFM, you should see traffic incoming and outgoing from the jumphost in AFM
 
 ## Cleanup
 use the following command to destroy all of the resources
@@ -151,26 +146,32 @@ use the following command to destroy all of the resources
 
 | Name | Version |
 |------|---------|
-| aws | >= 2.24 |
+| aws | n/a |
 | random | n/a |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| adminSourceCidr | cidr range allowed to access the jumpHost | `string` | `"0.0.0.0/0"` | no |
 | awsAz1 | Availability zone, will dynamically choose one if left empty | `string` | `null` | no |
 | awsAz2 | Availability zone, will dynamically choose one if left empty | `string` | `null` | no |
 | awsRegion | aws region | `string` | `"us-east-2"` | no |
-| projectPrefix | projectPrefix name for tagging | `string` | `"fw-inter-vpc"` | no |
+| projectPrefix | projectPrefix name for tagging | `string` | `"gwlb-fw"` | no |
 | resourceOwner | Owner of the deployment for tagging purposes | `string` | `"elsa"` | no |
 | sshPublicKey | SSH public key used to create an EC2 keypair | `string` | `null` | no |
+| vpcMainCidr | cidr range for vpcMain | `string` | `"10.1.0.0/16"` | no |
+| vpcMainSubGwlbeACidr | cidr range for GWLBE subnet A | `string` | `"10.1.52.0/24"` | no |
+| vpcMainSubGwlbeBCidr | cidr range for GWLBE subnet B | `string` | `"10.1.152.0/24"` | no |
+| vpcMainSubPubACidr | cidr range for public subnetA | `string` | `"10.1.10.0/24"` | no |
+| vpcMainSubPubBCidr | cidr range for public subnetB | `string` | `"10.1.110.0/24"` | no |
+
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| bigipPassword | Password for the admin usernmae |
-| bigipPublicIp | Public ip for the BIGIP, access on port 8443 |
-| jumphostPublicIp | List of public ip's for the jumphosts |
+| bigipAz1Ip | public ip address of the BIGIP |
+| ubuntuJumpHostAz1 | public ip address of the jumphost |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
