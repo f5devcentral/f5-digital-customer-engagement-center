@@ -61,6 +61,7 @@ Create a 'health check' virtual server to respond
 |------|---------|
 | name | health_check |
 | ip address | 0.0.0.0/0 |
+| port | 80 |
 | VLAN / Tunnel  | internal |
 | Protocol  | TCP |
 | HTTP profile  | HTTP |
@@ -114,7 +115,6 @@ Configure a virtual server performance L4, transparent virtual server, assign th
 | Service Port	  | * All Ports |
 | Protocols	  | * All Protocols |
 | Vlans and Tunnels	  | geneve |
-| Service Port	  | * All Ports |
 | Address translation	  | Disabled |
 | Source port	  | Preserve strict |
 | Default pool	  | fake_dg_pool |
@@ -126,19 +126,14 @@ Create your AFM policy and logging configuration
 
 ## TEST your setup:
 
-SCP your ssh keys to the jumphost (For Testing only, don't use long lived SSH keys)
 
-```bash
-scp ~/.ssh/id_rsa ~/.ssh/id_rsa.pub ubuntu@44.230.225.53:~/.ssh/
-```
-
-using your ssh key, connect to the Internet Vpc Jumphost - internetVpcData (workspaceManagementAddress)
+using your ssh key, connect to the  Jumphost - ubuntuJumpHostAz1
 
 ```bash
 ssh ubuntu@x.y.z.p
 ```
 
-monitor the traffic in AFM
+monitor the traffic in AFM, you should see traffic incoming and outgoing from the jumphost in AFM 
 
 ## Cleanup
 use the following command to destroy all of the resources

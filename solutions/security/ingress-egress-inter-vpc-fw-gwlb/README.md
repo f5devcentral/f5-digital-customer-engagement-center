@@ -59,6 +59,7 @@ Create a 'health check' virtual server to respond
 |------|---------|
 | name | health_check |
 | ip address | 0.0.0.0/0 |
+| port | 80 |
 | VLAN / Tunnel  | internal |
 | Protocol  | TCP |
 | HTTP profile  | HTTP |
@@ -112,7 +113,6 @@ Configure a virtual server performance L4, transparent virtual server, assign th
 | Service Port	  | * All Ports |
 | Protocols	  | * All Protocols |
 | Vlans and Tunnels	  | geneve |
-| Service Port	  | * All Ports |
 | Address translation	  | Disabled |
 | Source port	  | Preserve strict |
 | Default pool	  | fake_dg_pool |
