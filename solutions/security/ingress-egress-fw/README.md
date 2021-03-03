@@ -133,7 +133,7 @@ using your ssh key, connect to the  Jumphost - ubuntuJumpHostAz1
 ssh ubuntu@x.y.z.p
 ```
 
-monitor the traffic in AFM, you should see traffic incoming and outgoing from the jumphost in AFM 
+monitor the traffic in AFM, you should see traffic incoming and outgoing from the jumphost in AFM
 
 ## Cleanup
 use the following command to destroy all of the resources
