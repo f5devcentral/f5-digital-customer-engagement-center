@@ -1,12 +1,17 @@
 NGINX Kubernetes Ingress Controller | Deployment
 ------------------------------------------------
 
+|image00|
+
+With the infrastructure in place to support the solution, the NGINX Kubernetes Ingress Controller deployment can begin.
+
+What is NGINX Kubernetes Ingress Controller?
+
 NGINX Ingress Controller provides a robust feature set to secure, strengthen, and scale containerized apps, including:
 
 - Advanced app centric configuration - Use role-based access control (RBAC) and self service to set up security guardrails (not gates), so teams can manage their apps securely and with agility. Enable multi tenancy, reusability, simpler configs, and more.
 - Visibility and performance monitoring - Pinpoint undesirable behaviors and performance bottlenecks to simplify troubleshooting and make fixes faster.
 
-|image00|
 
 1. Change the directory into the NGINX Ingress cloned repository.
 
@@ -235,6 +240,7 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 .. |image19| image:: images/image19.png
 .. |image20| image:: images/image20.png
 .. |image21| image:: images/image21.png
+  :width: 50%
 .. |image23| image:: images/image23.png
 .. |image24| image:: images/image24.png
 .. |image26| image:: images/image26.png

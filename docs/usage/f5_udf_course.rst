@@ -73,7 +73,7 @@ The following steps will log you into the course:
 
    |image08|
 
-12. Access into the UDF environment is complete. Please follow the workshop-specific documentation located on the Course Description.
+12. Access into the UDF environment is complete. Please follow the workshop-specific documentation located on the Course Overview.
 
 
 
