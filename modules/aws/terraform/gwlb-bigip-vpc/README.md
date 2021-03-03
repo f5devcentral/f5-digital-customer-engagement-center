@@ -41,7 +41,6 @@ No requirements.
 | allowedMgmtIps | n/a | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | awsAz1 | will use a dynamic az if left empty | `any` | `null` | no |
 | awsAz2 | will use a dynamic az if left empty | `any` | `null` | no |
-| awsRegion | n/a | `string` | `"us-west-2"` | no |
 | bigipPassword | password for the bigip admin account | `any` | `null` | no |
 | buildSuffix | random build suffix for tagging | `string` | `"f5-dcec"` | no |
 | createGwlbEndpoint | Controls the creation of gwlb endpoints in the provided vpc, if true creates subnets and endpoints | `bool` | `false` | no |

@@ -22,9 +22,6 @@ variable "awsAz2" {
   description = "will use a dynamic az if left empty"
   default     = null
 }
-variable "awsRegion" {
-  default = "us-west-2"
-}
 variable "keyName" {
   default = null
 }

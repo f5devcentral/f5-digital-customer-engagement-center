@@ -32,15 +32,15 @@ output "gwlbEndpointService" {
 }
 output "gwlbeAz1" {
   description = "Id of the GWLB endpoint in AZ1"
-  value       = aws_vpc_endpoint.vpcGwlbeAz1[0].id
+  value       = length(aws_vpc_endpoint.vpcGwlbeAz1) > 0 ? aws_vpc_endpoint.vpcGwlbeAz1[0].id : null
 }
 output "gwlbeAz2" {
   description = "Id of the GWLB endpoint in AZ2"
-  value       = aws_vpc_endpoint.vpcGwlbeAz2[0].id
+  value       = length(aws_vpc_endpoint.vpcGwlbeAz2) > 0 ? aws_vpc_endpoint.vpcGwlbeAz2[0].id : null
 }
 output "subnetGwlbeAz1" {
-  value = aws_subnet.subnetGwlbeAz1[0].id
+  value = length(aws_subnet.subnetGwlbeAz1) > 0 ? aws_subnet.subnetGwlbeAz1[0].id : null
 }
 output "subnetGwlbeAz2" {
-  value = aws_subnet.subnetGwlbeAz2[0].id
+  value = length(aws_subnet.subnetGwlbeAz2) > 0 ? aws_subnet.subnetGwlbeAz2[0].id : null
 }

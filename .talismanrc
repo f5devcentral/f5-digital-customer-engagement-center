@@ -142,3 +142,5 @@ fileignoreconfig:
   checksum: fafd6af57c6f67439afaf5e9493fb8e393a4a2fbe30252944c644264871e88a8
 - filename: solutions/security/ingress-egress-inter-vpc-fw-gwlb/README.md
   checksum: 5ed655b3812b7993ac0a6d074abece9ab2fc99c58f843d11376e9c7c10422814
+- filename: modules/aws/terraform/gwlb-bigip-vpc/main.tf
+  checksum: 90999ce57eba4fafee5b4b64fb2102613594b09b76b8fbbfa00451aef6bf5cff

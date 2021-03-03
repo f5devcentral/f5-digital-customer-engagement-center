@@ -4,6 +4,7 @@
 
 # VPCs
 
+data "aws_region" "current" {}
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -11,8 +12,9 @@ data "aws_availability_zones" "available" {
 data "aws_caller_identity" "current" {}
 
 locals {
-  awsAz1 = var.awsAz1 != null ? var.awsAz1 : data.aws_availability_zones.available.names[0]
-  awsAz2 = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
+  awsAz1    = var.awsAz1 != null ? var.awsAz1 : data.aws_availability_zones.available.names[0]
+  awsAz2    = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
+  awsRegion = data.aws_region.current.name
 }
 resource "aws_vpc" "vpcGwlb" {
   cidr_block = var.vpcCidr
@@ -238,7 +240,7 @@ resource "aws_iam_role_policy" "BigIpPolicy" {
             "secretsmanager:UpdateSecretVersionStage"
         ],
         "Resource": [
-            "arn:aws:secretsmanager:${var.awsRegion}:${data.aws_caller_identity.current.account_id}:secret:*"
+            "arn:aws:secretsmanager:${local.awsRegion}:${data.aws_caller_identity.current.account_id}:secret:*"
         ]
     }
   ]

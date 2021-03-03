@@ -13,7 +13,6 @@ module "gwlb-bigip-vpc" {
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
   buildSuffix   = random_id.buildSuffix.hex
-  awsRegion     = var.awsRegion
   keyName       = aws_key_pair.deployer.id
   instanceCount = 1
 }
