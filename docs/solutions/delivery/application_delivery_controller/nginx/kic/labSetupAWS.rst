@@ -1,6 +1,10 @@
 NGINX Kubernetes Ingress Controller | AWS Environment
 -----------------------------------------------------
 
+This solution will use AWS backend services to host the modern application and NGINX Kubernetes Ingress Controller. Utilizing AWS managed services will dramatically reduce the amount of time needed to build out a solution. Using Terraform for building the AWS services provides a consistent deployment every time.
+
+Prior knowledge of AWS or Terraform is not needed. The solution aims for a smaller learning curve on infrastructure (with abstractions) in exchange for more time with Kubernetes.
+
 Terraform_ is an open-source infrastructure as code software tool that provides a consistent CLI workflow to manage hundreds of cloud services. Terraform codifies cloud APIs into declarative configuration files.
 
 `Visual Studio Code`_ is a streamlined code editor with support for development operations like debugging, task running, and version control.
@@ -69,7 +73,10 @@ This solution is leveraging Terraform to create and manage the following product
    .. code-block::
 
       git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
-      git clone https://github.com/nginxinc/kubernetes-ingress
+
+   .. code-block::
+
+      git clone -b 'v1.10.0' --single-branch https://github.com/nginxinc/kubernetes-ingress
 
    Example:
 
@@ -115,6 +122,9 @@ This solution is leveraging Terraform to create and manage the following product
    .. code-block::
 
       cp admin.auto.tfvars.example admin.auto.tfvars
+
+   .. code-block::
+
       sudo vi admin.auto.tfvars
 
    ============== ===========================================================
