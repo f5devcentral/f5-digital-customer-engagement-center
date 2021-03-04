@@ -126,15 +126,21 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    The NGINX Ingress Controller resource is in the environment-specific ECR. However, the manifest does not know what that resource location is. Update the manifest by replacing the default value with the ECR and image:tag location of the environment.
 
-   For modifying the file, either **vi** or opening the file in VSCode will produce the same result. To modify with VSCode, navigate to f5-digital-customer-engagement-center > solutions > delivery > application_delivery_controller > nginx > kic > templates > nginx-ingress-install.yml, alter and save
+   For modifying the file, either **vi** or opening the file in VSCode will produce the same result.
 
-   In the terminal window, copy the below text and paste+enter **or** navigate to the file directly in VSCode:
+   The vi method:
+
+   In the terminal window, copy the below text and paste+enter:
 
    .. code-block::
 
       sudo vi /home/ubuntu/Desktop/f5-digital-customer-engagement-center/solutions/delivery/application_delivery_controller/nginx/kic/templates/nginx-ingress-install.yml
 
+   modify the image:tag
+
    save and exit file with ``:wq``
+
+   To modify with VSCode, navigate to f5-digital-customer-engagement-center > solutions > delivery > application_delivery_controller > nginx > kic > templates > nginx-ingress-install.yml, alter and save
 
    Example:
 
@@ -208,19 +214,19 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    .. note:: The Dashboard and the Ingress websites will take a few minutes to become available (1-3 Minutes)
 
-    There is nothing yet deployed on NGINX Ingress Controller. However, the Dashboard and the Ingress are active. When the services were created in Kubernetes, Kubernetes created an AWS ELB. These ELBs allow for access to the services, and if the NGINX services ever scale, they will dynamically be added.
+   There is nothing yet deployed on NGINX Ingress Controller. However, the Dashboard and the Ingress are active. When the services were created in Kubernetes, Kubernetes created an AWS ELB. These ELBs allow for access to the services, and if the NGINX services ever scale, they will dynamically be added.
 
-    NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
+   NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
 
-    Example:
+   Example:
 
-    |image28|
+   |image28|
 
-    NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/``
+   NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/``
 
-    Example:
+   Example:
 
-    |image29|
+   |image29|
 
 12. The NGINX Ingress Controller services have been created and exposed
 

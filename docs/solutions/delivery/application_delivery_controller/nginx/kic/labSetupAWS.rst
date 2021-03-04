@@ -72,7 +72,7 @@ This solution is leveraging Terraform to create and manage the following product
 
    .. code-block::
 
-      git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
+      git clone -b 'v1.1.0' --single-branch https://github.com/f5devcentral/f5-digital-customer-engagement-center
 
    .. code-block::
 
