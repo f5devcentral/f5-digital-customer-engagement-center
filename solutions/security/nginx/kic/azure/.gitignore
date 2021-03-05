@@ -1,0 +1,7 @@
+# ingress repo
+kubernetes-ingress
+# aks config
+aks-client-cert
+aks-cluster-config
+#terraform
+.terraform.lock.hcl
