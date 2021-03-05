@@ -1,6 +1,8 @@
 # project specific
 cluster-config
 controller-installer-*
+docs_local
+docs_local/*
 # Local .terraform directories
 **/.terraform/*
 

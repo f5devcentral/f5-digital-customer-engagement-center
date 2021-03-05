@@ -1,0 +1,26 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: arcadia
+spec:
+  host: 52.247.39.43
+  upstreams:
+  - name: arcadia-main
+    service: arcadia-main
+    port: 80
+  - name: arcadia-app2
+    service: arcadia-app2
+    port: 80
+  - name: arcadia-app3
+    service: arcadia-app3
+    port: 80
+  routes:
+  - path: /
+    action:
+      pass: arcadia-main
+  - path: /app2
+    action:
+      pass: arcadia-app2
+  - path: /app3
+    action:
+      pass: arcadia-app3

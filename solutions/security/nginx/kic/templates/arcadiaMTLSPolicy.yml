@@ -1,0 +1,11 @@
+cat << EOF | kubectl apply -f -
+apiVersion: k8s.nginx.org/v1
+kind: Policy
+metadata:
+  name: arcadia-mtls-policy
+spec:
+  ingressMTLS:
+    clientCertSecret: arcadia-mtls-secret
+    verifyClient: "on"
+    verifyDepth: 1
+EOF
