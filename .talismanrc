@@ -172,3 +172,5 @@ fileignoreconfig:
   checksum: 898524dcb7b7b0c4fedfcb579f0f6a70eb1b0bc1d1ecd691e13470a1796a2be9
 - filename: solutions/security/nginx/kic/azure/main.tf
   checksum: e98f7951c2761ab8c0c149c9676e0bc02e5537dac44c14d5a7ec8b182e52ad74
+- filename: solutions/security/nginx/kic/templates/ingress-arcadia-demo.yml.source
+  checksum: cdd926f394799f385f7af01cd560e291eb15b6f900114f38dd02e53251b76326
