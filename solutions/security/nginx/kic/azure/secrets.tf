@@ -51,6 +51,7 @@ resource "azurerm_key_vault" "nginx" {
 }
 # create secret version
 resource "azurerm_key_vault_secret" "nginx" {
+  depends_on   = [azurerm_key_vault.nginx]
   name         = format("%s%s", "secret-nginx", random_id.randomString.dec)
   key_vault_id = azurerm_key_vault.nginx.id
 

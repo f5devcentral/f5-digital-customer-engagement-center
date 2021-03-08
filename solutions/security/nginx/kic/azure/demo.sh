@@ -43,13 +43,13 @@ sed -i "s/-image-/${ACR}\/nginx-plus-ingress:v1.10.0/g" ../templates/kic/nginx-i
 kubectl apply -f ../templates/kic/nginx-ingress-install.yml
 # add dashboard
 kubectl apply -f ../templates/kic/nginx-ingress-dashboard.yml
-# check services
-kubectl get all -n nginx-ingress
 # deploy app
 kubectl apply -f ../templates/arcadia/arcadia.yml
 # deploy ingress
 echo "==== waiting for ingress to settle ===="
 sleep 30
+# check services
+kubectl get all -n nginx-ingress
 # get ingress ip
 ingress=$(kubectl get service -n nginx-ingress nginx-ingress -o json | jq -r .status.loadBalancer.ingress[0].ip)
 # modify ingress
