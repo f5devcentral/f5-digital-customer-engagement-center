@@ -1,6 +1,8 @@
 # automation related to your script
 # pull containers for ansible etc.
 # should configure whole solution
+echo "==== starting kic nap ===="
+export KUBECONFIG=$KUBECONFIG:~/.kube/aks-cluster-config
 RG=$(terraform output -raw resource_group_name)
 AKS=$(terraform output -raw aks_name)
 ACR_NAME=$(terraform output -raw acr_name)
@@ -35,23 +37,24 @@ make DOCKERFILE=appprotect/DockerfileWithAppProtectForPlus VERSION=v1.10.0 PREFI
 cd ..
 # modify for custom registry
 # backup
-cp ../templates/nginx-ingress-install.yml.source ../templates/nginx-ingress-install.yml
-sed -i "s/-image-/${ACR}\/nginx-plus-ingress:v1.10.0/g" ../templates/nginx-ingress-install.yml
-# deploy kic
-kubectl apply -f ../templates/nginx-ingress-install.yml
+cp ../templates/kic/nginx-ingress-install.yml.source ../templates/kic/nginx-ingress-install.yml
+sed -i "s/-image-/${ACR}\/nginx-plus-ingress:v1.10.0/g" ../templates/kic/nginx-ingress-install.yml
+# deploy kic and dashboard
+kubectl apply -f ../templates/kic/nginx-ingress-install.yml
 # add dashboard
-kubectl apply -f ../templates/nginx-ingress-dashboard.yml
+kubectl apply -f ../templates/kic/nginx-ingress-dashboard.yml
 # check services
 kubectl get all -n nginx-ingress
 # deploy app
-kubectl apply -f ../templates/arcadia.yml
+kubectl apply -f ../templates/arcadia/arcadia.yml
 # deploy ingress
-sleep 10
+echo "==== waiting for ingress to settle ===="
+sleep 30
 # get ingress ip
 ingress=$(kubectl get service -n nginx-ingress nginx-ingress -o json | jq -r .status.loadBalancer.ingress[0].ip)
 # modify ingress
 #backup
-cp ../templates/ingress-arcadia-demo.yml.source ../templates/ingress-arcadia-demo.yml
-sed -i "s/-host-/${ingress}/g" ../templates/ingress-arcadia-demo.yml
-kubectl apply -f ../templates/ingress-arcadia-demo.yml
-echo "==done=="
+cp ../templates/arcadia/ingress-arcadia-demo.yml.source ../templates/arcadia/ingress-arcadia-demo.yml
+sed -i "s/-host-/${ingress}/g" ../templates/arcadia/ingress-arcadia-demo.yml
+kubectl apply -f ../templates/arcadia
+echo "==== done ===="
