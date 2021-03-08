@@ -30,6 +30,7 @@ hands off scripting of your configuration deployment EXPECTS infrastructure to e
 ## demo guide step by step
 
 commands step by step for your scripted solution
+https://github.com/nginxinc/kubernetes-ingress/tree/master/examples-of-custom-resources/waf
 
 ## cleanup
 ```bash
