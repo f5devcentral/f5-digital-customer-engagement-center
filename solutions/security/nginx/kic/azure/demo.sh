@@ -17,23 +17,41 @@ docker login $ACR -u 00000000-0000-0000-0000-000000000000 -p $TOKEN
 
 # build clone ingress repo
 git clone -b 'v1.10.0' --single-branch https://github.com/nginxinc/kubernetes-ingress
-cd kubernetes-ingress/
 
 # get secrets
 echo "get secrets"
 secrets=$(az keyvault secret show --id $SECRET_ID | jq -rc .value)
 # cert
-cat << EOF > nginx-repo.crt
+cat << EOF > kubernetes-ingress/nginx-repo.crt
 $(echo $secrets | jq -r .cert)
 EOF
 # key
-cat << EOF > nginx-repo.key
+cat << EOF > kubernetes-ingress/nginx-repo.key
 $(echo $secrets | jq -r .key)
 EOF
-# build plus
+# build kic with nap
+cd kubernetes-ingress/
 make DOCKERFILE=appprotect/DockerfileWithAppProtectForPlus VERSION=v1.10.0 PREFIX=${ACR}/nginx-plus-ingress
 cd ..
-# deploy plus
-# cp kic/nginx-plus-ingress-src.yaml kic/nginx-plus-ingress.yaml
-# sed -i "s/nginx-plus-ingress:1.9.1/gcr.io\/${GCP_PROJECT}\/nginx-plus-ingress:v1.9.1/g" kic/nginx-plus-ingress.yaml
+# modify for custom registry
+# backup
+cp ../templates/nginx-ingress-install.yml.source ../templates/nginx-ingress-install.yml
+sed -i "s/-image-/${ACR}\/nginx-plus-ingress:v1.10.0/g" ../templates/nginx-ingress-install.yml
+# deploy kic
+kubectl apply -f ../templates/nginx-ingress-install.yml
+# add dashboard
+kubectl apply -f ../templates/nginx-ingress-dashboard.yml
+# check services
+kubectl get all -n nginx-ingress
+# deploy app
+kubectl apply -f ../templates/arcadia.yml
+# deploy ingress
+sleep 10
+# get ingress ip
+ingress=$(kubectl get service -n nginx-ingress nginx-ingress -o json | jq -r .status.loadBalancer.ingress[0].ip)
+# modify ingress
+#backup
+cp ../templates/ingress-arcadia-demo.yml.source ../templates/ingress-arcadia-demo.yml
+sed -i "s/-host-/${ingress}/g" ../templates/ingress-arcadia-demo.yml
+kubectl apply -f ../templates/ingress-arcadia-demo.yml
 echo "==done=="

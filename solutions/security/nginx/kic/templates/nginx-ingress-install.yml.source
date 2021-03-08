@@ -1788,7 +1788,7 @@ spec:
     spec:
       serviceAccountName: nginx-ingress
       containers:
-      - image: $ecrRepositoryURL:edge
+      - image: -image-
         imagePullPolicy: Always
         name: nginx-plus-ingress
         ports:
