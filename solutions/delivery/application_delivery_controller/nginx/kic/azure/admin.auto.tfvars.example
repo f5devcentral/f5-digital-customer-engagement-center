@@ -1,0 +1,16 @@
+projectPrefix = "kic-nap-aks"
+resourceOwner = "user1"
+azureLocation = "westus2"
+#
+sshPublicKey = "keytype xxxxx"
+#controller
+controllerAccount = "zadmin@example.com"
+controllerPass    = "pleaseUseVault123!!"
+#nginx
+nginxCert = <<EOT
+fdsafdfsd
+EOT
+nginxKey  = <<EOT
+fdsafdsaf
+EOT
+#https://github.com/hashicorp/terraform/issues/4835#issuecomment-313280534

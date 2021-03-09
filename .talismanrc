@@ -180,3 +180,13 @@ fileignoreconfig:
   checksum: e98f7951c2761ab8c0c149c9676e0bc02e5537dac44c14d5a7ec8b182e52ad74
 - filename: solutions/security/nginx/kic/templates/ingress-arcadia-demo.yml.source
   checksum: cdd926f394799f385f7af01cd560e291eb15b6f900114f38dd02e53251b76326
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/azure/admin.auto.tfvars.example
+  checksum: 8cd6ef569adf314130901d2e7f2c91bcb02bd7d77fba52d4b84149993800ade3
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/azure/demo.sh
+  checksum: 44feeed09aa0183f7e9d53cfd7a6e0839cf0c0ce39d7d180487ed60916d986c9
+- filename: docs/solutions/delivery/application_delivery_controller/nginx/kic/labSetupAZURE.rst
+  checksum: 03fba74414d281e027ccfd88aac596c69501bd5fa8d4f325f9ed0ed7a4db6a5e
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/azure/secrets.tf
+  checksum: 58fbf13e3406254a85457f4d6f886cca9ed6e21883b45eea9d0f7ba14652d0f2
+- filename: solutions/delivery/application_delivery_controller/nginx/kic/azure/main.tf
+  checksum: 4a604e6bc2ee273828ade8c50e923780050c41d2802a56278ccb2b73a0371dd8
