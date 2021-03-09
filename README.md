@@ -82,6 +82,11 @@ testing pre-commit hooks:
   # test pre commit manually
   pre-commit run -a -v
   ```
+building documentation:
+  ```bash
+  #local
+  sphinx-build -b html $PWD docs_local/
+  ```
 ---
 ## Troubleshooting
 module not pulling in changes:

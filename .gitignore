@@ -2,7 +2,10 @@
 cluster-config
 controller-installer-*
 docs_local
+<<<<<<< HEAD
 docs_local/*
+=======
+>>>>>>> 512ab05... add
 # Local .terraform directories
 **/.terraform/*
 
