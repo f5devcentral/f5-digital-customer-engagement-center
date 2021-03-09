@@ -16,7 +16,8 @@ ENV USERNAME="codespace" \
     TERRAFORMVERSION="0.14.0" \
     TERRAFORMDOCSVERSION="0.9.1" \
     ANSIBLEVERSION="2.10.5" \
-    VESCTL_VERSION="0.2.15"
+    VESCTL_VERSION="0.2.15" \
+    SPHINX_VERSION="3.3.1"
 
 COPY scripts/* /tmp/scripts/
 
@@ -78,7 +79,9 @@ RUN set -ex \
 RUN set -ex \
   && ansible-galaxy install nginxinc.nginx \
   && ansible-galaxy install f5devcentral.atc_deploy
-
+# sphinx docs
+RUN set -ex \
+  && bash /tmp/scripts/sphinx-debian.sh ${SPHINX_VERSION}
 # Clean up
 RUN set -ex \
 && apt autoremove -y && apt clean -y && rm -rf /tmp/scripts

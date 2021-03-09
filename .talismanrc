@@ -179,7 +179,7 @@ fileignoreconfig:
 - filename: solutions/delivery/application_delivery_controller/nginx/kic/azure/demo.sh
   checksum: 44feeed09aa0183f7e9d53cfd7a6e0839cf0c0ce39d7d180487ed60916d986c9
 - filename: docs/solutions/delivery/application_delivery_controller/nginx/kic/labSetupAZURE.rst
-  checksum: 03fba74414d281e027ccfd88aac596c69501bd5fa8d4f325f9ed0ed7a4db6a5e
+  checksum: 87c15f205d47657a3e6874f750bd4d79e5fd75784d66b3d5b7381fc6374d2719
 - filename: solutions/delivery/application_delivery_controller/nginx/kic/azure/secrets.tf
   checksum: 58fbf13e3406254a85457f4d6f886cca9ed6e21883b45eea9d0f7ba14652d0f2
 - filename: solutions/delivery/application_delivery_controller/nginx/kic/azure/main.tf

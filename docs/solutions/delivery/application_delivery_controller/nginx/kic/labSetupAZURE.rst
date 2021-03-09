@@ -1,5 +1,5 @@
 NGINX Kubernetes Ingress Controller | Azure Environment
------------------------------------------------------
+-------------------------------------------------------
 
 This solution will use AZURE backend services to host the modern application and NGINX Kubernetes Ingress Controller. Utilizing AZURE managed services will dramatically reduce the amount of time needed to build out a solution. Using Terraform for building the AZURE services provides a consistent deployment every time.
 
@@ -164,12 +164,12 @@ This solution is leveraging Terraform to create and manage the following product
 
     .. code-block::
 
-      RG=$(terraform output -raw resource_group_name)
-      AKS=$(terraform output -raw aks_name)
-      ACR_NAME=$(terraform output -raw acr_name)
-      ACR=$(terraform output -raw acr_login_url)
-      SECRET_ID=$(terraform output -raw secret_id)
-      TOKEN=$(az acr login -n $ACR --expose-token | jq -r .accessToken)
+       RG=$(terraform output -raw resource_group_name)
+       AKS=$(terraform output -raw aks_name)
+       ACR_NAME=$(terraform output -raw acr_name)
+       ACR=$(terraform output -raw acr_login_url)
+       SECRET_ID=$(terraform output -raw secret_id)
+       TOKEN=$(az acr login -n $ACR --expose-token | jq -r .accessToken)
 
 
     Step 2: Assocate ACR with AKS.
@@ -178,8 +178,8 @@ This solution is leveraging Terraform to create and manage the following product
 
     .. code-block::
 
-      # associate ACR with AKS
-      az aks update -n $AKS -g $RG --attach-acr $ACR_NAME
+       # associate ACR with AKS
+       az aks update -n $AKS -g $RG --attach-acr $ACR_NAME
 
     ACR is used as our registry for the Kubernetes environment. Registries are used to keep container images for  lifecycle and deployments. NGINX Ingress Controller is a container.
 
@@ -191,8 +191,8 @@ This solution is leveraging Terraform to create and manage the following product
 
     .. code-block::
 
-      # connect docker to ACR
-      docker login $ACR -u 00000000-0000-0000-0000-000000000000 -p $TOKEN
+       # connect docker to ACR
+       docker login $ACR -u 00000000-0000-0000-0000-000000000000 -p $TOKEN
 
     Step 2: Log in to AKS.
 
