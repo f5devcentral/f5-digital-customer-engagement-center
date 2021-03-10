@@ -1,0 +1,6 @@
+adminAccountName = "zadmin"
+resourceOwner = "yourname"
+awsRegion = "us-west-2"
+awsAz1    = "us-west-2a"
+awsAz2    = "us-west-2b"
+sshPublicKey = "keytype xxxxx"

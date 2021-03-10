@@ -65,23 +65,23 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    .. note:: Building the image will take a few minutes (3-5)
 
-   Within the Kubernetes-ingress repository are all the needed files to create our NGINX Ingress Controller Docker image. With the certificate and key in place, we can **make** our image. After the image is created, our local installation of docker will push our image to the ECR we created with Terraform. When Terraform applied our ECR object, it output the name of our registry. Its output was a prefix and looked like a URL.
+   Within the Kubernetes-ingress Registry are all the needed files to create our NGINX Ingress Controller Docker image. With the certificate and key in place, we can **make** our image. After the image is created, our local installation of docker will push our image to the Registry we created with Terraform. When Terraform applied our Registry object, it output the name of our registry. Its output was a prefix and looked like a URL.
 
    Example of Terraform outputs:
 
    |image12|
 
-   Step 1. In the terminal window, **replace** ``ecrRepositoryURL`` with the output value and copy the below text and paste+enter:
+   Step 1. In the terminal window, **replace** ``RegistryURL`` with the output value and copy the below text and paste+enter:
 
    .. code-block::
 
-      make DOCKERFILE=DockerfileForPlus PREFIX=ecrRepositoryURL
+      make DOCKERFILE=DockerfileForPlus PREFIX=RegistryURL
 
    Example:
 
    |image19|
 
-   After the image is built, docker will publish the image into ECR.
+   After the image is built, docker will publish the image into Registry.
 
    Example:
 
@@ -105,7 +105,7 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    Kubernetes deployments are typically maintained through manifest files. The deployment of the NGINX Ingress Controller will be created through manifests. Multiple Kubernetes resources can be made through a single file. This environments to-be-created resources are declared in the ``nginx-ingress-install.yml`` file.
 
-   When executed, Kubernetes will build all the resources. For resources it doesnt know about (the newly created NGINX Ingress Controller container), it will reach out to the created ECR registry and pull down the image we created. If you ever need to update the container, publish a new one to ECR, change the tag and rerun the deployment. Declarative nature systems will replace with what has been defined.
+   When executed, Kubernetes will build all the resources. For resources it doesnt know about (the newly created NGINX Ingress Controller container), it will reach out to the created registry and pull down the image we created. If you ever need to update the container, push a new one to the registry, change the tag and rerun the deployment. Declarative nature systems will replace with what has been defined.
 
    Kubernetes resources types created:
 
@@ -124,7 +124,7 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    .. note:: Docker images and tags can be found by running the docker command ``docker images``
 
-   The NGINX Ingress Controller resource is in the environment-specific ECR. However, the manifest does not know what that resource location is. Update the manifest by replacing the default value with the ECR and image:tag location of the environment.
+   The NGINX Ingress Controller resource is in the environment-specific registry. However, the manifest does not know what that resource location is. Update the manifest by replacing the default value with the registryURL and image:tag location of the environment.
 
    For modifying the file, either **vi** or opening the file in VSCode will produce the same result.
 
