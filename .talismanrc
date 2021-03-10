@@ -190,3 +190,15 @@ fileignoreconfig:
   checksum: 58fbf13e3406254a85457f4d6f886cca9ed6e21883b45eea9d0f7ba14652d0f2
 - filename: solutions/delivery/application_delivery_controller/nginx/kic/azure/main.tf
   checksum: 4a604e6bc2ee273828ade8c50e923780050c41d2802a56278ccb2b73a0371dd8
+- filename: docs/solutions/security/kic-nap/labSetupAWS.rst
+  checksum: 9981462c4f59f38a022d1b098c4cf5536660419789b7788fc3aa3371f357817b
+- filename: docs/solutions/security/kic-nap/labSetupAZURE.rst
+  checksum: 04d9505b872a3fd2174a3c30106c5438fe50a99825627486ea4f3db8b5e93341
+- filename: solutions/security/nginx/kic/aws/admin.auto.tfvars.example
+  checksum: f5ca7119d6b38e126d58242bdbf8488454f9f1a785f9ea1fe7ce74ad61591a24
+- filename: solutions/security/nginx/kic/aws/main.tf
+  checksum: c731a838a4dcc20bc3533339d8f2a0a6e0d15ad083496fd61cc94707e9a0ae25
+- filename: solutions/security/nginx/kic/aws/README.md
+  checksum: baf2997145d646bd6a4c47a29718d6fa925f4df790902fdde44d9110dc6589e4
+- filename: README.md
+  checksum: 8cef98be4f68f03168f5e9cb3d5326fb4e16b1482154c7847321f00ea9dc4467
