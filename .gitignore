@@ -8,6 +8,7 @@ docs_local/*
 >>>>>>> 512ab05... add
 # Local .terraform directories
 **/.terraform/*
+.terraform.lock.hcl
 
 # .tfstate files
 *.tfstate
