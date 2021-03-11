@@ -2,11 +2,11 @@
 # should be sufficient
 locals {
   vpcs = {
-    "main"   = module.ext.network
-    "public" = module.ext.network
+    "main"   = module.ext.network.network
+    "public" = module.ext.network.network
   }
   subnets = {
-    "public" = lookup(module.ext.subnets, format("%s/external-subnet-%s", var.gcpRegion, var.buildSuffix), {})
+    "public" = lookup(module.ext.subnets, format("%s/%s-external-subnet-%s", var.gcpRegion, var.projectPrefix, var.buildSuffix), {})
   }
 }
 

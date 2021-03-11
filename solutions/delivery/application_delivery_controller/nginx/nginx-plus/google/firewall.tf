@@ -1,8 +1,8 @@
 # firewall
 # mgmt
 resource "google_compute_firewall" "mgmt" {
-  name    = "${var.prefix}mgmt-firewall-${random_pet.buildSuffix.id}"
-  network = module.google_network.vpcs["mgmt"].name
+  name    = "${var.projectPrefix}mgmt-firewall-${random_pet.buildSuffix.id}"
+  network = module.google_network.vpcs["public"].name
 
   allow {
     protocol = "icmp"
@@ -17,7 +17,7 @@ resource "google_compute_firewall" "mgmt" {
 }
 
 resource "google_compute_firewall" "nginx-mgmt" {
-  name    = "${var.prefix}nginx-firewall-${random_pet.buildSuffix.id}"
+  name    = "${var.projectPrefix}nginx-firewall-${random_pet.buildSuffix.id}"
   network = module.google_network.vpcs["public"].name
 
   allow {
@@ -33,8 +33,8 @@ resource "google_compute_firewall" "nginx-mgmt" {
 }
 
 resource "google_compute_firewall" "default-allow-internal-int" {
-  name    = "${var.prefix}-default-allow-internal-int-${random_pet.buildSuffix.id}"
-  network = module.google_network.vpcs["private"].name
+  name    = "${var.projectPrefix}-default-allow-internal-int-${random_pet.buildSuffix.id}"
+  network = module.google_network.vpcs["public"].name
 
   allow {
     protocol = "icmp"
@@ -53,7 +53,7 @@ resource "google_compute_firewall" "default-allow-internal-int" {
   source_ranges = ["10.0.20.0/24"]
 }
 resource "google_compute_firewall" "allow-internal-egress" {
-  name      = "${var.prefix}-allow-internal-egress-${random_pet.buildSuffix.id}"
+  name      = "${var.projectPrefix}-allow-internal-egress-${random_pet.buildSuffix.id}"
   network   = module.google_network.vpcs["public"].name
   direction = "EGRESS"
 
@@ -67,7 +67,7 @@ resource "google_compute_firewall" "allow-internal-egress" {
 }
 
 resource "google_compute_firewall" "app" {
-  name    = "${var.prefix}-app-${random_pet.buildSuffix.id}"
+  name    = "${var.projectPrefix}-app-${random_pet.buildSuffix.id}"
   network = module.google_network.vpcs["public"].name
 
   allow {
@@ -83,8 +83,8 @@ resource "google_compute_firewall" "app" {
 }
 
 resource "google_compute_firewall" "iap-ingress" {
-  name    = "${var.prefix}-iap-firewall-${random_pet.buildSuffix.id}"
-  network = module.google_network.vpcs["private"].name
+  name    = "${var.projectPrefix}-iap-firewall-${random_pet.buildSuffix.id}"
+  network = module.google_network.vpcs["public"].name
 
   allow {
     protocol = "tcp"

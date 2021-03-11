@@ -1,5 +1,5 @@
 # project
-prefix       = "demonginx"
+projectPrefix       = "demonginx"
 gcpProjectId = "myprojectid"
 gcpRegion    = "us-east1"
 gcpZone      = "us-east1-b"
