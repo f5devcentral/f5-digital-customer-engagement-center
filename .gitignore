@@ -4,6 +4,7 @@ controller-installer-*
 docs_local
 # Local .terraform directories
 **/.terraform/*
+.terraform.lock.hcl
 
 # .tfstate files
 *.tfstate
