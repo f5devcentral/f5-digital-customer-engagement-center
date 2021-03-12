@@ -23,8 +23,8 @@ resource "google_compute_instance_template" "nginx-template" {
     type         = "pd-ssd"
   }
   network_interface {
-    network    = var.vpc.id
-    subnetwork = var.subnet.id
+    network    = var.vpc
+    subnetwork = var.subnet
     access_config {
     }
     # how do?! needs to pick a free range for each new instance

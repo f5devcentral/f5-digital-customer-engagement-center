@@ -1,6 +1,6 @@
 resource "random_pet" "buildSuffix" {
   keepers = {
-    prefix = var.prefix
+    prefix = var.projectPrefix
   }
   separator = "-"
 }
@@ -10,7 +10,7 @@ resource "random_password" "password" {
   override_special = "_%@"
 }
 # project
-variable "prefix" {
+variable "projectPrefix" {
   description = "prefix for resources"
 }
 variable "gcpZone" {

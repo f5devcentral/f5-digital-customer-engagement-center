@@ -7,11 +7,11 @@ provider "google" {
 
 // New Network
 module "google_network" {
-  source       = "../../../../../../modules/google/terraform/network/min"
-  gcpProjectId = var.gcpProjectId
-  gcpRegion    = var.gcpRegion
-  gcpZone      = var.gcpZone
-  buildSuffix  = random_pet.buildSuffix.id
+  source        = "../../../../../../modules/google/terraform/network/min"
+  gcpProjectId  = var.gcpProjectId
+  gcpRegion     = var.gcpRegion
+  projectPrefix = var.projectPrefix
+  buildSuffix   = "random-cat"
 }
 // existing network
 // data "google_compute_network" "vpc_network" {
@@ -29,8 +29,8 @@ module "nginx" {
   nginxCert            = var.nginxCert
   nginxKey             = var.nginxKey
   buildSuffix          = random_pet.buildSuffix.id
-  vpc                  = module.google_network.vpcs["public"]
-  subnet               = module.google_network.subnets["public"]
+  vpc                  = module.google_network.vpcs["public"].id
+  subnet               = module.google_network.subnets["public"].id
   adminAccountName     = var.adminAccountName
   adminAccountPassword = random_password.password.result
   sshPublicKey         = var.sshPublicKey
