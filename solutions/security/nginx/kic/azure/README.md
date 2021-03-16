@@ -10,6 +10,10 @@ Environment using NGINX KIC with NAP fronting AKS Kubernetes
 
 ```bash
 az login
+# or
+az login --use-device-code
+# you may need to select a subscription
+az account set --subscription mySubscriptionName
 ```
 ## setup
 Add your specific instructions or scripts
