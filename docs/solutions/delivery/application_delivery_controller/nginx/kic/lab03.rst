@@ -34,7 +34,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    NGINX Dashboard should be updated reflecting the new services discovered
 
-   NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
+   NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/dashboard.html``
 
    Example:
 
