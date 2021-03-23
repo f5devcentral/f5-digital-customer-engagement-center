@@ -65,6 +65,8 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    .. note:: Building the image will take a few minutes (3-5)
 
+   .. note:: Terraform command ``terraform output`` displays environment outputs
+
    Within the Kubernetes-ingress repository are all the needed files to create our NGINX Ingress Controller Docker image. With the certificate and key in place, we can **make** our image. After the image is created, our local installation of docker will push our image to the ECR we created with Terraform. When Terraform applied our ECR object, it output the name of our registry. Its output was a prefix and looked like a URL.
 
    Example of Terraform outputs:

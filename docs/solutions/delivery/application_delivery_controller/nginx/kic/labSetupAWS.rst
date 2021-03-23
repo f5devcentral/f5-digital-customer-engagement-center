@@ -147,8 +147,6 @@ This solution is leveraging Terraform to create and manage the following product
 
 7. Run the setup script - **This will create AWS resource objects**
 
-
-
    In the terminal window copy the below text and paste+enter:
 
    .. code-block::
@@ -171,15 +169,19 @@ This solution is leveraging Terraform to create and manage the following product
 
    .. warning:: Terraform is building several services, this can take 10-15 minutes
 
+   .. note:: If you need to see the outputs again later and have not saved them, utilize the ``terraform output`` command.
+
    The outputs from our Terraform run are in green. We will need this information to access our services and create/publish NGINX into the environment.
 
-   Save the outputs for the next few steps.
+   Save the outputs for the next several steps.
 
    Example:
 
    |image12|
 
 10. All of the Terraform-created objects are dynamic, so until running the Terraform template they did not exist. Now that the resources are created, we need to apply access to those services.
+
+   .. warning:: Terraform does not know about the changes in this step. If Terraform must be re-run, this step will need to be repeated.
 
     Step 1: Log in to ECR. Change the ``ecrRepositoryURL`` to the terraform output.
 
@@ -209,7 +211,7 @@ This solution is leveraging Terraform to create and manage the following product
 
     |image14|
 
-    Step 3: Update the Subnet Tags for the EKS cluster. Change the ``publicSubnetAZ1`` and ``publicSubnetAZ2`` to  the terraform output.
+    Step 3: Update the Subnet Tags for the EKS cluster. Change the ``kubernetesClusterName``, ``publicSubnetAZ1`` and ``publicSubnetAZ2`` to  the terraform output.
 
     In the terminal window copy the below text and paste+enter:
 
@@ -217,9 +219,9 @@ This solution is leveraging Terraform to create and manage the following product
 
        aws ec2 create-tags \
           --resources publicSubnetAZ1 publicSubnetAZ2 \
-          --tags Key=kubernetes.io/cluster/my-cluster-3820603181,Value=shared   Key=kubernetes.io/role/elb,Value=1
+          --tags Key=kubernetes.io/cluster/kubernetesClusterName,Value=shared   Key=kubernetes.io/role/elb,Value=1
 
-    For EKS to create an Elastic Load Balancer for our Ingress solution, two tags need to be placed on the public  subnets. Ideally, Terraform would add the tags. However, the EKS module from Terraform does not manipulate  those. So, we are doing it manually. These issues can be tracked here.
+    For EKS to create an Elastic Load Balancer for our Ingress solution, two tags need to be placed on the public subnets. Ideally, Terraform would add the tags. However, the EKS module from Terraform does not manipulate  those. So, we are doing it manually. These issues can be tracked here.
 
     - issue01_
     - issue02_

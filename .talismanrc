@@ -144,3 +144,5 @@ fileignoreconfig:
   checksum: 5ed655b3812b7993ac0a6d074abece9ab2fc99c58f843d11376e9c7c10422814
 - filename: modules/aws/terraform/gwlb-bigip-vpc/main.tf
   checksum: 90999ce57eba4fafee5b4b64fb2102613594b09b76b8fbbfa00451aef6bf5cff
+- filename: docs/solutions/delivery/application_delivery_controller/nginx/kic/labSetupAWS.rst
+  checksum: b9d3ce252c1bde9c444c2d1101e82e652fda2c2d1edbe8d33ca0c76bbd9e8fe8
