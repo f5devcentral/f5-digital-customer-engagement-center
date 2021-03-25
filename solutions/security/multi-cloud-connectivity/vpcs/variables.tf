@@ -29,14 +29,3 @@ variable "awsAz2" {
   type        = string
   default     = null
 }
-variable "volterraP12" {
-  description = "Availability zone, will dynamically choose one if left empty"
-  type        = string
-  default     = null
-}
-
-variable "volterraUrl" {
-  description = "Availability zone, will dynamically choose one if left empty"
-  type        = string
-  default     = null
-}
