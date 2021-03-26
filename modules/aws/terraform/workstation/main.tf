@@ -46,11 +46,11 @@ resource "aws_eip" "mgmtEip" {
     Owner = var.resourceOwner
   }
 }
-resource "aws_eip_association" "mgmtEipAssoc" {
-  count         = var.associateEIP ? 1 : 0
-  instance_id   = aws_instance.workstation.id
-  allocation_id = aws_eip.mgmtEip[0].id
-}
+#resource "aws_eip_association" "mgmtEipAssoc" {
+#  count         = var.associateEIP ? 1 : 0
+#  instance_id   = aws_instance.workstation.id
+#  allocation_id = aws_eip.mgmtEip[0].id
+#}
 
 
 # instance

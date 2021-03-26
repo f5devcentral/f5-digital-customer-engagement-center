@@ -29,3 +29,29 @@ variable "awsAz2" {
   type        = string
   default     = null
 }
+variable "awsAz3" {
+  description = "Availability zone, will dynamically choose one if left empty"
+  type        = string
+  default     = null
+}
+variable "volterraP12" {
+  description = "Location of volterra p12 file"
+  type        = string
+  default     = null
+}
+
+variable "volterraUrl" {
+  description = "url of volterra api"
+  type        = string
+  default     = null
+}
+variable "volterraTenant" {
+  description = "Tenant of Volterra"
+  type        = string
+  default     = null
+}
+variable "volterraCloudCred" {
+  description = "Name of the volterra cloud credentials"
+  type        = string
+  default     = null
+}

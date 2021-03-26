@@ -144,3 +144,7 @@ fileignoreconfig:
   checksum: 5ed655b3812b7993ac0a6d074abece9ab2fc99c58f843d11376e9c7c10422814
 - filename: modules/aws/terraform/gwlb-bigip-vpc/main.tf
   checksum: 90999ce57eba4fafee5b4b64fb2102613594b09b76b8fbbfa00451aef6bf5cff
+- filename: solutions/security/multi-cloud-connectivity-volterra/volterraSites.tf
+  checksum: 631f0b94c9480c55fa3114b48441a0ed07863e125e6a99f31b73f8d63568b9ff
+- filename: solutions/security/multi-cloud-connectivity-volterra/main.tf
+  checksum: c368c6f3f15ccdb8d285cad0d8ebff52f04860a2c11fa5ffed5fe8d8fb8c6053
