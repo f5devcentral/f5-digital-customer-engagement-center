@@ -34,7 +34,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
 
    NGINX Dashboard should be updated reflecting the new services discovered
 
-   NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
+   NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/dashboard.html``
 
    Example:
 
@@ -68,7 +68,7 @@ Custom resources can appear and disappear in a running cluster through dynamic r
    .. literalinclude :: ../../../../../../solutions/delivery/application_delivery_controller/nginx/kic/templates/ingress-arcadia-https.yml
       :language: text
 
-   Arcadia application is now exposed through the NGINX Ingress Controller on HTTP!
+   Arcadia application is now exposed through the NGINX Ingress Controller on HTTPS!
 
    NGINX Ingress Controller URL (replace with the nginx-ingress EXTERNAL-IP): ``https://EXTERNAL-IP/`` or ``http://EXTERNAL-IP/``
 

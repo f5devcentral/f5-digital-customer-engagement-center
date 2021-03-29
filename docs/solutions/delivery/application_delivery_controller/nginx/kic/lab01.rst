@@ -65,6 +65,8 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    .. note:: Building the image will take a few minutes (3-5)
 
+   .. note:: Terraform command ``terraform output`` displays environment outputs
+
    Within the Kubernetes-ingress repository are all the needed files to create our NGINX Ingress Controller Docker image. With the certificate and key in place, we can **make** our image. After the image is created, our local installation of docker will push our image to the ECR we created with Terraform. When Terraform applied our ECR object, it output the name of our registry. Its output was a prefix and looked like a URL.
 
    Example of Terraform outputs:
@@ -216,7 +218,7 @@ NGINX Ingress Controller provides a robust feature set to secure, strengthen, an
 
    There is nothing yet deployed on NGINX Ingress Controller. However, the Dashboard and the Ingress are active. When the services were created in Kubernetes, Kubernetes created an AWS ELB. These ELBs allow for access to the services, and if the NGINX services ever scale, they will dynamically be added.
 
-   NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/Dashboard.html``
+   NGINX Dashboard URL (replace with the dashboard-nginx-ingress EXTERNAL-IP): ``http://EXTERNAL-IP/dashboard.html``
 
    Example:
 
