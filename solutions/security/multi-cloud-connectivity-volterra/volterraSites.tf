@@ -1,6 +1,4 @@
 provider "volterra" {
-  api_p12_file = "/home/codespace/.volterra/f5-gsa.console.ves.volterra.io.api-creds.p12"
-  url          = "https://f5-gsa.console.ves.volterra.io/api"
 }
 
 #resource "volterra_http_loadbalancer" "example" {
