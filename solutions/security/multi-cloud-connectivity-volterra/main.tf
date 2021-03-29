@@ -302,7 +302,7 @@ resource "aws_route" "vpcBu1SharedAddressSpace" {
   route_table_id         = module.vpcBu1.public_route_table_ids[0]
   destination_cidr_block = "100.64.0.0/16"
   transit_gateway_id     = aws_ec2_transit_gateway.tgwBu1.id
-  #  depends_on             = [aws_ec2_transit_gateway.tgwBu1]
+  depends_on             = [aws_ec2_transit_gateway.tgwBu1]
 }
 
 
@@ -330,30 +330,8 @@ resource "aws_route" "vpcBu2SharedAddressSpace" {
   route_table_id         = module.vpcBu2.public_route_table_ids[0]
   destination_cidr_block = "100.64.0.0/16"
   transit_gateway_id     = aws_ec2_transit_gateway.tgwBu2.id
-  #  depends_on             = [aws_ec2_transit_gateway.tgwBu2]
+  depends_on             = [aws_ec2_transit_gateway.tgwBu2]
 }
-
-#resource "aws_route53_resolver_rule" "route53RuleBu2" {
-#  name                 = "route53RuleBu2-${random_id.buildSuffix.hex}"
-#  domain_name          = "shared.acme.com"
-#  rule_type            = "FORWARD"
-#  resolver_endpoint_id = aws_route53_resolver_endpoint.resolverAcmeDns.id
-#
-#  target_ip {
-#    ip = local.privateDnsAddress
-#  }
-#
-#  tags = {
-#    resourceOwner = var.resourceOwner
-#    Name       = "${var.projectPrefix}-route53RuleBu2-${random_id.buildSuffix.hex}"
-#  }
-#}
-#
-#resource "aws_route53_resolver_rule_association" "ruleAssociationBu2" {
-#  resolver_rule_id = aws_route53_resolver_rule.route53RuleBu2.id
-#  vpc_id           = module.vpcBu2.vpc_id
-#}
-
 module "vpcAcme" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 2.0"
@@ -378,29 +356,8 @@ resource "aws_route" "vpcAcmeSharedAddressSpace" {
   route_table_id         = module.vpcAcme.public_route_table_ids[0]
   destination_cidr_block = "100.64.0.0/16"
   transit_gateway_id     = aws_ec2_transit_gateway.tgwAcme.id
-  #  depends_on             = [aws_ec2_transit_gateway.tgwAcme]
+  depends_on             = [aws_ec2_transit_gateway.tgwAcme]
 }
-
-#resource "aws_route53_resolver_rule" "route53RuleAcme" {
-#  name                 = "route53RuleAcme-${random_id.buildSuffix.hex}"
-#  domain_name          = "shared.acme.com"
-#  rule_type            = "FORWARD"
-#  resolver_endpoint_id = aws_route53_resolver_endpoint.resolverAcmeDns.id
-#
-#  target_ip {
-#    ip = local.privateDnsAddress
-#  }
-#
-#  tags = {
-#    resourceOwner = var.resourceOwner
-#    Name       = "${var.projectPrefix}-route53RuleAcme-${random_id.buildSuffix.hex}"
-#  }
-#}
-#
-#resource "aws_route53_resolver_rule_association" "ruleAssociationAcme" {
-#  resolver_rule_id = aws_route53_resolver_rule.route53RuleAcme.id
-#  vpc_id           = module.vpcAcme.vpc_id
-#}
 
 #Compute
 
