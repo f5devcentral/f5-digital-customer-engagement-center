@@ -72,6 +72,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "securityVpcTgwAttachment" {
   subnet_ids                                      = [aws_subnet.securityVpcSubnetTgwAttachmentAz1.id, aws_subnet.securityVpcSubnetTgwAttachmentAz2.id]
   transit_gateway_id                              = aws_ec2_transit_gateway.tgw.id
   vpc_id                                          = module.gwlb-bigip.vpcs["vpcGwlb"]
+  appliance_mode_support                          = enable # see https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-appliance-scenario.html
   transit_gateway_default_route_table_association = false
   transit_gateway_default_route_table_propagation = false
   tags = {
