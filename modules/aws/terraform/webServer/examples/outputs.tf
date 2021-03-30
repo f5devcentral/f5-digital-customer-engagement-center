@@ -1,3 +1,11 @@
-output "jumphostPublicIp" {
-  value = module.webApp.workspaceManagementAddress
+output "asg" {
+  value = module.webApp.asg
+}
+
+output "alb" {
+  value = module.webApp.alb
+}
+
+output "albDnsName" {
+  value = module.webApp.albDnsName
 }

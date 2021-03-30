@@ -19,6 +19,3 @@ variable "sshPublicKey" {
 resource "random_id" "buildSuffix" {
   byte_length = 2
 }
-variable "startupScriptPath" {
-  default = "startup.sh.tpl"
-}

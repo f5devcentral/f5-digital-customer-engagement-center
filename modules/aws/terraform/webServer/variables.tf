@@ -11,9 +11,14 @@ variable "vpc" {
   default     = null
 }
 
-variable "mgmtSubnet" {
-  description = "subnet id in which to deploy the server"
-  type        = string
+variable "subnets" {
+  description = "List of subnet ids in which to deploy the server/s"
+  type        = list
+  default     = null
+}
+variable "albSubnets" {
+  description = "List of subnet ids in which to deploy the alb"
+  type        = list
   default     = null
 }
 variable "securityGroup" {
@@ -37,14 +42,26 @@ variable "keyName" {
   type        = string
   default     = null
 }
-variable "associateEIP" {
-  description = "choose if you want to associate an EIP to the instance"
+variable "associatePublicIp" {
+  description = "choose if you want to associate a public ip to the instance"
   type        = bool
-  default     = true
+  default     = false
 }
 # onboarding
 variable "startupCommand" {
   description = "Command to run at boot, used to start the app"
   type        = string
   default     = "docker run -d --restart always -p 80:3000 bkimminich/juice-shop"
+}
+variable "desiredCapacity" {
+  description = "Desired number of server instances"
+  type        = number
+  default     = 1
+}
+variable "extraTags" {
+  description = "Map of additional tags"
+  type        = map
+  default     = {
+  "AdditionalKey" = "additionalValue"
+  }
 }

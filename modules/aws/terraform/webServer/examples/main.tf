@@ -2,12 +2,32 @@ provider "aws" {
   region = var.awsRegion
 }
 
-module "aws_network" {
-  source        = "../../network/min"
-  projectPrefix = var.projectPrefix
-  resourceOwner = var.resourceOwner
-  awsRegion     = var.awsRegion
-  buildSuffix   = random_id.buildSuffix.hex
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+locals {
+  awsAz1 = data.aws_availability_zones.available.names[0]
+  awsAz2 = data.aws_availability_zones.available.names[1]
+}
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 2.0"
+
+  name = "${var.projectPrefix}-vpc-${random_id.buildSuffix.hex}"
+
+  cidr = "10.1.0.0/16"
+
+  azs                  = [local.awsAz1, local.awsAz2]
+  public_subnets       = ["10.1.10.0/24", "10.1.110.0/24"]
+  private_subnets      = ["10.1.20.0/24", "10.1.120.0/24"]
+  enable_dns_hostnames = true
+  enable_nat_gateway   = true
+  tags = {
+    resourceOwner = var.resourceOwner
+    Name          = "${var.projectPrefix}-vpc-${random_id.buildSuffix.hex}"
+  }
+
 }
 
 resource "aws_key_pair" "deployer" {
@@ -17,7 +37,7 @@ resource "aws_key_pair" "deployer" {
 
 resource "aws_security_group" "secGroupWebapp" {
   description = "Jumphost workstation security group"
-  vpc_id      = module.aws_network.vpcs["main"]
+  vpc_id      = module.vpc.vpc_id
 
   ingress {
     from_port   = 22
@@ -51,8 +71,9 @@ module "webApp" {
   source        = "../"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
-  vpc           = module.aws_network.vpcs["main"]
+  vpc           = module.vpc.vpc_id
   keyName       = aws_key_pair.deployer.id
-  mgmtSubnet    = module.aws_network.subnetsAz1["mgmt"]
+  subnets    = [module.vpc.private_subnets[0], module.vpc.private_subnets[1]]
+  albSubnets = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
   securityGroup = aws_security_group.secGroupWebapp.id
 }
