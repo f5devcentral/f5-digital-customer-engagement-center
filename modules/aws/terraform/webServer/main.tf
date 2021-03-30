@@ -31,9 +31,9 @@ module "alb" {
 
   load_balancer_type = "application"
 
-  vpc_id             = var.vpc
-  subnets            = var.albSubnets
-  security_groups    = [var.securityGroup]
+  vpc_id          = var.vpc
+  subnets         = var.albSubnets
+  security_groups = [var.securityGroup]
 
   target_groups = [
     {
@@ -44,14 +44,14 @@ module "alb" {
     }
   ]
 
-#  https_listeners = [
-#    {
-#      port               = 80
-#      protocol           = "HTTP"
-#      certificate_arn    = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
-#      target_group_index = 0
-#    }
-#  ]
+  #  https_listeners = [
+  #    {
+  #      port               = 80
+  #      protocol           = "HTTP"
+  #      certificate_arn    = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
+  #      target_group_index = 0
+  #    }
+  #  ]
 
   http_tcp_listeners = [
     {
@@ -75,12 +75,12 @@ module "asg" {
   # Launch configuration
   lc_name = var.projectPrefix
 
-  image_id        = data.aws_ami.ubuntu.id
-  instance_type   = var.instanceType
-  security_groups = [var.securityGroup]
-  user_data     = data.template_file.applicationServer.rendered
-  key_name      = var.keyName
-  target_group_arns = module.alb.target_group_arns
+  image_id                    = data.aws_ami.ubuntu.id
+  instance_type               = var.instanceType
+  security_groups             = [var.securityGroup]
+  user_data                   = data.template_file.applicationServer.rendered
+  key_name                    = var.keyName
+  target_group_arns           = module.alb.target_group_arns
   associate_public_ip_address = var.associatePublicIp
 
   ebs_block_device = [
@@ -126,4 +126,3 @@ module "asg" {
     extra_tag2 = "extra_value2"
   }
 }
-

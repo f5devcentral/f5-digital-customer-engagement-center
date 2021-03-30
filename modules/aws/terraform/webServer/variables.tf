@@ -13,12 +13,12 @@ variable "vpc" {
 
 variable "subnets" {
   description = "List of subnet ids in which to deploy the server/s"
-  type        = list
+  type        = list(any)
   default     = null
 }
 variable "albSubnets" {
   description = "List of subnet ids in which to deploy the alb"
-  type        = list
+  type        = list(any)
   default     = null
 }
 variable "securityGroup" {
@@ -30,7 +30,7 @@ variable "securityGroup" {
 variable "instanceType" {
   description = "AWS instance type"
   type        = string
-  default = "t3.large"
+  default     = "t3.large"
 }
 variable "resourceOwner" {
   description = "tag used to mark instance owner"
@@ -60,8 +60,8 @@ variable "desiredCapacity" {
 }
 variable "extraTags" {
   description = "Map of additional tags"
-  type        = map
-  default     = {
-  "AdditionalKey" = "additionalValue"
+  type        = map(any)
+  default = {
+    "AdditionalKey" = "additionalValue"
   }
 }

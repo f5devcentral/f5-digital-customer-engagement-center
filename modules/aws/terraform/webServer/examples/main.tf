@@ -73,7 +73,7 @@ module "webApp" {
   resourceOwner = var.resourceOwner
   vpc           = module.vpc.vpc_id
   keyName       = aws_key_pair.deployer.id
-  subnets    = [module.vpc.private_subnets[0], module.vpc.private_subnets[1]]
-  albSubnets = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
+  subnets       = [module.vpc.private_subnets[0], module.vpc.private_subnets[1]]
+  albSubnets    = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
   securityGroup = aws_security_group.secGroupWebapp.id
 }
