@@ -84,6 +84,7 @@ testing pre-commit hooks:
   ```
 building documentation:
   ```bash
+  mkdir -p docs_local
   #local
   sphinx-build -b html $PWD docs_local/
   #preview local

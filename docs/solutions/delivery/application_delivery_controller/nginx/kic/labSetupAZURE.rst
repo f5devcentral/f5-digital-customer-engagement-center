@@ -156,7 +156,7 @@ This solution is leveraging Terraform to create and manage the following product
 
    Example:
 
-   |image12|
+   |image200|
 
 10. All of the Terraform-created objects are dynamic, so until running the Terraform template they did not exist. Now that the resources are created, we need to apply access to those services.
 
@@ -171,6 +171,9 @@ This solution is leveraging Terraform to create and manage the following product
        SECRET_ID=$(terraform output -raw secret_id)
        TOKEN=$(az acr login -n $ACR --expose-token | jq -r .accessToken)
 
+    Example:
+
+    |image201|
 
     Step 2: Assocate ACR with AKS.
 
@@ -180,6 +183,10 @@ This solution is leveraging Terraform to create and manage the following product
 
        # associate ACR with AKS
        az aks update -n $AKS -g $RG --attach-acr $ACR_NAME
+
+    Example:
+
+    |image203|
 
     ACR is used as our registry for the Kubernetes environment. Registries are used to keep container images for  lifecycle and deployments. NGINX Ingress Controller is a container.
 
@@ -194,6 +201,10 @@ This solution is leveraging Terraform to create and manage the following product
        # connect docker to ACR
        docker login $ACR -u 00000000-0000-0000-0000-000000000000 -p $TOKEN
 
+    Example:
+
+    |image202|
+
     Step 2: Log in to AKS.
 
     In the terminal window copy the below text and paste+enter:
@@ -203,6 +214,10 @@ This solution is leveraging Terraform to create and manage the following product
        export KUBECONFIG=$KUBECONFIG:~/.kube/aks-cluster-config
        # test connection
        kubectl get nodes -o wide
+
+    Example:
+
+    |image204|
 
     Kubernetes in this environment will host our application, and we will be using NGINX Ingress Controller to  expose that application.
 
@@ -260,6 +275,17 @@ This solution is leveraging Terraform to create and manage the following product
 .. |image14| image:: images/image14.png
   :align: middle
 .. |image15| image:: images/image15.png
+  :align: middle
+
+.. |image200| image:: images/image200.png
+  :align: middle
+.. |image201| image:: images/image201.png
+  :align: middle
+.. |image202| image:: images/image202.png
+  :align: middle
+.. |image203| image:: images/image203.png
+  :align: middle
+.. |image204| image:: images/image204.png
   :align: middle
 
 .. _Terraform: https://www.terraform.io/
