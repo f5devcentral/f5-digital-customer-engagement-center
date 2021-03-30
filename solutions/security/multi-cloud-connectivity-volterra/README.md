@@ -16,9 +16,7 @@ Multi cloud accounts with overlapping ip addresses services connectivity
 - Clone the repo and open the solution's directory
 ```bash
 git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
-cd f5-digital-customer-engagement-center
-git checkout acme
-cd solutions/security/multi-cloud-connectivity-volterra
+cd f5-digital-customer-engagement-center/solutions/security/multi-cloud-connectivity-volterra
 ```
 
 - Set AWS environment variables
