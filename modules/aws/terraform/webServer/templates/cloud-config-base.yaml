@@ -1,0 +1,9 @@
+#cloud-config
+runcmd:
+- apt-get update
+- apt-get install -y software-properties-common
+- apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+- curl -fsSL https://get.docker.com -o get-docker.sh
+- sh get-docker.sh
+- while ! docker --version; do echo trying again&sleep 1; done
+- ${startupCommand}
