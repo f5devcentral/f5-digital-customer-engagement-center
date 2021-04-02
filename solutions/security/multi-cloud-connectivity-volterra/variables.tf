@@ -55,3 +55,16 @@ variable "volterraCloudCred" {
   type        = string
   default     = null
 }
+variable "namespace" {
+  description = "Volterra application namespace"
+  type        = string
+  default     = "default"
+}
+variable "assisted" {
+  description = "Use Assisted deployment for Volterra TGW Site"
+  default     = false
+}
+variable "volterraUniquePrefix" {
+  description = "Unique prefix to use for System resources in Volterra tenant"
+  default     = "acme"
+}
