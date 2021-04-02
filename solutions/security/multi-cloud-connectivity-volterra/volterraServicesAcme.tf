@@ -2,7 +2,7 @@
 
 resource "volterra_origin_pool" "acmeapp" {
   name                   = "acmeapp"
-  namespace              = "default"
+  namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"
   loadbalancer_algorithm = "LB_OVERRIDE"
 
@@ -34,7 +34,7 @@ resource "volterra_origin_pool" "acmeapp" {
 
 resource "volterra_http_loadbalancer" "acmeapp" {
   name      = "acmeapp"
-  namespace = "default"
+  namespace = var.namespace
 
   // One of the arguments from this list "do_not_advertise advertise_on_public_default_vip advertise_on_public advertise_custom" must be set
 
