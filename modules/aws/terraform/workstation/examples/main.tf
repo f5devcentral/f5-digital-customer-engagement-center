@@ -3,11 +3,11 @@ provider "aws" {
 }
 
 module "aws_network" {
-  source        = "../../network/min"
-  projectPrefix = var.projectPrefix
-  resourceOwner = var.resourceOwner
-  awsRegion     = var.awsRegion
-  buildSuffix   = random_id.buildSuffix.hex
+  source                  = "../../network/min"
+  projectPrefix           = var.projectPrefix
+  resourceOwner           = var.resourceOwner
+  awsRegion               = var.awsRegion
+  buildSuffix             = random_id.buildSuffix.hex
 }
 
 resource "aws_key_pair" "deployer" {
@@ -54,6 +54,6 @@ module "jumphost" {
   resourceOwner = var.resourceOwner
   vpc           = module.aws_network.vpcs["main"]
   keyName       = aws_key_pair.deployer.id
-  mgmtSubnet    = module.aws_network.subnetsAz1["mgmt"]
+  mgmtSubnet    = module.aws_network.subnetsAz1["public"]
   securityGroup = aws_security_group.secGroupWorkstation.id
 }
