@@ -1,10 +1,20 @@
-output "jumphostPublicIp" {
-  description = "List of public ip's for the jumphosts"
-  value       = module.jumphost[*]
+output "vpcBu1JumphostPublicIp" {
+  value = module.jumphost[*].vpcBu1Jumphost.workstation.public_ip
 }
-output "webserversPublicIp" {
-  description = "List of ip's for the webservers"
-  value       = module.webserver[*]
+output "vpcBu2JumphostPublicIp" {
+  value = module.jumphost[*].vpcBu2Jumphost.workstation.public_ip
+}
+output "vpcAcmeJumphostPublicIp" {
+  value = module.jumphost[*].vpcAcmeJumphost.workstation.public_ip
+}
+output "vpcBu1WebServerIP" {
+  value = module.webserver[*].vpcBu1App1.workstation.private_ip
+}
+output "vpcBu2WebServerIP" {
+  value = module.webserver[*].vpcBu2App1.workstation.private_ip
+}
+output "vpcAcmeWebServerIP" {
+  value = module.webserver[*].vpcAcmeApp1.workstation.private_ip
 }
 output "vpcIdAcme" {
   description = "vpc id"

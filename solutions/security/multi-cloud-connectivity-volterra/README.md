@@ -33,6 +33,11 @@ export VOLT_API_URL="https://<tenant-name>.console.ves.volterra.io/api"
 export VOLT_API_P12_FILE="/var/tmp/<example>.console.ves.volterra.io.api-creds.p12"
 ```
 
+Get the Volterra tenant name:
+General namespace in the UI, then Tenant Settings > Tenant overview
+
+Create volterra cloud credentials using your AWS access and secret key
+
 create the vars file and update it with your settings
 
 ```bash
