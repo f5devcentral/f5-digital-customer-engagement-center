@@ -82,64 +82,64 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
       workload_subnet {
         // One of the arguments from this list "subnet_param existing_subnet_id" must be set
 
-        existing_subnet_id = module.vpcTransitBu1.intra_subnets[0]
+        existing_subnet_id = aws_subnet.bu1VoltWorkloadAz1.id
 
       }
     }
 
-    az_nodes {
-      aws_az_name = local.awsAz2
-
-      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
-      reserved_inside_subnet = false
-      disk_size              = "disk_size"
-
-      inside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = aws_subnet.bu1VoltSliAz2.id
-      }
-
-      outside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = module.vpcTransitBu1.public_subnets[1]
-      }
-
-      workload_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = module.vpcTransitBu1.intra_subnets[1]
-
-      }
-    }
-
-    az_nodes {
-      aws_az_name = local.awsAz3
-
-      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
-      reserved_inside_subnet = false
-      disk_size              = "disk_size"
-
-      inside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = aws_subnet.bu1VoltSliAz3.id
-      }
-
-      outside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = module.vpcTransitBu1.public_subnets[2]
-      }
-
-      workload_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = module.vpcTransitBu1.intra_subnets[2]
-
-      }
-    }
+    #    az_nodes {
+    #      aws_az_name = local.awsAz2
+    #
+    #      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
+    #      reserved_inside_subnet = false
+    #      disk_size              = "disk_size"
+    #
+    #      inside_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = aws_subnet.bu1VoltSliAz2.id
+    #      }
+    #
+    #      outside_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = module.vpcTransitBu1.public_subnets[1]
+    #      }
+    #
+    #      workload_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = aws_subnet.bu1VoltWorkloadAz2.id
+    #
+    #      }
+    #    }
+    #
+    #    az_nodes {
+    #      aws_az_name = local.awsAz3
+    #
+    #      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
+    #      reserved_inside_subnet = false
+    #      disk_size              = "disk_size"
+    #
+    #      inside_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = aws_subnet.bu1VoltSliAz3.id
+    #      }
+    #
+    #      outside_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = module.vpcTransitBu1.public_subnets[2]
+    #      }
+    #
+    #      workload_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = aws_subnet.bu1VoltWorkloadAz3.id
+    #
+    #      }
+    #    }
 
     // One of the arguments from this list "aws_cred assisted" must be set
 
@@ -220,64 +220,64 @@ resource "volterra_aws_tgw_site" "acmeBu2" {
       workload_subnet {
         // One of the arguments from this list "subnet_param existing_subnet_id" must be set
 
-        existing_subnet_id = module.vpcTransitBu2.intra_subnets[0]
+        existing_subnet_id = aws_subnet.bu2VoltWorkloadAz1.id
 
       }
     }
 
-    az_nodes {
-      aws_az_name = local.awsAz2
-
-      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
-      reserved_inside_subnet = false
-      disk_size              = "disk_size"
-
-      inside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = aws_subnet.bu2VoltSliAz2.id
-      }
-
-      outside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = module.vpcTransitBu2.public_subnets[1]
-      }
-
-      workload_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = module.vpcTransitBu2.intra_subnets[1]
-
-      }
-    }
-
-    az_nodes {
-      aws_az_name = local.awsAz3
-
-      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
-      reserved_inside_subnet = false
-      disk_size              = "disk_size"
-
-      inside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = aws_subnet.bu2VoltSliAz3.id
-      }
-
-      outside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = module.vpcTransitBu2.public_subnets[2]
-      }
-
-      workload_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = module.vpcTransitBu2.intra_subnets[2]
-
-      }
-    }
+    #    az_nodes {
+    #      aws_az_name = local.awsAz2
+    #
+    #      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
+    #      reserved_inside_subnet = false
+    #      disk_size              = "disk_size"
+    #
+    #      inside_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = aws_subnet.bu2VoltSliAz2.id
+    #      }
+    #
+    #      outside_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = module.vpcTransitBu2.public_subnets[1]
+    #      }
+    #
+    #      workload_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = aws_subnet.bu2VoltWorkloadAz2.id
+    #
+    #      }
+    #    }
+    #
+    #    az_nodes {
+    #      aws_az_name = local.awsAz3
+    #
+    #      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
+    #      reserved_inside_subnet = false
+    #      disk_size              = "disk_size"
+    #
+    #      inside_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = aws_subnet.bu2VoltSliAz3.id
+    #      }
+    #
+    #      outside_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = module.vpcTransitBu2.public_subnets[2]
+    #      }
+    #
+    #      workload_subnet {
+    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
+    #
+    #        existing_subnet_id = aws_subnet.bu2VoltWorkloadAz3.id
+    #
+    #      }
+    #    }
 
     // One of the arguments from this list "aws_cred assisted" must be set
 
@@ -358,7 +358,7 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
       workload_subnet {
         // One of the arguments from this list "subnet_param existing_subnet_id" must be set
 
-        existing_subnet_id = module.vpcTransitAcme.intra_subnets[0]
+        existing_subnet_id = aws_subnet.acmeVoltWorkloadAz1.id
 
       }
     }

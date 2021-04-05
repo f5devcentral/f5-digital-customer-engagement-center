@@ -23,6 +23,31 @@ data "template_file" "applicationServer" {
   }
 }
 
+data "template_file" "startupSh" {
+  template = file("${path.module}/templates/startup.sh")
+
+  vars = {
+    jsScriptTag = var.jsScriptTag
+  }
+}
+
+data "template_cloudinit_config" "config" {
+  gzip          = false
+  base64_encode = false
+
+  # Main cloud-config configuration file.
+  part {
+    filename     = "init.cfg"
+    content_type = "text/cloud-config"
+    content      = data.template_file.applicationServer.rendered
+  }
+
+  part {
+    content_type = "text/x-shellscript"
+    content      = data.template_file.startupSh.rendered
+  }
+}
+
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
@@ -31,9 +56,9 @@ module "alb" {
 
   load_balancer_type = "application"
 
-  vpc_id             = var.vpc
-  subnets            = var.albSubnets
-  security_groups    = [var.securityGroup]
+  vpc_id          = var.vpc
+  subnets         = var.albSubnets
+  security_groups = [var.securityGroup]
 
   target_groups = [
     {
@@ -43,15 +68,6 @@ module "alb" {
       target_type      = "instance"
     }
   ]
-
-#  https_listeners = [
-#    {
-#      port               = 80
-#      protocol           = "HTTP"
-#      certificate_arn    = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
-#      target_group_index = 0
-#    }
-#  ]
 
   http_tcp_listeners = [
     {
@@ -75,12 +91,12 @@ module "asg" {
   # Launch configuration
   lc_name = var.projectPrefix
 
-  image_id        = data.aws_ami.ubuntu.id
-  instance_type   = var.instanceType
-  security_groups = [var.securityGroup]
-  user_data     = data.template_file.applicationServer.rendered
-  key_name      = var.keyName
-  target_group_arns = module.alb.target_group_arns
+  image_id                    = data.aws_ami.ubuntu.id
+  instance_type               = var.instanceType
+  security_groups             = [var.securityGroup]
+  user_data                   = data.template_cloudinit_config.config.rendered
+  key_name                    = var.keyName
+  target_group_arns           = module.alb.target_group_arns
   associate_public_ip_address = var.associatePublicIp
 
   ebs_block_device = [
@@ -111,7 +127,7 @@ module "asg" {
   tags = [
     {
       key                 = "Name"
-      value               = "${var.projectPrefix}-workstation"
+      value               = "${var.projectPrefix}-webserver"
       propagate_at_launch = true
     },
     {
@@ -126,4 +142,3 @@ module "asg" {
     extra_tag2 = "extra_value2"
   }
 }
-

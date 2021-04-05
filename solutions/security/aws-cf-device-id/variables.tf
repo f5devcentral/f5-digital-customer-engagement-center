@@ -19,39 +19,13 @@ variable "sshPublicKey" {
   type        = string
   default     = null
 }
-variable "awsAz1" {
-  description = "Availability zone, will dynamically choose one if left empty"
+variable "domainName" {
+  description = "domain name that route53 manages - https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html"
   type        = string
   default     = null
 }
-variable "awsAz2" {
-  description = "Availability zone, will dynamically choose one if left empty"
+variable "subDomain" {
+  description = "subdomain, used to create the A record of the site under your domain"
   type        = string
-  default     = null
-}
-variable "awsAz3" {
-  description = "Availability zone, will dynamically choose one if left empty"
-  type        = string
-  default     = null
-}
-variable "volterraP12" {
-  description = "Location of volterra p12 file"
-  type        = string
-  default     = null
-}
-
-variable "volterraUrl" {
-  description = "url of volterra api"
-  type        = string
-  default     = null
-}
-variable "volterraTenant" {
-  description = "Tenant of Volterra"
-  type        = string
-  default     = null
-}
-variable "volterraCloudCred" {
-  description = "Name of the volterra cloud credentials"
-  type        = string
-  default     = null
+  default     = "cfdeviceid"
 }

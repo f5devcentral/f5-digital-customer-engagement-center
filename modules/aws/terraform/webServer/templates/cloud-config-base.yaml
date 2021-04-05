@@ -6,4 +6,5 @@ runcmd:
 - curl -fsSL https://get.docker.com -o get-docker.sh
 - sh get-docker.sh
 - while ! docker --version; do echo trying again&sleep 1; done
+- while ! ls /var/tmp/html; do echo trying&sleep 1; done
 - ${startupCommand}

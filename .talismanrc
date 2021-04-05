@@ -150,3 +150,15 @@ fileignoreconfig:
   checksum: c368c6f3f15ccdb8d285cad0d8ebff52f04860a2c11fa5ffed5fe8d8fb8c6053
 - filename: docs/solutions/delivery/application_delivery_controller/nginx/kic/labSetupAWS.rst
   checksum: b9d3ce252c1bde9c444c2d1101e82e652fda2c2d1edbe8d33ca0c76bbd9e8fe8
+- filename: solutions/security/aws-cf-device-id/main.tf
+  checksum: 2fc00078a011f55d9d4a738bb313d885a311f450c8360574b95e58dd0e1da65a
+- filename: solutions/security/aws-cf-device-id/.terraform.lock.hcl
+  checksum: e4cba66f6294115567214e85744c1bc46c17aaa9d966f311bff33670b4638dcf
+- filename: modules/aws/terraform/webServer/examples/.terraform.lock.hcl
+  checksum: eac651b4e10df7e9fea13fd5f239a3d0ccfe28fa3d121171049a52c7b5ba5831
+- filename: solutions/security/aws-cf-device-id/webapp/.terraform.lock.hcl
+  checksum: 6cf3d0e8e4525d18a205659d8506482e5f108df3df691122594ac57d47e448a1
+- filename: solutions/security/aws-cf-device-id/webapp/admin.auto.tfvars.example
+  checksum: a576eb2d25deb21d2135a7936dae3a9d21090e658b66e46f7bc88a5e27ce7f7d
+- filename: solutions/security/aws-cf-device-id/webapp/main.tf
+  checksum: d3f27fb418f7ab365bb9544ff30dd095d40d04f3d982b08b7a1fd75817641c2b

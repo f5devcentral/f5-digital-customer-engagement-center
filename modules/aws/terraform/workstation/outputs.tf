@@ -10,3 +10,8 @@ output "workspaceManagementAddress" {
   description = "public or private ip address of the instance"
   value       = var.associateEIP ? aws_instance.workstation.public_ip : aws_instance.workstation.private_ip
 }
+
+output "workstation" {
+  description = "ec2 instance output paramaters as documented here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance"
+  value       = aws_instance.workstation
+}

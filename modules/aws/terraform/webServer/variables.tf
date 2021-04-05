@@ -13,12 +13,12 @@ variable "vpc" {
 
 variable "subnets" {
   description = "List of subnet ids in which to deploy the server/s"
-  type        = list
+  type        = list(any)
   default     = null
 }
 variable "albSubnets" {
   description = "List of subnet ids in which to deploy the alb"
-  type        = list
+  type        = list(any)
   default     = null
 }
 variable "securityGroup" {
@@ -30,7 +30,7 @@ variable "securityGroup" {
 variable "instanceType" {
   description = "AWS instance type"
   type        = string
-  default = "t3.large"
+  default     = "t3.large"
 }
 variable "resourceOwner" {
   description = "tag used to mark instance owner"
@@ -60,8 +60,13 @@ variable "desiredCapacity" {
 }
 variable "extraTags" {
   description = "Map of additional tags"
-  type        = map
-  default     = {
-  "AdditionalKey" = "additionalValue"
+  type        = map(any)
+  default = {
+    "AdditionalKey" = "additionalValue"
   }
+}
+variable "jsScriptTag" {
+  description = "script tag to embed in the nginx index.html file"
+  type        = string
+  default     = "<script async defer src='https://us.gimp.zeronaught.com/__imp_apg__/js/f5cs-a_aaW0IGtTsQ-2918f28d.js' id='_imp_apg_dip_'  ></script>"
 }
