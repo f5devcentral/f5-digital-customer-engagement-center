@@ -16,9 +16,7 @@ Multi cloud accounts with overlapping ip addresses services connectivity
 - Clone the repo and open the solution's directory
 ```bash
 git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
-cd f5-digital-customer-engagement-center
-git checkout acme
-cd solutions/security/multi-cloud-connectivity-volterra
+cd f5-digital-customer-engagement-center/solutions/security/multi-cloud-connectivity-volterra
 ```
 
 - Set AWS environment variables
@@ -34,6 +32,11 @@ export VES_P12_PASSWORD="your_key"
 export VOLT_API_URL="https://<tenant-name>.console.ves.volterra.io/api"
 export VOLT_API_P12_FILE="/var/tmp/<example>.console.ves.volterra.io.api-creds.p12"
 ```
+
+Get the Volterra tenant name:
+General namespace in the UI, then Tenant Settings > Tenant overview
+
+Create volterra cloud credentials using your AWS access and secret key
 
 create the vars file and update it with your settings
 
