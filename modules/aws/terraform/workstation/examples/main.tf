@@ -3,11 +3,11 @@ provider "aws" {
 }
 
 module "aws_network" {
-  source                  = "../../network/min"
-  projectPrefix           = var.projectPrefix
-  resourceOwner           = var.resourceOwner
-  awsRegion               = var.awsRegion
-  buildSuffix             = random_id.buildSuffix.hex
+  source        = "../../network/min"
+  projectPrefix = var.projectPrefix
+  resourceOwner = var.resourceOwner
+  awsRegion     = var.awsRegion
+  buildSuffix   = random_id.buildSuffix.hex
 }
 
 resource "aws_key_pair" "deployer" {
