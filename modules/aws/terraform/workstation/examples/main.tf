@@ -54,6 +54,6 @@ module "jumphost" {
   resourceOwner = var.resourceOwner
   vpc           = module.aws_network.vpcs["main"]
   keyName       = aws_key_pair.deployer.id
-  mgmtSubnet    = module.aws_network.subnetsAz1["mgmt"]
+  mgmtSubnet    = module.aws_network.subnetsAz1["public"]
   securityGroup = aws_security_group.secGroupWorkstation.id
 }
