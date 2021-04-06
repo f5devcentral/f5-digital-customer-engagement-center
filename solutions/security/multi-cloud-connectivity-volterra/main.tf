@@ -56,7 +56,7 @@ resource "aws_ec2_transit_gateway" "tgwAcme" {
 
 ################### TGW - attachments #######
 resource "aws_ec2_transit_gateway_vpc_attachment" "vpcTransitBu1TgwAttachment" {
-  subnet_ids         = module.vpcTransitBu1.intra_subnets
+  subnet_ids         = module.vpcTransitBu1.private_subnets
   transit_gateway_id = aws_ec2_transit_gateway.tgwVolterra.id
   vpc_id             = module.vpcTransitBu1.vpc_id
   tags = {
@@ -68,7 +68,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpcTransitBu1TgwAttachment" {
 
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "vpcTransitBu2TgwAttachment" {
-  subnet_ids         = module.vpcTransitBu2.intra_subnets
+  subnet_ids         = module.vpcTransitBu2.private_subnets
   transit_gateway_id = aws_ec2_transit_gateway.tgwVolterra.id
   vpc_id             = module.vpcTransitBu2.vpc_id
   tags = {
@@ -80,7 +80,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpcTransitBu2TgwAttachment" {
 
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "vpcTransitAcmeTgwAttachment" {
-  subnet_ids         = module.vpcTransitAcme.intra_subnets
+  subnet_ids         = module.vpcTransitAcme.private_subnets
   transit_gateway_id = aws_ec2_transit_gateway.tgwVolterra.id
   vpc_id             = module.vpcTransitAcme.vpc_id
   tags = {
@@ -103,10 +103,10 @@ module "vpcTransitBu1" {
 
   cidr = "100.64.0.0/20"
 
-  azs                  = [local.awsAz1, local.awsAz2, local.awsAz3]
-  public_subnets       = ["100.64.0.0/24", "100.64.1.0/24", "100.64.3.0/24"]
-  private_subnets      = ["100.64.4.0/24", "100.64.5.0/24", "100.64.6.0/24"]
-  intra_subnets        = ["100.64.7.0/24", "100.64.8.0/24", "100.64.9.0/24"]
+  azs             = [local.awsAz1, local.awsAz2, local.awsAz3]
+  public_subnets  = ["100.64.0.0/24", "100.64.1.0/24", "100.64.3.0/24"]
+  private_subnets = ["100.64.4.0/24", "100.64.5.0/24", "100.64.6.0/24"]
+  #intra_subnets        = ["100.64.7.0/24", "100.64.8.0/24", "100.64.9.0/24"]
   enable_dns_hostnames = true
   tags = {
     resourceOwner = var.resourceOwner
@@ -148,11 +148,44 @@ resource "aws_subnet" "bu1VoltSliAz3" {
   }
 }
 
+resource "aws_subnet" "bu1VoltWorkloadAz1" {
+  vpc_id            = module.vpcTransitBu1.vpc_id
+  availability_zone = local.awsAz1
+  cidr_block        = "100.64.7.0/24"
+
+  tags = {
+    resourceOwner = var.resourceOwner
+    Name          = "${var.projectPrefix}-bu1VoltWorkloadAz1-${random_id.buildSuffix.hex}"
+  }
+}
+
+resource "aws_subnet" "bu1VoltWorkloadAz2" {
+  vpc_id            = module.vpcTransitBu1.vpc_id
+  availability_zone = local.awsAz2
+  cidr_block        = "100.64.8.0/24"
+
+  tags = {
+    resourceOwner = var.resourceOwner
+    Name          = "${var.projectPrefix}-bu1VoltWorkloadAz2-${random_id.buildSuffix.hex}"
+  }
+}
+
+resource "aws_subnet" "bu1VoltWorkloadAz3" {
+  vpc_id            = module.vpcTransitBu1.vpc_id
+  availability_zone = local.awsAz3
+  cidr_block        = "100.64.9.0/24"
+
+  tags = {
+    resourceOwner = var.resourceOwner
+    Name          = "${var.projectPrefix}-bu1VoltWorkloadAz3-${random_id.buildSuffix.hex}"
+  }
+}
+
 resource "aws_route" "vpcTransitBu1SharedAddressSpace" {
   route_table_id         = module.vpcTransitBu1.public_route_table_ids[0]
   destination_cidr_block = "100.64.0.0/16"
   transit_gateway_id     = aws_ec2_transit_gateway.tgwVolterra.id
-  #  depends_on             = [aws_ec2_transit_gateway.tgwVolterra]
+  depends_on             = [aws_ec2_transit_gateway.tgwVolterra]
 }
 
 module "vpcTransitBu2" {
@@ -166,7 +199,7 @@ module "vpcTransitBu2" {
   azs             = [local.awsAz1, local.awsAz2, local.awsAz3]
   public_subnets  = ["100.64.16.0/24", "100.64.17.0/24", "100.64.18.0/24"]
   private_subnets = ["100.64.19.0/24", "100.64.20.0/24", "100.64.21.0/24"]
-  intra_subnets   = ["100.64.22.0/24", "100.64.23.0/24", "100.64.24.0/24"]
+  #  intra_subnets   = ["100.64.22.0/24", "100.64.23.0/24", "100.64.24.0/24"]
 
   enable_dns_hostnames = true
   tags = {
@@ -209,11 +242,43 @@ resource "aws_subnet" "bu2VoltSliAz3" {
   }
 }
 
+resource "aws_subnet" "bu2VoltWorkloadAz1" {
+  vpc_id            = module.vpcTransitBu2.vpc_id
+  availability_zone = local.awsAz1
+  cidr_block        = "100.64.22.0/24"
+
+  tags = {
+    resourceOwner = var.resourceOwner
+    Name          = "${var.projectPrefix}-bu2VoltWorkloadAz1-${random_id.buildSuffix.hex}"
+  }
+}
+
+resource "aws_subnet" "bu2VoltWorkloadAz2" {
+  vpc_id            = module.vpcTransitBu2.vpc_id
+  availability_zone = local.awsAz2
+  cidr_block        = "100.64.23.0/24"
+
+  tags = {
+    resourceOwner = var.resourceOwner
+    Name          = "${var.projectPrefix}-bu2VoltWorkloadAz2-${random_id.buildSuffix.hex}"
+  }
+}
+
+resource "aws_subnet" "bu2VoltWorkloadAz3" {
+  vpc_id            = module.vpcTransitBu2.vpc_id
+  availability_zone = local.awsAz3
+  cidr_block        = "100.64.24.0/24"
+
+  tags = {
+    resourceOwner = var.resourceOwner
+    Name          = "${var.projectPrefix}-bu2VoltWorkloadAz3-${random_id.buildSuffix.hex}"
+  }
+}
 resource "aws_route" "vpcTransitBu2SharedAddressSpace" {
   route_table_id         = module.vpcTransitBu2.public_route_table_ids[0]
   destination_cidr_block = "100.64.0.0/16"
   transit_gateway_id     = aws_ec2_transit_gateway.tgwVolterra.id
-  #  depends_on             = [aws_ec2_transit_gateway.tgwVolterra]
+  depends_on             = [aws_ec2_transit_gateway.tgwVolterra]
 }
 
 module "vpcTransitAcme" {
@@ -227,7 +292,7 @@ module "vpcTransitAcme" {
   azs             = [local.awsAz1, local.awsAz2, local.awsAz3]
   public_subnets  = ["100.64.32.0/24", "100.64.33.0/24", "100.64.34.0/24"]
   private_subnets = ["100.64.35.0/24", "100.64.36.0/24", "100.64.37.0/24"]
-  intra_subnets   = ["100.64.38.0/24", "100.64.40.0/24", "100.64.41.0/24"]
+  #  intra_subnets   = ["100.64.38.0/24", "100.64.39.0/24", "100.64.40.0/24"]
 
   enable_dns_hostnames = true
   tags = {
@@ -241,7 +306,7 @@ resource "aws_route" "vpcTransitAcmeSharedAddressSpace" {
   route_table_id         = module.vpcTransitAcme.public_route_table_ids[0]
   destination_cidr_block = "100.64.0.0/16"
   transit_gateway_id     = aws_ec2_transit_gateway.tgwVolterra.id
-  #  depends_on             = [aws_ec2_transit_gateway.tgwVolterra]
+  depends_on             = [aws_ec2_transit_gateway.tgwVolterra]
 }
 
 resource "aws_subnet" "acmeVoltSliAz1" {
@@ -277,6 +342,38 @@ resource "aws_subnet" "acmeVoltSliAz3" {
   }
 }
 
+resource "aws_subnet" "acmeVoltWorkloadAz1" {
+  vpc_id            = module.vpcTransitAcme.vpc_id
+  availability_zone = local.awsAz1
+  cidr_block        = "100.64.38.0/24"
+
+  tags = {
+    resourceOwner = var.resourceOwner
+    Name          = "${var.projectPrefix}-acmeVoltWorkloadAz1-${random_id.buildSuffix.hex}"
+  }
+}
+
+resource "aws_subnet" "acmeVoltWorkloadAz2" {
+  vpc_id            = module.vpcTransitAcme.vpc_id
+  availability_zone = local.awsAz2
+  cidr_block        = "100.64.39.0/24"
+
+  tags = {
+    resourceOwner = var.resourceOwner
+    Name          = "${var.projectPrefix}-acmeVoltWorkloadAz2-${random_id.buildSuffix.hex}"
+  }
+}
+
+resource "aws_subnet" "acmeVoltWorkloadAz3" {
+  vpc_id            = module.vpcTransitAcme.vpc_id
+  availability_zone = local.awsAz3
+  cidr_block        = "100.64.40.0/24"
+
+  tags = {
+    resourceOwner = var.resourceOwner
+    Name          = "${var.projectPrefix}-acmeVoltWorkloadAz3-${random_id.buildSuffix.hex}"
+  }
+}
 ######################################################BU vpc's########################################
 module "vpcBu1" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -302,7 +399,7 @@ resource "aws_route" "vpcBu1SharedAddressSpace" {
   route_table_id         = module.vpcBu1.public_route_table_ids[0]
   destination_cidr_block = "100.64.0.0/16"
   transit_gateway_id     = aws_ec2_transit_gateway.tgwBu1.id
-  depends_on             = [aws_ec2_transit_gateway.tgwBu1]
+  depends_on             = [aws_ec2_transit_gateway.tgwBu1, volterra_tf_params_action.applyBu1]
 }
 
 
@@ -330,7 +427,7 @@ resource "aws_route" "vpcBu2SharedAddressSpace" {
   route_table_id         = module.vpcBu2.public_route_table_ids[0]
   destination_cidr_block = "100.64.0.0/16"
   transit_gateway_id     = aws_ec2_transit_gateway.tgwBu2.id
-  depends_on             = [aws_ec2_transit_gateway.tgwBu2]
+  depends_on             = [aws_ec2_transit_gateway.tgwBu2, volterra_tf_params_action.applyBu2]
 }
 module "vpcAcme" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -356,7 +453,7 @@ resource "aws_route" "vpcAcmeSharedAddressSpace" {
   route_table_id         = module.vpcAcme.public_route_table_ids[0]
   destination_cidr_block = "100.64.0.0/16"
   transit_gateway_id     = aws_ec2_transit_gateway.tgwAcme.id
-  depends_on             = [aws_ec2_transit_gateway.tgwAcme]
+  depends_on             = [aws_ec2_transit_gateway.tgwAcme, volterra_tf_params_action.applyAcme]
 }
 
 #Compute
@@ -495,7 +592,7 @@ module "jumphost" {
   keyName       = aws_key_pair.deployer.id
   mgmtSubnet    = each.value["subnetId"]
   securityGroup = aws_security_group.secGroupWorkstation[each.key].id
-  associateEIP  = true
+  associateEIP  = false
 }
 
 module "webserver" {
