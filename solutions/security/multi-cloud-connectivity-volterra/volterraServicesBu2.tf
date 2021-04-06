@@ -2,7 +2,7 @@
 
 resource "volterra_origin_pool" "bu2app" {
   name                   = "bu2app"
-  namespace              = "default"
+  namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"
   loadbalancer_algorithm = "LB_OVERRIDE"
 
@@ -34,7 +34,7 @@ resource "volterra_origin_pool" "bu2app" {
 
 resource "volterra_http_loadbalancer" "bu2app" {
   name      = "bu2app"
-  namespace = "default"
+  namespace = var.namespace
 
   // One of the arguments from this list "do_not_advertise advertise_on_public_default_vip advertise_on_public advertise_custom" must be set
 
