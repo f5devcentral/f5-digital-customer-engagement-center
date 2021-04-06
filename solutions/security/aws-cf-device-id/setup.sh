@@ -4,6 +4,6 @@ terraform init
 terraform -chdir=webapp plan -var-file=../admin.auto.tfvars
 terraform plan
 read -p "Press enter to continue"
-terraform -chdir=webapp apply --auto-approve
+terraform -chdir=webapp apply -var-file=../admin.auto.tfvars --auto-approve
 terraform apply --auto-approve
 # apply

@@ -67,3 +67,8 @@ output "siteDnsName" {
   description = "DNS record for the newly created site"
   value       = "https://${local.subdomain}.${local.domain_name}"
 }
+
+#output "elasticsearch" {
+#  description = "elasticsearch outputs"
+#  value       = module.elasticsearch
+#}

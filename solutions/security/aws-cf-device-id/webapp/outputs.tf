@@ -9,3 +9,6 @@ output "alb" {
 output "albDnsName" {
   value = module.webApp.albDnsName
 }
+output "vpc" {
+  value = module.vpc
+}

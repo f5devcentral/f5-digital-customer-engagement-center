@@ -2,6 +2,9 @@ provider "aws" {
   region = var.awsRegion
 }
 
+data "aws_route53_zone" "this" {
+  name = var.domainName
+}
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -79,3 +82,4 @@ module "webApp" {
   jsScriptTag    = "<script async defer src=\"https://${var.subDomain}.${var.domainName}${var.jsUri}\" id=\"_imp_apg_dip_\"  ></script>"
   startupCommand = "docker run -d --restart always -p 80:80 -v /var/tmp/html:/usr/share/nginx/html nginx"
 }
+
