@@ -7,6 +7,7 @@ variable "buildSuffix" {
   description = "random build suffix for resources"
 }
 variable "resourceOwner" {
+  type        = string
   description = "name of the person or customer running the solution"
 }
 variable "azureLocation" {
@@ -14,5 +15,6 @@ variable "azureLocation" {
   description = "location where Azure resources are deployed (abbreviated Azure Region name)"
 }
 variable "keyName" {
+  type        = string
   description = "instance key pair name"
 }
