@@ -51,8 +51,9 @@ variable "keyName" {
   description = "instance key pair name"
 }
 variable "coderAccountPassword" {
-  type    = string
-  default = "pleaseUseVault123!!"
+  type        = string
+  description = "password used to access VSCode code-server via web"
+  default     = "pleaseUseVault123!!"
 }
 
 # onboarding
@@ -62,6 +63,7 @@ variable "repositories" {
   default     = ""
 }
 variable "terraformVersion" {
-  type    = string
-  default = "0.14.10"
+  type        = string
+  description = "terraform version to install on jumphost"
+  default     = "0.14.10"
 }

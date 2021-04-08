@@ -45,11 +45,11 @@ module "jumphost" {
 | resourceOwner | name of the person or customer running the solution | `string` | n/a | yes |
 | securityGroup | security group for virtual machine | `string` | n/a | yes |
 | adminAccountName | admin account name used with instance | `string` | `"ubuntu"` | no |
-| coderAccountPassword | n/a | `string` | `"pleaseUseVault123!!"` | no |
+| coderAccountPassword | password used to access VSCode code-server via web | `string` | `"pleaseUseVault123!!"` | no |
 | instanceType | instance type for virtual machine | `string` | `"Standard_DS3_v2"` | no |
 | projectPrefix | prefix for resources | `string` | `"demo"` | no |
 | repositories | comma seperated list of git repositories to clone | `string` | `""` | no |
-| terraformVersion | n/a | `string` | `"0.14.10"` | no |
+| terraformVersion | terraform version to install on jumphost | `string` | `"0.14.10"` | no |
 
 ## Outputs
 
