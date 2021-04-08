@@ -52,7 +52,7 @@ variable "coderAccountPassword" {
 # onboarding
 variable "repositories" {
   description = "comma seperated list of git repositories to clone"
-  default     = null
+  default     = ""
 }
 variable "terraformVersion" {
   default = "0.14.10"
