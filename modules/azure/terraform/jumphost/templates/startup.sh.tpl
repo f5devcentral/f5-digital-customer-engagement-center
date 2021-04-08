@@ -22,7 +22,7 @@ set -ex \
 && curl -fsSL https://download.docker.com/linux/ubuntu/gpg |  apt-key add - \
 &&  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
 &&  apt-get update -y \
-&&  apt-get install -y apt-transport-https wget unzip jq git software-properties-common python3-pip ca-certificates gnupg-agent docker-ce docker-ce-cli containerd.io nginx \
+&&  apt-get install -y apt-transport-https wget unzip jq git software-properties-common python3-pip ca-certificates gnupg-agent docker-ce docker-ce-cli containerd.io \
 && echo "docker" \
 &&  usermod -aG docker $user \
 &&  chown -R $user: /var/run/docker.sock \
