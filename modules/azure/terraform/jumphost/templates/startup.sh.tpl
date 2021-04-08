@@ -60,7 +60,7 @@ do
 done
 IFS=$ifsDefault
 echo "=====install coder====="
-coderVersion="3.8.0"
+coderVersion="3.9.2"
 curl -sSOL https://github.com/cdr/code-server/releases/download/v$${coderVersion}/code-server_$${coderVersion}_amd64.deb
 dpkg -i code-server_$${coderVersion}_amd64.deb
 # sudo -u $user curl -fsSL https://code-server.dev/install.sh | sh
