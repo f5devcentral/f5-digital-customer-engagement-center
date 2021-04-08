@@ -58,6 +58,6 @@ module "jumphost" {
   azureResourceGroup = azurerm_resource_group.main.name
   azureLocation      = var.azureLocation
   keyName            = var.keyName
-  mgmtSubnet         = module.azure_network.subnets["public"]
+  mgmtSubnet         = module.azure_network.subnets["mgmt"]
   securityGroup      = azurerm_network_security_group.mgmt.id
 }
