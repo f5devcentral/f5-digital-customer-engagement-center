@@ -73,7 +73,7 @@ resource "azurerm_linux_virtual_machine" "jumphost" {
     public_key = file(var.keyName)
   }
 
-  custom_data = base64encode(local.onboard)
+  #custom_data = base64encode(local.onboard)
 
   os_disk {
     name                 = format("%s-jumphost-disk-%s", var.projectPrefix, var.buildSuffix)
@@ -94,25 +94,25 @@ resource "azurerm_linux_virtual_machine" "jumphost" {
   }
 }
 
-# # Run Startup Script
-# resource "azurerm_virtual_machine_extension" "jumphost_onboard" {
-#   name                 = format("%s-jumphost-onboard-%s", var.projectPrefix, var.buildSuffix)
-#   virtual_machine_id   = azurerm_linux_virtual_machine.jumphost.id
-#   publisher            = "Microsoft.Azure.Extensions"
-#   type                 = "CustomScript"
-#   type_handler_version = "2.0"
+# Run Startup Script
+resource "azurerm_virtual_machine_extension" "jumphost_onboard" {
+  name                 = format("%s-jumphost-onboard-%s", var.projectPrefix, var.buildSuffix)
+  virtual_machine_id   = azurerm_linux_virtual_machine.jumphost.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
 
-#   settings = <<SETTINGS
-#     {
-#         "commandToExecute": "bash /var/lib/waagent/CustomData; exit 0;"
-#     }
-#   SETTINGS
+  settings = <<SETTINGS
+    {
+        "script": "${base64encode(local.onboard)}"
+    }
+  SETTINGS
 
-#   tags = {
-#     Name      = format("%s-jumphost-onboard-%s", var.resourceOwner, var.buildSuffix)
-#     Terraform = "true"
-#   }
-# }
+  tags = {
+    Name      = format("%s-jumphost-onboard-%s", var.resourceOwner, var.buildSuffix)
+    Terraform = "true"
+  }
+}
 
 
 

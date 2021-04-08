@@ -21,17 +21,16 @@ terraformVersion="${terraformVersion}"
 set -ex \
 && curl -fsSL https://download.docker.com/linux/ubuntu/gpg |  apt-key add - \
 &&  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
-&& curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null \
-&& AZ_REPO=$(lsb_release -cs) \
-&& echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list \
-&& sudo apt-get update -y \
-&&  apt-get install -y apt-transport-https wget unzip jq git software-properties-common python3-pip ca-certificates gnupg-agent docker-ce docker-ce-cli containerd.io nginx azure-cli \
+&&  apt-get update -y \
+&&  apt-get install -y apt-transport-https wget unzip jq git software-properties-common python3-pip ca-certificates gnupg-agent docker-ce docker-ce-cli containerd.io nginx \
 && echo "docker" \
 &&  usermod -aG docker $user \
 &&  chown -R $user: /var/run/docker.sock \
 && echo "terraform" \
 &&  wget https://releases.hashicorp.com/terraform/$terraformVersion/terraform_"$terraformVersion"_linux_amd64.zip \
 &&  unzip ./terraform_"$terraformVersion"_linux_amd64.zip -d /usr/local/bin/ \
+&& echo "az cli" \
+&&  curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash \
 && echo "f5 cli" \
 && pip3 install f5-cli \
 && terraform -install-autocomplete
@@ -97,11 +96,7 @@ done
 extensions=$(ls *vsix)
 for extension in $extensions
 do
-    # azure rm rights
-    cp /var/lib/waagent/custom-script/download/0/$extension /home/$user/
-    chown $user:$user /home/$user/$extension
-    rm -f /var/lib/waagent/custom-script/download/0/$extension
-    sudo -u $user code-server --install-extension /home/$user/$extension
+    sudo -u $user code-server --install-extension $extension
     echo $extension
 done
 # exit user install
