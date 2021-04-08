@@ -1,7 +1,5 @@
 projectPrefix = "demo"
 buildSuffix   = "dev"
 resourceOwner = "user1"
-
 azureLocation = "westus2"
-
 keyName       = "~/.ssh/id_rsa.pub"
