@@ -45,7 +45,7 @@ resource "azurerm_network_interface" "mgmtNic" {
 }
 
 # Associate security groups with NIC
-resource "azurerm_network_interface_security_group_association" "jumphost-nsg" {
+resource "azurerm_network_interface_security_group_association" "this" {
   network_interface_id      = azurerm_network_interface.mgmtNic.id
   network_security_group_id = var.securityGroup
 }
@@ -95,7 +95,7 @@ resource "azurerm_linux_virtual_machine" "jumphost" {
 }
 
 # Run Startup Script
-resource "azurerm_virtual_machine_extension" "jumphost_onboard" {
+resource "azurerm_virtual_machine_extension" "onboard" {
   name                 = format("%s-jumphost-onboard-%s", var.projectPrefix, var.buildSuffix)
   virtual_machine_id   = azurerm_linux_virtual_machine.jumphost.id
   publisher            = "Microsoft.Azure.Extensions"
