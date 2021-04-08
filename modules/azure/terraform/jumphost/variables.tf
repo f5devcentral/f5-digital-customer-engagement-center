@@ -34,7 +34,7 @@ variable "securityGroup" {
 # instance
 variable "instanceType" {
   description = "instance type for virtual machine"
-  default = "Standard_B2ms"
+  default = "Standard_DS3_v2"
 }
 
 # admin
