@@ -25,7 +25,7 @@ resource "azurerm_public_ip" "mgmtPip" {
   }
 }
 
-# Create NIC 
+# Create NIC
 resource "azurerm_network_interface" "mgmtNic" {
   name                = format("%s-jumphost-nic-%s", var.projectPrefix, var.buildSuffix)
   location            = var.azureLocation
@@ -113,6 +113,3 @@ resource "azurerm_virtual_machine_extension" "onboard" {
     Terraform = "true"
   }
 }
-
-
-
