@@ -19,52 +19,19 @@ data "terraform_remote_state" "webapp" {
   }
 }
 
+data "aws_cloudfront_cache_policy" "managedCachingDisabled" {
+  name = "Managed-CachingDisabled"
+}
+
+data "aws_cloudfront_origin_request_policy" "managedAllViewer" {
+  name = "Managed-AllViewer"
+}
+
 locals {
   domain_name = var.domainName
   subdomain   = var.subDomain
 }
 
-##############################elastic search############################
-
-#module "cognito" {
-#  source     = "./cognito"
-#  awsRegion = var.awsRegion
-#  name = var.resourceOwner
-#  domainName = var.subDomain
-#}
-#
-#module "elasticsearch" {
-#  source = "cloudposse/elasticsearch/aws"
-#  # Cloud Posse recommends pinning every module to a specific version
-#  # version     = "x.x.x"
-#  namespace               = var.projectPrefix
-#  stage                   = "dev"
-#  name                    = var.domainName
-#  dns_zone_id             = data.aws_route53_zone.this.zone_id
-#  zone_awareness_enabled  = "true"
-#  elasticsearch_version   = "7.9"
-#  instance_type           = "t2.small.elasticsearch"
-#  instance_count          = 4
-#  ebs_volume_size         = 10
-#  vpc_enabled             = false
-#  #iam_role_arns           = ["arn:aws:iam::XXXXXXXXX:role/ops", "arn:aws:iam::XXXXXXXXX:role/dev"]
-#  #iam_actions             = ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost"]
-#  encrypt_at_rest_enabled = false
-#  kibana_subdomain_name   = "kibana-es"
-#  kibana_hostname_enabled = true
-#  domain_hostname_enabled = true
-#  create_iam_service_linked_role = false
-#  cognito_authentication_enabled = true
-#  cognito_iam_role_arn        = aws_iam_role.cognito_es_role.arn
-#  cognito_identity_pool_id    = lookup(module.cognito.cognito_map, "identity_pool")
-#  cognito_user_pool_id        = lookup(module.cognito.cognito_map, "user_pool")
-#
-#
-#  advanced_options = {
-#    "rest.action.multi.allow_explicit_index" = "true"
-#  }
-#  depends_on = [aws_iam_service_linked_role.es, aws_iam_role_policy_attachment.cognito_es_attach]
-#}
 resource "aws_wafv2_web_acl" "deviceIdAcl" {
   name        = "deviceIdAcl"
   description = "deviceIdAcl"
@@ -112,6 +79,11 @@ resource "aws_wafv2_web_acl" "deviceIdAcl" {
     metric_name                = "deviceIdLogs"
     sampled_requests_enabled   = true
   }
+}
+
+resource "aws_wafv2_web_acl_logging_configuration" "deviceIdAcl" {
+  log_destination_configs = [aws_kinesis_firehose_delivery_stream.kinesisFirehoseDeliveryStream.arn]
+  resource_arn            = aws_wafv2_web_acl.deviceIdAcl.arn
 }
 module "cloudfront" {
   depends_on = [aws_wafv2_web_acl.deviceIdAcl]
@@ -186,6 +158,9 @@ module "cloudfront" {
   default_cache_behavior = {
     target_origin_id       = "juiceshop"
     viewer_protocol_policy = "allow-all"
+    cache_policy_id = data.aws_cloudfront_cache_policy.managedCachingDisabled.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managedAllViewer.id
+    use_forwarded_values = false
 
     allowed_methods = ["GET", "HEAD", "OPTIONS", "POST", "DELETE", "PUT", "PATCH"]
     cached_methods  = ["GET", "HEAD"]
@@ -211,6 +186,9 @@ module "cloudfront" {
       path_pattern           = "/__imp_apg__/*"
       target_origin_id       = "deviceid"
       viewer_protocol_policy = "redirect-to-https"
+      cache_policy_id = data.aws_cloudfront_cache_policy.managedCachingDisabled.id
+      origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managedAllViewer.id
+      use_forwarded_values = false
 
       allowed_methods = ["GET", "HEAD", "OPTIONS", "POST", "DELETE", "PUT", "PATCH"]
       cached_methods  = ["GET", "HEAD"]
@@ -373,3 +351,4 @@ data "aws_iam_policy_document" "s3_policy" {
 resource "random_pet" "this" {
   length = 2
 }
+

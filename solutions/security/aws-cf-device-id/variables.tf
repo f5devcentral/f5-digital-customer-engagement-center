@@ -29,3 +29,13 @@ variable "subDomain" {
   type        = string
   default     = "cfdeviceid"
 }
+variable "userEmail" {
+  description = "Email used to create a user for the dashboard"
+  type        = string
+  default     = "your@email.com"
+}
+variable "elasticNodeType" {
+  description = "Elasticsearch Node Type"
+  type        = string
+  default     = "m5.large.elasticsearch"
+}
