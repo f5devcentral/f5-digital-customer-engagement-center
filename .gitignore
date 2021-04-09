@@ -1,8 +1,13 @@
 # project specific
 cluster-config
 controller-installer-*
+docs_local/*
+kubernetes-ingress/*
+aks-client-cert
+aks-cluster-config
 # Local .terraform directories
 **/.terraform/*
+.terraform.lock.hcl
 
 # .tfstate files
 *.tfstate

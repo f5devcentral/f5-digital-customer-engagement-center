@@ -19,7 +19,7 @@ resource "azurerm_resource_group" "main" {
 
 # Network Module
 module "azure_network" {
-  source             = "../../../../../../modules/azure/terraform/network/min/"
+  source             = "../../../../../modules/azure/terraform/network/min"
   projectPrefix      = var.projectPrefix
   buildSuffix        = random_id.randomString.dec
   resourceOwner      = var.resourceOwner

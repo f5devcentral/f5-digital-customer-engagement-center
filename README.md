@@ -82,6 +82,17 @@ testing pre-commit hooks:
   # test pre commit manually
   pre-commit run -a -v
   ```
+building documentation:
+  ```bash
+  mkdir -p docs_local
+  #local
+  sphinx-build -b html $PWD docs_local/
+  #preview local
+  # non wsl normal file path volume
+  docker run -it --rm -d -p 80:80 --name docs -v $PWD/docs_local:/usr/share/nginx/html nginx
+  # wsl requires volume path to original dockerhost filesystem
+  docker run -it --rm -d -p 80:80 --name docs -v /c/github/f5-digital-customer-engagement-center/docs_local:/usr/share/nginx/html nginx
+  ```
 ---
 ## Troubleshooting
 module not pulling in changes:
