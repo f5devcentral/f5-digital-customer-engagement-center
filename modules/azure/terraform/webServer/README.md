@@ -1,6 +1,6 @@
 # Azure Web Server
 
-This module will create one Azure Virtual Machine (VM), install docker, and run the JuiceShop web application.
+This module will create one Azure Virtual Machine (VM), install docker, and run the JuiceShop web application. The NIC will reside in the 'private' (aka internal) network, and the VM will have a private IP only.
 
 To use this module within a solutions context:
 
