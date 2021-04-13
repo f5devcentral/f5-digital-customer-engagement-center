@@ -6,11 +6,6 @@ terraform {
   }
 }
 
-# Azure Provider
-provider "azurerm" {
-  features {}
-}
-
 # Create NIC
 resource "azurerm_network_interface" "this" {
   name                = format("%s-webServer-nic-%s", var.projectPrefix, var.buildSuffix)
