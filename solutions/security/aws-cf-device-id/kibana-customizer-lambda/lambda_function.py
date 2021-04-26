@@ -4,6 +4,8 @@ import logging
 import boto3
 import os
 import requests
+import json
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +86,8 @@ def import_kibana_index_pattern(host, awsauth, type, name):
     headers = { "Content-Type": "application/json", 'kbn-xsrf': 'true' }
 
     with open("custom/" + name + ".json") as f:
-        template = f.read()
+        template = json.dumps(json.load(f))
+        #print (template)
 
     webacls_mapping = generate_wafacls_mapping();
     template = template.replace("WEBACL_CUSTOM_MAPPINGS", webacls_mapping);
@@ -117,25 +120,25 @@ def update_all(host, awsauth):
     #delete_kibana_object(host, awsauth, "index-pattern", "awswaf")
     import_kibana_index_pattern(host, awsauth, "index-pattern", "awswaf")
 
-    import_kibana_object(host, awsauth, "visualization", "allcountries")
-    import_kibana_object(host, awsauth, "visualization", "executedrules")
-    import_kibana_object(host, awsauth, "visualization", "filters")
-    import_kibana_object(host, awsauth, "visualization", "numberofallrequests")
-    import_kibana_object(host, awsauth, "visualization", "numberofblockedrequests")
-    import_kibana_object(host, awsauth, "visualization", "allvsblockedrequests")
-    import_kibana_object(host, awsauth, "visualization", "top10countries")
-    import_kibana_object(host, awsauth, "visualization", "top10useragents")
-    import_kibana_object(host, awsauth, "visualization", "top10uris")
-    import_kibana_object(host, awsauth, "visualization", "top10rules")
-    import_kibana_object(host, awsauth, "visualization", "top10ip")
-    import_kibana_object(host, awsauth, "visualization", "top10hosts")
-    import_kibana_object(host, awsauth, "visualization", "httpmethods")
-    import_kibana_object(host, awsauth, "visualization", "httpversions")
-    import_kibana_object(host, awsauth, "visualization", "uniqueipcount")
-    import_kibana_object(host, awsauth, "visualization", "requestcount")
-    import_kibana_object(host, awsauth, "visualization", "top10webacl")
+    #import_kibana_object(host, awsauth, "visualization", "allcountries")
+    #import_kibana_object(host, awsauth, "visualization", "executedrules")
+    #import_kibana_object(host, awsauth, "visualization", "filters")
+    #import_kibana_object(host, awsauth, "visualization", "numberofallrequests")
+    #import_kibana_object(host, awsauth, "visualization", "numberofblockedrequests")
+    #import_kibana_object(host, awsauth, "visualization", "allvsblockedrequests")
+    #import_kibana_object(host, awsauth, "visualization", "top10countries")
+    #import_kibana_object(host, awsauth, "visualization", "top10useragents")
+    #import_kibana_object(host, awsauth, "visualization", "top10uris")
+    #import_kibana_object(host, awsauth, "visualization", "top10rules")
+    #import_kibana_object(host, awsauth, "visualization", "top10ip")
+    #import_kibana_object(host, awsauth, "visualization", "top10hosts")
+    #import_kibana_object(host, awsauth, "visualization", "httpmethods")
+    #import_kibana_object(host, awsauth, "visualization", "httpversions")
+    #import_kibana_object(host, awsauth, "visualization", "uniqueipcount")
+    #import_kibana_object(host, awsauth, "visualization", "requestcount")
+    #import_kibana_object(host, awsauth, "visualization", "top10webacl")
 
-    import_kibana_object(host, awsauth, "dashboard", "dashboard")
+    #import_kibana_object(host, awsauth, "dashboard", "dashboard")
 
 
 def generate_wafacls_mapping():

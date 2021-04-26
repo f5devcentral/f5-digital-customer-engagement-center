@@ -65,7 +65,7 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
 
       // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
       reserved_inside_subnet = false
-      disk_size              = "disk_size"
+      disk_size              = 100
 
       inside_subnet {
         // One of the arguments from this list "subnet_param existing_subnet_id" must be set
@@ -203,7 +203,7 @@ resource "volterra_aws_tgw_site" "acmeBu2" {
 
       // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
       reserved_inside_subnet = false
-      disk_size              = "disk_size"
+      disk_size              = 100
 
       inside_subnet {
         // One of the arguments from this list "subnet_param existing_subnet_id" must be set
@@ -341,7 +341,7 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
 
       // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
       reserved_inside_subnet = false
-      disk_size              = "disk_size"
+      disk_size              = 100
 
       inside_subnet {
         // One of the arguments from this list "subnet_param existing_subnet_id" must be set
