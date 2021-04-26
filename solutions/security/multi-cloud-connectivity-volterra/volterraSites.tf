@@ -47,7 +47,7 @@ provider "volterra" {
 
 #Volterra
 resource "volterra_aws_tgw_site" "acmeBu1" {
-  name      = "${var.volterraUniquePrefix}-bu1"
+  name      = "acme-bu1"
   namespace = "system"
 
   vpc_attachments {
@@ -65,7 +65,7 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
 
       // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
       reserved_inside_subnet = false
-      disk_size              = "disk_size"
+      disk_size              = 100
 
       inside_subnet {
         // One of the arguments from this list "subnet_param existing_subnet_id" must be set
@@ -148,7 +148,6 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
       namespace = "system"
       tenant    = var.volterraTenant
     }
-    assisted      = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
     #    nodes_per_az  = "1"
@@ -175,7 +174,6 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
 
 
 resource "volterra_tf_params_action" "applyBu1" {
-  count            = var.assisted ? 0 : 1
   depends_on       = [volterra_aws_tgw_site.acmeBu1]
   site_name        = volterra_aws_tgw_site.acmeBu1.name
   site_kind        = "aws_tgw_site"
@@ -188,7 +186,7 @@ resource "volterra_tf_params_action" "applyBu1" {
 ##########################################################################    BU2 site    #################################################################
 
 resource "volterra_aws_tgw_site" "acmeBu2" {
-  name      = "${var.volterraUniquePrefix}-bu2"
+  name      = "acme-bu2"
   namespace = "system"
 
   vpc_attachments {
@@ -205,7 +203,7 @@ resource "volterra_aws_tgw_site" "acmeBu2" {
 
       // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
       reserved_inside_subnet = false
-      disk_size              = "disk_size"
+      disk_size              = 100
 
       inside_subnet {
         // One of the arguments from this list "subnet_param existing_subnet_id" must be set
@@ -288,7 +286,6 @@ resource "volterra_aws_tgw_site" "acmeBu2" {
       namespace = "system"
       tenant    = var.volterraTenant
     }
-    assisted      = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
     #    nodes_per_az  = "1"
@@ -315,7 +312,6 @@ resource "volterra_aws_tgw_site" "acmeBu2" {
 
 
 resource "volterra_tf_params_action" "applyBu2" {
-  count            = var.assisted ? 0 : 1
   depends_on       = [volterra_aws_tgw_site.acmeBu2]
   site_name        = volterra_aws_tgw_site.acmeBu2.name
   site_kind        = "aws_tgw_site"
@@ -327,7 +323,7 @@ resource "volterra_tf_params_action" "applyBu2" {
 ##########################################################################    Acme site    #################################################################
 
 resource "volterra_aws_tgw_site" "acmeAcme" {
-  name      = "${var.volterraUniquePrefix}-acme"
+  name      = "acme-acme"
   namespace = "system"
 
   vpc_attachments {
@@ -345,7 +341,7 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
 
       // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
       reserved_inside_subnet = false
-      disk_size              = "disk_size"
+      disk_size              = 100
 
       inside_subnet {
         // One of the arguments from this list "subnet_param existing_subnet_id" must be set
@@ -375,7 +371,6 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
       namespace = "system"
       tenant    = var.volterraTenant
     }
-    assisted      = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
     #    nodes_per_az  = "1"
@@ -402,7 +397,6 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
 
 
 resource "volterra_tf_params_action" "applyAcme" {
-  count            = var.assisted ? 0 : 1
   depends_on       = [volterra_aws_tgw_site.acmeAcme]
   site_name        = volterra_aws_tgw_site.acmeAcme.name
   site_kind        = "aws_tgw_site"
