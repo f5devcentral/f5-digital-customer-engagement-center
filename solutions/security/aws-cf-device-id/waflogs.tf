@@ -139,6 +139,106 @@ tags = {
 }
 }
 
+
+
+###########lambda transformer######
+resource "aws_iam_policy" "lambdaTransformerPolicy" {
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:*"
+            ],
+            "Effect": "Allow"
+        }
+    ]
+  })
+}
+resource "aws_iam_role" "lambdaTransformerExecutionRole" {
+  name                = "${var.projectPrefix}-lambdaTransformerExecutionRole-${random_id.buildSuffix.hex}"
+  managed_policy_arns = [aws_iam_policy.lambdaTransformerPolicy.arn]
+  assume_role_policy  = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+tags = {
+  Name  = "${var.projectPrefix}-lambdaTransformerExecutionRole-${random_id.buildSuffix.hex}"
+  Owner = var.resourceOwner
+}
+}
+
+###############
+
+
+########delivery role###################
+
+resource "aws_iam_policy" "logDeliveryPolicy" {
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "cognito-idp:CreateUserPoolDomain",
+                "cognito-idp:DeleteUserPoolDomain",
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "events:PutRule",
+                "events:DeleteRule",
+                "lambda:AddPermission",
+                "events:PutTargets",
+                "events:RemoveTargets",
+                "lambda:RemovePermission"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+  })
+}
+resource "aws_iam_role" "logDeliveryRole" {
+  name                = "${var.projectPrefix}-logDeliveryRole-${random_id.buildSuffix.hex}"
+  managed_policy_arns = [aws_iam_policy.logDeliveryPolicy.arn]
+  assume_role_policy  = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "firehose.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+tags = {
+  Name  = "${var.projectPrefix}-KibanaCustomizerLambdaRole-${random_id.buildSuffix.hex}"
+  Owner = var.resourceOwner
+}
+}
+
+
+
+######################################
 resource "aws_iam_role" "ESCognitoAuthSetterLambdaRole" {
   name                = "${var.projectPrefix}-ESCognitoAuthSetterLambdaRole-${random_id.buildSuffix.hex}"
   managed_policy_arns = [aws_iam_policy.ESCognitoAuthSetterLambdaRole.arn]
@@ -471,7 +571,10 @@ resource "aws_iam_policy" "kinesisFirehoseDeliveryPolicy" {
                 "lambda:InvokeFunction",
                 "lambda:GetFunctionConfiguration"
             ],
-            "Resource": "arn:aws:lambda:us-east-1:${data.aws_caller_identity.current.account_id}:function:%FIREHOSE_DEFAULT_FUNCTION%:%FIREHOSE_DEFAULT_VERSION%",
+            "Resource": [
+              "arn:aws:lambda:us-east-1:${data.aws_caller_identity.current.account_id}:function:%FIREHOSE_DEFAULT_FUNCTION%:%FIREHOSE_DEFAULT_VERSION%",
+              aws_lambda_function.lambdaLogTransformer.arn
+            ],
             "Effect": "Allow",
             "Sid": ""
         },
@@ -583,9 +686,20 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesisFirehoseDeliveryStream" 
     prefix = "log/"
   }
   elasticsearch_configuration {
+    processing_configuration {
+      enabled = "true"
+
+      processors {
+        type = "Lambda"
+
+        parameters {
+          parameter_name  = "LambdaArn"
+          parameter_value = aws_lambda_function.lambdaLogTransformer.arn
+        }
+      }
+    }
     domain_arn = aws_elasticsearch_domain.elasticsearchDomain.arn
     index_name = "awswaf"
-    type_name  = "waflog"
     retry_duration = 60
     role_arn  = aws_iam_role.kinesisFirehoseDeliveryRole.arn  
     buffering_interval   = 60
@@ -597,6 +711,19 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesisFirehoseDeliveryStream" 
         }
   }
 }
+
+resource "aws_lambda_function" "lambdaLogTransformer" {
+  filename      = "lambda/lambdaLogTransformer.zip"
+  function_name = "${var.projectPrefix}-lambdaLogTransformer-${random_id.buildSuffix.hex}"
+  role          = aws_iam_role.lambdaTransformerExecutionRole.arn
+  handler       = "index.handler"
+  runtime       = "nodejs14.x"
+  memory_size   = 128
+  timeout       = 60
+
+  source_code_hash = filebase64sha256("lambda/lambdaLogTransformer.zip")
+}
+
 
 resource "aws_lambda_function" "kibanaUpdate" {
   filename      = "aws-waf-dashboard/cloudformation-custom-resources/kibana-customizer-lambda.zip"
