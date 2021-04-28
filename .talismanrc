@@ -206,3 +206,7 @@ fileignoreconfig:
   checksum: 7388b32e8ad7a467d9817011a270a57eadd10762f4df45df5d90d0d621962d24
 - filename: solutions/security/ingress-egress-inter-vpc-fw-gwlb/README.md
   checksum: d32462c3b49b2c49aa4bedb513ec601f978f990f9cbfbb594744dffc3f9e59cd
+- filename: modules/google/terraform/tls/main.tf
+  checksum: a411606cae2277545eff110520b9f2c87cbba7abd574da8d492406f9a3fcb899
+- filename: modules/google/terraform/tls/README.md
+  checksum: 50f99abd36a106305a613ba25d262f313596cb9afd6278cc89c5ad25ec54ae9f
