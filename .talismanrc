@@ -206,3 +206,11 @@ fileignoreconfig:
   checksum: 7388b32e8ad7a467d9817011a270a57eadd10762f4df45df5d90d0d621962d24
 - filename: solutions/security/ingress-egress-inter-vpc-fw-gwlb/README.md
   checksum: d32462c3b49b2c49aa4bedb513ec601f978f990f9cbfbb594744dffc3f9e59cd
+- filename: modules/google/terraform/workstation/variables.tf
+  checksum: 2415ba8ca3762cef7fb86647c96f2e289b62b89f072603087e8c6ce36dfe026e
+- filename: modules/google/terraform/workstation/templates/cloud-config.yml
+  checksum: d26af85890bbcfd2f269119356e7c343a2fae1749b7be180afe9fb53725b82ba
+- filename: modules/google/terraform/workstation/main.tf
+  checksum: e007cd5b803ec1f74711d83f9484bc25a784d7c1d33d8a93074ee34cc69fde6f
+- filename: modules/google/terraform/workstation/files/install-workstation-tls-certs.sh
+  checksum: 146831bf6433d2121fcc41e9baece0232c68c0b1834bbf5393997169786638f4
