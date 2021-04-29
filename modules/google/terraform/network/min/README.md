@@ -8,7 +8,7 @@ three-leg deployment.
 A NAT is included on `mgmt` network to allow BIG-IP and other resources to access
 internet.
 
-![gcp-min.png](gcp-min.png)
+![network-min.png](network-min.png)
 
 To use this module within a solutions context:
 
@@ -21,6 +21,9 @@ module "network_min" {
     buildSuffix = var.buildSuffix
 }
 ```
+
+> For more flexibility, see the [infra](../../infra/) module which offers VPC
+> creation with additional options and supporting infrastructure.
 
 <!-- markdownlint-disable no-inline-html -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

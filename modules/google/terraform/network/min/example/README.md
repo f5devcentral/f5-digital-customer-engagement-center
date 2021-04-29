@@ -9,7 +9,7 @@ provided region:
 * `private`
 * `public`
 
-![gcp-min.png](../gcp-min.png)
+![network-min.png](../network-min.png)
 
 > Figure 1: High-level resources created by this example
 
@@ -39,6 +39,13 @@ provided region:
    ```shell
    terraform destroy -auto-approve
    ```
+
+## Infra module
+
+See also the [infra](../../../infra/) module to have a single dependency that will
+create VPC networks with configurations typically used with F5 products, a
+workstation to use as a jumphost and development server, along with supporting
+GCP resources given a broad scenario type.
 
 <!-- markdownlint-disable MD033 MD034 -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
