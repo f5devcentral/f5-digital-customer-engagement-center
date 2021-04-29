@@ -1,0 +1,50 @@
+# Shared Google infra module
+# spell-checker: ignore inspec
+---
+name: google-infra
+title: A common set of controls for verifying google/infra module
+maintainer: Matthew Emes <m.emes@f5.com>
+license: Apache-2.0
+supports:
+  - platform: gcp
+depends:
+  - name: inspec-gcp
+    git: https://github.com/inspec/inspec-gcp.git
+    tag: v1.8.8
+inputs:
+  - name: output_projectPrefix
+    type: string
+    required: true
+  - name: output_buildSuffix
+    type: string
+    required: true
+  - name: output_gcpRegion
+    type: string
+    required: true
+  - name: output_gcpProjectId
+    type: string
+    required: true
+  - name: output_resourceOwner
+    type: string
+    required: true
+  - name: output_features
+    type: hash
+    required: true
+  - name: output_vpc_options
+    type: hash
+    required: true
+  - name: output_vpcs
+    type: hash
+    required: true
+  - name: output_subnets
+    type: hash
+    required: true
+  - name: output_registries
+    type: string
+    required: false
+  - name: output_workstation
+    type: string
+    required: false
+  - name: output_expected_main_equiv
+    type: string
+    required: false
