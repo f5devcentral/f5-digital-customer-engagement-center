@@ -3,7 +3,7 @@ exports.handler = (event, context, callback) => {
 
     /* Process the list of records and drop those containing Default_Action */
     const output = event.records.map((record) => {
-        
+
         const entry = (Buffer.from(record.data, 'base64')).toString('utf8');
         var jsonEntry = JSON.parse(entry);
         //console.log(jsonEntry.httpRequest.headers)
@@ -16,7 +16,7 @@ exports.handler = (event, context, callback) => {
             break;
             }
         }
-        
+
         const cookieArray = cookie.split(';');
         //console.log(cookieArray)
         for (let j=0; j < cookieArray.length; j++) {
@@ -29,7 +29,7 @@ exports.handler = (event, context, callback) => {
             if (item.indexOf('_imp_apg_r_') == 0) {
                 const name = item.split('=')[0];
                 const value = item.split('=')[1];
-                jsonEntry["deviceidB"] = value;                
+                jsonEntry["deviceidB"] = value;
             }
             //console.log(jsonEntry);
         }
@@ -40,9 +40,9 @@ exports.handler = (event, context, callback) => {
             recordId: record.recordId,
             result: 'Ok',
             data: objJsonB64,
-        };        
+        };
     });
-  
+
     console.log(`Processing completed.  Successful records ${output.length}.`);
     callback(null, { records: output });
 };

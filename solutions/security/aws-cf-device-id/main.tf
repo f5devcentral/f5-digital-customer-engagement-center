@@ -156,11 +156,11 @@ module "cloudfront" {
 
 
   default_cache_behavior = {
-    target_origin_id       = "juiceshop"
-    viewer_protocol_policy = "allow-all"
-    cache_policy_id = data.aws_cloudfront_cache_policy.managedCachingDisabled.id
+    target_origin_id         = "juiceshop"
+    viewer_protocol_policy   = "allow-all"
+    cache_policy_id          = data.aws_cloudfront_cache_policy.managedCachingDisabled.id
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managedAllViewer.id
-    use_forwarded_values = false
+    use_forwarded_values     = false
 
     allowed_methods = ["GET", "HEAD", "OPTIONS", "POST", "DELETE", "PUT", "PATCH"]
     cached_methods  = ["GET", "HEAD"]
@@ -183,12 +183,12 @@ module "cloudfront" {
 
   ordered_cache_behavior = [
     {
-      path_pattern           = "/__imp_apg__/*"
-      target_origin_id       = "deviceid"
-      viewer_protocol_policy = "redirect-to-https"
-      cache_policy_id = data.aws_cloudfront_cache_policy.managedCachingDisabled.id
+      path_pattern             = "/__imp_apg__/*"
+      target_origin_id         = "deviceid"
+      viewer_protocol_policy   = "redirect-to-https"
+      cache_policy_id          = data.aws_cloudfront_cache_policy.managedCachingDisabled.id
       origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managedAllViewer.id
-      use_forwarded_values = false
+      use_forwarded_values     = false
 
       allowed_methods = ["GET", "HEAD", "OPTIONS", "POST", "DELETE", "PUT", "PATCH"]
       cached_methods  = ["GET", "HEAD"]
@@ -351,4 +351,3 @@ data "aws_iam_policy_document" "s3_policy" {
 resource "random_pet" "this" {
   length = 2
 }
-
