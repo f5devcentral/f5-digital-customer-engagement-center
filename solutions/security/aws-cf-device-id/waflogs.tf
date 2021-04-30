@@ -702,105 +702,6 @@ resource "aws_lambda_function" "lambdaLogTransformer" {
   source_code_hash = filebase64sha256("lambda/lambdaLogTransformer.zip")
 }
 
-
-resource "aws_lambda_function" "kibanaUpdate" {
-  filename      = "aws-waf-dashboard/cloudformation-custom-resources/kibana-customizer-lambda.zip"
-  function_name = "${var.projectPrefix}-kibanaUpdate-${random_id.buildSuffix.hex}"
-  role          = aws_iam_role.KibanaCustomizerLambdaRole.arn
-  handler       = "lambda_function.handler"
-  runtime       = "python3.7"
-  memory_size   = 128
-  timeout       = 160
-
-  source_code_hash = filebase64sha256("aws-waf-dashboard/cloudformation-custom-resources/kibana-customizer-lambda.zip")
-  environment {
-    variables = {
-      ES_ENDPOINT = aws_elasticsearch_domain.elasticsearchDomain.endpoint
-      REGION      = "us-east-1"
-      ACCOUNT_ID  = data.aws_caller_identity.current.account_id
-    }
-  }
-}
-
-resource "aws_cloudwatch_event_rule" "WAFv2Modification" {
-  name        = "${var.projectPrefix}-WAFv2Modification-${random_id.buildSuffix.hex}"
-  description = "WAF Dashboard - detects new WebACL and rules for WAFv2."
-  event_pattern = jsonencode({
-    "detail-type" : ["AWS API Call via CloudTrail"],
-    "source" : ["aws.wafv2"],
-    "detail" : {
-      "eventSource" : ["wafv2.amazonaws.com"],
-      "eventName" : ["CreateWebACL", "CreateRule"]
-    }
-  })
-}
-
-resource "aws_cloudwatch_event_target" "WAFv2Modification" {
-  rule = aws_cloudwatch_event_rule.WAFv2Modification.name
-  arn  = aws_lambda_function.kibanaUpdate.arn
-}
-
-resource "aws_cloudwatch_event_rule" "WAFGlobalModification" {
-  name        = "${var.projectPrefix}-WAFGlobalModification-${random_id.buildSuffix.hex}"
-  description = "WAF Dashboard - detects new WebACL and rules for WAFGlobalModification."
-  event_pattern = jsonencode({
-    "detail-type" : ["AWS API Call via CloudTrail"],
-    "source" : ["aws.waf"],
-    "detail" : {
-      "eventSource" : ["waf.amazonaws.com"],
-      "eventName" : ["CreateWebACL", "CreateRule"]
-    }
-  })
-}
-
-resource "aws_cloudwatch_event_target" "WAFGlobalModification" {
-  rule = aws_cloudwatch_event_rule.WAFGlobalModification.name
-  arn  = aws_lambda_function.kibanaUpdate.arn
-}
-
-
-resource "aws_cloudwatch_event_rule" "WAFRegionalModification" {
-  name        = "${var.projectPrefix}-WAFRegionalModification-${random_id.buildSuffix.hex}"
-  description = "WAF Dashboard - detects new WebACL and rules for WAFRegionalModification."
-  event_pattern = jsonencode({
-    "detail-type" : ["AWS API Call via CloudTrail"],
-    "source" : ["aws.waf-regional"],
-    "detail" : {
-      "eventSource" : ["waf-regional.amazonaws.com"],
-      "eventName" : ["CreateWebACL", "CreateRule"]
-    }
-  })
-}
-
-resource "aws_cloudwatch_event_target" "WAFRegionalModification" {
-  rule = aws_cloudwatch_event_rule.WAFRegionalModification.name
-  arn  = aws_lambda_function.kibanaUpdate.arn
-}
-
-resource "aws_lambda_permission" "kibanaUpdateWAFv2Permission" {
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.kibanaUpdate.function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.WAFv2Modification.arn
-}
-
-
-resource "aws_lambda_permission" "kibanaUpdateWAFGlobalPermission" {
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.kibanaUpdate.function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.WAFGlobalModification.arn
-}
-
-resource "aws_lambda_permission" "kibanaUpdateWAFRegionalPermission" {
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.kibanaUpdate.function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.WAFRegionalModification.arn
-}
-
-
-
 data "aws_lambda_invocation" "kibanaCustomizerLambda" {
   function_name = aws_lambda_function.KibanaCustomizerLambda.function_name
 
@@ -812,13 +713,8 @@ data "aws_lambda_invocation" "kibanaCustomizerLambda" {
   })
 }
 
-output "result_entry" {
-  value = jsondecode(data.aws_lambda_invocation.kibanaCustomizerLambda.result)
-}
 
-output "details" {
-  value = "${aws_elasticsearch_domain.elasticsearchDomain.endpoint}, ${data.aws_caller_identity.current.account_id}"
-}
+################# output ######################
 
 output "dashboardLinkOutput" {
   description = "DNS record for the newly created site"

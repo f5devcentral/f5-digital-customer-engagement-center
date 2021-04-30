@@ -1,0 +1,8 @@
+resourceOwner = "fred"
+projectPrefix = "juiceshop"
+awsRegion     = "us-west-2"
+sshPublicKey  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD3Ff9frbHatHMQqpiED33c6BknMUtjhti9F98eK4xDJbZfR1wmu/mTpuqyKtmeybjDgT2lcOsVupXQGsczGL4pShFoIkrL2wVQix8vk9Gj6SgfeMm3/yfjF5iMNDOOk49acUmMfiBkDBqAarSVdN6lZc+zp2oOUKQdMf+dxjS2onJjGN7ZOLq5h7uLRTAJGjnVAy9wqHOD1V/06FnaQpDHU9GUS0TJrRy3IN3Vek9UJPGO96NPzJf4HN/zTk3MqwRHJ2gwJyzpm+LnqsZtGSyFTi9fKUn242oKpSTseqHoQw0B9pOajr/vZ5SR5ydKmmeJSQP/HDgfNYbvrsDbP8Q5 rosenboim@SEA-L-00055956"
+domainName    = "f5acmedemo.com"
+subDomain     = "cfdeviceid"
+jsScriptTag   = "/__imp_apg__/js/f5cs-a_aaW0IGtTsQ-2918f28d.js"
+userEmail     = "yossi.ros@gmail.com"

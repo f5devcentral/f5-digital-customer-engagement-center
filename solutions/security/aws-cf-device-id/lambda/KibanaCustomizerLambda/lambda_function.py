@@ -19,7 +19,7 @@ def handler(event, context):
     message = 'Hello'
     if event['operation'] == 'create':
         create(event, context)
-    return { 
+    return {
         'message' : message
     }
 
