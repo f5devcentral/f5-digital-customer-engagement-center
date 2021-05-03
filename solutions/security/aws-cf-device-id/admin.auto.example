@@ -1,0 +1,8 @@
+resourceOwner = "fred"
+projectPrefix = "deviceid"
+awsRegion     = "us-west-2"
+sshPublicKey  = "ssh-rsa AAAAB3NzaC"
+domainName    = "REPLACE to a registered domainname managed by route53"
+subDomain     = "cfdeviceid"
+jsScriptTag   = "REPLACE to the JS uri string, similar to: /__imp_apg__/js/f5cs-a_aasQ-2918f28d.js"
+userEmail     = "your@email.com"

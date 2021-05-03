@@ -25,32 +25,6 @@ resource "aws_iam_policy" "UserPoolDomainSetterPolicy" {
   })
 }
 
-resource "aws_iam_policy" "ESCognitoAuthSetterLambdaRole" {
-  policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Action" : [
-          "es:UpdateElasticsearchDomainConfig",
-          "es:DescribeElasticsearchDomain",
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents",
-          "events:PutRule",
-          "events:DeleteRule",
-          "lambda:AddPermission",
-          "events:PutTargets",
-          "events:RemoveTargets",
-          "lambda:RemovePermission",
-          "iam:PassRole"
-        ],
-        "Resource" : "*",
-        "Effect" : "Allow"
-      }
-    ]
-  })
-}
-
 resource "aws_iam_policy" "KibanaCustomizerLambdaRole" {
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -115,31 +89,6 @@ resource "aws_iam_policy" "amazonESCognitoAccessPolicy" {
     ]
   })
 }
-#resource "aws_iam_role" "UserPoolDomainSetterLambdaRole" {
-#  name                = "${var.projectPrefix}-UserPoolDomainSetterLambdaRole-${random_id.buildSuffix.hex}"
-#  managed_policy_arns = [aws_iam_policy.UserPoolDomainSetterPolicy.arn]
-#  assume_role_policy  = <<EOF
-#{
-#  "Version": "2012-10-17",
-#  "Statement": [
-#    {
-#      "Action": "sts:AssumeRole",
-#      "Principal": {
-#        "Service": "lambda.amazonaws.com"
-#      },
-#      "Effect": "Allow",
-#      "Sid": ""
-#    }
-#  ]
-#}
-#EOF
-#tags = {
-#  Name  = "${var.projectPrefix}-UserPoolDomainSetterLambdaRole-${random_id.buildSuffix.hex}"
-#  Owner = var.resourceOwner
-#}
-#}
-
-
 
 ###########lambda transformer######
 resource "aws_iam_policy" "lambdaTransformerPolicy" {
@@ -237,32 +186,6 @@ EOF
 }
 
 
-
-######################################
-#resource "aws_iam_role" "ESCognitoAuthSetterLambdaRole" {
-#  name                = "${var.projectPrefix}-ESCognitoAuthSetterLambdaRole-${random_id.buildSuffix.hex}"
-#  managed_policy_arns = [aws_iam_policy.ESCognitoAuthSetterLambdaRole.arn]
-#  assume_role_policy  = <<EOF
-#{
-#  "Version": "2012-10-17",
-#  "Statement": [
-#    {
-#      "Action": "sts:AssumeRole",
-#      "Principal": {
-#        "Service": "lambda.amazonaws.com"
-#      },
-#      "Effect": "Allow",
-#      "Sid": ""
-#    }
-#  ]
-#}
-#EOF
-#tags = {
-#  Name  = "${var.projectPrefix}-UserPoolDomainSetterLambdaRole-${random_id.buildSuffix.hex}"
-#  Owner = var.resourceOwner
-#}
-#}
-
 resource "aws_iam_role" "KibanaCustomizerLambdaRole" {
   name                = "${var.projectPrefix}-KibanaCustomizerLambdaRole-${random_id.buildSuffix.hex}"
   managed_policy_arns = [aws_iam_policy.KibanaCustomizerLambdaRole.arn]
@@ -288,7 +211,7 @@ EOF
 }
 
 resource "aws_lambda_function" "KibanaCustomizerLambda" {
-  filename      = "lambda/KibanaCustomizerLambda.zip"
+  filename      = "lambda/KibanaCustomizerLambda/KibanaCustomizerLambda.zip"
   function_name = "${var.projectPrefix}-KibanaCustomizerLambda-${random_id.buildSuffix.hex}"
   role          = aws_iam_role.KibanaCustomizerLambdaRole.arn
   handler       = "lambda_function.handler"
@@ -296,10 +219,10 @@ resource "aws_lambda_function" "KibanaCustomizerLambda" {
   memory_size   = 128
   timeout       = 90
 
-  source_code_hash = filebase64sha256("lambda/KibanaCustomizerLambda.zip")
+  source_code_hash = filebase64sha256("lambda/KibanaCustomizerLambda/KibanaCustomizerLambda.zip")
   environment {
     variables = {
-      REGION     = "us-east-1"
+      REGION     =  var.awsRegion
       ACCOUNT_ID = data.aws_caller_identity.current.account_id
     }
   }
@@ -340,11 +263,6 @@ resource "aws_cognito_user_pool_domain" "main" {
   user_pool_id = aws_cognito_user_pool.userPool.id
 }
 
-#resource "aws_cognito_user_pool_client" "client" {
-#  name = "${var.projectPrefix}-client-${random_id.buildSuffix.hex}"
-#
-#  user_pool_id = aws_cognito_user_pool.userPool.id
-#}
 resource "aws_cognito_identity_pool" "main" {
   identity_pool_name               = "${var.projectPrefix}-WAFKibanaIdentityPool-${random_id.buildSuffix.hex}"
   allow_unauthenticated_identities = false
@@ -354,11 +272,6 @@ resource "aws_cognito_identity_pool" "main" {
       cognito_identity_providers
     ]
   }
-  #    cognito_identity_providers {
-  #      client_id               = aws_cognito_user_pool_client.client.id
-  #      provider_name           = aws_cognito_user_pool.userPool.endpoint
-  #      server_side_token_check = false
-  #    }
 }
 
 resource "aws_iam_policy" "authenticatedPolicy" {
@@ -445,7 +358,7 @@ resource "null_resource" "cognito_user" {
 
   #no way to create a user in terraform yet
   provisioner "local-exec" {
-    command = "aws --region us-east-1 cognito-idp admin-create-user --user-pool-id ${aws_cognito_user_pool.userPool.id} --username ${var.userEmail}"
+    command = "aws --region ${var.awsRegion} cognito-idp admin-create-user --user-pool-id ${aws_cognito_user_pool.userPool.id} --username ${var.userEmail}"
   }
 }
 
@@ -691,7 +604,7 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesisFirehoseDeliveryStream" 
 }
 
 resource "aws_lambda_function" "lambdaLogTransformer" {
-  filename      = "lambda/lambdaLogTransformer.zip"
+  filename      = "lambda/lambdaLogTransformer/lambdaLogTransformer.zip"
   function_name = "${var.projectPrefix}-lambdaLogTransformer-${random_id.buildSuffix.hex}"
   role          = aws_iam_role.lambdaTransformerExecutionRole.arn
   handler       = "index.handler"
@@ -699,7 +612,7 @@ resource "aws_lambda_function" "lambdaLogTransformer" {
   memory_size   = 128
   timeout       = 60
 
-  source_code_hash = filebase64sha256("lambda/lambdaLogTransformer.zip")
+  source_code_hash = filebase64sha256("lambda/lambdaLogTransformer/lambdaLogTransformer.zip")
 }
 
 data "aws_lambda_invocation" "kibanaCustomizerLambda" {

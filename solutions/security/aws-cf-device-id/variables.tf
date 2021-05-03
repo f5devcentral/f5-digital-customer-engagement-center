@@ -12,7 +12,7 @@ variable "resourceOwner" {
 variable "awsRegion" {
   description = "aws region"
   type        = string
-  default     = "us-east-2"
+  default     = "us-east-1"
 }
 variable "sshPublicKey" {
   description = "SSH public key used to create an EC2 keypair"

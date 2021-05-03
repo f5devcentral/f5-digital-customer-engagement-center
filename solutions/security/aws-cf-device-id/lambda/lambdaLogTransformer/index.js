@@ -1,6 +1,5 @@
 'use strict'
 exports.handler = (event, context, callback) => {
-
     /* Process the list of records and drop those containing Default_Action */
     const output = event.records.map((record) => {
 
@@ -21,15 +20,22 @@ exports.handler = (event, context, callback) => {
         //console.log(cookieArray)
         for (let j=0; j < cookieArray.length; j++) {
             const item = cookieArray[j].trim();
-            if (item.indexOf('_imp_di_pc_') == 0) {
-                const name = item.split('=')[0];
-                const value = item.split('=')[1];
-                jsonEntry["deviceidA"] = value;
-            }
+            //if (item.indexOf('_imp_di_pc_') == 0) {
+            //    const name = item.split('=')[0];
+            //    const value = item.split('=')[1];
+            //    jsonEntry["deviceidA"] = value;
+            //}
             if (item.indexOf('_imp_apg_r_') == 0) {
                 const name = item.split('=')[0];
                 const value = item.split('=')[1];
-                jsonEntry["deviceidB"] = value;
+                try {
+                    var deviceId = JSON.parse(decodeURIComponent(value));
+                    //console.log(decodeURIComponent(value))
+                  } catch (e) { // catches a malformed cookie
+                    console.error(e);
+                  }
+                jsonEntry["deviceidA"] = deviceId.diA;
+                jsonEntry["deviceidB"] = deviceId.diB;
             }
             //console.log(jsonEntry);
         }
