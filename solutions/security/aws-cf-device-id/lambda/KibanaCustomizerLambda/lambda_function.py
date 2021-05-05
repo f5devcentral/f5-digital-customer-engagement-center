@@ -34,8 +34,8 @@ def create(event, context):
     credentials = boto3.Session().get_credentials()
     awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, service, session_token=credentials.token)
 
-    import_index_template(host, awsauth)
-
+    #get_index_template(host, awsauth);
+    import_index_template(host, awsauth);
     update_all(host, awsauth);
 
     return "MyResourceId"
@@ -52,15 +52,29 @@ def poll_create(event, context):
     logger.info("Got create poll")
     return True
 
-def import_index_template(host, awsauth):
+def get_index_template(host, awsauth):
 
-    url = 'https://' + host + '/_template/awswaf-logs';
+    url = 'https://' + host + '/awswaf-*';
     headers = { "Content-Type": "application/json" }
 
     with open("custom/template.json") as f:
         template = f.read()
 
-    requests.put(url, auth=awsauth, headers=headers, data=template)
+    #response = requests.put(url, auth=awsauth, headers=headers, data=template)
+    response = requests.get(url, auth=awsauth, headers=headers)
+    print(response.text);
+
+def import_index_template(host, awsauth):
+
+    url = 'https://' + host + '/_index_template/awswaf';
+    headers = { "Content-Type": "application/json" }
+
+    with open("custom/template.json") as f:
+        template = f.read()
+
+    response = requests.put(url, auth=awsauth, headers=headers, data=template)
+    #response = requests.delete(url, auth=awsauth, headers=headers)
+    print(response.text);
 
 
 def import_kibana_object(host, awsauth, type, name):

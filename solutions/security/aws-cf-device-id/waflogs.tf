@@ -222,7 +222,7 @@ resource "aws_lambda_function" "KibanaCustomizerLambda" {
   source_code_hash = filebase64sha256("lambda/KibanaCustomizerLambda/KibanaCustomizerLambda.zip")
   environment {
     variables = {
-      REGION     =  var.awsRegion
+      REGION = "us-east-1"
       ACCOUNT_ID = data.aws_caller_identity.current.account_id
     }
   }
@@ -358,7 +358,7 @@ resource "null_resource" "cognito_user" {
 
   #no way to create a user in terraform yet
   provisioner "local-exec" {
-    command = "aws --region ${var.awsRegion} cognito-idp admin-create-user --user-pool-id ${aws_cognito_user_pool.userPool.id} --username ${var.userEmail}"
+    command = "aws --region us-east-1 cognito-idp admin-create-user --user-pool-id ${aws_cognito_user_pool.userPool.id} --username ${var.userEmail}"
   }
 }
 

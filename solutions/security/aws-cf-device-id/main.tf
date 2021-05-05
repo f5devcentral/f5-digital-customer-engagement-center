@@ -27,6 +27,9 @@ data "aws_cloudfront_origin_request_policy" "managedAllViewer" {
   name = "Managed-AllViewer"
 }
 
+data "aws_cloudfront_origin_request_policy" "Managed-CORS-CustomOrigin" {
+  name = "Managed-CORS-CustomOrigin"
+}
 locals {
   domain_name = var.domainName
   subdomain   = var.subDomain
@@ -187,7 +190,7 @@ module "cloudfront" {
       target_origin_id         = "deviceid"
       viewer_protocol_policy   = "redirect-to-https"
       cache_policy_id          = data.aws_cloudfront_cache_policy.managedCachingDisabled.id
-      origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managedAllViewer.id
+      origin_request_policy_id = data.aws_cloudfront_origin_request_policy.Managed-CORS-CustomOrigin.id
       use_forwarded_values     = false
 
       allowed_methods = ["GET", "HEAD", "OPTIONS", "POST", "DELETE", "PUT", "PATCH"]

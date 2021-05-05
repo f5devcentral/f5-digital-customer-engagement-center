@@ -1,28 +1,26 @@
 {
     "index_patterns": ["awswaf-*"],
-    "settings": {
-    "number_of_shards": 1
-    },
-    "mappings": {
-      "waflog": {
+    "template": {
+      "settings": {
+        "number_of_shards": 1
+      },
+      "mappings": {
+        "_source": {
+          "enabled": true
+        },
         "properties": {
-          "httpRequest": {
-            "properties": {
-              "clientIp": {
-                "type": "keyword",
-                "fields": {
-                  "keyword": {
-                    "type": "ip"
-                  }
-                }
-              }
-            }
-          },
           "timestamp": {
             "type": "date",
             "format": "epoch_millis"
           }
+        }
+      },
+      "aliases": {
+        "mydata": { }
       }
+    },
+    "priority": 500, 
+    "_meta": {
+      "description": "my custom"
     }
   }
-}
