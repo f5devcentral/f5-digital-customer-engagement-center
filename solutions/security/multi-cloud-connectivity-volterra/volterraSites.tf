@@ -47,7 +47,7 @@ provider "volterra" {
 
 #Volterra
 resource "volterra_aws_tgw_site" "acmeBu1" {
-  name      = "acme-bu1"
+  name      = "${var.volterraUniquePrefix}-bu1"
   namespace = "system"
 
   vpc_attachments {
@@ -148,6 +148,7 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
       namespace = "system"
       tenant    = var.volterraTenant
     }
+    assisted = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
     #    nodes_per_az  = "1"
@@ -174,6 +175,7 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
 
 
 resource "volterra_tf_params_action" "applyBu1" {
+  
   depends_on       = [volterra_aws_tgw_site.acmeBu1]
   site_name        = volterra_aws_tgw_site.acmeBu1.name
   site_kind        = "aws_tgw_site"
@@ -186,7 +188,7 @@ resource "volterra_tf_params_action" "applyBu1" {
 ##########################################################################    BU2 site    #################################################################
 
 resource "volterra_aws_tgw_site" "acmeBu2" {
-  name      = "acme-bu2"
+  name      = "${var.volterraUniquePrefix}-bu2"
   namespace = "system"
 
   vpc_attachments {
@@ -286,6 +288,7 @@ resource "volterra_aws_tgw_site" "acmeBu2" {
       namespace = "system"
       tenant    = var.volterraTenant
     }
+    assisted = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
     #    nodes_per_az  = "1"
@@ -323,7 +326,7 @@ resource "volterra_tf_params_action" "applyBu2" {
 ##########################################################################    Acme site    #################################################################
 
 resource "volterra_aws_tgw_site" "acmeAcme" {
-  name      = "acme-acme"
+  name      = "${var.volterraUniquePrefix}-acme"
   namespace = "system"
 
   vpc_attachments {
@@ -371,6 +374,7 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
       namespace = "system"
       tenant    = var.volterraTenant
     }
+    assisted = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
     #    nodes_per_az  = "1"
@@ -397,6 +401,7 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
 
 
 resource "volterra_tf_params_action" "applyAcme" {
+  count = var.assisted ? 0 : 1
   depends_on       = [volterra_aws_tgw_site.acmeAcme]
   site_name        = volterra_aws_tgw_site.acmeAcme.name
   site_kind        = "aws_tgw_site"
