@@ -19,7 +19,7 @@ variable "sshPublicKey" {
 resource "random_id" "buildSuffix" {
   byte_length = 2
 }
-variable "jsUri" {
+variable "jsScriptTag" {
   description = "js script tag for deviceid"
   default     = "/__imp_apg__/js/f5cs-a_aaW0IGtTsQ-2918f28d.js"
 }

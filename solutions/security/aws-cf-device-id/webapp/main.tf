@@ -79,6 +79,6 @@ module "webApp" {
   subnets        = [module.vpc.private_subnets[0], module.vpc.private_subnets[1]]
   albSubnets     = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
   securityGroup  = aws_security_group.secGroupWebapp.id
-  jsScriptTag    = "<script async defer src=\"https://${var.subDomain}.${var.domainName}${var.jsUri}\" id=\"_imp_apg_dip_\"  ></script>"
-  startupCommand = "docker run -d --restart always -p 80:80 -v /var/tmp/html:/usr/share/nginx/html nginx"
+  jsScriptTag    = "<script async defer src=\"https://${var.subDomain}.${var.domainName}${var.jsScriptTag}\" id=\"_imp_apg_dip_\"  ></script>"
+  startupCommand = "docker run -d --restart always -p 80:80 -v /var/tmp/html:/usr/share/nginx/html -v /tmp/nginx.conf:/etc/nginx/conf.d/default.conf nginx"
 }
