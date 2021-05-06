@@ -89,6 +89,7 @@ resource "aws_wafv2_web_acl_logging_configuration" "deviceIdAcl" {
   resource_arn            = aws_wafv2_web_acl.deviceIdAcl.arn
 }
 module "cloudfront" {
+  version = "2.3.0"
   depends_on = [aws_wafv2_web_acl.deviceIdAcl]
   source     = "terraform-aws-modules/cloudfront/aws"
 
@@ -149,7 +150,7 @@ module "cloudfront" {
       ]
     }
     s3_one = {
-      domain_name = module.s3_one.this_s3_bucket_bucket_regional_domain_name
+      domain_name = module.s3_one.s3_bucket_bucket_regional_domain_name
       #      s3_origin_config = {
       #        origin_access_identity = "s3_bucket_one" # key in `origin_access_identities`
       #        # cloudfront_access_identity_path = "origin-access-identity/cloudfront/E5IGQAA1QO48Z" # external OAI resource
@@ -235,6 +236,7 @@ module "acm" {
 data "aws_canonical_user_id" "current" {}
 
 module "s3_one" {
+  version = "2.1.0"
   source = "terraform-aws-modules/s3-bucket/aws"
 
   bucket        = "s3-one-${random_pet.this.id}"
@@ -325,8 +327,8 @@ module "records" {
       name = local.subdomain
       type = "A"
       alias = {
-        name    = module.cloudfront.this_cloudfront_distribution_domain_name
-        zone_id = module.cloudfront.this_cloudfront_distribution_hosted_zone_id
+        name    = module.cloudfront.cloudfront_distribution_domain_name
+        zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
       }
     },
   ]
@@ -338,11 +340,11 @@ module "records" {
 data "aws_iam_policy_document" "s3_policy" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = ["${module.s3_one.this_s3_bucket_arn}/static/*"]
+    resources = ["${module.s3_one.s3_bucket_arn}/static/*"]
 
     principals {
       type        = "AWS"
-      identifiers = module.cloudfront.this_cloudfront_origin_access_identity_iam_arns
+      identifiers = module.cloudfront.cloudfront_origin_access_identity_iam_arns
     }
   }
 }
