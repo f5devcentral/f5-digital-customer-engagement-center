@@ -8,6 +8,9 @@ Deployment is simple, with immediate benefits for the security, networking, frau
 
 |image00|
 
+Example of the dashboard:
+
+|image01|
 Extra resources on components used in this lab:
 1. F5 Device-Id overview - https://f5cloudservices.zendesk.com/hc/en-us/articles/360058428514-About-F5-Device-ID-
 2. https://aws.amazon.com/cloudfront/
@@ -18,9 +21,14 @@ Extra resources on components used in this lab:
 
 .. warning:: Choose the cloud provider environment listed below to start the solution. Example: **NGINX Kubernetes Ingress Controller | AWS Environment**
 
-.. |image00| image:: images/traffic-flow.png
+.. |image00| image:: images/diagram.png
   :width: 75%
   :align: middle
+
+.. |image01| image:: images/dashboard.png
+  :width: 75%
+  :align: middle
+
 
 .. toctree::
    :maxdepth: 1
