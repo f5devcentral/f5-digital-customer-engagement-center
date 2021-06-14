@@ -8,6 +8,41 @@ exports.handler = (event, context, callback) => {
         var jsonEntry = JSON.parse(entry);
         //console.log(jsonEntry.httpRequest.headers)
         const headers = jsonEntry.httpRequest.headers;
+        
+        const args = jsonEntry.httpRequest.args;
+        if ((typeof args !== 'undefined')){
+            //console.log(xff.split(',')[0]);
+            jsonEntry["httpRequest"]["username"] = args.split('=')[1];
+        }
+
+        let xff;
+        for (let i =0; i < headers.length; i++) {
+            const item = headers[i];
+            if (item.name.toLowerCase() == 'x-forwarded-for') {
+            xff = item.value;
+            //console.log('got xff')
+            break;
+            }
+        }
+        if ((typeof xff !== 'undefined')){
+            //console.log(xff.split(',')[0]);
+            jsonEntry["httpRequest"]["clientIp"] = xff.split(',')[0];
+        }
+
+        let userAgent;
+        for (let i =0; i < headers.length; i++) {
+            const item = headers[i];
+            if (item.name.toLowerCase() == 'user-agent') {
+            userAgent = item.value;
+            //console.log('got ua')
+            break;
+            }
+        }
+        if ((typeof userAgent !== 'undefined')){
+            //console.log(userAgent.split(',')[0]);
+            jsonEntry["httpRequest"]["userAgent"] = userAgent;
+        }
+
         let cookie;
         for (let i =0; i < headers.length; i++) {
             const item = headers[i];
@@ -16,7 +51,6 @@ exports.handler = (event, context, callback) => {
             break;
             }
         }
-        
         // if cookie existed in the request 
         if ((typeof cookie !== 'undefined')){
         const cookieArray = cookie.split(';');
@@ -38,16 +72,17 @@ exports.handler = (event, context, callback) => {
             }
             //console.log(jsonEntry);
         }
-        let objJsonStr = JSON.stringify(jsonEntry);
-        let objJsonB64 = Buffer.from(objJsonStr).toString("base64");
+
         //console.log(jsonEntry)
+        }
+        let objJsonStr = JSON.stringify(jsonEntry);
+        let objJsonB64 = Buffer.from(objJsonStr).toString("base64"); 
         return {
             recordId: record.recordId,
             result: 'Ok',
             data: objJsonB64,
-        };
-        }
-    });
+        };        
+    }    );
 
     console.log(`Processing completed.  Successful records ${output.length}.`);
     callback(null, { records: output });

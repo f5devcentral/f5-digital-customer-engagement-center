@@ -109,7 +109,8 @@ module "cloudfront" {
   #}
   origin = {
     juiceshop = {
-      domain_name = data.terraform_remote_state.webapp.outputs.albDnsName
+      #domain_name = data.terraform_remote_state.webapp.outputs.albDnsName
+      domain_name = "a3870f6a5db48465f8d6b8b270367bb6-1129788705.us-west-2.elb.amazonaws.com"
       custom_origin_config = {
         http_port              = 80
         https_port             = 443
@@ -170,19 +171,6 @@ module "cloudfront" {
     cached_methods  = ["GET", "HEAD"]
     compress        = true
     query_string    = true
-
-    #   lambda_function_association = {
-    #
-    #     # Valid keys: viewer-request, origin-request, viewer-response, origin-response
-    #     viewer-request = {
-    #       lambda_arn   = module.lambda_function.this_lambda_function_qualified_arn
-    #       include_body = true
-    #     }
-    #
-    #     origin-request = {
-    #       lambda_arn = module.lambda_function.this_lambda_function_qualified_arn
-    #     }
-    #   }
   }
 
   ordered_cache_behavior = [
@@ -198,9 +186,27 @@ module "cloudfront" {
       cached_methods  = ["GET", "HEAD"]
       compress        = true
       query_string    = true
-    }
+    },
+    #{
+    #  path_pattern             = "/post"
+    #  target_origin_id         = "juiceshop"
+    #  viewer_protocol_policy   = "redirect-to-https"
+    #  cache_policy_id          = data.aws_cloudfront_cache_policy.managedCachingDisabled.id
+    #  origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managedAllViewer.id
+    #  use_forwarded_values     = false
+#
+    #  allowed_methods = ["GET", "HEAD", "OPTIONS", "POST", "DELETE", "PUT", "PATCH"]
+    #  cached_methods  = ["GET", "HEAD"]
+    #  compress        = true
+    #  query_string    = true
+    #  lambda_function_association = {
+    #  viewer-request = {
+    #    lambda_arn   = aws_lambda_function.extractUsername.qualified_arn
+    #    include_body = true
+    #  }
+    #  }
+    #}  
   ]
-
   viewer_certificate = {
     acm_certificate_arn = module.acm.this_acm_certificate_arn
     ssl_support_method  = "sni-only"
