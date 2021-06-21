@@ -1,7 +1,3 @@
-output "gwlbEndpointService" {
-  value = module.gwlb-bigip-vpc.gwlbEndpointService
-}
-
-output "vpc_id" {
-  value = module.gwlb-bigip-vpc.vpcs["vpcGwlb"]
+output "gwlb-bigip-vpc-module-outputs" {
+  value = module.gwlb-bigip-vpc
 }

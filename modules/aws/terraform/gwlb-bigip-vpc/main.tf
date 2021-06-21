@@ -13,7 +13,7 @@ data "aws_caller_identity" "current" {}
 
 locals {
   awsAz1    = var.awsAz1 != null ? var.awsAz1 : data.aws_availability_zones.available.names[0]
-  awsAz2    = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
+  awsAz2    = var.awsAz2 != null ? var.awsAz2 : data.aws_availability_zones.available.names[1]
   awsRegion = data.aws_region.current.name
 }
 resource "aws_vpc" "vpcGwlb" {
@@ -129,7 +129,7 @@ resource "aws_lb_target_group" "bigipTargetGroup" {
 
   health_check {
     protocol = "TCP"
-    port     = 8443
+    port     = 80
     #    matcher  = "200-399"
   }
   tags = {
@@ -138,15 +138,12 @@ resource "aws_lb_target_group" "bigipTargetGroup" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachmentAz1" {
-  target_group_arn = aws_lb_target_group.bigipTargetGroup.arn
-  target_id        = module.bigipAz1.bigip_instance_ids[0]
-}
-
-#resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachmentAz2" {
+#resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachment" {
+#  count = var.bigipInstanceCount
 #  target_group_arn = aws_lb_target_group.bigipTargetGroup.arn
-#  target_id        = aws_instance.GeneveProxyAz2.private_ip
+#  target_id        = module.bigip[count.index].bigip_instance_ids
 #}
+
 
 resource "aws_vpc_endpoint_service" "gwlbEndpointService" {
   acceptance_required        = false
@@ -178,80 +175,6 @@ resource "aws_vpc_endpoint" "vpcGwlbeAz2" {
   vpc_id            = aws_vpc.vpcGwlb.id
 }
 ##########BIGIP################
-#
-#
-# Create random password for BIG-IP
-#
-resource "aws_iam_role" "main" {
-  name               = "${var.projectPrefix}-iam-role-${var.buildSuffix}"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "BigIpPolicy" {
-  //name = "aws-iam-role-policy-${module.utils.env_prefix}"
-  role   = aws_iam_role.main.id
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-        "Action": [
-            "ec2:DescribeInstances",
-            "ec2:DescribeInstanceStatus",
-            "ec2:DescribeAddresses",
-            "ec2:AssociateAddress",
-            "ec2:DisassociateAddress",
-            "ec2:DescribeNetworkInterfaces",
-            "ec2:DescribeNetworkInterfaceAttribute",
-            "ec2:DescribeRouteTables",
-            "ec2:ReplaceRoute",
-            "ec2:CreateRoute",
-            "ec2:assignprivateipaddresses",
-            "sts:AssumeRole",
-            "s3:ListAllMyBuckets"
-        ],
-        "Resource": [
-            "*"
-        ],
-        "Effect": "Allow"
-    },
-    {
-        "Effect": "Allow",
-        "Action": [
-            "secretsmanager:GetResourcePolicy",
-            "secretsmanager:GetSecretValue",
-            "secretsmanager:PutSecretValue",
-            "secretsmanager:DescribeSecret",
-            "secretsmanager:ListSecretVersionIds",
-            "secretsmanager:UpdateSecretVersionStage"
-        ],
-        "Resource": [
-            "arn:aws:secretsmanager:${local.awsRegion}:${data.aws_caller_identity.current.account_id}:secret:*"
-        ]
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_instance_profile" "instance_profile" {
-  name = "${var.projectPrefix}-iam-profile-${var.buildSuffix}"
-  role = aws_iam_role.main.id
-}
 
 module "mgmt-network-security-group" {
   source = "terraform-aws-modules/security-group/aws"
@@ -279,25 +202,13 @@ module "mgmt-network-security-group" {
 
 # Create BIG-IP
 
-module "bigipAz1" {
+module "bigip" {
+  count        = var.bigipInstanceCount
   source       = "../terraform-aws-bigip-module"
   prefix       = format("%s-1nic", var.projectPrefix)
   ec2_key_name = var.keyName
-  //aws_secretmanager_auth      = false
-  //aws_secretmanager_secret_id = aws_secretsmanager_secret.bigip.id
-  //aws_iam_instance_profile    = aws_iam_instance_profile.instance_profile.name
   mgmt_subnet_ids        = [{ "subnet_id" = aws_subnet.vpcGwlbSubPubA.id, "public_ip" = true, "private_ip_primary" = "" }]
-  mgmt_securitygroup_ids = [module.mgmt-network-security-group.this_security_group_id]
+  mgmt_securitygroup_ids = [module.mgmt-network-security-group.security_group_id]
   f5_ami_search_name     = "*F5 BIGIP-15.1.2.1* PAYG-Best 200Mbps*"
-}
-
-resource "null_resource" "clusterDO" {
-  provisioner "local-exec" {
-    command = "cat > DO_1nic.json <<EOL\n ${module.bigipAz1.onboard_do}\nEOL"
-  }
-  provisioner "local-exec" {
-    when    = destroy
-    command = "rm -rf DO_1nic.json"
-  }
-  depends_on = [module.bigipAz1]
+  custom_user_data = var.customUserData
 }

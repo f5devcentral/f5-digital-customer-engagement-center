@@ -10,10 +10,6 @@ variable "buildSuffix" {
   description = "random build suffix for tagging"
   default     = "f5-dcec"
 }
-variable "bigipPassword" {
-  description = "password for the bigip admin account"
-  default     = null
-}
 variable "awsAz1" {
   description = "will use a dynamic az if left empty"
   default     = null
@@ -28,9 +24,6 @@ variable "keyName" {
 variable "allowedMgmtIps" {
   default = ["0.0.0.0/0"]
 }
-variable "instanceCount" {
-  default = 1
-}
 variable "vpcCidr" {
   default = "10.252.0.0/16"
 }
@@ -39,10 +32,6 @@ variable "vpcGwlbSubPubACidr" {
 }
 variable "vpcGwlbSubPubBCidr" {
   default = "10.252.110.0/24"
-}
-variable "repositories" {
-  description = "comma seperated list of git repositories to clone"
-  default     = "https://github.com/vinnie357/aws-tf-workspace.git,https://github.com/f5devcentral/terraform-aws-f5-sca.git"
 }
 variable "subnetGwlbeAz1" {
   default = "10.252.54.0/24"
@@ -54,4 +43,13 @@ variable "createGwlbEndpoint" {
   default     = false
   type        = bool
   description = "Controls the creation of gwlb endpoints in the provided vpc, if true creates subnets and endpoints"
+}
+variable "bigipInstanceCount" {
+  default     = 2
+  type        = number
+  description = "number of BIGIP devices to deploy"
+}
+variable "customUserData" {
+  description = "content of a file containing custom user data for the BIGIP instance"
+  default     = null
 }
