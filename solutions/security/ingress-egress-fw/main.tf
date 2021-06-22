@@ -9,16 +9,16 @@ resource "aws_key_pair" "deployer" {
 }
 
 data "local_file" "customUserData" {
-    filename = "${path.module}/f5_onboard.tmpl"
+  filename = "${path.module}/f5_onboard.tmpl"
 }
 module "gwlb-bigip-vpc" {
-  source        = "../../../modules/aws/terraform/gwlb-bigip-vpc"
-  projectPrefix = var.projectPrefix
-  resourceOwner = var.resourceOwner
-  buildSuffix   = random_id.buildSuffix.hex
-  keyName       = aws_key_pair.deployer.id
+  source             = "../../../modules/aws/terraform/gwlb-bigip-vpc"
+  projectPrefix      = var.projectPrefix
+  resourceOwner      = var.resourceOwner
+  buildSuffix        = random_id.buildSuffix.hex
+  keyName            = aws_key_pair.deployer.id
   bigipInstanceCount = 2
-  customUserData = data.local_file.customUserData.content
+  customUserData     = data.local_file.customUserData.content
 }
 
 # VPCs

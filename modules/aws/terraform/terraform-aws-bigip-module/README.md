@@ -6,7 +6,7 @@ This Terraform module deploys N-nic F5 BIG-IP in AWS cloud,and with module count
 
 This module is supported from Terraform 0.13 version onwards.
 
-It is tested against following provider/terraform versions 
+It is tested against following provider/terraform versions
 
 Terraform v0.14.0
 
@@ -19,14 +19,14 @@ Terraform v0.14.0
 
 This module is supported in the following bigip and terraform version
 
-| BIGIP version | Terraform 0.14 | 
+| BIGIP version | Terraform 0.14 |
 |---------------|----------------|
 | BIG-IP 16.x  | X |
 | BIG-IP 15.x  | X |
 | BIG-IP 14.x  | X |
 
 ## Password Management
- 
+
 |:point_up: |By default bigip module will have random password setting to give dynamic password generation|
 |----|---|
 
@@ -55,7 +55,7 @@ With Static private ip allocation we can assign primary and secondary private ip
 and internal interfaces.
 ```
 
-If it is static private ip allocation we can't use module count as same private ips will be tried to allocate for multiple 
+If it is static private ip allocation we can't use module count as same private ips will be tried to allocate for multiple
 bigip instances based on module count.
 
 With Dynamic private ip allocation,we have to pass null value to primary/secondary private ip declaration and module count will be supported.
@@ -152,7 +152,7 @@ module bigip {
 }
 ```
 
-### BIG-IP Automation Toolchain InSpec Profile for testing readiness of Automation Tool Chain components 
+### BIG-IP Automation Toolchain InSpec Profile for testing readiness of Automation Tool Chain components
 
 After the module deployment, we can use inspec tool for verifying the Bigip connectivity along with ATC components
 
@@ -179,7 +179,7 @@ inspec exec inspec/bigip-ready  --input bigip_address=$BIGIP_MGMT_IP bigip_port=
 
 These variables must be set in the module block when using this module.
 
-| Name | Description | Type | 
+| Name | Description | Type |
 |------|-------------|------|
 | prefix | This value is inserted in the beginning of each aws object. Note: requires alpha-numeric without special character | `string` |
 | ec2_key_name 	| AWS EC2 Key name for SSH access 	| string 	|  	|
@@ -201,10 +201,10 @@ These variables have default values and don't have to be set to use this module.
 | aws_secretmanager_auth 	| Whether to use key vault to pass authentication 	| bool 	| FALSE 	|
 | aws_secretmanager_secret_id 	| AWS Secret Manager Secret ID that stores the BIG-IP password 	| string 	|  	|
 | aws_iam_instance_profile 	| AWS IAM instance profile that can be associate for BIGIP with required permissions 	| string 	|  	|
-| DO_URL | URL to download the BIG-IP Declarative Onboarding module | `string` | latest | 
-| AS3_URL | URL to download the BIG-IP Application Service Extension 3 (AS3) module | `string` | latest | 
-| TS_URL | URL to download the BIG-IP Telemetry Streaming module | `string` | latest | 
-| FAST_URL | URL to download the BIG-IP FAST module | `string` | latest | 
+| DO_URL | URL to download the BIG-IP Declarative Onboarding module | `string` | latest |
+| AS3_URL | URL to download the BIG-IP Application Service Extension 3 (AS3) module | `string` | latest |
+| TS_URL | URL to download the BIG-IP Telemetry Streaming module | `string` | latest |
+| FAST_URL | URL to download the BIG-IP FAST module | `string` | latest |
 | CFE_URL | URL to download the BIG-IP Cloud Failover Extension module | `string` | latest |
 | INIT_URL | URL to download the BIG-IP runtime init module | `string` | latest |
 | libs\_dir | Directory on the BIG-IP to download the A&O Toolchain into | `string` | /config/cloud/aws/node_modules |

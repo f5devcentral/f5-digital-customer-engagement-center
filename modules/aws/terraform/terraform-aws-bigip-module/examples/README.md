@@ -2,7 +2,7 @@ Above are the common deployment examples( 1, 2, 3, 4.....) and we can extend to 
 
 With module count, user can deploy multiple bigip instances in the aws cloud (with the default value of count being one )
 
-#### BIG-IP Automation Toolchain InSpec Profile for testing readiness of Automation Tool Chain components 
+#### BIG-IP Automation Toolchain InSpec Profile for testing readiness of Automation Tool Chain components
 
 After the module deployment, we can use inspec tool for verifying the Bigip connectivity along with ATC components
 

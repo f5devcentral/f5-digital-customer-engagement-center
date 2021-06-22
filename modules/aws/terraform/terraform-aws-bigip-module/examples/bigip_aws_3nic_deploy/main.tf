@@ -12,7 +12,7 @@ resource "random_id" "id" {
 #
 # Create random password for BIG-IP
 #
-resource random_string password {
+resource "random_string" "password" {
   length      = 16
   min_upper   = 1
   min_lower   = 1
@@ -173,7 +173,7 @@ resource "aws_key_pair" "generated_key" {
 #
 # Create BIG-IP
 #
-module bigip {
+module "bigip" {
   source = "../../"
   count  = var.instance_count
   prefix = format("%s-3nic", var.prefix)
@@ -207,4 +207,3 @@ locals {
   allowed_mgmt_cidr = "0.0.0.0/0"
   allowed_app_cidr  = "0.0.0.0/0"
 }
-

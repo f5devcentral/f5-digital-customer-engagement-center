@@ -36,90 +36,11 @@ run the setup script to deploy all of the components into your AWS account (reme
 
 ## BIGIP configuration steps
 
-Connect to the BIGIP using the bigipPublicIp and bigipPassword over port 8443. https://admin:bigipPassword@bigipPublicIp:8443
+Connect to the BIGIP using the bigipPublicIp and bigipPassword over port 8443. https://quickstart:bigipPassword@bigipPublicIp:8443
 
-Upload the 15.1.2 ISO image, upload the EHF iso image, upgrade to the Hotfix-BIGIP-15.1.2.1.0.126.10-ENG EHF and boot the BIGIP.
-
-Change TMM count to 1 (temp step)
-
-```bash
-tmsh modify sys db provision.tmmcount value 1
-```
-
-Configure a Geneve tunnel - https://techdocs.f5.com/en-us/bigip-14-1-0/big-ip-tmos-tunneling-and-ipsec-14-1-0/creating-ip-tunnels.html
-
-| Object | Value |
-|------|---------|
-| name | geneve |
-| profile | geneve |
-| local address | bigip private ip (can be seen at the top left of the UI) |
-| everything else  | default value |
-
-Create a 'health check' virtual server to respond
-
-| Object | Value |
-|------|---------|
-| name | health_check |
-| ip address | 0.0.0.0/0 |
-| port | 80 |
-| VLAN / Tunnel  | internal |
-| Protocol  | TCP |
-| HTTP profile  | HTTP |
-| VLAN / Tunnel  | internal |
-| everything else  | default value |
+Upload the 16.1 ISO image and boot the BIGIP.
 
 
-Create a 'fake_self_ip' 10.131.0.1/24, assign it to the tunnel interface
-
-| Object | Value |
-|------|---------|
-| name | fake_ip_for_tunnel |
-| ip address | 10.131.0.1 |
-| netmask | 255.255.255.0 |
-| VLAN / Tunnel  | geneve |
-| everything else  | default value |
-
-Create a static arp entry to 10.131.0.2 ff:ff:ff:ff:ff:ff
-
-| Object | Value |
-|------|---------|
-| name | fake_arp_entry |
-| ip address | 10.131.0.2 |
-| MAC address | ff:ff:ff:ff:ff:ff |
-
-Create a node with 10.131.0.2
-
-| Object | Value |
-|------|---------|
-| name | fake_dg_node |
-| ip address | 10.131.0.2 |
-| Health Moniors | none |
-| everything else  | default value |
-
-Create a pool with the 'fake node'
-
-| Object | Value |
-|------|---------|
-| name | fake_dg_pool |
-| Nodes | fake_dg_node, all services |
-| Health Moniors | none |
-| everything else  | default value |
-
-Configure a virtual server performance L4, transparent virtual server, assign the pool from previous step.
-
-| Object | Value |
-|------|---------|
-| name | forwarding_vs |
-| Type | performance L4 |
-| Destination Address/Mask	 | 0.0.0.0/0 |
-| Service Port	  | * All Ports |
-| Protocols	  | * All Protocols |
-| Vlans and Tunnels	  | geneve |
-| Address translation	  | Disabled |
-| Source port	  | Preserve strict |
-| Default pool	  | fake_dg_pool |
-
-Provision AFM - System --> Resource provisioning --> AFM
 
 Create your AFM policy and logging configuration
 

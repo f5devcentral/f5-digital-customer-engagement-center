@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 data "local_file" "customUserData" {
-    filename = "${path.module}/f5_onboard.tmpl"
+  filename = "${path.module}/f5_onboard.tmpl"
 }
 resource "aws_key_pair" "deployer" {
   key_name   = "${var.projectPrefix}-key-${random_id.buildSuffix.hex}"
@@ -11,12 +11,12 @@ resource "aws_key_pair" "deployer" {
 }
 
 module "gwlb-bigip-vpc" {
-  source        = "../"
-  projectPrefix = var.projectPrefix
-  resourceOwner = var.resourceOwner
-  keyName       = aws_key_pair.deployer.id
-  buildSuffix   = random_id.buildSuffix.hex
+  source             = "../"
+  projectPrefix      = var.projectPrefix
+  resourceOwner      = var.resourceOwner
+  keyName            = aws_key_pair.deployer.id
+  buildSuffix        = random_id.buildSuffix.hex
   createGwlbEndpoint = true
-  customUserData = data.local_file.customUserData.content
+  customUserData     = data.local_file.customUserData.content
   bigipInstanceCount = 2
 }

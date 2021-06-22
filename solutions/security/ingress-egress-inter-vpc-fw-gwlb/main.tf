@@ -389,7 +389,7 @@ resource "aws_key_pair" "deployer" {
 }
 
 data "local_file" "customUserData" {
-    filename = "${path.module}/f5_onboard.tmpl"
+  filename = "${path.module}/f5_onboard.tmpl"
 }
 
 module "gwlb-bigip" {
@@ -404,7 +404,7 @@ module "gwlb-bigip" {
   subnetGwlbeAz1     = "10.252.54.0/24"
   subnetGwlbeAz2     = "10.252.154.0/24"
   createGwlbEndpoint = true
-  customUserData = data.local_file.customUserData.content
+  customUserData     = data.local_file.customUserData.content
 }
 
 ############subnets

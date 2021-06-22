@@ -46,7 +46,7 @@ runtime_parameters:
     value: 'http://169.254.169.254/latest/dynamic/instance-identity/document'
   - name: MGMT_IP
     type: metadata
-    metadataProvider: 
+    metadataProvider:
       environment: aws
       type: network
       field: local-ipv4s
@@ -120,7 +120,7 @@ post_onboard_enabled:
       - tmsh create net self geneve-tunnel address 10.131.0.1/24 vlan geneve allow-service all
       - tmsh create net arp fake_arp_entry ip-address 10.131.0.2 mac-address ff:ff:ff:ff:ff:ff
       - tmsh create ltm node geneve-tunnel address 10.131.0.2 monitor none
-      - tmsh create ltm pool geneve-tunnel members add { geneve-tunnel:0 } monitor none 
+      - tmsh create ltm pool geneve-tunnel members add { geneve-tunnel:0 } monitor none
       - tmsh create ltm virtual forwarding_vs destination 0.0.0.0:any ip-protocol any vlans-enabled vlans add { geneve } translate-address disabled source-port preserve-strict pool geneve-tunnel mask any
       - tmsh create ltm virtual health_check destination 0.0.0.0:80 ip-protocol tcp mask 0.0.0.0 profiles add { http tcp } vlans-enabled vlans add { internal }
       - tmsh save /sys config

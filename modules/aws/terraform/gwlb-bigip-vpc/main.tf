@@ -139,7 +139,7 @@ resource "aws_lb_target_group" "bigipTargetGroup" {
 }
 
 resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachment" {
-  count = var.bigipInstanceCount
+  count            = var.bigipInstanceCount
   target_group_arn = aws_lb_target_group.bigipTargetGroup.arn
   target_id        = module.bigip[count.index].bigip_instance_ids[0]
 }
@@ -178,7 +178,7 @@ resource "aws_vpc_endpoint" "vpcGwlbeAz2" {
 
 module "mgmt-network-security-group" {
   version = "v4.2.0"
-  source = "terraform-aws-modules/security-group/aws"
+  source  = "terraform-aws-modules/security-group/aws"
 
   name        = "${var.projectPrefix}-mgmt-nsg-${var.buildSuffix}"
   description = "Security group for BIG-IP Management"
@@ -204,12 +204,12 @@ module "mgmt-network-security-group" {
 # Create BIG-IP
 
 module "bigip" {
-  count        = var.bigipInstanceCount
-  source       = "../terraform-aws-bigip-module"
-  prefix       = format("%s-1nic", var.projectPrefix)
-  ec2_key_name = var.keyName
+  count                  = var.bigipInstanceCount
+  source                 = "../terraform-aws-bigip-module"
+  prefix                 = format("%s-1nic", var.projectPrefix)
+  ec2_key_name           = var.keyName
   mgmt_subnet_ids        = [{ "subnet_id" = aws_subnet.vpcGwlbSubPubA.id, "public_ip" = true, "private_ip_primary" = "" }]
   mgmt_securitygroup_ids = [module.mgmt-network-security-group.security_group_id]
   f5_ami_search_name     = "*F5 BIGIP-15.1.2.1* PAYG-Best 200Mbps*"
-  custom_user_data = var.customUserData
+  custom_user_data       = var.customUserData
 }

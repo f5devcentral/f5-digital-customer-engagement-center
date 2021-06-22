@@ -148,7 +148,7 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
       namespace = "system"
       tenant    = var.volterraTenant
     }
-    assisted = var.assisted
+    assisted      = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
     #    nodes_per_az  = "1"
@@ -175,7 +175,7 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
 
 
 resource "volterra_tf_params_action" "applyBu1" {
-  
+
   depends_on       = [volterra_aws_tgw_site.acmeBu1]
   site_name        = volterra_aws_tgw_site.acmeBu1.name
   site_kind        = "aws_tgw_site"
@@ -288,7 +288,7 @@ resource "volterra_aws_tgw_site" "acmeBu2" {
       namespace = "system"
       tenant    = var.volterraTenant
     }
-    assisted = var.assisted
+    assisted      = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
     #    nodes_per_az  = "1"
@@ -374,7 +374,7 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
       namespace = "system"
       tenant    = var.volterraTenant
     }
-    assisted = var.assisted
+    assisted      = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
     #    nodes_per_az  = "1"
@@ -401,7 +401,7 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
 
 
 resource "volterra_tf_params_action" "applyAcme" {
-  count = var.assisted ? 0 : 1
+  count            = var.assisted ? 0 : 1
   depends_on       = [volterra_aws_tgw_site.acmeAcme]
   site_name        = volterra_aws_tgw_site.acmeAcme.name
   site_kind        = "aws_tgw_site"
