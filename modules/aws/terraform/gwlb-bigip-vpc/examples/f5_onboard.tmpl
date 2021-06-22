@@ -1,0 +1,139 @@
+#!/bin/bash
+
+# Send output to log file and serial console
+mkdir -p  /var/log/cloud /config/cloud /var/config/rest/downloads
+LOG_FILE=/var/log/cloud/startup-script.log
+[[ ! -f $LOG_FILE ]] && touch $LOG_FILE || { echo "Run Only Once. Exiting"; exit; }
+npipe=/tmp/$$.tmp
+trap "rm -f $npipe" EXIT
+mknod $npipe p
+tee <$npipe -a $LOG_FILE /dev/ttyS0 &
+exec 1>&-
+exec 1>$npipe
+exec 2>&1
+echo "$(date +"%Y-%m-%dT%H:%M:%S.%3NZ") : Startup Script Start"
+
+# # create user
+# tmsh create auth user ${bigip_username} password ${bigip_password} shell tmsh partition-access replace-all-with { all-partitions { role admin } }
+
+# save config
+tmsh save sys config
+
+mkdir -p /config/cloud
+
+cat << 'EOF' > /config/cloud/runtime-init-conf.yaml
+---
+pre_onboard_enabled:
+  - name: provision_rest
+    type: inline
+    commands:
+      - /usr/bin/setdb provision.extramb 1000
+      - /usr/bin/setdb restjavad.useextramb true
+runtime_parameters:
+  - name: HOST_NAME
+    type: metadata
+    metadataProvider:
+      type: compute
+      environment: aws
+      field: hostname
+  - name: REGION
+    type: url
+    query: region
+    value: 'http://169.254.169.254/latest/dynamic/instance-identity/document'
+  - name: BIGIP_PASSWORD
+    type: url
+    query: instanceId
+    value: 'http://169.254.169.254/latest/dynamic/instance-identity/document'
+  - name: MGMT_IP
+    type: metadata
+    metadataProvider:
+      environment: aws
+      type: network
+      field: local-ipv4s
+      index: 0
+bigip_ready_enabled: []
+extension_packages:
+  install_operations:
+    - extensionType: do
+      extensionVersion: 1.21.0
+      extensionHash: 4fbf99d9dd15ab9f3c639f7cc009935b659a5c00c9f4895884e971da0d3326a4
+    - extensionType: as3
+      extensionVersion: 3.26.0
+      extensionHash: b33a96c84b77cff60249b7a53b6de29cc1e932d7d94de80cc77fb69e0b9a45a0
+    - extensionType: ts
+      extensionVersion: 1.18.0
+      extensionHash: de4c82cafe503e65b751fcacfb2f169912ad5ce1645e13c5135dca972299174a
+    - extensionType: fast
+      extensionVersion: 1.7.0
+      extensionHash: 9c617f5bb1bb0d08ec095ce568a6d5d2ef162e504cd183fe3540586200f9d950
+extension_services:
+  service_operations:
+    - extensionType: do
+      type: inline
+      value:
+        schemaVersion: 1.0.0
+        class: Device
+        label: >-
+          Quickstart 1NIC BIG-IP declaration for Declarative Onboarding with
+          PAYG license
+        async: true
+        Common:
+          class: Tenant
+          My_DbVariables:
+            class: DbVariables
+            provision.extramb: 1000
+            restjavad.useextramb: true
+            ui.advisory.enabled: true
+            ui.advisory.color: blue
+            ui.advisory.text: GWLB BIGIP DEMO
+          My_Dns:
+            class: DNS
+            nameServers:
+              - 169.254.169.253
+          My_Ntp:
+            class: NTP
+            servers:
+              - 169.254.169.253
+            timezone: UTC
+          My_Provisioning:
+            class: Provision
+            asm: nominal
+            ltm: nominal
+          My_System:
+            class: System
+            autoPhonehome: false
+            hostname: '{{{HOST_NAME}}}'
+          quickstart:
+            class: User
+            partitionAccess:
+              all-partitions:
+                role: admin
+            password: '{{{BIGIP_PASSWORD}}}'
+            shell: bash
+            userType: regular
+post_onboard_enabled:
+  - name: gwlb
+    type: inline
+    commands:
+      - tmsh modify net vlan internal mtu 9001
+      - tmsh create net tunnels tunnel geneve local-address `printf {{{ MGMT_IP }}} | cut -d "/" -f1` remote-address any profile geneve
+      - tmsh create net self geneve-tunnel address 10.131.0.1/24 vlan geneve allow-service all
+      - tmsh create net arp fake_arp_entry ip-address 10.131.0.2 mac-address ff:ff:ff:ff:ff:ff
+      - tmsh create ltm node geneve-tunnel address 10.131.0.2 monitor none
+      - tmsh create ltm pool geneve-tunnel members add { geneve-tunnel:0 } monitor none
+      - tmsh create ltm virtual forwarding_vs destination 0.0.0.0:any ip-protocol any vlans-enabled vlans add { geneve } translate-address disabled source-port preserve-strict pool geneve-tunnel mask any
+      - tmsh create ltm virtual health_check destination 0.0.0.0:80 ip-protocol tcp mask 0.0.0.0 profiles add { http tcp } vlans-enabled vlans add { internal }
+      - tmsh save /sys config
+EOF
+
+# # Download
+PACKAGE_URL='https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.2.1/dist/f5-bigip-runtime-init-1.2.1-1.gz.run'
+for i in {1..30}; do
+    curl -fv --retry 1 --connect-timeout 5 -L $PACKAGE_URL -o "/var/config/rest/downloads/f5-bigip-runtime-init.gz.run" && break || sleep 10
+done
+# Install
+bash /var/config/rest/downloads/f5-bigip-runtime-init.gz.run -- '--cloud aws'
+# Run
+# export F5_BIGIP_RUNTIME_INIT_LOG_LEVEL=silly
+f5-bigip-runtime-init --config-file /config/cloud/runtime-init-conf.yaml
+echo "$(date +"%Y-%m-%dT%H:%M:%S.%3NZ") : Startup Script Finish"

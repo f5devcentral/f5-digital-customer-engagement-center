@@ -184,14 +184,27 @@ resource "aws_key_pair" "generated_key" {
 #
 module "bigip" {
   source = "../../"
+  count  = var.instance_count
   prefix = format("%s-1nic", var.prefix)
   //ec2_key_name = aws_key_pair.generated_key.key_name
-  f5_password = random_string.password.result
-  //aws_secretmanager_auth      = false
-  //aws_secretmanager_secret_id = aws_secretsmanager_secret.bigip.id
-  //aws_iam_instance_profile    = aws_iam_instance_profile.instance_profile.name
-  mgmt_subnet_ids        = [{ "subnet_id" = aws_subnet.mgmt.id, "public_ip" = true, "private_ip_primary" = "" }]
-  mgmt_securitygroup_ids = [module.mgmt-network-security-group.security_group_id]
+  //f5_password  = random_string.password.result
+  aws_secretmanager_auth      = true
+  aws_secretmanager_secret_id = aws_secretsmanager_secret.bigip.id
+  aws_iam_instance_profile    = aws_iam_instance_profile.instance_profile.name
+  mgmt_subnet_ids             = [{ "subnet_id" = aws_subnet.mgmt.id, "public_ip" = true, "private_ip_primary" = "" }]
+  mgmt_securitygroup_ids      = [module.mgmt-network-security-group.security_group_id]
+}
+
+resource "null_resource" "clusterDO" {
+  count = var.instance_count
+  provisioner "local-exec" {
+    command = "cat > DO_1nic.json <<EOL\n ${module.bigip[count.index].onboard_do}\nEOL"
+  }
+  provisioner "local-exec" {
+    when    = destroy
+    command = "rm -rf DO_1nic.json"
+  }
+  depends_on = [module.bigip]
 }
 
 

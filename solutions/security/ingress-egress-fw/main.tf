@@ -8,13 +8,17 @@ resource "aws_key_pair" "deployer" {
   public_key = var.sshPublicKey
 }
 
+data "local_file" "customUserData" {
+  filename = "${path.module}/f5_onboard.tmpl"
+}
 module "gwlb-bigip-vpc" {
-  source        = "../../../modules/aws/terraform/gwlb-bigip-vpc"
-  projectPrefix = var.projectPrefix
-  resourceOwner = var.resourceOwner
-  buildSuffix   = random_id.buildSuffix.hex
-  keyName       = aws_key_pair.deployer.id
-  instanceCount = 1
+  source             = "../../../modules/aws/terraform/gwlb-bigip-vpc"
+  projectPrefix      = var.projectPrefix
+  resourceOwner      = var.resourceOwner
+  buildSuffix        = random_id.buildSuffix.hex
+  keyName            = aws_key_pair.deployer.id
+  bigipInstanceCount = 2
+  customUserData     = data.local_file.customUserData.content
 }
 
 # VPCs
@@ -25,7 +29,7 @@ data "aws_availability_zones" "available" {
 
 locals {
   awsAz1 = var.awsAz1 != null ? var.awsAz1 : data.aws_availability_zones.available.names[0]
-  awsAz2 = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
+  awsAz2 = var.awsAz2 != null ? var.awsAz2 : data.aws_availability_zones.available.names[1]
 }
 resource "aws_vpc" "vpcMain" {
   cidr_block = var.vpcMainCidr
@@ -219,7 +223,7 @@ resource "aws_instance" "ubuntuVpcMainSubnetA" {
   subnet_id                   = aws_subnet.vpcMainSubPubA.id
   key_name                    = aws_key_pair.deployer.id
   associate_public_ip_address = true
-  vpc_security_group_ids      = [module.jumphost-security-group.this_security_group_id]
+  vpc_security_group_ids      = [module.jumphost-security-group.security_group_id]
 
   tags = {
     Name  = "${var.projectPrefix}-ubuntuVpcMainSubnetA-${random_id.buildSuffix.hex}"

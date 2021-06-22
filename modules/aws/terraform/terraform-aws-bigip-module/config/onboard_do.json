@@ -23,13 +23,15 @@
             "class": "User",
             "userType": "regular",
             "password": "{{{ ADMIN_PASS }}}",
-            "shell": "bash"
+            "shell": "bash",
+            "keys": ["{{{ SSH_KEYS }}}"]
         },
         "{{{ USER_NAME }}}": {
             "class": "User",
             "userType": "regular",
             "password": "{{{ ADMIN_PASS }}}",
-            "shell": "none",
+            "shell": "bash",
+            "keys": ["{{{ SSH_KEYS }}}"],
             "partitionAccess": {
                 "all-partitions": {
                     "role": "admin"

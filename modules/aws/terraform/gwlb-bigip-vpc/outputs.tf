@@ -21,11 +21,14 @@ output "subnetsAz1" {
 output "subnetsAz2" {
   value = local.subnetsAz2
 }
-output "bigipAz1Ip" {
-  value = module.bigipAz1.mgmtPublicIP
+output "bigipIp" {
+  value = module.bigip[*].mgmtPublicIP[0]
+}
+output "bigipInstanceId" {
+  value = module.bigip[*].bigip_instance_ids[0]
 }
 output "bigipPassword" {
-  value = module.bigipAz1.bigip_password
+  value = module.bigip[*].bigip_instance_ids[0]
 }
 output "gwlbEndpointService" {
   value = aws_vpc_endpoint_service.gwlbEndpointService.service_name

@@ -8,7 +8,7 @@ This module is supported from Terraform 0.13 version onwards.
 
 It is tested against following provider/terraform versions
 
-Terraform v0.13.0
+Terraform v0.14.0
 
 + provider registry.terraform.io/hashicorp/aws v3.8.0
 + provider registry.terraform.io/hashicorp/random v2.3.0
@@ -19,61 +19,31 @@ Terraform v0.13.0
 
 This module is supported in the following bigip and terraform version
 
-| BIGIP version | Terraform 0.13 |
+| BIGIP version | Terraform 0.14 |
 |---------------|----------------|
+| BIG-IP 16.x  | X |
 | BIG-IP 15.x  | X |
 | BIG-IP 14.x  | X |
-| BIG-IP 13.x  | X |
 
 ## Password Management
 
-By default bigip module will have random password setting to give dynamic password generation
+|:point_up: |By default bigip module will have random password setting to give dynamic password generation|
+|----|---|
 
-```
-cat terraform-aws-bigip-module/variables.tf
+|:point_up: |Users Can explicitly provide password as input to Module using optional Variable "f5_password"|
+|----|---|
 
-variable aws_secretmanager_auth {
-  description = "Whether to use key vault to pass authentication"
-  type        = bool
-  default     = false
-}
+|:point_up:  | To use AWS secret manager password,we have to enable the variable "aws_secretmanager_auth" to true and supply the secret name to variable "aws_secretmanager_secret_id" and also IAM Profile to "aws_iam_instance_profile"|
+|-----|----|
 
-Outputs:
-
-bigip_password = [
-  "xxxxxxxxxxxxxxxxxx",
-]
-
-```
-
-To use AWS secret manager password,we have to enable the variable "aws_secretmanager_auth" to true and supply the secret name to variable "aws_secretmanager_secret_id"
-
-```
-cat terraform-aws-bigip-module/variables.tf
-
-variable aws_secretmanager_auth {
-  description = "Whether to use key vault to pass authentication"
-  type        = bool
-  default     = true
-}
-
-variable aws_secretmanager_secret_id {
-  description = "AWS Secret Manager Secret ID that stores the BIG-IP password"
-  type        = string
-  default     = "tf-aws-bigip-bigip-secret-9759"
-}
-
-Outputs:
-
-bigip_password = [
-  "xxxxxxxxxxxxxxx",
-]
-
-```
+|:warning:  |End Users are responsible of the IAM profile setup, please find useful links for [IAM Setup](https://aws.amazon.com/premiumsupport/knowledge-center/restrict-ec2-iam/)|
+|:-----------|:----|
 
 ## Example Usage
 
 We have provided some common deployment [examples](https://github.com/f5devcentral/terraform-aws-bigip-module/tree/master/examples)
+
+
 
 #### Note
 There should be one to one mapping between subnet_ids and securitygroup_ids (for example if we have 2 or more external subnet_ids,we have to give same number of external securitygroup_ids to module)
@@ -224,8 +194,9 @@ These variables have default values and don't have to be set to use this module.
 | Name | Description | Type | Default |
 |------|-------------|------|---------|
 | f5\_username | The admin username of the F5   BIG-IP that will be deployed | `string` | bigipuser |
+| f5\_password | Password of the F5  BIG-IP that will be deployed | `string` | "" |
 | ec2_instance_type 	| AWS EC2 instance type 	| string 	| m5.large 	|
-| f5_ami_search_name 	| BIG-IP AMI name to search for 	| string 	| F5 Networks BIGIP-14.* PAYG - Best 200Mbps* 	|
+| f5_ami_search_name 	| BIG-IP AMI name to search for 	| string 	| F5 BIGIP-* PAYG-Best 200Mbps* 	|
 | mgmt_eip 	| Enable an Elastic IP address on the management interface 	| bool 	| TRUE 	|
 | aws_secretmanager_auth 	| Whether to use key vault to pass authentication 	| bool 	| FALSE 	|
 | aws_secretmanager_secret_id 	| AWS Secret Manager Secret ID that stores the BIG-IP password 	| string 	|  	|
@@ -233,8 +204,9 @@ These variables have default values and don't have to be set to use this module.
 | DO_URL | URL to download the BIG-IP Declarative Onboarding module | `string` | latest |
 | AS3_URL | URL to download the BIG-IP Application Service Extension 3 (AS3) module | `string` | latest |
 | TS_URL | URL to download the BIG-IP Telemetry Streaming module | `string` | latest |
-| fastPackageUrl | URL to download the BIG-IP FAST module | `string` | latest |
+| FAST_URL | URL to download the BIG-IP FAST module | `string` | latest |
 | CFE_URL | URL to download the BIG-IP Cloud Failover Extension module | `string` | latest |
+| INIT_URL | URL to download the BIG-IP runtime init module | `string` | latest |
 | libs\_dir | Directory on the BIG-IP to download the A&O Toolchain into | `string` | /config/cloud/aws/node_modules |
 | onboard\_log | Directory on the BIG-IP to store the cloud-init logs | `string` | /var/log/startup-script.log |
 | external\_subnet\_ids | he subnet id of the virtual network where the virtual machines will reside | `List of Maps` | [{ "subnet_id" = null, "public_ip" = null }] |
@@ -242,8 +214,7 @@ These variables have default values and don't have to be set to use this module.
 | external\_securitygroup\_ids | The Network Security Group ids for external network | `List` | [] |
 | internal\_securitygroup\_ids | The Network Security Group ids for internal network | `List` | [] |
 
-Note: For each external interface there will be one primary,secondary private ip will be assigned.
-
+~> **NOTE:** For each external interface there will be one primary,secondary private ip will be assigned.
 
 #### Output Variables
 | Name | Description |
@@ -256,10 +227,7 @@ Note: For each external interface there will be one primary,secondary private ip
 | private\_addresses | List of BIG-IP private addresses |
 | public\_addresses | List of BIG-IP public addresses |
 
-```
-NOTE: A local json file will get generated which contains the DO declaration
-```
-
+~> **NOTE:** A local json file will get generated which contains the DO declaration
 
 ## Support Information
 
