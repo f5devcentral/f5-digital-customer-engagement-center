@@ -138,11 +138,11 @@ resource "aws_lb_target_group" "bigipTargetGroup" {
   }
 }
 
-#resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachment" {
-#  count = var.bigipInstanceCount
-#  target_group_arn = aws_lb_target_group.bigipTargetGroup.arn
-#  target_id        = module.bigip[count.index].bigip_instance_ids
-#}
+resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachment" {
+  count = var.bigipInstanceCount
+  target_group_arn = aws_lb_target_group.bigipTargetGroup.arn
+  target_id        = module.bigip[count.index].bigip_instance_ids[0]
+}
 
 
 resource "aws_vpc_endpoint_service" "gwlbEndpointService" {

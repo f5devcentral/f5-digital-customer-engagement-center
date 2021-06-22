@@ -8,7 +8,7 @@ data "aws_availability_zones" "available" {
 ##################################################################### Locals #############################################################
 locals {
   awsAz1 = var.awsAz1 != null ? var.awsAz1 : data.aws_availability_zones.available.names[0]
-  awsAz2 = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
+  awsAz2 = var.awsAz2 != null ? var.awsAz2 : data.aws_availability_zones.available.names[1]
 }
 
 ##################################################################### Locals #############################################################
@@ -72,7 +72,6 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "securityVpcTgwAttachment" {
   subnet_ids                                      = [aws_subnet.securityVpcSubnetTgwAttachmentAz1.id, aws_subnet.securityVpcSubnetTgwAttachmentAz2.id]
   transit_gateway_id                              = aws_ec2_transit_gateway.tgw.id
   vpc_id                                          = module.gwlb-bigip.vpcs["vpcGwlb"]
-  appliance_mode_support                          = enable # see https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-appliance-scenario.html
   transit_gateway_default_route_table_association = false
   transit_gateway_default_route_table_propagation = false
   tags = {
@@ -389,18 +388,23 @@ resource "aws_key_pair" "deployer" {
   public_key = var.sshPublicKey
 }
 
+data "local_file" "customUserData" {
+    filename = "${path.module}/f5_onboard.tmpl"
+}
+
 module "gwlb-bigip" {
-  source             = "../../../../modules/aws/terraform/gwlb-bigip-vpc"
+  source             = "../../../modules/aws/terraform/gwlb-bigip-vpc"
   projectPrefix      = var.projectPrefix
   resourceOwner      = var.resourceOwner
   keyName            = aws_key_pair.deployer.id
   buildSuffix        = random_id.buildSuffix.hex
-  instanceCount      = 1
+  bigipInstanceCount = 2
   vpcGwlbSubPubACidr = "10.252.10.0/24"
   vpcGwlbSubPubBCidr = "10.252.110.0/24"
   subnetGwlbeAz1     = "10.252.54.0/24"
   subnetGwlbeAz2     = "10.252.154.0/24"
   createGwlbEndpoint = true
+  customUserData = data.local_file.customUserData.content
 }
 
 ############subnets
@@ -557,7 +561,7 @@ resource "aws_security_group" "secGroupWorkstation" {
 
 module "jumphost" {
   for_each      = local.vpcs
-  source        = "../../../../modules/aws/terraform/workstation/"
+  source        = "../../../modules/aws/terraform/workstation/"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
   vpc           = each.value["vpcId"]

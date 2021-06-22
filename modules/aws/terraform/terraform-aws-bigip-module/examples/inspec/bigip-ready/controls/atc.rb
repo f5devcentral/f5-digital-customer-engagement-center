@@ -16,7 +16,7 @@ control "bigip-connectivity" do
   describe host(BIGIP_HOST, port: BIGIP_PORT, protocol: 'tcp') do
       it { should be_reachable }
   end
-end
+end 
 
 control "bigip-declarative-onboarding" do
   impact 1.0
@@ -29,7 +29,7 @@ control "bigip-declarative-onboarding" do
         its('status') { should cmp 200 }
         its('headers.Content-Type') { should match 'application/json' }
   end
-end
+end 
 
 control "bigip-declarative-onboarding-version" do
   impact 1.0
@@ -52,7 +52,7 @@ control "bigip-application-services" do
         its('status') { should cmp 200 }
         its('headers.Content-Type') { should match 'application/json' }
   end
-end
+end 
 
 control "bigip-application-services-version" do
   impact 1.0
@@ -75,7 +75,7 @@ control "bigip-telemetry-streaming" do
         its('status') { should cmp 200 }
         its('headers.Content-Type') { should match 'application/json' }
   end
-end
+end 
 
 control "bigip-telemetry-streaming-version" do
   impact 1.0
@@ -99,7 +99,7 @@ control "bigip-fast" do
         its('status') { should cmp 200 }
         its('headers.Content-Type') { should match 'application/json' }
   end
-end
+end 
 
 control "bigip-fast-version" do
   impact 1.0
@@ -124,7 +124,7 @@ control "bigip-cloud-failover-extension" do
         its('status') { should cmp 200 }
         its('headers.Content-Type') { should match 'application/json' }
   end
-end
+end 
 
 control "bigip-cloud-failover-extension-version" do
   impact 1.0

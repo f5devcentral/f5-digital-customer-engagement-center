@@ -20,14 +20,20 @@ tmsh save sys config
 
 mkdir -p /config/cloud
 
-if ${aws_secretmanager_auth}
-then
-   cat << 'EOF' > /config/cloud/runtime-init-conf.yaml
+cat << 'EOF' > /config/cloud/runtime-init-conf.yaml
 ---
 runtime_parameters:
   - name: USER_NAME
     type: static
     value: ${bigip_username}
+  - name: SSH_KEYS
+    type: static
+    value: "${ssh_keypair}"
+EOF
+
+if ${aws_secretmanager_auth}
+then
+   cat << 'EOF' >> /config/cloud/runtime-init-conf.yaml
   - name: ADMIN_PASS
     type: secret
     secretProvider:
@@ -35,42 +41,17 @@ runtime_parameters:
       type: SecretsManager
       version: AWSCURRENT
       secretId: ${bigip_password}
-pre_onboard_enabled:
-  - name: provision_rest
-    type: inline
-    commands:
-      - /usr/bin/setdb provision.extramb 500
-      - /usr/bin/setdb restjavad.useextramb true
-extension_packages:
-  install_operations:
-    - extensionType: do
-      extensionVersion: ${DO_VER}
-      extensionUrl: ${DO_URL}
-    - extensionType: as3
-      extensionVersion: ${AS3_VER}
-      extensionUrl: ${AS3_URL}
-extension_services:
-  service_operations:
-    - extensionType: do
-      type: url
-      value: https://raw.githubusercontent.com/f5devcentral/terraform-aws-bigip-module/master/config/onboard_do.json
-    - extensionType: as3
-      type: url
-      value: https://raw.githubusercontent.com/f5devcentral/terraform-aws-bigip-module/master/config/as3.json
-post_onboard_enabled: []
-
 EOF
-
 else
-   cat << 'EOF' > /config/cloud/runtime-init-conf.yaml
----
-runtime_parameters:
-  - name: USER_NAME
-    type: static
-    value: ${bigip_username}
+   cat << 'EOF' >> /config/cloud/runtime-init-conf.yaml
   - name: ADMIN_PASS
     type: static
     value: ${bigip_password}
+EOF
+fi
+
+# Add remaining runtime_parameters:
+cat << 'EOF' >> /config/cloud/runtime-init-conf.yaml
 pre_onboard_enabled:
   - name: provision_rest
     type: inline
@@ -85,26 +66,28 @@ extension_packages:
     - extensionType: as3
       extensionVersion: ${AS3_VER}
       extensionUrl: ${AS3_URL}
+    - extensionType: ts
+      extensionVersion: ${TS_VER}
+      extensionUrl: ${TS_URL}
+    - extensionType: cf
+      extensionVersion: ${CFE_VER}
+      extensionUrl: ${CFE_URL}
 extension_services:
   service_operations:
     - extensionType: do
       type: url
       value: https://raw.githubusercontent.com/f5devcentral/terraform-aws-bigip-module/master/config/onboard_do.json
-    - extensionType: as3
-      type: url
-      value: https://raw.githubusercontent.com/f5devcentral/terraform-aws-bigip-module/master/config/as3.json
 post_onboard_enabled: []
-
 EOF
 
-fi
-
 # # Download
-PACKAGE_URL='https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.1.0/dist/f5-bigip-runtime-init-1.1.0-1.gz.run'
+#PACKAGE_URL='https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.1.0/dist/f5-bigip-runtime-init-1.1.0-1.gz.run'
+#PACKAGE_URL='https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.2.0/dist/f5-bigip-runtime-init-1.2.0-1.gz.run'
 for i in {1..30}; do
-    curl -fv --retry 1 --connect-timeout 5 -L $PACKAGE_URL -o "/var/config/rest/downloads/f5-bigip-runtime-init-1.1.0-1.gz.run" && break || sleep 10
+    curl -fv --retry 1 --connect-timeout 5 -L ${INIT_URL} -o "/var/config/rest/downloads/f5-bigip-runtime-init.gz.run" && break || sleep 10
 done
 # Install
-bash /var/config/rest/downloads/f5-bigip-runtime-init-1.1.0-1.gz.run -- '--cloud aws'
+bash /var/config/rest/downloads/f5-bigip-runtime-init.gz.run -- '--cloud aws'
 # Run
+# export F5_BIGIP_RUNTIME_INIT_LOG_LEVEL=silly
 f5-bigip-runtime-init --config-file /config/cloud/runtime-init-conf.yaml
