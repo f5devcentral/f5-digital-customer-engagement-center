@@ -1,6 +1,6 @@
-output "bigipAz1Ip" {
-  description = "public ip address of the BIGIP"
-  value       = module.gwlb-bigip-vpc.bigipAz1Ip
+output "bigipPublicIp" {
+  description = "Public ip for the BIGIP, access on port 8443"
+  value       = module.gwlb-bigip-vpc.bigipIp
 }
 output "ubuntuJumpHostAz1" {
   description = "public ip address of the jumphost"

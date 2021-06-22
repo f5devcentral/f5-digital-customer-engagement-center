@@ -177,6 +177,7 @@ resource "aws_vpc_endpoint" "vpcGwlbeAz2" {
 ##########BIGIP################
 
 module "mgmt-network-security-group" {
+  version = "v4.2.0"
   source = "terraform-aws-modules/security-group/aws"
 
   name        = "${var.projectPrefix}-mgmt-nsg-${var.buildSuffix}"
