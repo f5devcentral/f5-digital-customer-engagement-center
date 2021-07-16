@@ -202,3 +202,7 @@ fileignoreconfig:
   checksum: baf2997145d646bd6a4c47a29718d6fa925f4df790902fdde44d9110dc6589e4
 - filename: README.md
   checksum: 8cef98be4f68f03168f5e9cb3d5326fb4e16b1482154c7847321f00ea9dc4467
+- filename: solutions/security/ingress-egress-fw/README.md
+  checksum: 7388b32e8ad7a467d9817011a270a57eadd10762f4df45df5d90d0d621962d24
+- filename: solutions/security/ingress-egress-inter-vpc-fw-gwlb/README.md
+  checksum: d32462c3b49b2c49aa4bedb513ec601f978f990f9cbfbb594744dffc3f9e59cd
