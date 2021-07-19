@@ -3,13 +3,17 @@ ingress-egress and inter-vpc firewall in AWS using AFM and GWLB
 
 ## Diagram
 
-![ingress-egress firewall to a single VPC using GWLB](ingress-egress-inter-vpc-fw.png)
+![ingress-egress-inter-vpc firewall using GWLB](ingress-egress-inter-vpc-WITH-sec.png)
 
+![Spoke10 to the internet traffic flow](spoke10-to-internet.png)
 
+![Spoke10 to spoke20 traffic flow](spoke10-to-spoke20.png)
+
+![user to spoke10 service traffic flow](user-to-spoke10-service.png)
 ## Requirements
 
 - Solution was tested only on us-west-2, the region has to support GWLB.
-- Subscribe to the F5 PAYG-Best 200Mbps image from the AWS marketplace - https://aws.amazon.com/marketplace/pp/B079C3N5PX?qid=1614637412553&sr=0-1&ref_=srh_res_product_title
+- Subscribe to the F5 PAYG-Best 1Gbps image from the AWS marketplace - https://aws.amazon.com/marketplace/pp/prodview-atilk7h6dqu6k?ref_=srh_res_product_title
 
 ## Usage example
 
@@ -26,18 +30,25 @@ cp admin.auto.tfvars.example admin.auto.tfvars
 # MODIFY TO YOUR SETTINGS
 ```
 
-run the setup script to deploy all of the components into your AWS account (remember that you are responsible for the cost of those components)
+run the terraform plan to deploy all of the components into your AWS account (remember that you are responsible for the cost of those components)
 
 ```bash
-./setup.sh
+terraform init
+terraform plan
+terraform apply
 ```
 
 ## BIGIP configuration steps
 
 Connect to the BIGIP using the bigipPublicIp and bigipPassword over port 8443. https://quickstart:bigipPassword@bigipPublicIp:8443
 
-Upload the 16.1 ISO image, install it and boot the BIGIP.
+Username: quickstart
 
+Password: bigipPassword output value
+
+Please note it takes a few minutes for the BIGIP to complete the onboarding process, once it's done you will be able to ssh into the jumphost.
+
+The BIGIP gets configured with a forwarding virtual server to route accept the traffic inside the GENEVE tunnel and apply relevant security controls on it.
 
 Create your AFM policy and logging configuration
 
@@ -64,7 +75,7 @@ monitor the traffic in AFM
 use the following command to destroy all of the resources
 
 ```bash
-./destroy.sh
+terraform destroy
 ```
 
 ## Providers

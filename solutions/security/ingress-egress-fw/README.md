@@ -5,13 +5,13 @@ ingress-egress firewall to a single VPC using GWLB
 
 ![ingress-egress firewall to a single VPC using GWLB](gwlb-fw.png)
 
-![logical-diagram - Follow the packet](logical-diagram.png)
+![Ingress traffic flow - Follow the packet](ingress-traffic-flow.png)
 
-
+![Egress traffic flow - Follow the packet](Egress-traffic-flow.png)
 ## Requirements
 
 - Solution was tested only on us-west-2, the region has to support GWLB.
-- Subscribe to the F5 PAYG-Best 200Mbps image from the AWS marketplace - https://aws.amazon.com/marketplace/pp/B079C3N5PX?qid=1614637412553&sr=0-1&ref_=srh_res_product_title
+- Subscribe to the F5 PAYG-Best 1Gbps image from the AWS marketplace - https://aws.amazon.com/marketplace/pp/prodview-atilk7h6dqu6k?ref_=srh_res_product_title
 
 ## Usage example
 
@@ -38,9 +38,13 @@ run the setup script to deploy all of the components into your AWS account (reme
 
 Connect to the BIGIP using the bigipPublicIp and bigipPassword over port 8443. https://quickstart:bigipPassword@bigipPublicIp:8443
 
-Upload the 16.1 ISO image and boot the BIGIP.
+Username: quickstart
 
+Password: bigipPassword output value
 
+Please note it takes a few minutes for the BIGIP to complete the onboarding process, once it's done you will be able to ssh into the jumphost.
+
+The BIGIP gets configured with a forwarding virtual server to route accept the traffic inside the GENEVE tunnel and apply relevant security controls on it.
 
 Create your AFM policy and logging configuration
 

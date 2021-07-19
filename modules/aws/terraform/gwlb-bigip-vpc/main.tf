@@ -210,6 +210,6 @@ module "bigip" {
   ec2_key_name           = var.keyName
   mgmt_subnet_ids        = [{ "subnet_id" = aws_subnet.vpcGwlbSubPubA.id, "public_ip" = true, "private_ip_primary" = "" }]
   mgmt_securitygroup_ids = [module.mgmt-network-security-group.security_group_id]
-  f5_ami_search_name     = "*F5 BIGIP-15.1.2.1* PAYG-Best 200Mbps*"
+  f5_ami_search_name     = "*F5 BIGIP-16.1* PAYG-Best 1Gbps*"
   custom_user_data       = var.customUserData
 }

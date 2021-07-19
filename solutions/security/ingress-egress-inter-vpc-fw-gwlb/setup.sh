@@ -1,6 +1,6 @@
 #!/bin/bash
-terraform -chdir=vpcs init
-terraform -chdir=vpcs plan -var-file=../admin.auto.tfvars
+terraform  init
+terraform plan
 read -p "Press enter to continue"
-terraform -chdir=vpcs apply -var-file=../admin.auto.tfvars --auto-approve
+terraform apply --auto-approve
 # apply
