@@ -9,45 +9,6 @@ module "aws_network" {
   awsRegion               = var.awsRegion
   map_public_ip_on_launch = true
 }
-// ECR
-resource "aws_ecr_repository" "ecr" {
-  name                 = "${var.clusterName}-ecr-${random_id.randomString.dec}"
-  image_tag_mutability = "MUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-resource "aws_ecr_repository_policy" "ecr-policy" {
-  depends_on = [
-    aws_ecr_repository.ecr,
-  ]
-  repository = "${var.clusterName}-ecr-${random_id.randomString.dec}"
-  policy     = <<EOF
-  {
-    "Version": "2008-10-17",
-    "Statement": [
-      {
-        "Sid": "adds full ecr access to the demo repository",
-        "Effect": "Allow",
-        "Principal": "*",
-        "Action": [
-          "ecr:GetAuthorizationToken",
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:BatchGetImage",
-          "ecr:CompleteLayerUpload",
-          "ecr:GetDownloadUrlForLayer",
-          "ecr:GetLifecyclePolicy",
-          "ecr:InitiateLayerUpload",
-          "ecr:PutImage",
-          "ecr:UploadLayerPart"
-        ]
-      }
-    ]
-  }
-  EOF
-}
-
 
 // EKS
 data "aws_eks_cluster" "cluster" {
@@ -81,7 +42,7 @@ module "eks" {
   cluster_endpoint_private_access      = false
   cluster_endpoint_public_access       = true
   cluster_endpoint_public_access_cidrs = [var.adminSourceCidr]
-  config_output_path                   = "${path.module}/cluster-config"
+  kubeconfig_output_path               = "${path.module}/cluster-config"
 }
 
 // jumphost
@@ -90,28 +51,8 @@ resource "aws_key_pair" "deployer" {
   public_key = var.sshPublicKey
 }
 
-module "jumphost" {
-  source               = "../../../../modules/aws/terraform/workstation"
-  projectPrefix        = var.projectPrefix
-  adminAccountName     = var.adminAccountName
-  coderAccountPassword = random_password.password.result
-  vpc                  = module.aws_network.vpcs["main"]
-  keyName              = aws_key_pair.deployer.id
-  mgmtSubnet           = module.aws_network.subnetsAz1["mgmt"]
-  securityGroup        = aws_security_group.secGroupWorkstation.id
+resource "kubernetes_namespace" "example" {
+  metadata {
+    name = "my-first-namespace"
+  }
 }
-
-
-// NGINX
-// module nginx {
-//   source = "./nginx"
-//   vpc = module.infa.vpc_nginx.id
-//   subnets = [module.infa.subnet1.id, modules.ifra.subnet2.id]
-//   admin_cidr
-
-// }
-
-// module controller {
-//   vpc = module.infa.vpc_controller.id
-//   subnets = [module.infa.subnet1.id, modules.]
-// }

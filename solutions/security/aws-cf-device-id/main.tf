@@ -89,7 +89,7 @@ resource "aws_wafv2_web_acl_logging_configuration" "deviceIdAcl" {
   resource_arn            = aws_wafv2_web_acl.deviceIdAcl.arn
 }
 module "cloudfront" {
-  version = "2.3.0"
+  version    = "2.3.0"
   depends_on = [aws_wafv2_web_acl.deviceIdAcl]
   source     = "terraform-aws-modules/cloudfront/aws"
 
@@ -109,8 +109,7 @@ module "cloudfront" {
   #}
   origin = {
     juiceshop = {
-      #domain_name = data.terraform_remote_state.webapp.outputs.albDnsName
-      domain_name = "a3870f6a5db48465f8d6b8b270367bb6-1129788705.us-west-2.elb.amazonaws.com"
+      domain_name = data.terraform_remote_state.webapp.outputs.albDnsName
       custom_origin_config = {
         http_port              = 80
         https_port             = 443
@@ -194,7 +193,7 @@ module "cloudfront" {
     #  cache_policy_id          = data.aws_cloudfront_cache_policy.managedCachingDisabled.id
     #  origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managedAllViewer.id
     #  use_forwarded_values     = false
-#
+    #
     #  allowed_methods = ["GET", "HEAD", "OPTIONS", "POST", "DELETE", "PUT", "PATCH"]
     #  cached_methods  = ["GET", "HEAD"]
     #  compress        = true
@@ -205,7 +204,7 @@ module "cloudfront" {
     #    include_body = true
     #  }
     #  }
-    #}  
+    #}
   ]
   viewer_certificate = {
     acm_certificate_arn = module.acm.this_acm_certificate_arn
@@ -243,7 +242,7 @@ data "aws_canonical_user_id" "current" {}
 
 module "s3_one" {
   version = "2.1.0"
-  source = "terraform-aws-modules/s3-bucket/aws"
+  source  = "terraform-aws-modules/s3-bucket/aws"
 
   bucket        = "s3-one-${random_pet.this.id}"
   force_destroy = true

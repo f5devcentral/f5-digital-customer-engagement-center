@@ -3,12 +3,12 @@ exports.handler = (event, context, callback) => {
     //console.log(event)
     /* Process the list of records and drop those containing Default_Action */
     const output = event.records.map((record) => {
-        
+
         const entry = (Buffer.from(record.data, 'base64')).toString('utf8');
         var jsonEntry = JSON.parse(entry);
         //console.log(jsonEntry.httpRequest.headers)
         const headers = jsonEntry.httpRequest.headers;
-        
+
         const args = jsonEntry.httpRequest.args;
         if ((typeof args !== 'undefined')){
             //console.log(xff.split(',')[0]);
@@ -51,10 +51,10 @@ exports.handler = (event, context, callback) => {
             break;
             }
         }
-        // if cookie existed in the request 
+        // if cookie existed in the request
         if ((typeof cookie !== 'undefined')){
         const cookieArray = cookie.split(';');
-        
+
         //console.log(cookieArray)
         for (let j=0; j < cookieArray.length; j++) {
             const item = cookieArray[j].trim();
@@ -76,12 +76,12 @@ exports.handler = (event, context, callback) => {
         //console.log(jsonEntry)
         }
         let objJsonStr = JSON.stringify(jsonEntry);
-        let objJsonB64 = Buffer.from(objJsonStr).toString("base64"); 
+        let objJsonB64 = Buffer.from(objJsonStr).toString("base64");
         return {
             recordId: record.recordId,
             result: 'Ok',
             data: objJsonB64,
-        };        
+        };
     }    );
 
     console.log(`Processing completed.  Successful records ${output.length}.`);

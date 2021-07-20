@@ -19,7 +19,7 @@
         "mydata": { }
       }
     },
-    "priority": 500, 
+    "priority": 500,
     "_meta": {
       "description": "my custom"
     }

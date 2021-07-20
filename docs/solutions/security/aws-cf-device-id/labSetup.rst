@@ -23,7 +23,7 @@ This solution is leveraging Terraform to create and manage the following product
 
 .. note:: Double-clicking in the empty space to the right of **Welcome** tab in VSCode will create a new file that can be used as a digital notepad
 
-1. Open Cloud9 
+1. Open Cloud9
 
    Example:
 
@@ -31,7 +31,7 @@ This solution is leveraging Terraform to create and manage the following product
 
 2. Set or verify environment AWS credentials
 
-   .. note:: AWS Access and Secret keys are provided by the instructer 
+   .. note:: AWS Access and Secret keys are provided by the instructer
 
    In the terminal window, copy the below text and paste+enter:
 

@@ -77,5 +77,5 @@ module "webApp" {
   albSubnets        = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
   securityGroup     = aws_security_group.secGroupWebapp.id
   associatePublicIp = true
-  startupCommand = "docker run -d --restart always -p 80:80 -v /var/tmp/html:/usr/share/nginx/html -v /tmp/nginx.conf:/etc/nginx/conf.d/default.conf nginx"
+  startupCommand    = "docker run -d --restart always -p 80:80 -v /var/tmp/html:/usr/share/nginx/html -v /tmp/nginx.conf:/etc/nginx/conf.d/default.conf nginx"
 }

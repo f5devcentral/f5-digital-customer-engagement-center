@@ -222,7 +222,7 @@ resource "aws_lambda_function" "KibanaCustomizerLambda" {
   source_code_hash = filebase64sha256("lambda/KibanaCustomizerLambda/KibanaCustomizerLambda.zip")
   environment {
     variables = {
-      REGION = "us-east-1"
+      REGION     = "us-east-1"
       ACCOUNT_ID = data.aws_caller_identity.current.account_id
     }
   }

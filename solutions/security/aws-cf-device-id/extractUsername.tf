@@ -1,5 +1,5 @@
 ###########lambda transformer######
-data aws_iam_policy_document assume_role_policy_doc {
+data "aws_iam_policy_document" "assume_role_policy_doc" {
   statement {
     sid    = "AllowAwsToAssumeRole"
     effect = "Allow"
@@ -47,13 +47,13 @@ resource "aws_iam_role" "lambdaEdgeRole" {
 }
 
 resource "aws_lambda_function" "extractUsername" {
-  filename      = "lambda/extractUsername/extractUsername.zip"
-  function_name = "${var.projectPrefix}-extractUsername-${random_id.buildSuffix.hex}"
-  role          = aws_iam_role.lambdaEdgeRole.arn
-  handler       = "index.handler"
-  runtime       = "nodejs14.x"
-  memory_size   = 128
-  timeout       = 1
-  publish = true
+  filename         = "lambda/extractUsername/extractUsername.zip"
+  function_name    = "${var.projectPrefix}-extractUsername-${random_id.buildSuffix.hex}"
+  role             = aws_iam_role.lambdaEdgeRole.arn
+  handler          = "index.handler"
+  runtime          = "nodejs14.x"
+  memory_size      = 128
+  timeout          = 1
+  publish          = true
   source_code_hash = filebase64sha256("lambda/extractUsername/extractUsername.zip")
 }
