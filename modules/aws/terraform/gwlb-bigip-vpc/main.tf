@@ -132,10 +132,6 @@ resource "aws_lb_target_group" "bigipTargetGroup" {
     port     = 80
     #    matcher  = "200-399"
   }
-  tags = {
-    Name  = "${var.projectPrefix}-bigipTargetGroup-${var.buildSuffix}"
-    Owner = var.resourceOwner
-  }
 }
 
 resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachment" {
