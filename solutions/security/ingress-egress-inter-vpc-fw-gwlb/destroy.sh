@@ -4,7 +4,7 @@ echo "This will destroy your deployment, no going back from here - Press enter t
 read -r -p "Are you sure? [y/N] " response
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
 then
-    terraform -chdir=vpcs destroy -var-file=../admin.auto.tfvars --auto-approve
+    terraform destroy --auto-approve
 else
     echo "canceling"
 fi
