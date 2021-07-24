@@ -237,4 +237,16 @@ fileignoreconfig:
 - filename: modules/google/terraform/infra/variables.tf
   checksum: b46fa19f456fa97ee84e1b720d902bc93f3a0cff50c091f625b63b1991572a7c
 - filename: modules/google/terraform/infra/README.md
-  checksum: 88d70979a9aa8a8ae01443fb096339230f4e072c2facc372e3744516e4adf611
+  checksum: 9215b350e25ed7be0f9e14374cb32cc6f979249b77af5c8a7fc9149e723490b7
+- filename: modules/google/terraform/backend/templates/cloud-config.yml
+  checksum: b3a410e8161547dc288735a06a5a27021114a820db2bf1c8ec2b98439aeb8bd9
+- filename: modules/google/terraform/backend/files/install-server-tls-certs.sh
+  checksum: 054b34fa80ad541a2dcc3dd1d3fd9aa25f5c08d5e03c3f38e4c37168530edab5
+- filename: modules/google/terraform/backend/variables.tf
+  checksum: ad7341f0617298b7059bc36505ad190d7095db0656b568f5d63210252a24bbf5
+- filename: modules/google/terraform/backend/main.tf
+  checksum: 001d7a5a13affe2ee77b575b3862db44a497654556ee7e6e8cde869113124e90
+- filename: modules/google/terraform/backend/README.md
+  checksum: 7ba4c0584aff22edfa172515e108687c9d68b0299a6d1dd74786d9ff83e006db
+- filename: solutions/security/multi-cloud-connectivity-volterra/google/main.tf
+  checksum: 0c6af3a3c22f59306d6d8096a46f2ebe3bce181ad98e07dab07a2274939253af
