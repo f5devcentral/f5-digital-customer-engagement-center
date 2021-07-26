@@ -25,21 +25,25 @@ variable "resourceOwner" {
 
 variable "business_units" {
   type = map(object({
-    cidr = string
-    mtu  = number
+    cidr        = string
+    mtu         = number
+    workstation = bool
   }))
   default = {
     bu21 = {
-      cidr = "10.1.0.0/16"
-      mtu  = 1460
+      cidr        = "10.1.0.0/16"
+      mtu         = 1460
+      workstation = true
     }
     bu22 = {
-      cidr = "10.1.0.0/16"
-      mtu  = 1460
+      cidr        = "10.1.0.0/16"
+      mtu         = 1460
+      workstation = false
     }
     bu23 = {
-      cidr = "10.1.0.0/16"
-      mtu  = 1460
+      cidr        = "10.1.0.0/16"
+      mtu         = 1460
+      workstation = false
     }
   }
   description = <<EOD
@@ -47,9 +51,12 @@ The set of VPCs to create with overlapping CIDRs.
 EOD
 }
 
-variable "hub_cidr" {
-  type    = string
-  default = "100.64.96.0/20"
+variable "outside_cidr" {
+  type        = string
+  default     = "100.64.96.0/20"
+  description = <<EOD
+The CIDR to assign to shared outside VPC. Default is '100.64.96.0/20'.
+EOD
 }
 
 variable "domain_name" {

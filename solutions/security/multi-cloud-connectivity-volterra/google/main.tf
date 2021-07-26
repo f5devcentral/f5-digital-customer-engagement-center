@@ -78,21 +78,21 @@ module "webserver_sa" {
   generate_keys = false
 }
 
-# Create a VPC for each business unit, with a single regional subnet in each
-module "spoke" {
+# Create an inside VPC for each business unit, with a single regional subnet in each
+module "inside" {
   for_each                               = var.business_units
   source                                 = "terraform-google-modules/network/google"
   version                                = "3.0.1"
   project_id                             = var.gcpProjectId
-  network_name                           = format("%s-%s-spoke-%s", var.projectPrefix, each.key, local.build_suffix)
-  description                            = format("%s spoke VPC (%s-%s)", each.key, var.projectPrefix, local.build_suffix)
+  network_name                           = format("%s-%s-inside-%s", var.projectPrefix, each.key, local.build_suffix)
+  description                            = format("%s inside VPC (%s-%s)", each.key, var.projectPrefix, local.build_suffix)
   auto_create_subnetworks                = false
   delete_default_internet_gateway_routes = false
   mtu                                    = each.value.mtu
   routing_mode                           = "REGIONAL"
   subnets = [
     {
-      subnet_name           = format("%s-%s-subnet-%s", var.projectPrefix, each.key, local.build_suffix)
+      subnet_name           = format("%s-%s-inside-%s", var.projectPrefix, each.key, local.build_suffix)
       subnet_ip             = each.value.cidr
       subnet_region         = var.gcpRegion
       subnet_private_access = false
@@ -100,21 +100,21 @@ module "spoke" {
   ]
 }
 
-# Create a hub VPC with a single regional subnet
-module "hub" {
+# Create a single outside VPC with a single regional subnet
+module "outside" {
   source                                 = "terraform-google-modules/network/google"
   version                                = "3.0.1"
   project_id                             = var.gcpProjectId
-  network_name                           = format("%s-hub-%s", var.projectPrefix, local.build_suffix)
-  description                            = format("Hub VPC (%s-%s)", var.projectPrefix, local.build_suffix)
+  network_name                           = format("%s-outside-%s", var.projectPrefix, local.build_suffix)
+  description                            = format("Shared outside VPC (%s-%s)", var.projectPrefix, local.build_suffix)
   auto_create_subnetworks                = false
   delete_default_internet_gateway_routes = false
   mtu                                    = 1460
   routing_mode                           = "REGIONAL"
   subnets = [
     {
-      subnet_name           = format("%s-hub-%s", var.projectPrefix, local.build_suffix)
-      subnet_ip             = var.hub_cidr
+      subnet_name           = format("%s-outside-%s", var.projectPrefix, local.build_suffix)
+      subnet_ip             = var.outside_cidr
       subnet_region         = var.gcpRegion
       subnet_private_access = false
     }
@@ -122,13 +122,15 @@ module "hub" {
 }
 
 module "workstation" {
+  for_each      = { for k, v in var.business_units : k => v if v.workstation }
   source        = "../../../../modules/google/terraform/workstation"
   projectPrefix = var.projectPrefix
   buildSuffix   = local.build_suffix
   gcpProjectId  = var.gcpProjectId
   gcpRegion     = var.gcpRegion
   resourceOwner = var.resourceOwner
-  subnet        = module.spoke[keys(var.business_units)[0]].subnets_self_links[0]
+  name          = format("%s-%s-workstation-%s", var.projectPrefix, each.key, local.build_suffix)
+  subnet        = module.inside[each.key].subnets_self_links[0]
   zone          = local.zones[0]
   labels        = local.gcp_common_labels
   # Not using a NAT on the BU spokes, and Volterra gateway takes too long to
@@ -136,8 +138,8 @@ module "workstation" {
   # required packages and secrets.
   public_address = true
   # depends_on = [
-  #  volterra_gcp_vpc_site.spoke,
-  #  volterra_tf_params_action.spoke,
+  #  volterra_gcp_vpc_site.inside,
+  #  volterra_tf_params_action.inside,
   # ]
 }
 
@@ -154,7 +156,7 @@ module "webserver_tls" {
 module "webservers" {
   for_each = { for ws in setproduct(keys(var.business_units), range(0, var.num_servers)) : join("", ws) => {
     name   = format("%s-%s-web-%s-%d", var.projectPrefix, ws[0], local.build_suffix, tonumber(ws[1]) + 1)
-    subnet = module.spoke[ws[0]].subnets_self_links[0]
+    subnet = module.inside[ws[0]].subnets_self_links[0]
     zone   = element(local.zones, index(keys(var.business_units), ws[0]) * var.num_servers + tonumber(ws[1]))
   } }
   source          = "../../../../modules/google/terraform/backend"
@@ -172,18 +174,19 @@ module "webservers" {
   # bootstrap; make sure the webservers get public addresses so they can pull
   # required packages and secrets.
   public_address = true
-  # depends_on = [
-  #  volterra_gcp_vpc_site.spoke,
-  #  volterra_tf_params_action.spoke,
-  # ]
+  depends_on = [
+    module.webserver_sa,
+    # volterra_gcp_vpc_site.inside,
+    # volterra_tf_params_action.inside,
+  ]
 }
 
-# Allow ingress to webservers from any VM in the spoke CIDR
-resource "google_compute_firewall" "spoke" {
+# Allow ingress to webservers from any VM in the inside CIDR
+resource "google_compute_firewall" "inside" {
   for_each  = var.business_units
   project   = var.gcpProjectId
   name      = format("%s-allow-all-%s-%s", var.projectPrefix, each.key, local.build_suffix)
-  network   = module.spoke[each.key].network_self_link
+  network   = module.inside[each.key].network_self_link
   direction = "INGRESS"
   source_ranges = [
     each.value.cidr,
@@ -206,7 +209,7 @@ module "compute_locations" {
   source = "git::https://github.com/memes/terraform-google-volterra//modules/region-locations?ref=0.3.0"
 }
 
-resource "volterra_gcp_vpc_site" "spoke" {
+resource "volterra_gcp_vpc_site" "inside" {
   for_each    = var.business_units
   name        = format("%s-%s-%s", var.projectPrefix, each.key, local.build_suffix)
   namespace   = "system"
@@ -239,37 +242,37 @@ resource "volterra_gcp_vpc_site" "spoke" {
     no_outside_static_routes = true
     inside_network {
       existing_network {
-        name = module.spoke[each.key].network_name
+        name = module.inside[each.key].network_name
       }
     }
     inside_subnet {
       existing_subnet {
-        subnet_name = module.spoke[each.key].subnets_names[0]
+        subnet_name = module.inside[each.key].subnets_names[0]
       }
     }
     outside_network {
       existing_network {
-        name = module.hub.network_name
+        name = module.outside.network_name
       }
     }
     outside_subnet {
       existing_subnet {
-        subnet_name = module.hub.subnets_names[0]
+        subnet_name = module.outside.subnets_names[0]
       }
     }
   }
   # These shouldn't be necessary, but lifecycle is flaky without them
-  depends_on = [module.volterra_sa, module.spoke, module.hub]
+  depends_on = [module.volterra_sa, module.inside, module.outside]
 }
 
-resource "volterra_tf_params_action" "spoke" {
-  for_each        = volterra_gcp_vpc_site.spoke
+resource "volterra_tf_params_action" "inside" {
+  for_each        = volterra_gcp_vpc_site.inside
   site_name       = each.value.name
   site_kind       = "gcp_vpc_site"
   action          = "apply"
   wait_for_action = true
   # These shouldn't be necessary, but lifecycle is flaky without them
-  depends_on = [module.volterra_sa, module.spoke, module.hub, volterra_gcp_vpc_site.spoke]
+  depends_on = [module.volterra_sa, module.inside, module.outside, volterra_gcp_vpc_site.inside]
 }
 
 resource "volterra_virtual_site" "site" {
@@ -281,12 +284,12 @@ resource "volterra_virtual_site" "site" {
   site_type   = "CUSTOMER_EDGE"
   site_selector {
     expressions = [
-      join(",", [for k, v in local.volterra_common_labels : format("%s = %s", k, v)])
+      join(",", [for k, v in local.volterra_common_labels : format("%s = %s", k, v) if k != "platform"])
     ]
   }
 }
 
-resource "volterra_healthcheck" "spoke" {
+resource "volterra_healthcheck" "inside" {
   for_each    = var.business_units
   name        = format("%s-%s-%s", var.projectPrefix, each.key, local.build_suffix)
   namespace   = var.volterra_namespace
@@ -305,9 +308,13 @@ resource "volterra_healthcheck" "spoke" {
     use_origin_server_name = true
     path                   = "/"
   }
+
+  depends_on = [
+    google_compute_firewall.inside
+  ]
 }
 
-resource "volterra_origin_pool" "spoke" {
+resource "volterra_origin_pool" "inside" {
   for_each               = var.business_units
   name                   = format("%s-%sapp-%s", var.projectPrefix, each.key, local.build_suffix)
   namespace              = var.volterra_namespace
@@ -327,8 +334,8 @@ resource "volterra_origin_pool" "spoke" {
         site_locator {
           site {
             tenant    = var.volterra_tenant
-            namespace = volterra_gcp_vpc_site.spoke[each.key].namespace
-            name      = volterra_gcp_vpc_site.spoke[each.key].name
+            namespace = volterra_gcp_vpc_site.inside[each.key].namespace
+            name      = volterra_gcp_vpc_site.inside[each.key].name
           }
         }
         inside_network = true
@@ -340,7 +347,7 @@ resource "volterra_origin_pool" "spoke" {
   }
 }
 
-resource "volterra_http_loadbalancer" "spoke" {
+resource "volterra_http_loadbalancer" "inside" {
   for_each    = var.business_units
   name        = format("%s-%sapp-%s", var.projectPrefix, each.key, local.build_suffix)
   namespace   = var.volterra_namespace
@@ -373,8 +380,8 @@ resource "volterra_http_loadbalancer" "spoke" {
   }
   default_route_pools {
     pool {
-      name      = volterra_origin_pool.spoke[each.key].name
-      namespace = volterra_origin_pool.spoke[each.key].namespace
+      name      = volterra_origin_pool.inside[each.key].name
+      namespace = volterra_origin_pool.inside[each.key].namespace
       tenant    = var.volterra_tenant
     }
   }
