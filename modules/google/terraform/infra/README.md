@@ -79,7 +79,7 @@ module "vpc_override" {
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.14.5 |
+| terraform | >= 0.14.5 |
 | google | >= 3.54 |
 
 ## Providers
@@ -112,9 +112,9 @@ module "vpc_override" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | buildSuffix | random build suffix for resources | `string` | n/a | yes |
-| features | Allow module cconsumers to modify the default behaviour of infra module.<br>  workstation: boolean to toggle creation of a `workstation` VM that can be used<br>               for development, testing, and a proxy for BIG-IP, GKE, etc.<br>               Enabled by default.<br>  isolated:    boolean to toggle creation of an `isolated` set of VPCs and the<br>               required supporting infrastructure (private DNS). Disabled by default.<br>  registry:    boolean to toggle enablement of Google Artifact Registry for<br>               container storage and helm charts. Disabled by default. | <pre>object({<br>    workstation = bool<br>    isolated    = bool<br>    registry    = bool<br>  })</pre> | <pre>{<br>  "isolated": false,<br>  "registry": false,<br>  "workstation": true<br>}</pre> | no |
 | gcpProjectId | gcp project id | `string` | n/a | yes |
 | gcpRegion | region where gke is deployed | `string` | n/a | yes |
+| features | Allow module cconsumers to modify the default behaviour of infra module.<br>  workstation: boolean to toggle creation of a `workstation` VM that can be used<br>               for development, testing, and a proxy for BIG-IP, GKE, etc.<br>               Enabled by default.<br>  isolated:    boolean to toggle creation of an `isolated` set of VPCs and the<br>               required supporting infrastructure (private DNS). Disabled by default.<br>  registry:    boolean to toggle enablement of Google Artifact Registry for<br>               container storage and helm charts. Disabled by default. | <pre>object({<br>    workstation = bool<br>    isolated    = bool<br>    registry    = bool<br>  })</pre> | <pre>{<br>  "isolated": false,<br>  "registry": false,<br>  "workstation": true<br>}</pre> | no |
 | labels | An optional map of key:value strings that will be applied to resources as labels,<br>where supported. | `map(string)` | `{}` | no |
 | projectPrefix | prefix for resources | `string` | `"demo"` | no |
 | resourceOwner | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |

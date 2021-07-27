@@ -31,7 +31,7 @@ module "network_min" {
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.14.5 |
+| terraform | >= 0.14.5 |
 | google | >= 3.54 |
 
 ## Providers
