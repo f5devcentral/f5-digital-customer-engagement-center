@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 0.14.5"
+  required_version = ">= 0.14.5"
   required_providers {
     google = {
       source  = "hashicorp/google"
@@ -33,7 +33,7 @@ locals {
 # Store the TLS certificate, key, and CA in Secret Manager.
 module "tls_secret" {
   source     = "memes/secret-manager/google"
-  version    = "1.0.2"
+  version    = "1.0.3"
   project_id = var.gcpProjectId
   id         = var.secret_manager_key_name
   secret     = jsonencode(local.tls_secret)
