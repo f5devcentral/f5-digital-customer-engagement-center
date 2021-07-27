@@ -37,7 +37,7 @@ on port 80 (and 443 if a TLS Secret Manager key is provided).
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.14.5 |
+| terraform | >= 0.14.5 |
 | google | >= 3.54 |
 
 ## Providers

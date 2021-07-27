@@ -10,7 +10,7 @@ on port 80 (and 443 if a TLS Secret Manager key is provided).
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.14.5 |
+| terraform | >= 0.14.5 |
 | google | >= 3.54 |
 
 ## Providers
@@ -40,9 +40,10 @@ No Modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | buildSuffix | random build suffix for resources | `string` | n/a | yes |
+| gcpProjectId | gcp project id | `string` | n/a | yes |
+| subnet | Self-link of the subnet that the workstation should be attached to. | `string` | n/a | yes |
 | disk\_size\_gb | Use this flag to set the boot volume size in GB. Default is 50Gb. | `number` | `50` | no |
 | disk\_type | The boot disk type to use with instances; can be 'pd-balanced' (default),<br>'pd-ssd', or 'pd-standard'. | `string` | `"pd-balanced"` | no |
-| gcpProjectId | gcp project id | `string` | n/a | yes |
 | image | An optional Google Compute Engine image to use instead of the module default (COS).<br>Set this to use a specific image; see also `user_data` to set cloud-config. | `string` | `null` | no |
 | labels | An optional map of key:value strings that will be applied to resources as labels,<br>where supported. | `map(string)` | `{}` | no |
 | machine\_type | The compute machine type to use for workstation VM. Default is 'e2-standard-4'<br>which provides 4 vCPUs and 16Gb RAM, and is available in all regions. | `string` | `"e2-standard-4"` | no |
@@ -52,7 +53,6 @@ No Modules.
 | public\_address | If true, an ephemeral public IP address will be assigned to the webserver.<br>Default value is 'false'. | `bool` | `false` | no |
 | resourceOwner | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |
 | service\_account | The service account to use with server. If empty (default), the Default Compute<br>service account will be used. | `string` | `null` | no |
-| subnet | Self-link of the subnet that the workstation should be attached to. | `string` | n/a | yes |
 | tags | An optional list of network tags to apply to the instance; default is an empty set. | `list(string)` | `[]` | no |
 | tls\_secret\_key | An optional Secret Manager key that contains a TLS certificate and key pair that<br>will be used for the backend server. If empty (default), the backend server will<br>listen on port 80 only unless a custom `user_data` is provided. | `string` | `""` | no |
 | user\_data | An optional cloud-config definition to apply to the launched instances. If empty<br>(default), a simple webserver will be launched that displays the hostname of the<br>instance that serviced the request. | `string` | `null` | no |
