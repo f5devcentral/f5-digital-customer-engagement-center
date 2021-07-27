@@ -15,9 +15,9 @@ capabilities to limit access to accounts with the correct permissions.
 2. Firewall rule to allow ingress TCP to ports 22, 443, and 8888 on `workstation` from IAP CIDR
 
 3. Workstation VM (Ubuntu Focal LTS) deployed to one of the AZs in region
-   * [Code Server](https://github.com/cdr/code-server) v3.9.3
+   * [Code Server](https://github.com/cdr/code-server) v3.11.0
       * Latest [F5 VS-Code](https://github.com/f5devcentral/vscode-f5) extension
-      * [Terraform VS-Code](https://open-vsx.org/extension/hashicorp/terraform) 2.10.0 extension
+      * [Terraform VS-Code](https://open-vsx.org/extension/hashicorp/terraform) 2.13.2 extension
    * [NGINX OSS](https://nginx.org/) as reverse-proxy for Code Server, and forward-proxy to other resources on network
    * [F5 CLI](https://clouddocs.f5.com/sdk/f5-cli/)
    * [Terraform](https://www.terraform.io/docs/index.html) v0.14.11

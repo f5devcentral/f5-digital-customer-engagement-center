@@ -129,9 +129,9 @@ EOD
 
 variable "code_server_version" {
   type        = string
-  default     = "3.9.3"
+  default     = "3.11.0"
   description = <<EOD
-The version of code-server to install in the workstation. Default is 3.9.3.
+The version of code-server to install in the workstation. Default is 3.11.0.
 EOD
 }
 
@@ -139,7 +139,7 @@ variable "code_server_extension_urls" {
   type = list(string)
   default = [
     "https://api.github.com/repos/f5devcentral/vscode-f5/releases/latest",
-    "https://open-vsx.org/api/hashicorp/terraform/2.10.0/file/hashicorp.terraform-2.10.0.vsix",
+    "https://open-vsx.org/api/hashicorp/terraform/2.10.0/file/hashicorp.terraform-2.13.2.vsix",
   ]
   description = <<EOD
 A list of vsix extensions to install as part of code-server initialisation.
