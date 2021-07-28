@@ -54,7 +54,7 @@ resource "random_shuffle" "zones" {
 # Create a service account for Volterra to manage VPC sites and store the
 # GCP credentials in a Cloud Credentials object.
 module "volterra_sa" {
-  source                   = "git::https://github.com/memes/terraform-google-volterra//modules/service-account?ref=0.2.1"
+  source                   = "git::https://github.com/memes/terraform-google-volterra//modules/service-account?ref=0.3.1"
   gcp_project_id           = var.gcpProjectId
   gcp_role_name            = replace(format("%s_volterra_site_%s", var.projectPrefix, local.build_suffix), "/[^a-z0-9_.]/", "_")
   gcp_service_account_name = format("%s-volterra-site-%s", var.projectPrefix, local.build_suffix)
@@ -65,7 +65,7 @@ module "volterra_sa" {
 
 module "webserver_sa" {
   source       = "terraform-google-modules/service-accounts/google"
-  version      = "4.0.0"
+  version      = "4.0.2"
   project_id   = var.gcpProjectId
   prefix       = var.projectPrefix
   names        = [format("webserver-%s", local.build_suffix)]
@@ -82,7 +82,7 @@ module "webserver_sa" {
 module "inside" {
   for_each                               = var.business_units
   source                                 = "terraform-google-modules/network/google"
-  version                                = "3.0.1"
+  version                                = "3.3.0"
   project_id                             = var.gcpProjectId
   network_name                           = format("%s-%s-inside-%s", var.projectPrefix, each.key, local.build_suffix)
   description                            = format("%s inside VPC (%s-%s)", each.key, var.projectPrefix, local.build_suffix)
@@ -103,7 +103,7 @@ module "inside" {
 # Create a single outside VPC with a single regional subnet
 module "outside" {
   source                                 = "terraform-google-modules/network/google"
-  version                                = "3.0.1"
+  version                                = "3.3.0"
   project_id                             = var.gcpProjectId
   network_name                           = format("%s-outside-%s", var.projectPrefix, local.build_suffix)
   description                            = format("Shared outside VPC (%s-%s)", var.projectPrefix, local.build_suffix)
@@ -206,7 +206,8 @@ resource "google_compute_firewall" "inside" {
 }
 
 module "compute_locations" {
-  source = "git::https://github.com/memes/terraform-google-volterra//modules/region-locations?ref=0.3.0"
+  #source = "git::https://github.com/memes/terraform-google-volterra//modules/region-locations?ref=0.3.1"
+  source = "/Users/emes/projects/automation/terraform-google-volterra-vpc/modules/region-locations/"
 }
 
 resource "volterra_gcp_vpc_site" "inside" {
@@ -218,10 +219,13 @@ resource "volterra_gcp_vpc_site" "inside" {
     bu = each.key
   })
   annotations = local.volterra_common_annotations
-  coordinates {
-    latitude  = module.compute_locations.lookup[var.gcpRegion].latitude
-    longitude = module.compute_locations.lookup[var.gcpRegion].longitude
-  }
+  # TODO @memes - reenable when upstream provider is fixed
+  # https://github.com/volterraedge/terraform-provider-volterra/issues/61
+  # coordinates {
+  #   latitude  = module.compute_locations.lookup[var.gcpRegion].latitude
+  #   longitude = module.compute_locations.lookup[var.gcpRegion].longitude
+  # }
+
   cloud_credentials {
     name      = module.volterra_sa.cloud_credential_name
     namespace = module.volterra_sa.cloud_credential_namespace
