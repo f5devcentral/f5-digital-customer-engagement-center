@@ -151,7 +151,7 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
     assisted      = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
-    #    nodes_per_az  = "1"
+    nodes_per_az  = "1"
 
     // One of the arguments from this list "new_vpc vpc_id" must be set
 
@@ -291,7 +291,7 @@ resource "volterra_aws_tgw_site" "acmeBu2" {
     assisted      = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
-    #    nodes_per_az  = "1"
+    nodes_per_az  = "1"
 
     // One of the arguments from this list "new_vpc vpc_id" must be set
 
@@ -377,7 +377,7 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
     assisted      = var.assisted
     disk_size     = "80"
     instance_type = "t3.xlarge"
-    #    nodes_per_az  = "1"
+    nodes_per_az  = "1"
 
     // One of the arguments from this list "new_vpc vpc_id" must be set
 
