@@ -1,13 +1,13 @@
 terraform {
-  required_version = "~> 0.14.5"
+  required_version = ">= 0.14.5"
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = ">= 3.54"
+      version = ">= 3.77"
     }
     volterra = {
       source  = "volterraedge/volterra"
-      version = "0.4.0"
+      version = "0.8.1"
     }
   }
 }
