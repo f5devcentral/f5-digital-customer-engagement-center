@@ -14,3 +14,4 @@
 #modules owners
 /modules/aws/terraform/workstation @yossi-r
 /modules/google/terraform/tls @memes
+/modules/google/terraform/workstation @memes
