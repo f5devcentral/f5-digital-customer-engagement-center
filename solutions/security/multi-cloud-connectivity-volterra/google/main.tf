@@ -275,6 +275,10 @@ resource "volterra_tf_params_action" "inside" {
   depends_on = [module.volterra_sa, module.inside, module.outside, volterra_gcp_vpc_site.inside]
 }
 
+# TODO @yossi-r @JeffGiroux @memes
+# This site could be moved up to the parent folder and have AWS, Azure, and GCP
+# use a common set of labels that we know to aggregate the business units on
+# each cloud.
 resource "volterra_virtual_site" "site" {
   name        = format("%s-site-%s", var.projectPrefix, local.build_suffix)
   namespace   = var.volterra_namespace
