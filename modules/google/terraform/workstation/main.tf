@@ -13,7 +13,7 @@ locals {
     owner   = var.resourceOwner
     purpose = "workstation"
   })
-  name = coalesce(format("%s-workstation-%s", var.projectPrefix, var.buildSuffix))
+  name = coalesce(var.name, format("%s-workstation-%s", var.projectPrefix, var.buildSuffix))
   zone = coalesce(var.zone, random_shuffle.zones.result[0])
 }
 
