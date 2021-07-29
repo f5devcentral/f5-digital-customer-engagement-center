@@ -585,7 +585,7 @@ resource "aws_security_group" "secGroupWebServers" {
 
 module "jumphost" {
   for_each      = local.jumphosts
-  source        = "../../../modules/aws/terraform/workstation/"
+  source        = "../../../../modules/aws/terraform/workstation/"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
   vpc           = each.value["vpcId"]
@@ -597,7 +597,7 @@ module "jumphost" {
 
 module "webserver" {
   for_each      = local.webservers
-  source        = "../../../modules/aws/terraform/workstation/"
+  source        = "../../../../modules/aws/terraform/workstation/"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
   vpc           = each.value["vpcId"]
