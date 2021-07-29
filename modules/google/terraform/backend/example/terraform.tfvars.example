@@ -1,0 +1,5 @@
+projectPrefix = "unique-prefix"
+buildSuffix = "unique-suffix"
+gcpRegion = "us-west1"
+gcpProjectId = "my-gcp-projectid"
+resourceOwner = "my-name"

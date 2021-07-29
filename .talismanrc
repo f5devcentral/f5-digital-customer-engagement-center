@@ -206,6 +206,16 @@ fileignoreconfig:
   checksum: 7388b32e8ad7a467d9817011a270a57eadd10762f4df45df5d90d0d621962d24
 - filename: solutions/security/ingress-egress-inter-vpc-fw-gwlb/README.md
   checksum: d32462c3b49b2c49aa4bedb513ec601f978f990f9cbfbb594744dffc3f9e59cd
+- filename: modules/google/terraform/backend/templates/cloud-config.yml
+  checksum: b3a410e8161547dc288735a06a5a27021114a820db2bf1c8ec2b98439aeb8bd9
+- filename: modules/google/terraform/backend/files/install-server-tls-certs.sh
+  checksum: 054b34fa80ad541a2dcc3dd1d3fd9aa25f5c08d5e03c3f38e4c37168530edab5
+- filename: modules/google/terraform/backend/variables.tf
+  checksum: ad7341f0617298b7059bc36505ad190d7095db0656b568f5d63210252a24bbf5
+- filename: modules/google/terraform/backend/main.tf
+  checksum: 001d7a5a13affe2ee77b575b3862db44a497654556ee7e6e8cde869113124e90
+- filename: modules/google/terraform/backend/README.md
+  checksum: 7ba4c0584aff22edfa172515e108687c9d68b0299a6d1dd74786d9ff83e006db
 - filename: test/integration/gcp-network-min/controls/subnets.rb
   checksum: 9b01f27cef74d3c010371707e331869bc7a8376a38dfe99d11657e0ea53c5984
 - filename: modules/google/terraform/tls/main.tf
@@ -222,3 +232,9 @@ fileignoreconfig:
   checksum: 146831bf6433d2121fcc41e9baece0232c68c0b1834bbf5393997169786638f4
 - filename: modules/google/terraform/workstation/templates/cloud-config.yml
   checksum: d26af85890bbcfd2f269119356e7c343a2fae1749b7be180afe9fb53725b82ba
+- filename: test/integration/gcp-infra/controls/workstation.rb
+  checksum: 712ce7310c5a68c1b89658524539791741fdd2317adc92d174b6d979eab7df6f
+- filename: modules/google/terraform/infra/variables.tf
+  checksum: b46fa19f456fa97ee84e1b720d902bc93f3a0cff50c091f625b63b1991572a7c
+- filename: modules/google/terraform/infra/README.md
+  checksum: 88d70979a9aa8a8ae01443fb096339230f4e072c2facc372e3744516e4adf611
