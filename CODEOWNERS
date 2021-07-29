@@ -5,6 +5,9 @@
 # solution owners
 /solutions/security/gwlb-ingress-fw @yossi-r
 /solutions/delivery/application_delivery_controller/nginx/kic/aws @jmcalalang
+/solutions/security/multi-cloud-connectivity-volterra @yossi-r @JeffGiroux @memes
+/solutions/security/multi-cloud-connectivity-volterra/aws @memes
+/solutions/security/multi-cloud-connectivity-volterra/azure @memes
 /solutions/security/multi-cloud-connectivity-volterra/google @memes
 
 # Network module owners
