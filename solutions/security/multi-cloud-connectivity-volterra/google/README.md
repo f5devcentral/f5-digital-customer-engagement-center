@@ -14,7 +14,7 @@ on every CE site that match the selector predicate for the Virtual Site. This me
 that existing resources can use DNS discovery via the Volterra gateways without
 changing the deployment.
 
-> See [Scenario](SCENARIO) document for details on why this solution was chosen
+> See [Scenario](SCENARIO.md) document for details on why this solution was chosen
 > for a hypothetical customer looking for a minimally invasive solution
 > to multi-cloud networking.
 
@@ -29,7 +29,7 @@ changing the deployment.
    to use a 2-NIC Volterra Ingress/Egress gateway that can support routing traffic
    _from_ an `inside` network.
 
-   See [Next Steps](SCENARIO#next-steps)
+   See [Next Steps](SCENARIO.md#next-steps)
 
 2. Can I deploy just this GCP sub-module?
 
