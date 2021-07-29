@@ -63,6 +63,7 @@ module "volterra_sa" {
   annotations              = local.volterra_common_annotations
 }
 
+# Service account to use with Webserver VMs
 module "webserver_sa" {
   source       = "terraform-google-modules/service-accounts/google"
   version      = "4.0.2"
@@ -121,6 +122,8 @@ module "outside" {
   ]
 }
 
+# Launch a Workstation VM (forward-proxy, ssh jumphost) on inside network of any
+# business unit that has set the 'workstation' flag to true.
 module "workstation" {
   for_each      = { for k, v in var.business_units : k => v if v.workstation }
   source        = "../../../../modules/google/terraform/workstation"
@@ -143,6 +146,7 @@ module "workstation" {
   # ]
 }
 
+# Create a TLS certificate and key pair for webservers
 module "webserver_tls" {
   source                  = "../../../../modules/google/terraform/tls"
   gcpProjectId            = var.gcpProjectId
@@ -153,6 +157,8 @@ module "webserver_tls" {
   ]
 }
 
+# Launch `var.num_servers` webserver VMs on the inside network of every business
+# unit. These will be the sources for origin pools in each business unit.
 module "webservers" {
   for_each = { for ws in setproduct(keys(var.business_units), range(0, var.num_servers)) : join("", ws) => {
     name   = format("%s-%s-web-%s-%d", var.projectPrefix, ws[0], local.build_suffix, tonumber(ws[1]) + 1)
@@ -195,21 +201,20 @@ resource "google_compute_firewall" "inside" {
     local.webserver_sa,
   ]
   allow {
-    protocol = "ICMP"
-  }
-  allow {
     protocol = "TCP"
-  }
-  allow {
-    protocol = "UDP"
+    ports = [
+      80,
+      443,
+    ]
   }
 }
 
-module "compute_locations" {
-  #source = "git::https://github.com/memes/terraform-google-volterra//modules/region-locations?ref=0.3.1"
-  source = "/Users/emes/projects/automation/terraform-google-volterra-vpc/modules/region-locations/"
+# Import helper module to determine approximate latitude/longitude of GCP regions
+module "region_locations" {
+  source = "git::https://github.com/memes/terraform-google-volterra//modules/region-locations?ref=0.3.1"
 }
 
+# Create a GCP VPC site for each business unit
 resource "volterra_gcp_vpc_site" "inside" {
   for_each    = var.business_units
   name        = format("%s-%s-%s", var.projectPrefix, each.key, local.build_suffix)
@@ -219,13 +224,12 @@ resource "volterra_gcp_vpc_site" "inside" {
     bu = each.key
   })
   annotations = local.volterra_common_annotations
-  # TODO @memes - reenable when upstream provider is fixed
+  # TODO: @memes - reenable when upstream provider is fixed
   # https://github.com/volterraedge/terraform-provider-volterra/issues/61
   # coordinates {
-  #   latitude  = module.compute_locations.lookup[var.gcpRegion].latitude
-  #   longitude = module.compute_locations.lookup[var.gcpRegion].longitude
+  #   latitude  = module.region_locations.lookup[var.gcpRegion].latitude
+  #   longitude = module.region_locations.lookup[var.gcpRegion].longitude
   # }
-
   cloud_credentials {
     name      = module.volterra_sa.cloud_credential_name
     namespace = module.volterra_sa.cloud_credential_namespace
@@ -269,6 +273,7 @@ resource "volterra_gcp_vpc_site" "inside" {
   depends_on = [module.volterra_sa, module.inside, module.outside]
 }
 
+# Instruct Volterra to provision the GCP VPC sites
 resource "volterra_tf_params_action" "inside" {
   for_each        = volterra_gcp_vpc_site.inside
   site_name       = each.value.name
@@ -279,8 +284,8 @@ resource "volterra_tf_params_action" "inside" {
   depends_on = [module.volterra_sa, module.inside, module.outside, volterra_gcp_vpc_site.inside]
 }
 
-# TODO @yossi-r @JeffGiroux @memes
-# This site could be moved up to the parent folder and have AWS, Azure, and GCP
+# TODO: @yossi-r @JeffGiroux @memes
+# This site should be moved up to the parent folder and have AWS, Azure, and GCP
 # use a common set of labels that we know to aggregate the business units on
 # each cloud.
 resource "volterra_virtual_site" "site" {
@@ -297,6 +302,7 @@ resource "volterra_virtual_site" "site" {
   }
 }
 
+# Define health checks for the origin pools; HTTP to 80
 resource "volterra_healthcheck" "inside" {
   for_each    = var.business_units
   name        = format("%s-%s-%s", var.projectPrefix, each.key, local.build_suffix)
@@ -322,6 +328,8 @@ resource "volterra_healthcheck" "inside" {
   ]
 }
 
+# Define an origin pool for each business unit that contains the webservers
+# launched on the inside network.
 resource "volterra_origin_pool" "inside" {
   for_each               = var.business_units
   name                   = format("%s-%sapp-%s", var.projectPrefix, each.key, local.build_suffix)
@@ -332,8 +340,10 @@ resource "volterra_origin_pool" "inside" {
     bu = each.key
   })
   annotations = local.volterra_common_annotations
-  port        = 80
-  no_tls      = true
+  # TODO: @memes - webserver supports TLS, and is deployed by default with
+  # self-signed certs; try to enable TLS for the demo?
+  port   = 80
+  no_tls = true
   dynamic "origin_servers" {
     for_each = [for ws in setproduct([each.key], range(0, var.num_servers)) : module.webservers[join("", ws)].addresses.private]
     content {
@@ -355,6 +365,9 @@ resource "volterra_origin_pool" "inside" {
   }
 }
 
+# Define a load balancer for each app in the business units. VIP will be
+# advertised to virtual site, so all Volterra gateways can proxy to the true
+# source.
 resource "volterra_http_loadbalancer" "inside" {
   for_each    = var.business_units
   name        = format("%s-%sapp-%s", var.projectPrefix, each.key, local.build_suffix)

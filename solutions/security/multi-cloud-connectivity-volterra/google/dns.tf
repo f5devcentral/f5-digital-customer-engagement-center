@@ -6,6 +6,11 @@ data "google_compute_region_instance_group" "inside" {
   depends_on = [volterra_tf_params_action.inside]
 }
 
+# TODO: @memes - can inside addresses of Volterra gateways be found in API or
+# through service discovery?
+#
+# This is still an abomination of an approach; it relies on observed Volterra
+# gateway deployment patterns rather than DNS forwarding or an ILB to MIG.
 data "google_compute_instance" "inside" {
   for_each  = toset(flatten([for ig in data.google_compute_region_instance_group.inside : [for vm in ig.instances : vm.instance]]))
   self_link = each.value
