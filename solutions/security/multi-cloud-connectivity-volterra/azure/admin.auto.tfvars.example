@@ -1,0 +1,8 @@
+resourceOwner        = "fred"
+azureLocation        = "westus2"
+keyName              = "~/.ssh/id_rsa.pub"
+projectPrefix        = "multi-cloud"
+volterraTenant       = "example"
+volterraCloudCred    = "example"
+namespace            = "example"
+volterraUniquePrefix = "example"
