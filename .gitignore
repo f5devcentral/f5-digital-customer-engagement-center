@@ -49,3 +49,8 @@ terraform.rc
 
 #BIGIP AWS module files
 DO_1nic.json
+# Kitchen ignores
+.kitchen
+Gemfile.lock
+test/reports
+!test/reports/.gitkeep

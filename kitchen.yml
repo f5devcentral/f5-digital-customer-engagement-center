@@ -26,6 +26,28 @@ verifier:
   color: true
 
 platforms:
+  - name: google-network-min
+    driver:
+      root_module_directory: test/fixtures/google/network/min
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-network-min-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-network-min-<%= report_ts %>.html
+  - name: google-network-min-example
+    driver:
+      root_module_directory: test/fixtures/google/network/min/example
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-network-min-example-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-network-min-example-<%= report_ts %>.html
   - name: google-workstation-default
     driver:
       root_module_directory: test/fixtures/google/workstation
@@ -50,9 +72,184 @@ platforms:
             - cli
             - documentation:<%= report_dir %>/google-workstation-example-<%= report_ts %>.txt
             - html2:<%= report_dir %>/google-workstation-example-<%= report_ts %>.html
+  - name: google-infra-default
+    driver:
+      root_module_directory: test/fixtures/google/infra
+      variables:
+        variant: def
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-default-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-default-<%= report_ts %>.html
+  - name: google-infra-example
+    driver:
+      root_module_directory: test/fixtures/google/infra/example
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-example-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-example-<%= report_ts %>.html
+  - name: google-infra-custom-vpcs
+    driver:
+      root_module_directory: test/fixtures/google/infra
+      variables:
+        # spell-checker: ignore vpcopts mgmt
+        variant: vpcopts
+        vpc_options: '{ mgmt = { primary_cidr = \"172.16.0.0/16\", mtu = 1500, nat = true }, private = { primary_cidr = \"172.17.0.0/16\", mtu = 1500, nat = false }, public = { primary_cidr = \"172.18.0.0/16\", mtu = 1500, nat = false }}'
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-custom-vpcs-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-custom-vpcs-<%= report_ts %>.html
+  - name: google-infra-private-vpc
+    driver:
+      root_module_directory: test/fixtures/google/infra
+      variables:
+        variant: priv
+        # main VPC should be an alias for private in this case
+        expected_main_equiv: private
+        vpc_options: '{ mgmt = null, private = { primary_cidr = \"172.17.0.0/16\", mtu = 1500, nat = true }, public = null}'
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-private-vpc-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-private-vpc-<%= report_ts %>.html
+  - name: google-infra-public-vpc
+    driver:
+      root_module_directory: test/fixtures/google/infra
+      variables:
+        variant: pub
+        # main VPC should be an alias for public in this case
+        expected_main_equiv: public
+        vpc_options: '{ mgmt = null, private = null, public = { primary_cidr = \"172.18.0.0/16\", mtu = 1500, nat = false } }'
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-public-vpc-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-public-vpc-<%= report_ts %>.html
+  - name: google-infra-priv-pub-vpc
+    driver:
+      root_module_directory: test/fixtures/google/infra
+      variables:
+        variant: pp
+        # main VPC should be an alias for private in this case
+        expected_main_equiv: private
+        vpc_options: '{ mgmt = null, private = { primary_cidr = \"172.17.0.0/16\", mtu = 1500, nat = false }, public = { primary_cidr = \"172.18.0.0/16\", mtu = 1500, nat = false } }'
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-priv-pub-vpc-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-priv-pub-vpc-<%= report_ts %>.html
+  - name: google-infra-workstation
+    driver:
+      root_module_directory: test/fixtures/google/infra
+      variables:
+        # spell-checker: ignore wkstn
+        variant: wkstn
+        features: '{workstation = "true", isolated = "false", registry = "false"}'
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-workstation-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-workstation-<%= report_ts %>.html
+  - name: google-infra-isolated
+    driver:
+      root_module_directory: test/fixtures/google/infra
+      variables:
+        variant: iso
+        features: '{workstation = "false", isolated = "true", registry = "false"}'
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-isolated-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-isolated-<%= report_ts %>.html
+  - name: google-infra-registry
+    driver:
+      root_module_directory: test/fixtures/google/infra
+      variables:
+        variant: reg
+        features: '{workstation = "false", isolated = "false", registry = "true"}'
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-registry-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-registry-<%= report_ts %>.html
+  - name: google-infra-enable-all
+    driver:
+      root_module_directory: test/fixtures/google/infra
+      variables:
+        variant: all
+        features: '{workstation = "true", isolated = "true", registry = "true"}'
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-enable-all-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-enable-all-<%= report_ts %>.html
+  - name: google-infra-disable-all
+    driver:
+      root_module_directory: test/fixtures/google/infra
+      variables:
+        variant: 'off'
+        features: '{workstation = "false", isolated = "false", registry = "false"}'
+    verifier:
+      systems:
+        - name: inspec-gcp
+          backend: gcp
+          reporter:
+            - cli
+            - documentation:<%= report_dir %>/google-infra-disable-all-<%= report_ts %>.txt
+            - html2:<%= report_dir %>/google-infra-disable-all-<%= report_ts %>.html
 
 suites:
+  - name: gcp-network-min
+    includes:
+      - google-network-min
+      - google-network-min-example
   - name: gcp-workstation
     includes:
       - google-workstation-default
       - google-workstation-example
+  - name: gcp-infra
+    includes:
+      - google-infra-default
+      - google-infra-example
+      - google-infra-custom-vpcs
+      - google-infra-private-vpc
+      - google-infra-public-vpc
+      - google-infra-priv-pub-vpc
+      - google-infra-workstation
+      - google-infra-isolated
+      - google-infra-registry
+      - google-infra-enable-all
+      - google-infra-disable-all
