@@ -1,0 +1,35 @@
+# Declare a minimal GCP network module validator
+# spell-checker: ignore inspec
+---
+name: google-network-min
+title: Minimal GCP network module
+maintainer: Matthew Emes <m.emes@f5.com>
+license: Apache-2.0
+supports:
+  - platform: gcp
+depends:
+  - name: inspec-gcp
+    git: https://github.com/inspec/inspec-gcp.git
+    tag: v1.8.8
+inputs:
+  - name: output_projectPrefix
+    type: string
+    required: true
+  - name: output_buildSuffix
+    type: string
+    required: true
+  - name: output_gcpRegion
+    type: string
+    required: true
+  - name: output_gcpProjectId
+    type: string
+    required: true
+  - name: output_resourceOwner
+    type: string
+    required: true
+  - name: output_vpcs
+    type: hash
+    required: true
+  - name: output_subnets
+    type: hash
+    required: true

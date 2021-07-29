@@ -2,7 +2,6 @@
 variable "projectPrefix" {
   type        = string
   description = "prefix for resources"
-  default     = "demo"
 }
 variable "buildSuffix" {
   type        = string
@@ -16,8 +15,13 @@ variable "gcpProjectId" {
   type        = string
   description = "gcp project id"
 }
-
 variable "resourceOwner" {
+  type        = string
   description = "owner of the deployment, for tagging purposes"
-  default     = "f5-dcec"
+}
+# Unused, but include so Terraform doesn't complain about undefined variable.
+variable "users" {
+  type        = list(string)
+  default     = []
+  description = "list of user emails to grant access to workstation"
 }

@@ -216,3 +216,25 @@ fileignoreconfig:
   checksum: 001d7a5a13affe2ee77b575b3862db44a497654556ee7e6e8cde869113124e90
 - filename: modules/google/terraform/backend/README.md
   checksum: 7ba4c0584aff22edfa172515e108687c9d68b0299a6d1dd74786d9ff83e006db
+- filename: test/integration/gcp-network-min/controls/subnets.rb
+  checksum: 9b01f27cef74d3c010371707e331869bc7a8376a38dfe99d11657e0ea53c5984
+- filename: modules/google/terraform/tls/main.tf
+  checksum: b0f5c8b0283462c4558e9f9f571a484bb51257c61d90f36aee7c73cbba1567b6
+- filename: modules/google/terraform/tls/README.md
+  checksum: a01ca437c6d86d8d244320e58c7632d2c037fdb7faf246f2393b3d9c2a469d5c
+- filename: modules/google/terraform/workstation/variables.tf
+  checksum: 3da7e875013c285faafe91ed78eda1deaa1a213f4de20c501f70fabfe3dec778
+- filename: modules/google/terraform/workstation/templates/cloud-config.yml
+  checksum: d26af85890bbcfd2f269119356e7c343a2fae1749b7be180afe9fb53725b82ba
+- filename: modules/google/terraform/workstation/main.tf
+  checksum: 40db1813cd68acc786a8ba7e42468b436eaf8eb4d2d2ca35ebd28dc1b13b4754
+- filename: modules/google/terraform/workstation/files/install-workstation-tls-certs.sh
+  checksum: 146831bf6433d2121fcc41e9baece0232c68c0b1834bbf5393997169786638f4
+- filename: modules/google/terraform/workstation/templates/cloud-config.yml
+  checksum: d26af85890bbcfd2f269119356e7c343a2fae1749b7be180afe9fb53725b82ba
+- filename: test/integration/gcp-infra/controls/workstation.rb
+  checksum: 712ce7310c5a68c1b89658524539791741fdd2317adc92d174b6d979eab7df6f
+- filename: modules/google/terraform/infra/variables.tf
+  checksum: b46fa19f456fa97ee84e1b720d902bc93f3a0cff50c091f625b63b1991572a7c
+- filename: modules/google/terraform/infra/README.md
+  checksum: 88d70979a9aa8a8ae01443fb096339230f4e072c2facc372e3744516e4adf611

@@ -2,7 +2,6 @@
 variable "projectPrefix" {
   type        = string
   description = "prefix for resources"
-  default     = "demo"
 }
 variable "buildSuffix" {
   type        = string
@@ -10,14 +9,27 @@ variable "buildSuffix" {
 }
 variable "gcpRegion" {
   type        = string
-  description = "region where gke is deployed"
+  description = "region where resources are deployed"
 }
 variable "gcpProjectId" {
   type        = string
   description = "gcp project id"
 }
-
 variable "resourceOwner" {
+  type        = string
   description = "owner of the deployment, for tagging purposes"
-  default     = "f5-dcec"
+}
+variable "variant" {
+  type        = string
+  description = "Workstation variant"
+}
+variable "users" {
+  type        = list(string)
+  default     = []
+  description = "list of user emails to grant access to workstation"
+}
+variable "image" {
+  type        = string
+  default     = ""
+  description = "Image self-link to override default base for VM"
 }

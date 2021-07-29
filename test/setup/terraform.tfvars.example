@@ -1,0 +1,9 @@
+# Common settings here
+resourceOwner = "my-name"
+
+# Create AWS resources here
+
+# Create Azure resources here
+
+# Create GCP resources here
+gcpProjectId = "my-gcp-project-id"
