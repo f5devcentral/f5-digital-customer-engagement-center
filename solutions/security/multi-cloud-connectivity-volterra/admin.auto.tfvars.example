@@ -1,0 +1,18 @@
+# Common variables: these will be used when naming demo resources
+projectPrefix = "my-mcn-demo"
+resourceOwner = "my-name"
+
+# Volterra variables: these will be used to standup Volterra resources across clouds
+volterra_namespace = "my-namespace"
+volterra_tenant = "my-volterra-tenant-id"
+
+# Optional: if provided this public key will allow SSH access to the Volterra gateways
+volterra_ssh_key = "ssh-rsa REDACTED me@my.email"
+
+# AWS variables: if these are not null/empty, AWS VPC sites will be created for demo
+
+# Azure variables: if these are not null/empty, AWS VPC sites will be created for demo
+
+# GCP variables: if these are not null/empty, AWS VPC sites will be created for demo
+gcpRegion = "us-west1"
+gcpProjectId = "my-gcp-project-id"

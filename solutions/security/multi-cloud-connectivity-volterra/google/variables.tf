@@ -2,11 +2,9 @@
 variable "projectPrefix" {
   type        = string
   description = "prefix for resources"
-  default     = "demo"
 }
 variable "buildSuffix" {
   type        = string
-  default     = null
   description = "random build suffix for resources"
 }
 variable "gcpRegion" {
@@ -19,8 +17,8 @@ variable "gcpProjectId" {
 }
 
 variable "resourceOwner" {
+  type        = string
   description = "owner of the deployment, for tagging purposes"
-  default     = "f5-dcec"
 }
 
 variable "business_units" {
