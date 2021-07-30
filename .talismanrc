@@ -147,7 +147,7 @@ fileignoreconfig:
 - filename: solutions/security/multi-cloud-connectivity-volterra/volterraSites.tf
   checksum: 631f0b94c9480c55fa3114b48441a0ed07863e125e6a99f31b73f8d63568b9ff
 - filename: solutions/security/multi-cloud-connectivity-volterra/main.tf
-  checksum: c368c6f3f15ccdb8d285cad0d8ebff52f04860a2c11fa5ffed5fe8d8fb8c6053
+  checksum: ec786af7df9bd177569afb3ea69a52bcabdee3b1bbfbacee61bebed04ac33bc8
 - filename: docs/solutions/delivery/application_delivery_controller/nginx/kic/labSetupAWS.rst
   checksum: b9d3ce252c1bde9c444c2d1101e82e652fda2c2d1edbe8d33ca0c76bbd9e8fe8
 - filename: solutions/security/nginx/kic/azure/admin.auto.tfvars.example
@@ -249,6 +249,8 @@ fileignoreconfig:
 - filename: modules/google/terraform/backend/README.md
   checksum: 7ba4c0584aff22edfa172515e108687c9d68b0299a6d1dd74786d9ff83e006db
 - filename: solutions/security/multi-cloud-connectivity-volterra/google/main.tf
-  checksum: 0c6af3a3c22f59306d6d8096a46f2ebe3bce181ad98e07dab07a2274939253af
+  checksum: bcd7090067a734c4a1612bad866a2f2dc861a44d0467774c78dc23c0ff998e6c
 - filename: solutions/security/multi-cloud-connectivity-volterra/google/README.md
   checksum: 274459853a09a95b3a3e1987e14b9fd25b7ba3da3ed4fb85bc88697433ba8c8b
+- filename: solutions/security/multi-cloud-connectivity-volterra/admin.auto.tfvars.example
+  checksum: fc68481cdd4f19a65f5a748e68edd06fbde6a8ecfa2b4a605740e4d527b8d2ea

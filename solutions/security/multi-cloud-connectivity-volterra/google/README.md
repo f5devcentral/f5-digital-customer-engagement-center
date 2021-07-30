@@ -127,7 +127,6 @@ changing the deployment.
 
 | Name | Source | Version |
 |------|--------|---------|
-| dns | terraform-google-modules/cloud-dns/google | 3.1.0 |
 | inside | terraform-google-modules/network/google | 3.3.0 |
 | outside | terraform-google-modules/network/google | 3.3.0 |
 | region_locations | git::https://github.com/memes/terraform-google-volterra//modules/region-locations?ref=0.3.1 |  |
@@ -142,10 +141,8 @@ changing the deployment.
 | Name |
 |------|
 | [google_compute_firewall](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) |
-| [google_compute_instance](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_instance) |
 | [google_compute_region_instance_group](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_region_instance_group) |
 | [google_compute_zones](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_zones) |
-| [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
 | [random_shuffle](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/shuffle) |
 | [volterra_gcp_vpc_site](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/gcp_vpc_site) |
 | [volterra_healthcheck](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/healthcheck) |
@@ -158,20 +155,20 @@ changing the deployment.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| buildSuffix | random build suffix for resources | `string` | `null` | no |
-| business\_units | The set of VPCs to create with overlapping CIDRs. | <pre>map(object({<br>    cidr        = string<br>    mtu         = number<br>    workstation = bool<br>  }))</pre> | <pre>{<br>  "bu21": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": true<br>  },<br>  "bu22": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  },<br>  "bu23": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  }<br>}</pre> | no |
+| buildSuffix | random build suffix for resources | `string` | n/a | yes |
 | domain\_name | The DNS domain name that will be used as common parent generated DNS name of<br>loadbalancers. | `string` | n/a | yes |
 | gcpProjectId | gcp project id | `string` | n/a | yes |
 | gcpRegion | region where gke is deployed | `string` | n/a | yes |
+| projectPrefix | prefix for resources | `string` | n/a | yes |
+| resourceOwner | owner of the deployment, for tagging purposes | `string` | n/a | yes |
+| volterra\_namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
+| volterra\_tenant | The Volterra tenant to use. | `string` | n/a | yes |
+| business\_units | The set of VPCs to create with overlapping CIDRs. | <pre>map(object({<br>    cidr        = string<br>    mtu         = number<br>    workstation = bool<br>  }))</pre> | <pre>{<br>  "bu21": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": true<br>  },<br>  "bu22": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  },<br>  "bu23": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  }<br>}</pre> | no |
 | labels | An optional list of labels to apply to GCP resources. | `map(string)` | `{}` | no |
 | num\_servers | The number of webserver instances to launch in each business unit spoke. Default<br>is 2. | `number` | `2` | no |
 | num\_volterra\_nodes | The number of Volterra gateway instances to launch in each business unit spoke.<br>Default is 1. | `number` | `1` | no |
 | outside\_cidr | The CIDR to assign to shared outside VPC. Default is '100.64.96.0/20'. | `string` | `"100.64.96.0/20"` | no |
-| projectPrefix | prefix for resources | `string` | `"demo"` | no |
-| resourceOwner | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |
-| volterra\_namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
 | volterra\_ssh\_key | An optional SSH key to add to Volterra nodes. | `string` | `""` | no |
-| volterra\_tenant | The Volterra tenant to use. | `string` | n/a | yes |
 
 ## Outputs
 

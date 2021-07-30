@@ -5,7 +5,7 @@ data "google_compute_region_instance_group" "inside" {
   region     = var.gcpRegion
   depends_on = [volterra_tf_params_action.inside]
 }
-
+/*
 # TODO: @memes - can inside addresses of Volterra gateways be found in API or
 # through service discovery?
 #
@@ -28,9 +28,9 @@ module "dns" {
   version     = "3.1.0"
   project_id  = var.gcpProjectId
   type        = "private"
-  name        = format("%s-private-%s-%s", var.projectPrefix, each.key, local.build_suffix)
+  name        = format("%s-private-%s-%s", var.projectPrefix, each.key, var.buildSuffix)
   domain      = format("%s.", var.domain_name)
-  description = format("Resolve all %s hosts to Volterra gateway (%s-%s)", each.key, var.projectPrefix, local.build_suffix)
+  description = format("Resolve all %s hosts to Volterra gateway (%s-%s)", each.key, var.projectPrefix, var.buildSuffix)
   labels = merge(local.gcp_common_labels, {
     bu = each.key
   })
@@ -54,3 +54,4 @@ module "dns" {
 
   depends_on = [volterra_tf_params_action.inside]
 }
+*/
