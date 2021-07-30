@@ -58,11 +58,6 @@ module "network" {
   #   internal = azurerm_network_security_group.allow_ce[each.key].id
   # }
 
-  route_tables_ids = {
-    external = azurerm_route_table.rt[each.key].id
-    internal = azurerm_route_table.rt[each.key].id
-  }
-
   tags = {
     Name      = format("%s-vnet-%s-%s", var.resourceOwner, each.key, random_id.buildSuffix.hex)
     Terraform = "true"
@@ -116,17 +111,6 @@ data "azurerm_network_interface" "sliBu13" {
   name                = "master-0-sli"
   resource_group_name = format("%s-bu13-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   depends_on          = [volterra_tf_params_action.applyBu13]
-}
-
-# Create routes
-resource "azurerm_route" "rt" {
-  for_each               = local.routes
-  name                   = "volterra_gateway"
-  resource_group_name    = azurerm_resource_group.rg[each.key].name
-  route_table_name       = azurerm_route_table.rt[each.key].name
-  address_prefix         = "100.64.101.0/24"
-  next_hop_type          = "VirtualAppliance"
-  next_hop_in_ip_address = each.value["nextHop"]
 }
 
 ############################ Security Groups - Jumphost, Web Servers ############################
