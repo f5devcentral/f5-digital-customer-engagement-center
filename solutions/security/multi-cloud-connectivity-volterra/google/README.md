@@ -4,7 +4,7 @@
 This module will create a set of Volterra GCP VPC Sites with ingress/egress gateways
 configured and a virtual site that spans the CE sites.
 
-![multi-cloud-volterra-hla.png](images/multi-cloud-volterra-hla.png)
+![multi-cloud-volterra-hla.png](../images/multi-cloud-volterra-hla.png)
 <!-- markdownlint-disable no-inline-html -->
 <p align="center">Figure 1: High-level overview of solution; this module delivers the GCP resources</p>
 <!-- markdownlint-enable no-inline-html -->
