@@ -1,24 +1,3 @@
-# Set locals
-locals {
-  dnsRecords = {
-    bu11 = {
-      name    = "bu11app"
-      records = ["100.64.101.110"]
-      vnetId  = module.network["bu11"].vnet_id
-    }
-    bu12 = {
-      name    = "bu12app"
-      records = ["100.64.101.120"]
-      vnetId  = module.network["bu12"].vnet_id
-    }
-    bu13 = {
-      name    = "bu13app"
-      records = ["100.64.101.130"]
-      vnetId  = module.network["bu13"].vnet_id
-    }
-  }
-}
-
 ############################ Private DNS Zones ############################
 
 resource "azurerm_private_dns_zone" "sharedAcme" {
@@ -33,21 +12,28 @@ resource "azurerm_private_dns_zone" "sharedAcme" {
 
 ############################ Zone Records ############################
 
-resource "azurerm_private_dns_a_record" "app" {
-  for_each            = local.dnsRecords
-  name                = each.value["name"]
+resource "azurerm_private_dns_a_record" "inside" {
+  name                = "inside"
   zone_name           = azurerm_private_dns_zone.sharedAcme.name
   resource_group_name = azurerm_resource_group.rg["bu11"].name
   ttl                 = 300
-  records             = each.value["records"]
+  records             = ["10.1.52.6"]
+}
+
+resource "azurerm_private_dns_cname_record" "sharedAcme" {
+  name                = "*"
+  zone_name           = azurerm_private_dns_zone.sharedAcme.name
+  resource_group_name = azurerm_resource_group.rg["bu11"].name
+  ttl                 = 300
+  record              = "inside.shared.acme.com"
 }
 
 ############################ DNS Virtual Network Link ############################
 
 resource "azurerm_private_dns_zone_virtual_network_link" "link" {
-  for_each              = local.dnsRecords
+  for_each              = local.vnets
   name                  = each.key
   resource_group_name   = azurerm_resource_group.rg["bu11"].name
   private_dns_zone_name = azurerm_private_dns_zone.sharedAcme.name
-  virtual_network_id    = each.value["vnetId"]
+  virtual_network_id    = module.network[each.key].vnet_id
 }

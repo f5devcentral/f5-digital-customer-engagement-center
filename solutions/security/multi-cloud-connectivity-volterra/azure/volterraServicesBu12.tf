@@ -39,7 +39,6 @@ resource "volterra_http_loadbalancer" "bu12app" {
     advertise_where {
       port = 80
       site {
-        ip      = "100.64.101.120"
         network = "SITE_NETWORK_INSIDE"
         site {
           tenant    = var.volterraTenant
@@ -51,7 +50,6 @@ resource "volterra_http_loadbalancer" "bu12app" {
     advertise_where {
       port = 80
       site {
-        ip      = "100.64.101.120"
         network = "SITE_NETWORK_INSIDE"
         site {
           tenant    = var.volterraTenant
@@ -63,7 +61,6 @@ resource "volterra_http_loadbalancer" "bu12app" {
     advertise_where {
       port = 80
       site {
-        ip      = "100.64.101.120"
         network = "SITE_NETWORK_INSIDE"
         site {
           tenant    = var.volterraTenant
