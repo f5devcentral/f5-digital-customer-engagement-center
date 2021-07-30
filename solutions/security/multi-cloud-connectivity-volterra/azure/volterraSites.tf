@@ -108,7 +108,7 @@ resource "volterra_azure_vnet_site" "bu11" {
             type = "NEXT_HOP_USE_CONFIGURED"
             nexthop_address {
               ipv4 {
-                addr = "100.64.49.1"
+                addr = "10.1.52.1"
               }
             }
           }
@@ -197,7 +197,7 @@ resource "volterra_azure_vnet_site" "bu12" {
             type = "NEXT_HOP_USE_CONFIGURED"
             nexthop_address {
               ipv4 {
-                addr = "100.64.65.1"
+                addr = "10.1.52.1"
               }
             }
           }
@@ -285,7 +285,7 @@ resource "volterra_azure_vnet_site" "bu13" {
             type = "NEXT_HOP_USE_CONFIGURED"
             nexthop_address {
               ipv4 {
-                addr = "100.64.81.1"
+                addr = "10.1.52.1"
               }
             }
           }
