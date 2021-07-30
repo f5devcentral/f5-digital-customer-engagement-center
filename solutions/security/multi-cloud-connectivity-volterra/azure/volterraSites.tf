@@ -1,6 +1,24 @@
 provider "volterra" {
 }
 
+locals {
+  azure_common_labels = {
+    owner = var.resourceOwner
+    demo  = "multi-cloud-connectivity-volterra"
+  }
+  volterra_common_labels = {
+    owner    = var.resourceOwner
+    demo     = "multi-cloud-connectivity-volterra"
+    prefix   = var.projectPrefix
+    suffix   = random_id.buildSuffix.hex
+    platform = "azure"
+  }
+  volterra_common_annotations = {
+    source      = "git::https://github.com/F5DevCentral/f5-digital-customer-engangement-center"
+    provisioner = "terraform"
+  }
+}
+
 ############################ Azure Subnet Names ############################
 
 data "azurerm_subnet" "bu11_outside" {
@@ -52,11 +70,28 @@ data "azurerm_subnet" "bu13_inside" {
 }
 
 
+############################ Volterra Virtual Site ############################
+
+resource "volterra_virtual_site" "site" {
+  name        = format("%s-site-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
+  namespace   = var.namespace
+  labels      = local.volterra_common_labels
+  annotations = local.volterra_common_annotations
+  site_type   = "CUSTOMER_EDGE"
+  site_selector {
+    expressions = [
+      join(",", [for k, v in local.volterra_common_labels : format("%s = %s", k, v) if k != "platform"])
+    ]
+  }
+}
+
 ############################ Volterra Azure VNet Site - BU11 ############################
 
 resource "volterra_azure_vnet_site" "bu11" {
   name                    = format("%s-bu11-azure-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   namespace               = "system"
+  labels                  = local.volterra_common_labels
+  annotations             = local.volterra_common_annotations
   azure_region            = azurerm_resource_group.rg["bu11"].location
   resource_group          = format("%s-bu11-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   machine_type            = "Standard_D3_v2"
@@ -146,6 +181,8 @@ resource "volterra_tf_params_action" "applyBu11" {
 resource "volterra_azure_vnet_site" "bu12" {
   name                    = format("%s-bu12-azure-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   namespace               = "system"
+  labels                  = local.volterra_common_labels
+  annotations             = local.volterra_common_annotations
   azure_region            = azurerm_resource_group.rg["bu12"].location
   resource_group          = format("%s-bu12-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   machine_type            = "Standard_D3_v2"
@@ -234,6 +271,8 @@ resource "volterra_tf_params_action" "applyBu12" {
 resource "volterra_azure_vnet_site" "bu13" {
   name                    = format("%s-bu13-azure-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   namespace               = "system"
+  labels                  = local.volterra_common_labels
+  annotations             = local.volterra_common_annotations
   azure_region            = azurerm_resource_group.rg["bu13"].location
   resource_group          = format("%s-bu13-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   machine_type            = "Standard_D3_v2"
