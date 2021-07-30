@@ -3,52 +3,52 @@ provider "volterra" {
 
 ############################ Azure Subnet Names ############################
 
-data "azurerm_subnet" "transitBu11_outside" {
+data "azurerm_subnet" "bu11_outside" {
   name                 = "external"
-  virtual_network_name = module.network["transitBu11"].vnet_name
-  resource_group_name  = azurerm_resource_group.rg["transitBu11"].name
+  virtual_network_name = module.network["bu11"].vnet_name
+  resource_group_name  = azurerm_resource_group.rg["bu11"].name
 
-  depends_on = [module.network["transitBu11"].vnet_subnets]
+  depends_on = [module.network["bu11"].vnet_subnets]
 }
 
-data "azurerm_subnet" "transitBu11_inside" {
+data "azurerm_subnet" "bu11_inside" {
   name                 = "internal"
-  virtual_network_name = module.network["transitBu11"].vnet_name
-  resource_group_name  = azurerm_resource_group.rg["transitBu11"].name
+  virtual_network_name = module.network["bu11"].vnet_name
+  resource_group_name  = azurerm_resource_group.rg["bu11"].name
 
-  depends_on = [module.network["transitBu11"].vnet_subnets]
+  depends_on = [module.network["bu11"].vnet_subnets]
 }
 
-data "azurerm_subnet" "transitBu12_outside" {
+data "azurerm_subnet" "bu12_outside" {
   name                 = "external"
-  virtual_network_name = module.network["transitBu12"].vnet_name
-  resource_group_name  = azurerm_resource_group.rg["transitBu12"].name
+  virtual_network_name = module.network["bu12"].vnet_name
+  resource_group_name  = azurerm_resource_group.rg["bu12"].name
 
-  depends_on = [module.network["transitBu12"].vnet_subnets]
+  depends_on = [module.network["bu12"].vnet_subnets]
 }
 
-data "azurerm_subnet" "transitBu12_inside" {
+data "azurerm_subnet" "bu12_inside" {
   name                 = "internal"
-  virtual_network_name = module.network["transitBu12"].vnet_name
-  resource_group_name  = azurerm_resource_group.rg["transitBu12"].name
+  virtual_network_name = module.network["bu12"].vnet_name
+  resource_group_name  = azurerm_resource_group.rg["bu12"].name
 
-  depends_on = [module.network["transitBu12"].vnet_subnets]
+  depends_on = [module.network["bu12"].vnet_subnets]
 }
 
-data "azurerm_subnet" "transitBu13_outside" {
+data "azurerm_subnet" "bu13_outside" {
   name                 = "external"
-  virtual_network_name = module.network["transitBu13"].vnet_name
-  resource_group_name  = azurerm_resource_group.rg["transitBu13"].name
+  virtual_network_name = module.network["bu13"].vnet_name
+  resource_group_name  = azurerm_resource_group.rg["bu13"].name
 
-  depends_on = [module.network["transitBu13"].vnet_subnets]
+  depends_on = [module.network["bu13"].vnet_subnets]
 }
 
-data "azurerm_subnet" "transitBu13_inside" {
+data "azurerm_subnet" "bu13_inside" {
   name                 = "internal"
-  virtual_network_name = module.network["transitBu13"].vnet_name
-  resource_group_name  = azurerm_resource_group.rg["transitBu13"].name
+  virtual_network_name = module.network["bu13"].vnet_name
+  resource_group_name  = azurerm_resource_group.rg["bu13"].name
 
-  depends_on = [module.network["transitBu13"].vnet_subnets]
+  depends_on = [module.network["bu13"].vnet_subnets]
 }
 
 
@@ -57,11 +57,12 @@ data "azurerm_subnet" "transitBu13_inside" {
 resource "volterra_azure_vnet_site" "bu11" {
   name                    = format("%s-bu11-azure-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   namespace               = "system"
-  azure_region            = azurerm_resource_group.rg["transitBu11"].location
+  azure_region            = azurerm_resource_group.rg["bu11"].location
   resource_group          = format("%s-bu11-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   machine_type            = "Standard_D3_v2"
   assisted                = var.assisted
   logs_streaming_disabled = true
+  no_worker_nodes         = true
 
   azure_cred {
     name      = var.volterraCloudCred
@@ -82,13 +83,13 @@ resource "volterra_azure_vnet_site" "bu11" {
 
       inside_subnet {
         subnet {
-          subnet_name         = data.azurerm_subnet.transitBu11_inside.name
+          subnet_name         = data.azurerm_subnet.bu11_inside.name
           vnet_resource_group = true
         }
       }
       outside_subnet {
         subnet {
-          subnet_name         = data.azurerm_subnet.transitBu11_outside.name
+          subnet_name         = data.azurerm_subnet.bu11_outside.name
           vnet_resource_group = true
         }
       }
@@ -122,8 +123,8 @@ resource "volterra_azure_vnet_site" "bu11" {
 
   vnet {
     existing_vnet {
-      resource_group = azurerm_resource_group.rg["transitBu11"].name
-      vnet_name      = module.network["transitBu11"].vnet_name
+      resource_group = azurerm_resource_group.rg["bu11"].name
+      vnet_name      = module.network["bu11"].vnet_name
     }
   }
 }
@@ -145,11 +146,12 @@ resource "volterra_tf_params_action" "applyBu11" {
 resource "volterra_azure_vnet_site" "bu12" {
   name                    = format("%s-bu12-azure-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   namespace               = "system"
-  azure_region            = azurerm_resource_group.rg["transitBu12"].location
+  azure_region            = azurerm_resource_group.rg["bu12"].location
   resource_group          = format("%s-bu12-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   machine_type            = "Standard_D3_v2"
   assisted                = var.assisted
   logs_streaming_disabled = true
+  no_worker_nodes         = true
 
   azure_cred {
     name      = var.volterraCloudCred
@@ -170,13 +172,13 @@ resource "volterra_azure_vnet_site" "bu12" {
 
       inside_subnet {
         subnet {
-          subnet_name         = data.azurerm_subnet.transitBu12_inside.name
+          subnet_name         = data.azurerm_subnet.bu12_inside.name
           vnet_resource_group = true
         }
       }
       outside_subnet {
         subnet {
-          subnet_name         = data.azurerm_subnet.transitBu12_outside.name
+          subnet_name         = data.azurerm_subnet.bu12_outside.name
           vnet_resource_group = true
         }
       }
@@ -210,8 +212,8 @@ resource "volterra_azure_vnet_site" "bu12" {
 
   vnet {
     existing_vnet {
-      resource_group = azurerm_resource_group.rg["transitBu12"].name
-      vnet_name      = module.network["transitBu12"].vnet_name
+      resource_group = azurerm_resource_group.rg["bu12"].name
+      vnet_name      = module.network["bu12"].vnet_name
     }
   }
 }
@@ -232,11 +234,12 @@ resource "volterra_tf_params_action" "applyBu12" {
 resource "volterra_azure_vnet_site" "bu13" {
   name                    = format("%s-bu13-azure-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   namespace               = "system"
-  azure_region            = azurerm_resource_group.rg["transitBu13"].location
+  azure_region            = azurerm_resource_group.rg["bu13"].location
   resource_group          = format("%s-bu13-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
   machine_type            = "Standard_D3_v2"
   assisted                = var.assisted
   logs_streaming_disabled = true
+  no_worker_nodes         = true
 
   azure_cred {
     name      = var.volterraCloudCred
@@ -257,13 +260,13 @@ resource "volterra_azure_vnet_site" "bu13" {
 
       inside_subnet {
         subnet {
-          subnet_name         = data.azurerm_subnet.transitBu13_inside.name
+          subnet_name         = data.azurerm_subnet.bu13_inside.name
           vnet_resource_group = true
         }
       }
       outside_subnet {
         subnet {
-          subnet_name         = data.azurerm_subnet.transitBu13_outside.name
+          subnet_name         = data.azurerm_subnet.bu13_outside.name
           vnet_resource_group = true
         }
       }
@@ -297,8 +300,8 @@ resource "volterra_azure_vnet_site" "bu13" {
 
   vnet {
     existing_vnet {
-      resource_group = azurerm_resource_group.rg["transitBu13"].name
-      vnet_name      = module.network["transitBu13"].vnet_name
+      resource_group = azurerm_resource_group.rg["bu13"].name
+      vnet_name      = module.network["bu13"].vnet_name
     }
   }
 }
