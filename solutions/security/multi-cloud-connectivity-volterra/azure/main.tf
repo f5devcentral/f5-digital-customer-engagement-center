@@ -64,13 +64,16 @@ module "network" {
 locals {
   jumphosts = {
     bu11 = {
-      subnet = module.network["bu11"].vnet_subnets[0]
+      subnet   = module.network["bu11"].vnet_subnets[0]
+      create = true
     }
     bu12 = {
       subnet = module.network["bu12"].vnet_subnets[0]
+      create = false
     }
     bu13 = {
       subnet = module.network["bu13"].vnet_subnets[0]
+      create = false
     }
   }
 
@@ -155,7 +158,7 @@ resource "azurerm_network_security_group" "webserver" {
 
 # Create jumphost instances
 module "jumphost" {
-  for_each           = local.jumphosts
+  for_each           = { for k, v in local.jumphosts : k => v if v.create }
   source             = "../../../../modules/azure/terraform/jumphost/"
   projectPrefix      = var.projectPrefix
   buildSuffix        = random_id.buildSuffix.hex
