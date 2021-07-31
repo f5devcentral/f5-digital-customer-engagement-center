@@ -19,6 +19,29 @@ locals {
   }
 }
 
+
+############################ NIC Info ############################
+
+# Collect data for Volterra node "inside" NIC
+data "azurerm_network_interface" "sliBu11" {
+  name                = "master-0-sli"
+  resource_group_name = format("%s-bu11-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
+  depends_on          = [volterra_tf_params_action.applyBu11]
+}
+
+data "azurerm_network_interface" "sliBu12" {
+  name                = "master-0-sli"
+  resource_group_name = format("%s-bu12-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
+  depends_on          = [volterra_tf_params_action.applyBu12]
+}
+
+data "azurerm_network_interface" "sliBu13" {
+  name                = "master-0-sli"
+  resource_group_name = format("%s-bu13-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
+  depends_on          = [volterra_tf_params_action.applyBu13]
+}
+
+
 ############################ Azure Subnet Names ############################
 
 data "azurerm_subnet" "bu11_outside" {

@@ -53,64 +53,10 @@ module "network" {
   subnet_prefixes     = each.value["subnetPrefixes"]
   subnet_names        = each.value["subnetNames"]
 
-  # nsg_ids = {
-  #   external = azurerm_network_security_group.allow_ce[each.key].id
-  #   internal = azurerm_network_security_group.allow_ce[each.key].id
-  # }
-
   tags = {
     Name      = format("%s-vnet-%s-%s", var.resourceOwner, each.key, random_id.buildSuffix.hex)
     Terraform = "true"
   }
-}
-
-############################ Route Tables ############################
-
-locals {
-  routes = {
-    bu11 = {
-      nextHop = data.azurerm_network_interface.sliBu11.private_ip_address
-    }
-    bu12 = {
-      nextHop = data.azurerm_network_interface.sliBu12.private_ip_address
-    }
-    bu13 = {
-      nextHop = data.azurerm_network_interface.sliBu13.private_ip_address
-    }
-  }
-}
-
-# Create Route Tables
-resource "azurerm_route_table" "rt" {
-  for_each                      = local.vnets
-  name                          = format("%s-rt-%s-%s", var.projectPrefix, each.key, random_id.buildSuffix.hex)
-  location                      = azurerm_resource_group.rg[each.key].location
-  resource_group_name           = azurerm_resource_group.rg[each.key].name
-  disable_bgp_route_propagation = false
-
-  tags = {
-    Name      = format("%s-rt-%s-%s", var.resourceOwner, each.key, random_id.buildSuffix.hex)
-    Terraform = "true"
-  }
-}
-
-# Collect data for Volterra node "inside" NIC
-data "azurerm_network_interface" "sliBu11" {
-  name                = "master-0-sli"
-  resource_group_name = format("%s-bu11-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
-  depends_on          = [volterra_tf_params_action.applyBu11]
-}
-
-data "azurerm_network_interface" "sliBu12" {
-  name                = "master-0-sli"
-  resource_group_name = format("%s-bu12-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
-  depends_on          = [volterra_tf_params_action.applyBu12]
-}
-
-data "azurerm_network_interface" "sliBu13" {
-  name                = "master-0-sli"
-  resource_group_name = format("%s-bu13-volterra-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
-  depends_on          = [volterra_tf_params_action.applyBu13]
 }
 
 ############################ Security Groups - Jumphost, Web Servers ############################
