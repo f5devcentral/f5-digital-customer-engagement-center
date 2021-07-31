@@ -38,34 +38,12 @@ resource "volterra_http_loadbalancer" "bu11app" {
   advertise_custom {
     advertise_where {
       port = 80
-      site {
+      virtual_site {
         network = "SITE_NETWORK_INSIDE"
-        site {
+        virtual_site {
+          name      = volterra_virtual_site.site.name
+          namespace = volterra_virtual_site.site.namespace
           tenant    = var.volterraTenant
-          namespace = "system"
-          name      = volterra_azure_vnet_site.bu11.name
-        }
-      }
-    }
-    advertise_where {
-      port = 80
-      site {
-        network = "SITE_NETWORK_INSIDE"
-        site {
-          tenant    = var.volterraTenant
-          namespace = "system"
-          name      = volterra_azure_vnet_site.bu12.name
-        }
-      }
-    }
-    advertise_where {
-      port = 80
-      site {
-        network = "SITE_NETWORK_INSIDE"
-        site {
-          tenant    = var.volterraTenant
-          namespace = "system"
-          name      = volterra_azure_vnet_site.bu13.name
         }
       }
     }
