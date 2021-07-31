@@ -1,38 +1,26 @@
 output "bu11JumphostPublicIp" {
   description = "BU11 Jumphost Public IP"
-  value       = module.jumphost["bu11"].publicIp
+  value       = local.jumphosts["bu11"].create ? module.jumphost["bu11"].publicIp : null
 }
 output "bu12JumphostPublicIp" {
   description = "BU12 Jumphost Public IP"
-  value       = module.jumphost["bu12"].publicIp
+  value       = local.jumphosts["bu12"].create ? module.jumphost["bu12"].publicIp : null
 }
 output "bu13JumphostPublicIp" {
   description = "BU13 Jumphost Public IP"
-  value       = module.jumphost["bu13"].publicIp
+  value       = local.jumphosts["bu13"].create ? module.jumphost["bu13"].publicIp : null
 }
 output "bu11JumphostPrivateIp" {
   description = "BU11 Jumphost Private IP"
-  value       = module.jumphost["bu11"].jumphostInfo.private_ip_address
+  value       = local.jumphosts["bu11"].create ? module.jumphost["bu11"].jumphostInfo.private_ip_address : null
 }
 output "bu12JumphostPrivateIp" {
   description = "BU12 Jumphost Private IP"
-  value       = module.jumphost["bu12"].jumphostInfo.private_ip_address
+  value       = local.jumphosts["bu12"].create ? module.jumphost["bu12"].jumphostInfo.private_ip_address : null
 }
 output "bu13JumphostPrivateIp" {
   description = "BU13 Jumphost Private IP"
-  value       = module.jumphost["bu13"].jumphostInfo.private_ip_address
-}
-output "bu11WebServerIP" {
-  description = "BU11 Web Server Private IP"
-  value       = module.webserver["bu11"].privateIp
-}
-output "bu12WebServerIP" {
-  description = "BU12 Web Server Private IP"
-  value       = module.webserver["bu12"].privateIp
-}
-output "bu13WebServerIP" {
-  description = "BU13 Web Server Private IP"
-  value       = module.webserver["bu13"].privateIp
+  value       = local.jumphosts["bu13"].create ? module.jumphost["bu13"].jumphostInfo.private_ip_address : null
 }
 output "vnetIdBu11" {
   description = "BU11 VNet ID"
