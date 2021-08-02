@@ -6,9 +6,6 @@
 /solutions/security/gwlb-ingress-fw @yossi-r
 /solutions/delivery/application_delivery_controller/nginx/kic/aws @jmcalalang
 /solutions/security/multi-cloud-connectivity-volterra @yossi-r @JeffGiroux @memes
-/solutions/security/multi-cloud-connectivity-volterra/aws @yossi-r @JeffGiroux
-/solutions/security/multi-cloud-connectivity-volterra/azure @JeffGiroux
-/solutions/security/multi-cloud-connectivity-volterra/google @memes
 
 # Network module owners
 /modules/aws/terraform/network/ @yossi-r
