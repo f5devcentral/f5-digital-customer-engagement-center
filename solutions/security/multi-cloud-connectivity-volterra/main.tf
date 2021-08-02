@@ -34,7 +34,7 @@ locals {
     demo   = "multi-cloud-connectivity-volterra"
     owner  = var.resourceOwner
     prefix = var.projectPrefix
-    suffix = local.build_suffix
+    suffix = var.buildSuffix
   }
   deploy_aws    = false
   deploy_azure  = false
