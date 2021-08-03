@@ -1,0 +1,67 @@
+############################ Volterra Origin Pool (backend) ############################
+
+resource "volterra_origin_pool" "app" {
+  for_each               = local.vnets
+  name                   = format("%s-app", each.key)
+  namespace              = var.namespace
+  endpoint_selection     = "DISTRIBUTED"
+  loadbalancer_algorithm = "LB_OVERRIDE"
+  port                   = 80
+  no_tls                 = true
+
+  origin_servers {
+    private_ip {
+      ip = module.webserver[each.key].privateIp
+      site_locator {
+        site {
+          tenant    = var.volterraTenant
+          namespace = "system"
+          name      = volterra_azure_vnet_site.bu[each.key].name
+        }
+      }
+      inside_network = true
+    }
+
+    labels = {
+      "bu" = each.key
+    }
+  }
+}
+
+############################ Volterra HTTP LB ############################
+
+resource "volterra_http_loadbalancer" "app" {
+  for_each                        = local.vnets
+  name                            = format("%s-app", each.key)
+  namespace                       = var.namespace
+  no_challenge                    = true
+  domains                         = [format("%sapp.shared.acme.com", each.key)]
+  random                          = true
+  disable_rate_limit              = true
+  service_policies_from_namespace = true
+  disable_waf                     = true
+
+  advertise_custom {
+    advertise_where {
+      port = 80
+      virtual_site {
+        network = "SITE_NETWORK_INSIDE"
+        virtual_site {
+          name      = volterra_virtual_site.vsite.name
+          namespace = volterra_virtual_site.vsite.namespace
+          tenant    = var.volterraTenant
+        }
+      }
+    }
+  }
+
+  default_route_pools {
+    pool {
+      name = volterra_origin_pool.app[each.key].name
+    }
+  }
+
+  http {
+    dns_volterra_managed = false
+  }
+}

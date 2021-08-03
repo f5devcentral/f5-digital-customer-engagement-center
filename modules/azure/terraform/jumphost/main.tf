@@ -6,11 +6,6 @@ terraform {
   }
 }
 
-# Azure Provider
-provider "azurerm" {
-  features {}
-}
-
 # Create Public IP
 resource "azurerm_public_ip" "mgmtPip" {
   name                = format("%s-jumphost-pip-%s", var.projectPrefix, var.buildSuffix)
