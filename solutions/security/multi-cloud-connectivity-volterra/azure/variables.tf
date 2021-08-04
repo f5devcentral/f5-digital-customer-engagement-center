@@ -59,3 +59,11 @@ The DNS domain name that will be used as common parent generated DNS name of
 loadbalancers.
 EOD
 }
+
+variable "labels" {
+  type        = map(string)
+  default     = {}
+  description = <<EOD
+An optional list of labels to apply to Azure resources.
+EOD
+}

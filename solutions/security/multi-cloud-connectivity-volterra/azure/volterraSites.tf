@@ -1,15 +1,12 @@
 locals {
-  azure_common_labels = {
+  # TODO: @JeffGiroux - is this redundant?
+  azure_common_labels = merge(var.labels, {
     owner = var.resourceOwner
     demo  = "multi-cloud-connectivity-volterra"
-  }
-  volterra_common_labels = {
-    owner    = var.resourceOwner
-    demo     = "multi-cloud-connectivity-volterra"
-    prefix   = var.projectPrefix
-    suffix   = var.buildSuffix
+  })
+  volterra_common_labels = merge(var.labels, {
     platform = "azure"
-  }
+  })
   volterra_common_annotations = {
     source      = "git::https://github.com/F5DevCentral/f5-digital-customer-engangement-center"
     provisioner = "terraform"
