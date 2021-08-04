@@ -278,7 +278,7 @@ resource "volterra_tf_params_action" "inside" {
 # each cloud.
 resource "volterra_virtual_site" "site" {
   name        = format("%s-site-%s", var.projectPrefix, var.buildSuffix)
-  namespace   = var.volterra_namespace
+  namespace   = var.namespace
   description = format("Virtual site for %s-%s", var.projectPrefix, var.buildSuffix)
   labels      = local.volterra_common_labels
   annotations = local.volterra_common_annotations
@@ -294,7 +294,7 @@ resource "volterra_virtual_site" "site" {
 resource "volterra_healthcheck" "inside" {
   for_each    = var.business_units
   name        = format("%s-%s-%s", var.projectPrefix, each.key, var.buildSuffix)
-  namespace   = var.volterra_namespace
+  namespace   = var.namespace
   description = format("HTTP healthcheck for service in %s (%s-%s)", each.key, var.projectPrefix, var.buildSuffix)
   labels = merge(var.labels, {
     bu     = each.key
@@ -321,7 +321,7 @@ resource "volterra_healthcheck" "inside" {
 resource "volterra_origin_pool" "inside" {
   for_each               = var.business_units
   name                   = format("%s-%sapp-%s", var.projectPrefix, each.key, var.buildSuffix)
-  namespace              = var.volterra_namespace
+  namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"
   loadbalancer_algorithm = "LB_OVERRIDE"
   labels = merge(local.volterra_common_labels, {
@@ -359,7 +359,7 @@ resource "volterra_origin_pool" "inside" {
 resource "volterra_http_loadbalancer" "inside" {
   for_each    = var.business_units
   name        = format("%s-%sapp-%s", var.projectPrefix, each.key, var.buildSuffix)
-  namespace   = var.volterra_namespace
+  namespace   = var.namespace
   description = format("HTTP service LB for %s (%s-%s)", each.key, var.projectPrefix, var.buildSuffix)
   labels = merge(local.volterra_common_labels, {
     bu = each.key

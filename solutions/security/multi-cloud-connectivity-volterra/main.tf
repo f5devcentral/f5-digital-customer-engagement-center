@@ -54,16 +54,16 @@ locals {
 # }
 
 module "google" {
-  count              = local.deploy_google ? 1 : 0
-  source             = "./google/"
-  projectPrefix      = var.projectPrefix
-  buildSuffix        = local.build_suffix
-  gcpRegion          = var.gcpRegion
-  gcpProjectId       = var.gcpProjectId
-  resourceOwner      = var.resourceOwner
-  volterra_namespace = var.volterra_namespace
-  volterraTenant     = var.volterraTenant
-  ssh_key            = var.ssh_key
-  domain_name        = var.domain_name
-  labels             = local.common_labels
+  count          = local.deploy_google ? 1 : 0
+  source         = "./google/"
+  projectPrefix  = var.projectPrefix
+  buildSuffix    = var.buildSuffix
+  gcpRegion      = var.gcpRegion
+  gcpProjectId   = var.gcpProjectId
+  resourceOwner  = var.resourceOwner
+  namespace      = var.namespace
+  volterraTenant = var.volterraTenant
+  ssh_key        = var.ssh_key
+  domain_name    = var.domain_name
+  labels         = local.common_labels
 }

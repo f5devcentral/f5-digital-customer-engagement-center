@@ -29,7 +29,7 @@ EOD
 # Volterra specific values; these will be used in each cloud module
 
 
-variable "volterra_namespace" {
+variable "namespace" {
   type        = string
   description = <<EOD
 The Volterra namespace into which Volterra resources will be managed.

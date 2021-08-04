@@ -53,8 +53,8 @@ changing the deployment.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
 | volterraTenant | The Volterra tenant to use. | `string` | n/a | yes |
-| volterra\_namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
 | awsRegion | aws region | `string` | `null` | no |
 | azureLocation | location where Azure resources are deployed (abbreviated Azure Region name) | `string` | `null` | no |
 | buildSuffix | unique build suffix for resources; will be generated if empty or null | `string` | `null` | no |

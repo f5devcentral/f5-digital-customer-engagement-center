@@ -147,7 +147,7 @@ fileignoreconfig:
 - filename: solutions/security/multi-cloud-connectivity-volterra/volterraSites.tf
   checksum: 631f0b94c9480c55fa3114b48441a0ed07863e125e6a99f31b73f8d63568b9ff
 - filename: solutions/security/multi-cloud-connectivity-volterra/main.tf
-  checksum: 15430353f40f606ef706f857bc54b8374c49d064a32760e011a86136da808e37
+  checksum: b7e016fe0e6b3bc269a9fe656acd9bd94ea75a6773c2bf74c4db81ecce0f328e
 - filename: docs/solutions/delivery/application_delivery_controller/nginx/kic/labSetupAWS.rst
   checksum: b9d3ce252c1bde9c444c2d1101e82e652fda2c2d1edbe8d33ca0c76bbd9e8fe8
 - filename: solutions/security/nginx/kic/azure/admin.auto.tfvars.example

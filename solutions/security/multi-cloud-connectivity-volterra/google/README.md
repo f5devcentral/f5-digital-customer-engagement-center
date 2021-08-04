@@ -41,13 +41,13 @@ changing the deployment.
 
       <!-- spell-checker: disable -->
       ```ini
-      gcpProjectId       = "my-gcp-project-id"
-      gcpRegion          = "us-central1"
-      projectPrefix      = "my-prefix"
-      buildSuffix        = "my-suffix"
-      domain_name        = "shared.acme.com"
-      volterra_namespace = "my-volterra-ns"
-      volterraTenant    = "my-tenant-id"
+      gcpProjectId   = "my-gcp-project-id"
+      gcpRegion      = "us-central1"
+      projectPrefix  = "my-prefix"
+      buildSuffix    = "my-suffix"
+      domain_name    = "shared.acme.com"
+      namespace      = "my-volterra-ns"
+      volterraTenant = "my-tenant-id"
       ```
       <!-- spell-checker: enable -->
 
@@ -159,10 +159,10 @@ changing the deployment.
 | domain\_name | The DNS domain name that will be used as common parent generated DNS name of<br>loadbalancers. | `string` | n/a | yes |
 | gcpProjectId | gcp project id | `string` | n/a | yes |
 | gcpRegion | region where gke is deployed | `string` | n/a | yes |
+| namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
 | projectPrefix | prefix for resources | `string` | n/a | yes |
 | resourceOwner | owner of the deployment, for tagging purposes | `string` | n/a | yes |
 | volterraTenant | The Volterra tenant to use. | `string` | n/a | yes |
-| volterra\_namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
 | business\_units | The set of VPCs to create with overlapping CIDRs. | <pre>map(object({<br>    cidr        = string<br>    mtu         = number<br>    workstation = bool<br>  }))</pre> | <pre>{<br>  "bu21": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": true<br>  },<br>  "bu22": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  },<br>  "bu23": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  }<br>}</pre> | no |
 | labels | An optional list of labels to apply to GCP resources. | `map(string)` | `{}` | no |
 | num\_servers | The number of webserver instances to launch in each business unit spoke. Default<br>is 2. | `number` | `2` | no |

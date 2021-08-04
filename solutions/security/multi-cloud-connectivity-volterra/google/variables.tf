@@ -91,7 +91,7 @@ An optional list of labels to apply to GCP resources.
 EOD
 }
 
-variable "volterra_namespace" {
+variable "namespace" {
   type        = string
   description = <<EOD
 The Volterra namespace into which Volterra resources will be managed.
