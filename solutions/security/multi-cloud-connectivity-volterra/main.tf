@@ -36,8 +36,8 @@ locals {
     prefix = var.projectPrefix
     suffix = var.buildSuffix
   }
-  deploy_aws    = false
-  deploy_azure  = false
+  deploy_aws    = coalesce(var.awsRegion, "x") != "x"
+  deploy_azure  = coalesce(var.azureLocation, "x") != "x"
   deploy_google = coalesce(var.gcpProjectId, "x") != "x" && coalesce(var.gcpRegion, "x") != "x"
 }
 

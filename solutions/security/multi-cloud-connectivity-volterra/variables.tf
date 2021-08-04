@@ -52,8 +52,18 @@ EOD
 }
 
 # AWS specific vars - if these are not empty/null, AWS resources will be created
+variable "awsRegion" {
+  description = "aws region"
+  type        = string
+  default     = null
+}
 
 # Azure specific vars - if these are not empty/null, Azure resources will be created
+variable "azureLocation" {
+  type        = string
+  default     = null
+  description = "location where Azure resources are deployed (abbreviated Azure Region name)"
+}
 
 # GCP Specific vars - if these are not empty/null, GCP resources will be created
 variable "gcpRegion" {
