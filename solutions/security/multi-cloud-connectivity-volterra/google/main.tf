@@ -225,7 +225,7 @@ resource "volterra_gcp_vpc_site" "inside" {
   gcp_region              = var.gcpRegion
   instance_type           = "n1-standard-4"
   logs_streaming_disabled = true
-  ssh_key                 = var.volterra_ssh_key
+  ssh_key                 = var.ssh_key
   ingress_egress_gw {
     gcp_certified_hw = "gcp-byol-multi-nic-voltmesh"
     node_number      = var.num_volterra_nodes

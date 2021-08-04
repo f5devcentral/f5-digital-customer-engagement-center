@@ -43,11 +43,11 @@ The Volterra tenant to use.
 EOD
 }
 
-variable "volterra_ssh_key" {
+variable "ssh_key" {
   type        = string
   default     = ""
   description = <<EOD
-An optional SSH key to add to Volterra nodes.
+An optional SSH key to add to nodes.
 EOD
 }
 

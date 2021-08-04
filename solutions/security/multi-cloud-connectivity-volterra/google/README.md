@@ -168,7 +168,7 @@ changing the deployment.
 | num\_servers | The number of webserver instances to launch in each business unit spoke. Default<br>is 2. | `number` | `2` | no |
 | num\_volterra\_nodes | The number of Volterra gateway instances to launch in each business unit spoke.<br>Default is 1. | `number` | `1` | no |
 | outside\_cidr | The CIDR to assign to shared outside VPC. Default is '100.64.96.0/20'. | `string` | `"100.64.96.0/20"` | no |
-| volterra\_ssh\_key | An optional SSH key to add to Volterra nodes. | `string` | `""` | no |
+| ssh\_key | An optional SSH key to add to Volterra nodes. | `string` | `""` | no |
 
 ## Outputs
 

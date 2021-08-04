@@ -63,7 +63,7 @@ module "google" {
   resourceOwner      = var.resourceOwner
   volterra_namespace = var.volterra_namespace
   volterra_tenant    = var.volterra_tenant
-  volterra_ssh_key   = var.volterra_ssh_key
+  ssh_key            = var.ssh_key
   domain_name        = var.domain_name
   labels             = local.common_labels
 }

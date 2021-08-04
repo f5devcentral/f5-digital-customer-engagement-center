@@ -7,7 +7,8 @@ volterra_namespace = "my-namespace"
 volterra_tenant = "my-volterra-tenant-id"
 
 # Optional: if provided this public key will allow SSH access to the Volterra gateways
-volterra_ssh_key = "ssh-rsa REDACTED me@my.email"
+# and may be used by AWS/Azure/GCP where an SSH key can be specified
+ssh_key = "ssh-rsa REDACTED me@my.email"
 
 # AWS variables: if these are not null/empty, AWS VPC sites will be created for demo
 awsRegion            = "us-west-2"

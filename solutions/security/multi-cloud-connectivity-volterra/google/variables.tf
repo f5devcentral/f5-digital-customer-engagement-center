@@ -105,7 +105,7 @@ The Volterra tenant to use.
 EOD
 }
 
-variable "volterra_ssh_key" {
+variable "ssh_key" {
   type        = string
   default     = ""
   description = <<EOD
