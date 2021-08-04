@@ -31,10 +31,13 @@ resource "volterra_azure_vnet_site" "bu" {
   logs_streaming_disabled = true
   no_worker_nodes         = true
 
-  azure_cred {
-    name      = var.volterraCloudCred
-    namespace = "system"
-    tenant    = var.volterraTenant
+  dynamic "azure_cred" {
+    for_each = var.assisted ? [] : [var.volterraCloudCred]
+    content {
+      name      = azure_cred.value
+      namespace = "system"
+      tenant    = var.volterraTenant
+    }
   }
 
   ingress_egress_gw {
@@ -97,7 +100,7 @@ resource "volterra_azure_vnet_site" "bu" {
 }
 
 resource "volterra_tf_params_action" "applyBu" {
-  for_each         = local.vnets
+  for_each         = var.assisted ? {} : local.vnets
   site_name        = volterra_azure_vnet_site.bu[each.key].name
   site_kind        = "azure_vnet_site"
   action           = "apply"
