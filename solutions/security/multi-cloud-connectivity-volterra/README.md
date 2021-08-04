@@ -1,7 +1,7 @@
 # Multi-cloud Volterra demo
 
 <!-- spell-checker: ignore volterra markdownlint tfvars -->
-This module will create a set of Volterra AWS VPC, Azure VNET, and GCP VPC Sites
+This module will create a set of Volterra AWS TGW, Azure VNET, and GCP VPC Sites
 with ingress/egress gateways configured and a virtual site that spans the cloud
 sites.
 
