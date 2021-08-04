@@ -4,7 +4,7 @@ resourceOwner = "my-name"
 
 # Volterra variables: these will be used to standup Volterra resources across clouds
 volterra_namespace = "my-namespace"
-volterra_tenant = "my-volterra-tenant-id"
+volterraTenant = "my-volterra-tenant-id"
 
 # Optional: if provided this public key will allow SSH access to the Volterra gateways
 # and may be used by AWS/Azure/GCP where an SSH key can be specified

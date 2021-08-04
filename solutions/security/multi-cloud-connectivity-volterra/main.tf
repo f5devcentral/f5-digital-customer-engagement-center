@@ -57,12 +57,12 @@ module "google" {
   count              = local.deploy_google ? 1 : 0
   source             = "./google/"
   projectPrefix      = var.projectPrefix
-  buildSuffix        = var.buildSuffix
+  buildSuffix        = local.build_suffix
   gcpRegion          = var.gcpRegion
   gcpProjectId       = var.gcpProjectId
   resourceOwner      = var.resourceOwner
   volterra_namespace = var.volterra_namespace
-  volterra_tenant    = var.volterra_tenant
+  volterraTenant     = var.volterraTenant
   ssh_key            = var.ssh_key
   domain_name        = var.domain_name
   labels             = local.common_labels

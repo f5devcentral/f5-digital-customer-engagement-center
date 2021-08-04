@@ -98,7 +98,7 @@ The Volterra namespace into which Volterra resources will be managed.
 EOD
 }
 
-variable "volterra_tenant" {
+variable "volterraTenant" {
   type        = string
   description = <<EOD
 The Volterra tenant to use.

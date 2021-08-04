@@ -339,7 +339,7 @@ resource "volterra_origin_pool" "inside" {
         ip = origin_servers.value
         site_locator {
           site {
-            tenant    = var.volterra_tenant
+            tenant    = var.volterraTenant
             namespace = volterra_gcp_vpc_site.inside[each.key].namespace
             name      = volterra_gcp_vpc_site.inside[each.key].name
           }
@@ -382,7 +382,7 @@ resource "volterra_http_loadbalancer" "inside" {
         virtual_site {
           name      = volterra_virtual_site.site.name
           namespace = volterra_virtual_site.site.namespace
-          tenant    = var.volterra_tenant
+          tenant    = var.volterraTenant
         }
       }
     }
@@ -391,7 +391,7 @@ resource "volterra_http_loadbalancer" "inside" {
     pool {
       name      = volterra_origin_pool.inside[each.key].name
       namespace = volterra_origin_pool.inside[each.key].namespace
-      tenant    = var.volterra_tenant
+      tenant    = var.volterraTenant
     }
   }
 }
