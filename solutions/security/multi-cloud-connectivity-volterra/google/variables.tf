@@ -119,3 +119,8 @@ variable "volterraVirtualSite" {
 The name of the Volterra virtual site that will receive LB registrations.
 EOD
 }
+
+variable "assisted" {
+  description = "Use Assisted deployment for Volterra GCP Site"
+  default     = false
+}
