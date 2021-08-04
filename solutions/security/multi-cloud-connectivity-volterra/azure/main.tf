@@ -53,6 +53,11 @@ module "network" {
     Name      = format("%s-vnet-%s-%s", var.resourceOwner, each.key, var.buildSuffix)
     Terraform = "true"
   }
+  # Emes - I needed this dependency to get the module to function
+  # TODO: @JeffGiroux - is this necessary or because of my Azure perms issue?
+  depends_on = [
+    azurerm_resource_group.rg,
+  ]
 }
 
 ############################ Security Groups - Jumphost, Web Servers ############################
