@@ -82,7 +82,6 @@ module "aws" {
   awsRegion           = var.awsRegion
   volterraTenant      = var.volterraTenant
   volterraCloudCred   = var.volterraCloudCredAWS
-  assisted            = var.assisted
 }
 
 module "azure" {
@@ -98,7 +97,6 @@ module "azure" {
   volterraTenant      = var.volterraTenant
   keyName             = var.keyName
   volterraCloudCred   = var.volterraCloudCredAzure
-  assisted            = var.assisted
 }
 
 module "google" {
@@ -115,5 +113,4 @@ module "google" {
   domain_name         = var.domain_name
   labels              = local.common_labels
   volterraVirtualSite = volterra_virtual_site.site.name
-  assisted            = var.assisted
 }

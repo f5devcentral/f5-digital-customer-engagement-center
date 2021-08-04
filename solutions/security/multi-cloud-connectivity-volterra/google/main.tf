@@ -42,7 +42,6 @@ resource "random_shuffle" "zones" {
 # Create a service account for Volterra to manage VPC sites and store the
 # GCP credentials in a Cloud Credentials object.
 module "volterra_sa" {
-  count                    = var.assisted ? 0 : 1
   source                   = "git::https://github.com/memes/terraform-google-volterra//modules/service-account?ref=0.3.1"
   gcp_project_id           = var.gcpProjectId
   gcp_role_name            = replace(format("%s_volterra_site_%s", var.projectPrefix, var.buildSuffix), "/[^a-z0-9_.]/", "_")
@@ -219,13 +218,11 @@ resource "volterra_gcp_vpc_site" "inside" {
   #   latitude  = module.region_locations.lookup[var.gcpRegion].latitude
   #   longitude = module.region_locations.lookup[var.gcpRegion].longitude
   # }
-  assisted = var.assisted
-  dynamic "cloud_credentials" {
-    for_each = module.volterra_sa
-    content {
-      name      = cloud_credentials.value.cloud_credential_name
-      namespace = cloud_credentials.value.cloud_credential_namespace
-    }
+  # MEmes - this demo breaks if assisted mode is used;
+  assisted = false
+  cloud_credentials {
+    name      = module.volterra_sa.cloud_credential_name
+    namespace = module.volterra_sa.cloud_credential_namespace
   }
   gcp_region              = var.gcpRegion
   instance_type           = "n1-standard-4"
@@ -268,7 +265,7 @@ resource "volterra_gcp_vpc_site" "inside" {
 
 # Instruct Volterra to provision the GCP VPC sites
 resource "volterra_tf_params_action" "inside" {
-  for_each        = var.assisted ? {} : volterra_gcp_vpc_site.inside
+  for_each        = volterra_gcp_vpc_site.inside
   site_name       = each.value.name
   site_kind       = "gcp_vpc_site"
   action          = "apply"

@@ -16,25 +16,23 @@ locals {
 ############################ Volterra Azure VNet Sites ############################
 
 resource "volterra_azure_vnet_site" "bu" {
-  for_each                = local.vnets
-  name                    = format("%s-%s-azure-%s", var.volterraUniquePrefix, each.key, var.buildSuffix)
-  namespace               = "system"
-  labels                  = local.volterra_common_labels
-  annotations             = local.volterra_common_annotations
-  azure_region            = azurerm_resource_group.rg[each.key].location
-  resource_group          = format("%s-%s-volterra-%s", var.volterraUniquePrefix, each.key, var.buildSuffix)
-  machine_type            = "Standard_D3_v2"
-  assisted                = var.assisted
+  for_each       = local.vnets
+  name           = format("%s-%s-azure-%s", var.volterraUniquePrefix, each.key, var.buildSuffix)
+  namespace      = "system"
+  labels         = local.volterra_common_labels
+  annotations    = local.volterra_common_annotations
+  azure_region   = azurerm_resource_group.rg[each.key].location
+  resource_group = format("%s-%s-volterra-%s", var.volterraUniquePrefix, each.key, var.buildSuffix)
+  machine_type   = "Standard_D3_v2"
+  # MEmes - this demo breaks if assisted mode is used;
+  assisted                = false
   logs_streaming_disabled = true
   no_worker_nodes         = true
 
-  dynamic "azure_cred" {
-    for_each = var.assisted ? [] : [var.volterraCloudCred]
-    content {
-      name      = azure_cred.value
-      namespace = "system"
-      tenant    = var.volterraTenant
-    }
+  azure_cred {
+    name      = var.volterraCloudCred
+    namespace = "system"
+    tenant    = var.volterraTenant
   }
 
   ingress_egress_gw {
@@ -97,7 +95,7 @@ resource "volterra_azure_vnet_site" "bu" {
 }
 
 resource "volterra_tf_params_action" "applyBu" {
-  for_each         = var.assisted ? {} : local.vnets
+  for_each         = local.vnets
   site_name        = volterra_azure_vnet_site.bu[each.key].name
   site_kind        = "azure_vnet_site"
   action           = "apply"

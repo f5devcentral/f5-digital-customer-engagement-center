@@ -35,10 +35,6 @@ variable "namespace" {
   description = "Volterra application namespace"
   type        = string
 }
-variable "assisted" {
-  description = "Use Assisted deployment for Volterra Site"
-  default     = false
-}
 variable "volterraUniquePrefix" {
   description = "Unique prefix to use for System resources in Volterra tenant"
   type        = string

@@ -61,11 +61,6 @@ Path to SSH public key for Azure.
 EOD
 }
 
-variable "assisted" {
-  description = "Use Assisted deployment for Volterra sites"
-  default     = false
-}
-
 # AWS specific vars - if these are not empty/null, AWS resources will be created
 variable "awsRegion" {
   description = "aws region"
