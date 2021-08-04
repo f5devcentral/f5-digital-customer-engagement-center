@@ -75,3 +75,11 @@ variable "volterraVirtualSite" {
 The name of the Volterra virtual site that will receive LB registrations.
 EOD
 }
+
+variable "domain_name" {
+  type        = string
+  description = <<EOD
+The DNS domain name that will be used as common parent generated DNS name of
+loadbalancers.
+EOD
+}

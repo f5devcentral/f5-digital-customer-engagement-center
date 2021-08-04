@@ -66,6 +66,7 @@ resource "volterra_virtual_site" "site" {
 #   source = "./aws/"
 #   projectPrefix = var.projectPrefix
 #   volterraVirtualSite = volterra_virtual_site.site.name
+#   domain_name         = var.domain_name
 # }
 
 # module "azure" {
@@ -73,6 +74,7 @@ resource "volterra_virtual_site" "site" {
 #   source = "./azure/"
 #   projectPrefix = var.projectPrefix
 #   volterraVirtualSite = volterra_virtual_site.site.name
+#   domain_name         = var.domain_name
 # }
 
 module "google" {

@@ -1,7 +1,7 @@
 ############################ Private DNS Zones ############################
 
 resource "azurerm_private_dns_zone" "sharedAcme" {
-  name                = "shared.acme.com"
+  name                = var.domain_name
   resource_group_name = azurerm_resource_group.rg["bu11"].name
 
   tags = {

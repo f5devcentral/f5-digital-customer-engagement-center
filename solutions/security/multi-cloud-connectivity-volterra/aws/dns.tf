@@ -90,7 +90,7 @@ resource "aws_route53_resolver_endpoint" "resolverBu1" {
 
 resource "aws_route53_resolver_rule" "route53RuleBu1" {
   name                 = "route53RuleBu1-${random_id.buildSuffix.hex}"
-  domain_name          = "shared.acme.com"
+  domain_name          = var.domain_name
   rule_type            = "FORWARD"
   resolver_endpoint_id = aws_route53_resolver_endpoint.resolverBu1.id
 
@@ -135,7 +135,7 @@ resource "aws_route53_resolver_endpoint" "resolverBu2" {
 
 resource "aws_route53_resolver_rule" "route53RuleBu2" {
   name                 = "route53RuleBu2-${random_id.buildSuffix.hex}"
-  domain_name          = "shared.acme.com"
+  domain_name          = var.domain_name
   rule_type            = "FORWARD"
   resolver_endpoint_id = aws_route53_resolver_endpoint.resolverBu2.id
 
@@ -179,7 +179,7 @@ resource "aws_route53_resolver_endpoint" "resolverAcme" {
 
 resource "aws_route53_resolver_rule" "route53RuleAcme" {
   name                 = "route53RuleAcme-${random_id.buildSuffix.hex}"
-  domain_name          = "shared.acme.com"
+  domain_name          = var.domain_name
   rule_type            = "FORWARD"
   resolver_endpoint_id = aws_route53_resolver_endpoint.resolverAcme.id
 
