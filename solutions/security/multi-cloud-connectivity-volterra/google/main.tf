@@ -205,7 +205,7 @@ module "region_locations" {
 # Create a GCP VPC site for each business unit
 resource "volterra_gcp_vpc_site" "inside" {
   for_each    = var.business_units
-  name        = format("%s-%s-%s", var.projectPrefix, each.key, var.buildSuffix)
+  name        = format("%s-%s-gcp-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace   = "system"
   description = format("%s site (%s-%s)", each.key, var.projectPrefix, var.buildSuffix)
   labels = merge(local.volterra_common_labels, {

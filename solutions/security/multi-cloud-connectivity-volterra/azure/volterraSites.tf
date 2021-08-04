@@ -17,12 +17,12 @@ locals {
 
 resource "volterra_azure_vnet_site" "bu" {
   for_each       = local.vnets
-  name           = format("%s-%s-azure-%s", var.volterraUniquePrefix, each.key, var.buildSuffix)
+  name           = format("%s-%s-azure-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace      = "system"
   labels         = local.volterra_common_labels
   annotations    = local.volterra_common_annotations
   azure_region   = azurerm_resource_group.rg[each.key].location
-  resource_group = format("%s-%s-volterra-%s", var.volterraUniquePrefix, each.key, var.buildSuffix)
+  resource_group = format("%s-%s-volterra-%s", var.projectPrefix, each.key, var.buildSuffix)
   machine_type   = "Standard_D3_v2"
   # MEmes - this demo breaks if assisted mode is used;
   assisted                = false
@@ -111,6 +111,6 @@ resource "volterra_tf_params_action" "applyBu" {
 data "azurerm_network_interface" "sli" {
   for_each            = local.vnets
   name                = "master-0-sli"
-  resource_group_name = format("%s-%s-volterra-%s", var.volterraUniquePrefix, each.key, var.buildSuffix)
+  resource_group_name = format("%s-%s-volterra-%s", var.projectPrefix, each.key, var.buildSuffix)
   depends_on          = [volterra_tf_params_action.applyBu]
 }

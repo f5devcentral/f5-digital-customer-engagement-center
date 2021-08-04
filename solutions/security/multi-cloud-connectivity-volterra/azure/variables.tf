@@ -35,11 +35,6 @@ variable "namespace" {
   description = "Volterra application namespace"
   type        = string
 }
-variable "volterraUniquePrefix" {
-  description = "Unique prefix to use for System resources in Volterra tenant"
-  type        = string
-  default     = "acme"
-}
 
 variable "volterraVirtualSite" {
   type        = string
