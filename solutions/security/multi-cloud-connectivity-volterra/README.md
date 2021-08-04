@@ -36,6 +36,7 @@ changing the deployment.
 | Name | Version |
 |------|---------|
 | random | n/a |
+| volterra | 0.8.1 |
 
 ## Modules
 
@@ -48,6 +49,7 @@ changing the deployment.
 | Name |
 |------|
 | [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
+| [volterra_virtual_site](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/virtual_site) |
 
 ## Inputs
 

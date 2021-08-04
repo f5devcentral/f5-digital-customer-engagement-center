@@ -64,7 +64,7 @@ module "network" {
 locals {
   jumphosts = {
     bu11 = {
-      subnet   = module.network["bu11"].vnet_subnets[0]
+      subnet = module.network["bu11"].vnet_subnets[0]
       create = true
     }
     bu12 = {

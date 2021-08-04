@@ -68,3 +68,10 @@ variable "volterraUniquePrefix" {
   description = "Unique prefix to use for System resources in Volterra tenant"
   default     = "acme"
 }
+
+variable "volterraVirtualSite" {
+  type        = string
+  description = <<EOD
+The name of the Volterra virtual site that will receive LB registrations.
+EOD
+}

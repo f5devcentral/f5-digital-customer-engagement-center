@@ -149,7 +149,6 @@ changing the deployment.
 | [volterra_http_loadbalancer](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/http_loadbalancer) |
 | [volterra_origin_pool](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/origin_pool) |
 | [volterra_tf_params_action](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/tf_params_action) |
-| [volterra_virtual_site](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/virtual_site) |
 
 ## Inputs
 
@@ -163,6 +162,7 @@ changing the deployment.
 | projectPrefix | prefix for resources | `string` | n/a | yes |
 | resourceOwner | owner of the deployment, for tagging purposes | `string` | n/a | yes |
 | volterraTenant | The Volterra tenant to use. | `string` | n/a | yes |
+| volterraVirtualSite | The name of the Volterra virtual site that will receive LB registrations. | `string` | n/a | yes |
 | business\_units | The set of VPCs to create with overlapping CIDRs. | <pre>map(object({<br>    cidr        = string<br>    mtu         = number<br>    workstation = bool<br>  }))</pre> | <pre>{<br>  "bu21": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": true<br>  },<br>  "bu22": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  },<br>  "bu23": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  }<br>}</pre> | no |
 | labels | An optional list of labels to apply to GCP resources. | `map(string)` | `{}` | no |
 | num\_servers | The number of webserver instances to launch in each business unit spoke. Default<br>is 2. | `number` | `2` | no |

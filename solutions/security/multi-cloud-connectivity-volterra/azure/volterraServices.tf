@@ -47,8 +47,8 @@ resource "volterra_http_loadbalancer" "app" {
       virtual_site {
         network = "SITE_NETWORK_INSIDE"
         virtual_site {
-          name      = volterra_virtual_site.vsite.name
-          namespace = volterra_virtual_site.vsite.namespace
+          name      = var.volterraVirtualSite
+          namespace = var.namespace
           tenant    = var.volterraTenant
         }
       }

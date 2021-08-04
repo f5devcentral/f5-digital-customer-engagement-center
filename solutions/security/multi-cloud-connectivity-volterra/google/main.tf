@@ -272,24 +272,6 @@ resource "volterra_tf_params_action" "inside" {
   depends_on = [module.volterra_sa, module.inside, module.outside, volterra_gcp_vpc_site.inside]
 }
 
-# TODO: @yossi-r @JeffGiroux @memes
-# This site should be moved up to the parent folder and have AWS, Azure, and GCP
-# use a common set of labels that we know to aggregate the business units on
-# each cloud.
-resource "volterra_virtual_site" "site" {
-  name        = format("%s-site-%s", var.projectPrefix, var.buildSuffix)
-  namespace   = var.namespace
-  description = format("Virtual site for %s-%s", var.projectPrefix, var.buildSuffix)
-  labels      = local.volterra_common_labels
-  annotations = local.volterra_common_annotations
-  site_type   = "CUSTOMER_EDGE"
-  site_selector {
-    expressions = [
-      join(",", [for k, v in local.volterra_common_labels : format("%s = %s", k, v) if k != "platform"])
-    ]
-  }
-}
-
 # Define health checks for the origin pools; HTTP to 80
 resource "volterra_healthcheck" "inside" {
   for_each    = var.business_units
@@ -380,8 +362,8 @@ resource "volterra_http_loadbalancer" "inside" {
       virtual_site {
         network = "SITE_NETWORK_INSIDE"
         virtual_site {
-          name      = volterra_virtual_site.site.name
-          namespace = volterra_virtual_site.site.namespace
+          name      = var.volterraVirtualSite
+          namespace = var.namespace
           tenant    = var.volterraTenant
         }
       }

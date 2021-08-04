@@ -44,3 +44,10 @@ variable "volterraUniquePrefix" {
   type        = string
   default     = "acme"
 }
+
+variable "volterraVirtualSite" {
+  type        = string
+  description = <<EOD
+The name of the Volterra virtual site that will receive LB registrations.
+EOD
+}

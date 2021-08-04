@@ -19,21 +19,6 @@ locals {
   }
 }
 
-############################ Volterra Virtual Site ############################
-
-resource "volterra_virtual_site" "vsite" {
-  name        = format("%s-site-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
-  namespace   = var.namespace
-  labels      = local.volterra_common_labels
-  annotations = local.volterra_common_annotations
-  site_type   = "CUSTOMER_EDGE"
-  site_selector {
-    expressions = [
-      join(",", [for k, v in local.volterra_common_labels : format("%s = %s", k, v) if k != "platform"])
-    ]
-  }
-}
-
 ############################ Volterra Azure VNet Sites ############################
 
 resource "volterra_azure_vnet_site" "bu" {

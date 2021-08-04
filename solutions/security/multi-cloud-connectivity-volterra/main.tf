@@ -41,29 +41,52 @@ locals {
   deploy_google = coalesce(var.gcpProjectId, "x") != "x" && coalesce(var.gcpRegion, "x") != "x"
 }
 
+
+# Create a virtual site that will identify services deployed in AWS, Azure, and
+# GCP.
+resource "volterra_virtual_site" "site" {
+  name        = format("%s-site-%s", var.projectPrefix, var.buildSuffix)
+  namespace   = var.namespace
+  description = format("Virtual site for %s-%s", var.projectPrefix, var.buildSuffix)
+  labels      = local.common_labels
+  annotations = {
+    source      = "git::https://github.com/F5DevCentral/f5-digital-customer-engangement-center"
+    provisioner = "terraform"
+  }
+  site_type = "CUSTOMER_EDGE"
+  site_selector {
+    expressions = [
+      join(",", [for k, v in local.common_labels : format("%s = %s", k, v)])
+    ]
+  }
+}
+
 # module "aws" {
 #   count = local.deploy_aws ?  1 : 0
 #   source = "./aws/"
 #   projectPrefix = var.projectPrefix
+#   volterraVirtualSite = volterra_virtual_site.site.name
 # }
 
 # module "azure" {
 #   count = local.deploy_azure ?  1 : 0
 #   source = "./azure/"
 #   projectPrefix = var.projectPrefix
+#   volterraVirtualSite = volterra_virtual_site.site.name
 # }
 
 module "google" {
-  count          = local.deploy_google ? 1 : 0
-  source         = "./google/"
-  projectPrefix  = var.projectPrefix
-  buildSuffix    = var.buildSuffix
-  gcpRegion      = var.gcpRegion
-  gcpProjectId   = var.gcpProjectId
-  resourceOwner  = var.resourceOwner
-  namespace      = var.namespace
-  volterraTenant = var.volterraTenant
-  ssh_key        = var.ssh_key
-  domain_name    = var.domain_name
-  labels         = local.common_labels
+  count               = local.deploy_google ? 1 : 0
+  source              = "./google/"
+  projectPrefix       = var.projectPrefix
+  buildSuffix         = var.buildSuffix
+  gcpRegion           = var.gcpRegion
+  gcpProjectId        = var.gcpProjectId
+  resourceOwner       = var.resourceOwner
+  namespace           = var.namespace
+  volterraTenant      = var.volterraTenant
+  ssh_key             = var.ssh_key
+  domain_name         = var.domain_name
+  labels              = local.common_labels
+  volterraVirtualSite = volterra_virtual_site.site.name
 }

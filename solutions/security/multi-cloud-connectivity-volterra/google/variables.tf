@@ -112,3 +112,10 @@ variable "ssh_key" {
 An optional SSH key to add to Volterra nodes.
 EOD
 }
+
+variable "volterraVirtualSite" {
+  type        = string
+  description = <<EOD
+The name of the Volterra virtual site that will receive LB registrations.
+EOD
+}
