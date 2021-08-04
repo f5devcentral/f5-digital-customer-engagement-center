@@ -44,8 +44,8 @@ locals {
     prefix = var.projectPrefix
     suffix = var.buildSuffix
   }
-  deploy_aws    = coalesce(var.awsRegion, "x") != "x"
-  deploy_azure  = coalesce(var.azureLocation, "x") != "x"
+  deploy_aws    = coalesce(var.awsRegion, "x") != "x" && coalesce(var.volterraCloudCredAWS, "x") != "x"
+  deploy_azure  = coalesce(var.azureLocation, "x") != "x" && coalesce(var.volterraCloudCredAzure, "x") != "x"
   deploy_google = coalesce(var.gcpProjectId, "x") != "x" && coalesce(var.gcpRegion, "x") != "x"
 }
 
@@ -81,6 +81,8 @@ module "aws" {
   resourceOwner       = var.resourceOwner
   awsRegion           = var.awsRegion
   volterraTenant      = var.volterraTenant
+  volterraCloudCred   = var.volterraCloudCredAWS
+  assisted            = var.assisted
 }
 
 module "azure" {
@@ -94,9 +96,9 @@ module "azure" {
   resourceOwner       = var.resourceOwner
   azureLocation       = var.azureLocation
   volterraTenant      = var.volterraTenant
-  # TODO: @memes
-  keyName           = null
-  volterraCloudCred = null
+  keyName             = var.keyName
+  volterraCloudCred   = var.volterraCloudCredAzure
+  assisted            = var.assisted
 }
 
 module "google" {

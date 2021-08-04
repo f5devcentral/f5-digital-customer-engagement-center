@@ -35,7 +35,7 @@ resource "volterra_http_loadbalancer" "app" {
   name                            = format("%s-app", each.key)
   namespace                       = var.namespace
   no_challenge                    = true
-  domains                         = [format("%sapp.shared.acme.com", each.key)]
+  domains                         = [format("%sapp.%s", each.key, var.domain_name)]
   random                          = true
   disable_rate_limit              = true
   service_policies_from_namespace = true

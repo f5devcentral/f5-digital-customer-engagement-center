@@ -25,7 +25,7 @@ resource "azurerm_private_dns_cname_record" "sharedAcme" {
   zone_name           = azurerm_private_dns_zone.sharedAcme.name
   resource_group_name = azurerm_resource_group.rg["bu11"].name
   ttl                 = 300
-  record              = "inside.shared.acme.com"
+  record              = format("inside.%s", var.domain_name)
 }
 
 ############################ DNS Virtual Network Link ############################

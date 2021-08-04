@@ -66,9 +66,12 @@ changing the deployment.
 | domain\_name | The DNS domain name that will be used as common parent generated DNS name of<br>loadbalancers. Default is 'shared.acme.com'. | `string` | `"shared.acme.com"` | no |
 | gcpProjectId | gcp project id | `string` | `null` | no |
 | gcpRegion | region where GCP resources will be deployed | `string` | `null` | no |
+| keyName | Path to SSH public key for Azure. | `string` | `""` | no |
 | projectPrefix | prefix for resources | `string` | `"mcn-demo"` | no |
 | resourceOwner | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |
 | ssh\_key | An optional SSH key to add to nodes. | `string` | `""` | no |
+| volterraCloudCredAWS | Volterra Cloud Credential to use with AWS | `string` | `null` | no |
+| volterraCloudCredAzure | Volterra Cloud Credential to use with Azure | `string` | `null` | no |
 
 ## Outputs
 

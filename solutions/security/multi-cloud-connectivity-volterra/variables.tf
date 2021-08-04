@@ -51,6 +51,16 @@ An optional SSH key to add to nodes.
 EOD
 }
 
+# TODO: @memes @JeffGiroux - standardise on path to key or content of key
+# (ssh_key above)
+variable "keyName" {
+  type        = string
+  default     = ""
+  description = <<EOD
+Path to SSH public key for Azure.
+EOD
+}
+
 variable "assisted" {
   description = "Use Assisted deployment for Volterra sites"
   default     = false
@@ -63,11 +73,23 @@ variable "awsRegion" {
   default     = null
 }
 
+variable "volterraCloudCredAWS" {
+  type        = string
+  default     = null
+  description = "Volterra Cloud Credential to use with AWS"
+}
+
 # Azure specific vars - if these are not empty/null, Azure resources will be created
 variable "azureLocation" {
   type        = string
   default     = null
   description = "location where Azure resources are deployed (abbreviated Azure Region name)"
+}
+
+variable "volterraCloudCredAzure" {
+  type        = string
+  default     = null
+  description = "Volterra Cloud Credential to use with Azure"
 }
 
 # GCP Specific vars - if these are not empty/null, GCP resources will be created
