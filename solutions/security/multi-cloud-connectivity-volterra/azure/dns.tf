@@ -5,7 +5,7 @@ resource "azurerm_private_dns_zone" "sharedAcme" {
   resource_group_name = azurerm_resource_group.rg["bu11"].name
 
   tags = {
-    Name      = format("%s-dns-%s", var.resourceOwner, random_id.buildSuffix.hex)
+    Name      = format("%s-dns-%s", var.resourceOwner, var.buildSuffix)
     Terraform = "true"
   }
 }

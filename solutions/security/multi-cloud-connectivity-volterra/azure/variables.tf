@@ -1,11 +1,11 @@
 #Project info
-resource "random_id" "buildSuffix" {
-  byte_length = 2
+variable "buildSuffix" {
+  type        = string
+  description = "random build suffix for resources"
 }
 variable "projectPrefix" {
   type        = string
   description = "prefix for resources"
-  default     = "demo"
 }
 variable "resourceOwner" {
   type        = string

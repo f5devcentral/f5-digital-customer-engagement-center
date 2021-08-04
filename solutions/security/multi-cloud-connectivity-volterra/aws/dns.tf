@@ -82,14 +82,14 @@ resource "aws_route53_resolver_endpoint" "resolverBu1" {
   }
 
   tags = {
-    Name  = "${var.projectPrefix}-resolverBu1-${random_id.buildSuffix.hex}"
+    Name  = "${var.projectPrefix}-resolverBu1-${var.buildSuffix}"
     Owner = var.resourceOwner
   }
 }
 
 
 resource "aws_route53_resolver_rule" "route53RuleBu1" {
-  name                 = "route53RuleBu1-${random_id.buildSuffix.hex}"
+  name                 = "route53RuleBu1-${var.buildSuffix}"
   domain_name          = var.domain_name
   rule_type            = "FORWARD"
   resolver_endpoint_id = aws_route53_resolver_endpoint.resolverBu1.id
@@ -100,7 +100,7 @@ resource "aws_route53_resolver_rule" "route53RuleBu1" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-route53RuleBu1-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-route53RuleBu1-${var.buildSuffix}"
   }
 }
 
@@ -127,14 +127,14 @@ resource "aws_route53_resolver_endpoint" "resolverBu2" {
   }
 
   tags = {
-    Name  = "${var.projectPrefix}-resolverBu2-${random_id.buildSuffix.hex}"
+    Name  = "${var.projectPrefix}-resolverBu2-${var.buildSuffix}"
     Owner = var.resourceOwner
   }
 }
 
 
 resource "aws_route53_resolver_rule" "route53RuleBu2" {
-  name                 = "route53RuleBu2-${random_id.buildSuffix.hex}"
+  name                 = "route53RuleBu2-${var.buildSuffix}"
   domain_name          = var.domain_name
   rule_type            = "FORWARD"
   resolver_endpoint_id = aws_route53_resolver_endpoint.resolverBu2.id
@@ -145,7 +145,7 @@ resource "aws_route53_resolver_rule" "route53RuleBu2" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-route53RuleBu2-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-route53RuleBu2-${var.buildSuffix}"
   }
 }
 
@@ -171,14 +171,14 @@ resource "aws_route53_resolver_endpoint" "resolverAcme" {
   }
 
   tags = {
-    Name  = "${var.projectPrefix}-resolverAcme-${random_id.buildSuffix.hex}"
+    Name  = "${var.projectPrefix}-resolverAcme-${var.buildSuffix}"
     Owner = var.resourceOwner
   }
 }
 
 
 resource "aws_route53_resolver_rule" "route53RuleAcme" {
-  name                 = "route53RuleAcme-${random_id.buildSuffix.hex}"
+  name                 = "route53RuleAcme-${var.buildSuffix}"
   domain_name          = var.domain_name
   rule_type            = "FORWARD"
   resolver_endpoint_id = aws_route53_resolver_endpoint.resolverAcme.id
@@ -189,7 +189,7 @@ resource "aws_route53_resolver_rule" "route53RuleAcme" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-route53RuleAcme-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-route53RuleAcme-${var.buildSuffix}"
   }
 }
 

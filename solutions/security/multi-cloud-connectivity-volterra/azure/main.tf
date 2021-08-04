@@ -1,7 +1,3 @@
-provider "azurerm" {
-  features {}
-}
-
 ############################ Locals for Vnets ############################
 
 locals {
@@ -32,11 +28,11 @@ locals {
 # Create Resource Groups
 resource "azurerm_resource_group" "rg" {
   for_each = local.vnets
-  name     = format("%s-rg-%s-%s", var.projectPrefix, each.key, random_id.buildSuffix.hex)
+  name     = format("%s-rg-%s-%s", var.projectPrefix, each.key, var.buildSuffix)
   location = each.value["location"]
 
   tags = {
-    Name      = format("%s-rg-%s-%s", var.resourceOwner, each.key, random_id.buildSuffix.hex)
+    Name      = format("%s-rg-%s-%s", var.resourceOwner, each.key, var.buildSuffix)
     Terraform = "true"
   }
 }
@@ -48,13 +44,13 @@ module "network" {
   for_each            = local.vnets
   source              = "Azure/vnet/azurerm"
   resource_group_name = azurerm_resource_group.rg[each.key].name
-  vnet_name           = format("%s-vnet-%s-%s", var.projectPrefix, each.key, random_id.buildSuffix.hex)
+  vnet_name           = format("%s-vnet-%s-%s", var.projectPrefix, each.key, var.buildSuffix)
   address_space       = each.value["addressSpace"]
   subnet_prefixes     = each.value["subnetPrefixes"]
   subnet_names        = each.value["subnetNames"]
 
   tags = {
-    Name      = format("%s-vnet-%s-%s", var.resourceOwner, each.key, random_id.buildSuffix.hex)
+    Name      = format("%s-vnet-%s-%s", var.resourceOwner, each.key, var.buildSuffix)
     Terraform = "true"
   }
 }
@@ -93,7 +89,7 @@ locals {
 # Allow jumphost access
 resource "azurerm_network_security_group" "jumphost" {
   for_each            = local.jumphosts
-  name                = format("%s-nsg-jumphost-%s", var.projectPrefix, random_id.buildSuffix.hex)
+  name                = format("%s-nsg-jumphost-%s", var.projectPrefix, var.buildSuffix)
   location            = azurerm_resource_group.rg[each.key].location
   resource_group_name = azurerm_resource_group.rg[each.key].name
 
@@ -111,7 +107,7 @@ resource "azurerm_network_security_group" "jumphost" {
   }
 
   tags = {
-    Name      = format("%s-nsg-jumphost-%s", var.resourceOwner, random_id.buildSuffix.hex)
+    Name      = format("%s-nsg-jumphost-%s", var.resourceOwner, var.buildSuffix)
     Terraform = "true"
   }
 }
@@ -119,7 +115,7 @@ resource "azurerm_network_security_group" "jumphost" {
 # Allow webserver access
 resource "azurerm_network_security_group" "webserver" {
   for_each            = local.webservers
-  name                = format("%s-nsg-webservers-%s", var.projectPrefix, random_id.buildSuffix.hex)
+  name                = format("%s-nsg-webservers-%s", var.projectPrefix, var.buildSuffix)
   location            = azurerm_resource_group.rg[each.key].location
   resource_group_name = azurerm_resource_group.rg[each.key].name
 
@@ -149,7 +145,7 @@ resource "azurerm_network_security_group" "webserver" {
   }
 
   tags = {
-    Name      = format("%s-nsg-webservers-%s", var.resourceOwner, random_id.buildSuffix.hex)
+    Name      = format("%s-nsg-webservers-%s", var.resourceOwner, var.buildSuffix)
     Terraform = "true"
   }
 }
@@ -161,7 +157,7 @@ module "jumphost" {
   for_each           = { for k, v in local.jumphosts : k => v if v.create }
   source             = "../../../../modules/azure/terraform/jumphost/"
   projectPrefix      = var.projectPrefix
-  buildSuffix        = random_id.buildSuffix.hex
+  buildSuffix        = var.buildSuffix
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.rg[each.key].name
   azureLocation      = azurerm_resource_group.rg[each.key].location
@@ -175,7 +171,7 @@ module "webserver" {
   for_each           = local.webservers
   source             = "../../../../modules/azure/terraform/webServer/"
   projectPrefix      = var.projectPrefix
-  buildSuffix        = random_id.buildSuffix.hex
+  buildSuffix        = var.buildSuffix
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.rg[each.key].name
   azureLocation      = azurerm_resource_group.rg[each.key].location

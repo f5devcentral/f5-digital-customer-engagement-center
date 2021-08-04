@@ -1,6 +1,3 @@
-provider "volterra" {
-}
-
 #resource "volterra_http_loadbalancer" "example" {
 #  name      = "acmecorp-web"
 #  namespace = "staging"
@@ -158,7 +155,7 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
 
     vpc_id = module.vpcTransitBu1.vpc_id
 
-    ssh_key = var.sshPublicKey
+    ssh_key = var.ssh_key
 
     // One of the arguments from this list "new_tgw existing_tgw" must be set
 
@@ -299,7 +296,7 @@ resource "volterra_aws_tgw_site" "acmeBu2" {
 
     vpc_id = module.vpcTransitBu2.vpc_id
 
-    ssh_key = var.sshPublicKey
+    ssh_key = var.ssh_key
 
     // One of the arguments from this list "new_tgw existing_tgw" must be set
 
@@ -386,7 +383,7 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
 
     vpc_id = module.vpcTransitAcme.vpc_id
 
-    ssh_key = var.sshPublicKey
+    ssh_key = var.ssh_key
 
     // One of the arguments from this list "new_tgw existing_tgw" must be set
 

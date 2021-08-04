@@ -20,6 +20,14 @@ terraform {
   }
 }
 
+provider "aws" {
+  region = var.awsRegion
+}
+
+provider "azurerm" {
+  features {}
+}
+
 # Used to generate a random build suffix
 resource "random_id" "build_suffix" {
   byte_length = 2
@@ -61,21 +69,35 @@ resource "volterra_virtual_site" "site" {
   }
 }
 
-# module "aws" {
-#   count = local.deploy_aws ?  1 : 0
-#   source = "./aws/"
-#   projectPrefix = var.projectPrefix
-#   volterraVirtualSite = volterra_virtual_site.site.name
-#   domain_name         = var.domain_name
-# }
+module "aws" {
+  count               = local.deploy_aws ? 1 : 0
+  source              = "./aws/"
+  projectPrefix       = var.projectPrefix
+  volterraVirtualSite = volterra_virtual_site.site.name
+  domain_name         = var.domain_name
+  ssh_key             = var.ssh_key
+  buildSuffix         = var.buildSuffix
+  namespace           = var.namespace
+  resourceOwner       = var.resourceOwner
+  awsRegion           = var.awsRegion
+  volterraTenant      = var.volterraTenant
+}
 
-# module "azure" {
-#   count = local.deploy_azure ?  1 : 0
-#   source = "./azure/"
-#   projectPrefix = var.projectPrefix
-#   volterraVirtualSite = volterra_virtual_site.site.name
-#   domain_name         = var.domain_name
-# }
+module "azure" {
+  count               = local.deploy_azure ? 1 : 0
+  source              = "./azure/"
+  projectPrefix       = var.projectPrefix
+  volterraVirtualSite = volterra_virtual_site.site.name
+  domain_name         = var.domain_name
+  buildSuffix         = var.buildSuffix
+  namespace           = var.namespace
+  resourceOwner       = var.resourceOwner
+  azureLocation       = var.azureLocation
+  volterraTenant      = var.volterraTenant
+  # TODO: @memes
+  keyName           = null
+  volterraCloudCred = null
+}
 
 module "google" {
   count               = local.deploy_google ? 1 : 0

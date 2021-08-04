@@ -1,6 +1,3 @@
-provider "aws" {
-  region = var.awsRegion
-}
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -19,7 +16,7 @@ locals {
 resource "aws_ec2_transit_gateway" "tgwVolterra" {
   description = "Transit Gateway"
   tags = {
-    Name  = "${var.projectPrefix}-tgwVolterra-${random_id.buildSuffix.hex}"
+    Name  = "${var.projectPrefix}-tgwVolterra-${var.buildSuffix}"
     Owner = var.resourceOwner
   }
 }
@@ -29,7 +26,7 @@ resource "aws_ec2_transit_gateway" "tgwBu1" {
   default_route_table_association = "disable"
   default_route_table_propagation = "disable"
   tags = {
-    Name  = "${var.projectPrefix}-tgwBu1-${random_id.buildSuffix.hex}"
+    Name  = "${var.projectPrefix}-tgwBu1-${var.buildSuffix}"
     Owner = var.resourceOwner
   }
 }
@@ -39,7 +36,7 @@ resource "aws_ec2_transit_gateway" "tgwBu2" {
   default_route_table_association = "disable"
   default_route_table_propagation = "disable"
   tags = {
-    Name  = "${var.projectPrefix}-tgwBu2-${random_id.buildSuffix.hex}"
+    Name  = "${var.projectPrefix}-tgwBu2-${var.buildSuffix}"
     Owner = var.resourceOwner
   }
 }
@@ -49,7 +46,7 @@ resource "aws_ec2_transit_gateway" "tgwAcme" {
   default_route_table_association = "disable"
   default_route_table_propagation = "disable"
   tags = {
-    Name  = "${var.projectPrefix}-tgwAcme-${random_id.buildSuffix.hex}"
+    Name  = "${var.projectPrefix}-tgwAcme-${var.buildSuffix}"
     Owner = var.resourceOwner
   }
 }
@@ -60,7 +57,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpcTransitBu1TgwAttachment" {
   transit_gateway_id = aws_ec2_transit_gateway.tgwVolterra.id
   vpc_id             = module.vpcTransitBu1.vpc_id
   tags = {
-    Name  = "${var.projectPrefix}-vpcTransitBu1TgwAttachment-${random_id.buildSuffix.hex}"
+    Name  = "${var.projectPrefix}-vpcTransitBu1TgwAttachment-${var.buildSuffix}"
     Owner = var.resourceOwner
   }
   depends_on = [aws_ec2_transit_gateway.tgwVolterra]
@@ -72,7 +69,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpcTransitBu2TgwAttachment" {
   transit_gateway_id = aws_ec2_transit_gateway.tgwVolterra.id
   vpc_id             = module.vpcTransitBu2.vpc_id
   tags = {
-    Name  = "${var.projectPrefix}-vpcTransitBu2TgwAttachment-${random_id.buildSuffix.hex}"
+    Name  = "${var.projectPrefix}-vpcTransitBu2TgwAttachment-${var.buildSuffix}"
     Owner = var.resourceOwner
   }
   depends_on = [aws_ec2_transit_gateway.tgwVolterra]
@@ -84,7 +81,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpcTransitAcmeTgwAttachment" 
   transit_gateway_id = aws_ec2_transit_gateway.tgwVolterra.id
   vpc_id             = module.vpcTransitAcme.vpc_id
   tags = {
-    Name  = "${var.projectPrefix}-vpcTransitAcmeTgwAttachment-${random_id.buildSuffix.hex}"
+    Name  = "${var.projectPrefix}-vpcTransitAcmeTgwAttachment-${var.buildSuffix}"
     Owner = var.resourceOwner
   }
   depends_on = [aws_ec2_transit_gateway.tgwVolterra]
@@ -99,7 +96,7 @@ module "vpcTransitBu1" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 2.0"
 
-  name = "${var.projectPrefix}-vpcTransitBu1-${random_id.buildSuffix.hex}"
+  name = "${var.projectPrefix}-vpcTransitBu1-${var.buildSuffix}"
 
   cidr = "100.64.0.0/20"
 
@@ -110,7 +107,7 @@ module "vpcTransitBu1" {
   enable_dns_hostnames = true
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-vpcTransitBu1-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-vpcTransitBu1-${var.buildSuffix}"
   }
 
 }
@@ -122,7 +119,7 @@ resource "aws_subnet" "bu1VoltSliAz1" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu1VoltSliAz1-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu1VoltSliAz1-${var.buildSuffix}"
   }
 }
 
@@ -133,7 +130,7 @@ resource "aws_subnet" "bu1VoltSliAz2" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu1VoltSliAz2-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu1VoltSliAz2-${var.buildSuffix}"
   }
 }
 
@@ -144,7 +141,7 @@ resource "aws_subnet" "bu1VoltSliAz3" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu1VoltSliAz3-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu1VoltSliAz3-${var.buildSuffix}"
   }
 }
 
@@ -155,7 +152,7 @@ resource "aws_subnet" "bu1VoltWorkloadAz1" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu1VoltWorkloadAz1-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu1VoltWorkloadAz1-${var.buildSuffix}"
   }
 }
 
@@ -166,7 +163,7 @@ resource "aws_subnet" "bu1VoltWorkloadAz2" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu1VoltWorkloadAz2-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu1VoltWorkloadAz2-${var.buildSuffix}"
   }
 }
 
@@ -177,7 +174,7 @@ resource "aws_subnet" "bu1VoltWorkloadAz3" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu1VoltWorkloadAz3-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu1VoltWorkloadAz3-${var.buildSuffix}"
   }
 }
 
@@ -192,7 +189,7 @@ module "vpcTransitBu2" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 2.0"
 
-  name = "${var.projectPrefix}-vpcTransitBu2-${random_id.buildSuffix.hex}"
+  name = "${var.projectPrefix}-vpcTransitBu2-${var.buildSuffix}"
 
   cidr = "100.64.16.0/20"
 
@@ -204,7 +201,7 @@ module "vpcTransitBu2" {
   enable_dns_hostnames = true
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-vpcTransitBu2-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-vpcTransitBu2-${var.buildSuffix}"
   }
 
 }
@@ -216,7 +213,7 @@ resource "aws_subnet" "bu2VoltSliAz1" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu2VoltSliAz1-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu2VoltSliAz1-${var.buildSuffix}"
   }
 }
 
@@ -227,7 +224,7 @@ resource "aws_subnet" "bu2VoltSliAz2" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu2VoltSliAz2-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu2VoltSliAz2-${var.buildSuffix}"
   }
 }
 
@@ -238,7 +235,7 @@ resource "aws_subnet" "bu2VoltSliAz3" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu2VoltSliAz3-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu2VoltSliAz3-${var.buildSuffix}"
   }
 }
 
@@ -249,7 +246,7 @@ resource "aws_subnet" "bu2VoltWorkloadAz1" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu2VoltWorkloadAz1-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu2VoltWorkloadAz1-${var.buildSuffix}"
   }
 }
 
@@ -260,7 +257,7 @@ resource "aws_subnet" "bu2VoltWorkloadAz2" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu2VoltWorkloadAz2-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu2VoltWorkloadAz2-${var.buildSuffix}"
   }
 }
 
@@ -271,7 +268,7 @@ resource "aws_subnet" "bu2VoltWorkloadAz3" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu2VoltWorkloadAz3-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-bu2VoltWorkloadAz3-${var.buildSuffix}"
   }
 }
 resource "aws_route" "vpcTransitBu2SharedAddressSpace" {
@@ -285,7 +282,7 @@ module "vpcTransitAcme" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 2.0"
 
-  name = "${var.projectPrefix}-vpcTransitAcme-${random_id.buildSuffix.hex}"
+  name = "${var.projectPrefix}-vpcTransitAcme-${var.buildSuffix}"
 
   cidr = "100.64.32.0/20"
 
@@ -297,7 +294,7 @@ module "vpcTransitAcme" {
   enable_dns_hostnames = true
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-vpcTransitAcme-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-vpcTransitAcme-${var.buildSuffix}"
   }
 
 }
@@ -316,7 +313,7 @@ resource "aws_subnet" "acmeVoltSliAz1" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-acmeVoltSliAz1-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-acmeVoltSliAz1-${var.buildSuffix}"
   }
 }
 
@@ -327,7 +324,7 @@ resource "aws_subnet" "acmeVoltSliAz2" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-acmeVoltSliAz2-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-acmeVoltSliAz2-${var.buildSuffix}"
   }
 }
 
@@ -338,7 +335,7 @@ resource "aws_subnet" "acmeVoltSliAz3" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-acmeVoltSliAz3-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-acmeVoltSliAz3-${var.buildSuffix}"
   }
 }
 
@@ -349,7 +346,7 @@ resource "aws_subnet" "acmeVoltWorkloadAz1" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-acmeVoltWorkloadAz1-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-acmeVoltWorkloadAz1-${var.buildSuffix}"
   }
 }
 
@@ -360,7 +357,7 @@ resource "aws_subnet" "acmeVoltWorkloadAz2" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-acmeVoltWorkloadAz2-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-acmeVoltWorkloadAz2-${var.buildSuffix}"
   }
 }
 
@@ -371,7 +368,7 @@ resource "aws_subnet" "acmeVoltWorkloadAz3" {
 
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-acmeVoltWorkloadAz3-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-acmeVoltWorkloadAz3-${var.buildSuffix}"
   }
 }
 ######################################################BU vpc's########################################
@@ -379,7 +376,7 @@ module "vpcBu1" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 2.0"
 
-  name = "${var.projectPrefix}-vpcBu1-${random_id.buildSuffix.hex}"
+  name = "${var.projectPrefix}-vpcBu1-${var.buildSuffix}"
 
   cidr = "10.1.0.0/16"
 
@@ -390,7 +387,7 @@ module "vpcBu1" {
   enable_dns_hostnames = true
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-vpcBu1-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-vpcBu1-${var.buildSuffix}"
   }
 
 }
@@ -407,7 +404,7 @@ module "vpcBu2" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 2.0"
 
-  name = "${var.projectPrefix}-vpcBu2-${random_id.buildSuffix.hex}"
+  name = "${var.projectPrefix}-vpcBu2-${var.buildSuffix}"
 
   cidr = "10.1.0.0/16"
 
@@ -418,7 +415,7 @@ module "vpcBu2" {
   enable_dns_hostnames = true
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-vpcBu2-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-vpcBu2-${var.buildSuffix}"
   }
 
 }
@@ -433,7 +430,7 @@ module "vpcAcme" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 2.0"
 
-  name = "${var.projectPrefix}-vpcAcme-${random_id.buildSuffix.hex}"
+  name = "${var.projectPrefix}-vpcAcme-${var.buildSuffix}"
 
   cidr = "10.1.0.0/16"
 
@@ -444,7 +441,7 @@ module "vpcAcme" {
   enable_dns_hostnames = true
   tags = {
     resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-vpcAcme-${random_id.buildSuffix.hex}"
+    Name          = "${var.projectPrefix}-vpcAcme-${var.buildSuffix}"
   }
 
 }
@@ -459,8 +456,8 @@ resource "aws_route" "vpcAcmeSharedAddressSpace" {
 #Compute
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "${var.projectPrefix}-key-${random_id.buildSuffix.hex}"
-  public_key = var.sshPublicKey
+  key_name   = "${var.projectPrefix}-key-${var.buildSuffix}"
+  public_key = var.ssh_key
 }
 
 #local for spinning up compute resources

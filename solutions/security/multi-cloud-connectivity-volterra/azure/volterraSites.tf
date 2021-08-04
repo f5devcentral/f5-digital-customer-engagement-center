@@ -1,6 +1,3 @@
-provider "volterra" {
-}
-
 locals {
   azure_common_labels = {
     owner = var.resourceOwner
@@ -10,7 +7,7 @@ locals {
     owner    = var.resourceOwner
     demo     = "multi-cloud-connectivity-volterra"
     prefix   = var.projectPrefix
-    suffix   = random_id.buildSuffix.hex
+    suffix   = var.buildSuffix
     platform = "azure"
   }
   volterra_common_annotations = {
@@ -23,12 +20,12 @@ locals {
 
 resource "volterra_azure_vnet_site" "bu" {
   for_each                = local.vnets
-  name                    = format("%s-%s-azure-%s", var.volterraUniquePrefix, each.key, random_id.buildSuffix.hex)
+  name                    = format("%s-%s-azure-%s", var.volterraUniquePrefix, each.key, var.buildSuffix)
   namespace               = "system"
   labels                  = local.volterra_common_labels
   annotations             = local.volterra_common_annotations
   azure_region            = azurerm_resource_group.rg[each.key].location
-  resource_group          = format("%s-%s-volterra-%s", var.volterraUniquePrefix, each.key, random_id.buildSuffix.hex)
+  resource_group          = format("%s-%s-volterra-%s", var.volterraUniquePrefix, each.key, var.buildSuffix)
   machine_type            = "Standard_D3_v2"
   assisted                = var.assisted
   logs_streaming_disabled = true
@@ -116,6 +113,6 @@ resource "volterra_tf_params_action" "applyBu" {
 data "azurerm_network_interface" "sli" {
   for_each            = local.vnets
   name                = "master-0-sli"
-  resource_group_name = format("%s-%s-volterra-%s", var.volterraUniquePrefix, each.key, random_id.buildSuffix.hex)
+  resource_group_name = format("%s-%s-volterra-%s", var.volterraUniquePrefix, each.key, var.buildSuffix)
   depends_on          = [volterra_tf_params_action.applyBu]
 }

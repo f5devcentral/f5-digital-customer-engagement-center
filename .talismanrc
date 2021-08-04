@@ -147,7 +147,7 @@ fileignoreconfig:
 - filename: solutions/security/multi-cloud-connectivity-volterra/volterraSites.tf
   checksum: 631f0b94c9480c55fa3114b48441a0ed07863e125e6a99f31b73f8d63568b9ff
 - filename: solutions/security/multi-cloud-connectivity-volterra/main.tf
-  checksum: 30da3514a146ee2817b611ea2958042e40759b8b4b9411f355dfd13e1c6c3dee
+  checksum: 827ef2db28ea0a410917cb5d03a8648d8596f385592eddcb2e5ca68fe12a2c4b
 - filename: docs/solutions/delivery/application_delivery_controller/nginx/kic/labSetupAWS.rst
   checksum: b9d3ce252c1bde9c444c2d1101e82e652fda2c2d1edbe8d33ca0c76bbd9e8fe8
 - filename: solutions/security/nginx/kic/azure/admin.auto.tfvars.example
@@ -254,3 +254,7 @@ fileignoreconfig:
   checksum: 274459853a09a95b3a3e1987e14b9fd25b7ba3da3ed4fb85bc88697433ba8c8b
 - filename: solutions/security/multi-cloud-connectivity-volterra/admin.auto.tfvars.example
   checksum: d51c8a495a25e87c7e01f6fa8ac2a4a7f9e2af474cb0ba8479f90b50191461ad
+- filename: solutions/security/multi-cloud-connectivity-volterra/aws/volterraSites.tf
+  checksum: 9e3b192f1241aa347c432a58a89b9df48a68b1cd4a0e5b811411d079f46b8524
+- filename: solutions/security/multi-cloud-connectivity-volterra/aws/main.tf
+  checksum: ca79bc6dd74ca2a8dd382161201848fba9d803482c026feb10cbc66963ec8f65

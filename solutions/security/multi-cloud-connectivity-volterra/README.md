@@ -42,6 +42,8 @@ changing the deployment.
 
 | Name | Source | Version |
 |------|--------|---------|
+| aws | ./aws/ |  |
+| azure | ./azure/ |  |
 | google | ./google/ |  |
 
 ## Resources
