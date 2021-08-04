@@ -13,9 +13,20 @@ NGINX Kubernetes Ingress Controller solution can run on multiple clouds. The doc
   :width: 75%
   :align: middle
 
+**Amazon Web Services (AWS) and Azure**
+
 .. toctree::
    :maxdepth: 1
    :glob:
 
    labSetup*
    lab*
+
+**Google Kubernetes Engine (GKE)**
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   gke_labSetupGKE*
+   gke*
