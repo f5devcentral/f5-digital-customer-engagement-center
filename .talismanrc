@@ -255,6 +255,6 @@ fileignoreconfig:
 - filename: solutions/security/multi-cloud-connectivity-volterra/admin.auto.tfvars.example
   checksum: d51c8a495a25e87c7e01f6fa8ac2a4a7f9e2af474cb0ba8479f90b50191461ad
 - filename: solutions/security/multi-cloud-connectivity-volterra/aws/volterraSites.tf
-  checksum: 9e3b192f1241aa347c432a58a89b9df48a68b1cd4a0e5b811411d079f46b8524
+  checksum: a6125d9a879efd830dfa1e37969e032358b806ddb71754af8df36d97847d25bc
 - filename: solutions/security/multi-cloud-connectivity-volterra/aws/main.tf
   checksum: ca79bc6dd74ca2a8dd382161201848fba9d803482c026feb10cbc66963ec8f65

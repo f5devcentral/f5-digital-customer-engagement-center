@@ -1,6 +1,6 @@
 data "aws_instances" "VolterraBu1Instances" {
   instance_tags = {
-    "ves.io/site_name" = volterra_aws_tgw_site.acmeBu1.name
+    "ves.io/site_name" = volterra_aws_vpc_site.acmeBu1.name
   }
 
   instance_state_names = ["running"]
@@ -9,7 +9,7 @@ data "aws_instances" "VolterraBu1Instances" {
 
 data "aws_instances" "VolterraBu2Instances" {
   instance_tags = {
-    "ves.io/site_name" = volterra_aws_tgw_site.acmeBu2.name
+    "ves.io/site_name" = volterra_aws_vpc_site.acmeBu2.name
   }
 
   instance_state_names = ["running"]
@@ -18,7 +18,7 @@ data "aws_instances" "VolterraBu2Instances" {
 
 data "aws_instances" "VolterraAcmeInstances" {
   instance_tags = {
-    "ves.io/site_name" = volterra_aws_tgw_site.acmeAcme.name
+    "ves.io/site_name" = volterra_aws_vpc_site.acmeAcme.name
   }
 
   instance_state_names = ["running"]
@@ -71,14 +71,14 @@ resource "aws_route53_resolver_endpoint" "resolverBu1" {
   name      = "resolverBu1"
   direction = "OUTBOUND"
 
-  security_group_ids = [module.vpcTransitBu1.default_security_group_id]
+  security_group_ids = [module.vpcBu1.default_security_group_id]
 
   ip_address {
-    subnet_id = module.vpcTransitBu1.public_subnets[0]
+    subnet_id = module.vpcBu1.public_subnets[0]
   }
 
   ip_address {
-    subnet_id = module.vpcTransitBu1.public_subnets[1]
+    subnet_id = module.vpcBu1.public_subnets[1]
   }
 
   tags = {
@@ -116,14 +116,14 @@ resource "aws_route53_resolver_endpoint" "resolverBu2" {
   name      = "resolverBu2"
   direction = "OUTBOUND"
 
-  security_group_ids = [module.vpcTransitBu2.default_security_group_id]
+  security_group_ids = [module.vpcBu2.default_security_group_id]
 
   ip_address {
-    subnet_id = module.vpcTransitBu2.public_subnets[0]
+    subnet_id = module.vpcBu2.public_subnets[0]
   }
 
   ip_address {
-    subnet_id = module.vpcTransitBu2.public_subnets[1]
+    subnet_id = module.vpcBu2.public_subnets[1]
   }
 
   tags = {
@@ -160,14 +160,14 @@ resource "aws_route53_resolver_endpoint" "resolverAcme" {
   name      = "resolverAcme"
   direction = "OUTBOUND"
 
-  security_group_ids = [module.vpcTransitAcme.default_security_group_id]
+  security_group_ids = [module.vpcAcme.default_security_group_id]
 
   ip_address {
-    subnet_id = module.vpcTransitAcme.public_subnets[0]
+    subnet_id = module.vpcAcme.public_subnets[0]
   }
 
   ip_address {
-    subnet_id = module.vpcTransitAcme.public_subnets[1]
+    subnet_id = module.vpcAcme.public_subnets[1]
   }
 
   tags = {

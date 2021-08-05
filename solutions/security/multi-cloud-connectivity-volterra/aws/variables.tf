@@ -58,14 +58,6 @@ variable "namespace" {
   description = "Volterra application namespace"
   type        = string
 }
-variable "assisted" {
-  description = "Use Assisted deployment for Volterra TGW Site"
-  default     = false
-}
-variable "volterraUniquePrefix" {
-  description = "Unique prefix to use for System resources in Volterra tenant"
-  default     = "acme"
-}
 
 variable "volterraVirtualSite" {
   type        = string
@@ -79,5 +71,13 @@ variable "domain_name" {
   description = <<EOD
 The DNS domain name that will be used as common parent generated DNS name of
 loadbalancers.
+EOD
+}
+
+variable "labels" {
+  type        = map(string)
+  default     = {}
+  description = <<EOD
+An optional list of labels to apply to AWS resources.
 EOD
 }

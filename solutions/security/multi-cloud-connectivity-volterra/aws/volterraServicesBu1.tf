@@ -15,15 +15,15 @@ resource "volterra_origin_pool" "bu1app" {
         site {
           tenant    = var.volterraTenant
           namespace = "system"
-          name      = volterra_aws_tgw_site.acmeBu1.name
+          name      = volterra_aws_vpc_site.acmeBu1.name
         }
       }
       inside_network = true
     }
 
-    labels = {
+    labels = merge(local.volterra_common_labels, {
       "bu" = "bu1"
-    }
+    })
   }
 
   port = 80
@@ -40,38 +40,13 @@ resource "volterra_http_loadbalancer" "bu1app1" {
 
   advertise_custom {
     advertise_where {
-      port = 80
-      site {
-        ip      = "100.64.100.110"
+      use_default_port = true
+      virtual_site {
         network = "SITE_NETWORK_INSIDE"
-        site {
+        virtual_site {
+          name      = var.volterraVirtualSite
+          namespace = var.namespace
           tenant    = var.volterraTenant
-          namespace = "system"
-          name      = volterra_aws_tgw_site.acmeBu1.name
-        }
-      }
-    }
-    advertise_where {
-      port = 80
-      site {
-        ip      = "100.64.100.110"
-        network = "SITE_NETWORK_INSIDE"
-        site {
-          tenant    = var.volterraTenant
-          namespace = "system"
-          name      = volterra_aws_tgw_site.acmeBu2.name
-        }
-      }
-    }
-    advertise_where {
-      port = 80
-      site {
-        ip      = "100.64.100.110"
-        network = "SITE_NETWORK_INSIDE"
-        site {
-          tenant    = var.volterraTenant
-          namespace = "system"
-          name      = volterra_aws_tgw_site.acmeAcme.name
         }
       }
     }
@@ -84,7 +59,7 @@ resource "volterra_http_loadbalancer" "bu1app1" {
   // One of the arguments from this list "no_challenge js_challenge captcha_challenge policy_based_challenge" must be set
   no_challenge = true
 
-  domains = ["bu1app.shared.acme.com"]
+  domains = [format("bu1app.%s", var.domain_name)]
 
   // One of the arguments from this list "least_active random source_ip_stickiness cookie_stickiness ring_hash round_robin" must be set
   random = true
