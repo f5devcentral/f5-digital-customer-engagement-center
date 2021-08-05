@@ -39,18 +39,6 @@ resource "random_shuffle" "zones" {
   }
 }
 
-# Create a service account for Volterra to manage VPC sites and store the
-# GCP credentials in a Cloud Credentials object.
-module "volterra_sa" {
-  source                   = "git::https://github.com/memes/terraform-google-volterra//modules/service-account?ref=0.3.1"
-  gcp_project_id           = var.gcpProjectId
-  gcp_role_name            = replace(format("%s_volterra_site_%s", var.projectPrefix, var.buildSuffix), "/[^a-z0-9_.]/", "_")
-  gcp_service_account_name = format("%s-volterra-site-%s", var.projectPrefix, var.buildSuffix)
-  cloud_credential_name    = format("%s-gcp-%s", var.projectPrefix, var.buildSuffix)
-  labels                   = local.volterra_common_labels
-  annotations              = local.volterra_common_annotations
-}
-
 # Service account to use with Webserver VMs
 module "webserver_sa" {
   source       = "terraform-google-modules/service-accounts/google"
@@ -221,8 +209,9 @@ resource "volterra_gcp_vpc_site" "inside" {
   # MEmes - this demo breaks if assisted mode is used;
   assisted = false
   cloud_credentials {
-    name      = module.volterra_sa.cloud_credential_name
-    namespace = module.volterra_sa.cloud_credential_namespace
+    name      = var.volterraCloudCred
+    namespace = "system"
+    tenant    = var.volterraTenant
   }
   gcp_region              = var.gcpRegion
   instance_type           = "n1-standard-4"
@@ -260,7 +249,7 @@ resource "volterra_gcp_vpc_site" "inside" {
     }
   }
   # These shouldn't be necessary, but lifecycle is flaky without them
-  depends_on = [module.volterra_sa, module.inside, module.outside]
+  depends_on = [module.inside, module.outside]
 }
 
 # Instruct Volterra to provision the GCP VPC sites
@@ -271,7 +260,7 @@ resource "volterra_tf_params_action" "inside" {
   action          = "apply"
   wait_for_action = true
   # These shouldn't be necessary, but lifecycle is flaky without them
-  depends_on = [module.volterra_sa, module.inside, module.outside, volterra_gcp_vpc_site.inside]
+  depends_on = [module.inside, module.outside, volterra_gcp_vpc_site.inside]
 }
 
 # Define health checks for the origin pools; HTTP to 80

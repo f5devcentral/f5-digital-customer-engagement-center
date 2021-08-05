@@ -99,3 +99,9 @@ variable "gcpProjectId" {
   default     = null
   description = "gcp project id"
 }
+
+variable "volterraCloudCredGCP" {
+  type        = string
+  default     = null
+  description = "Volterra Cloud Credential to use with GCP"
+}

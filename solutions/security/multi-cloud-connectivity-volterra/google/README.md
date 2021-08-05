@@ -41,13 +41,14 @@ changing the deployment.
 
       <!-- spell-checker: disable -->
       ```ini
-      gcpProjectId   = "my-gcp-project-id"
-      gcpRegion      = "us-central1"
-      projectPrefix  = "my-prefix"
-      buildSuffix    = "my-suffix"
-      domain_name    = "shared.acme.com"
-      namespace      = "my-volterra-ns"
-      volterraTenant = "my-tenant-id"
+      gcpProjectId       = "my-gcp-project-id"
+      gcpRegion          = "us-central1"
+      projectPrefix      = "my-prefix"
+      buildSuffix        = "my-suffix"
+      domain_name        = "shared.acme.com"
+      namespace          = "my-volterra-ns"
+      volterraTenant     = "my-tenant-id"
+      volterraCloudCreds = "my-gcp-cloud-creds"
       ```
       <!-- spell-checker: enable -->
 
@@ -130,7 +131,6 @@ changing the deployment.
 | inside | terraform-google-modules/network/google | 3.3.0 |
 | outside | terraform-google-modules/network/google | 3.3.0 |
 | region_locations | git::https://github.com/memes/terraform-google-volterra//modules/region-locations?ref=0.3.1 |  |
-| volterra_sa | git::https://github.com/memes/terraform-google-volterra//modules/service-account?ref=0.3.1 |  |
 | webserver_sa | terraform-google-modules/service-accounts/google | 4.0.2 |
 | webserver_tls | ../../../../modules/google/terraform/tls |  |
 | webservers | ../../../../modules/google/terraform/backend |  |
@@ -161,6 +161,7 @@ changing the deployment.
 | namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
 | projectPrefix | prefix for resources | `string` | n/a | yes |
 | resourceOwner | owner of the deployment, for tagging purposes | `string` | n/a | yes |
+| volterraCloudCred | Name of the Volterra cloud credentials to use with GCP VPC sites | `string` | n/a | yes |
 | volterraTenant | The Volterra tenant to use. | `string` | n/a | yes |
 | volterraVirtualSite | The name of the Volterra virtual site that will receive LB registrations. | `string` | n/a | yes |
 | business\_units | The set of VPCs to create with overlapping CIDRs. | <pre>map(object({<br>    cidr        = string<br>    mtu         = number<br>    workstation = bool<br>  }))</pre> | <pre>{<br>  "bu21": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": true<br>  },<br>  "bu22": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  },<br>  "bu23": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  }<br>}</pre> | no |

@@ -19,6 +19,30 @@ changing the deployment.
 > for a hypothetical customer looking for a minimally invasive solution
 > to multi-cloud networking.
 
+## Prerequisites
+
+### AWS
+
+Cloud Credentials, awsRegion
+
+### Azure
+
+Cloud Credentials, awsLocation
+
+## Google
+
+Cloud Credentials, gcpProjectId, gcpRegion
+
+```hcl
+module "volterra_sa" {
+  source                   = "git::https://github.com/memes/terraform-google-volterra//modules/service-account?ref=0.3.1"
+  gcp_project_id           = "my-gcp-project-id"
+  gcp_role_name            = "my_volterra_role"
+  gcp_service_account_name = "volterra-site-sa"
+  cloud_credential_name    = "my-gcp-volterra"
+}
+```
+
 <!-- markdownlint-disable no-inline-html -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -71,6 +95,7 @@ changing the deployment.
 | ssh\_key | An optional SSH key to add to nodes. | `string` | `""` | no |
 | volterraCloudCredAWS | Volterra Cloud Credential to use with AWS | `string` | `null` | no |
 | volterraCloudCredAzure | Volterra Cloud Credential to use with Azure | `string` | `null` | no |
+| volterraCloudCredGCP | Volterra Cloud Credential to use with GCP | `string` | `null` | no |
 
 ## Outputs
 

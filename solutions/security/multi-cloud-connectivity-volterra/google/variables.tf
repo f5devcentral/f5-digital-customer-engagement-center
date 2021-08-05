@@ -119,3 +119,8 @@ variable "volterraVirtualSite" {
 The name of the Volterra virtual site that will receive LB registrations.
 EOD
 }
+
+variable "volterraCloudCred" {
+  description = "Name of the Volterra cloud credentials to use with GCP VPC sites"
+  type        = string
+}

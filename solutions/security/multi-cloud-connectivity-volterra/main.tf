@@ -113,4 +113,5 @@ module "google" {
   domain_name         = var.domain_name
   labels              = local.common_labels
   volterraVirtualSite = volterra_virtual_site.site.name
+  volterraCloudCred   = var.volterraCloudCredGCP
 }
