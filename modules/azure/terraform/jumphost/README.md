@@ -12,7 +12,7 @@ module "jumphost" {
     resourceOwner       = "someName"
     azureResourceGroup  = "someResourceGroup"
     azureLocation       = "westus2"
-    keyName             = "~/.ssh/id_rsa.pub"
+    ssh_key             = "ssh-rsa AAABC123....."
     mgmtSubnet          = "someSubnet"
     securityGroup       = "someSecurityGroup"
 }
@@ -40,7 +40,7 @@ module "jumphost" {
 | azureLocation | location where Azure resources are deployed (abbreviated Azure Region name) | `string` | n/a | yes |
 | azureResourceGroup | resource group to create objects in | `string` | n/a | yes |
 | buildSuffix | random build suffix for resources | `string` | n/a | yes |
-| keyName | instance key pair name | `string` | n/a | yes |
+| ssh_key | public key used for authentication in ssh-rsa format | `string` | n/a | yes |
 | mgmtSubnet | subnet for virtual machine | `string` | n/a | yes |
 | resourceOwner | name of the person or customer running the solution | `string` | n/a | yes |
 | securityGroup | security group for virtual machine | `string` | n/a | yes |

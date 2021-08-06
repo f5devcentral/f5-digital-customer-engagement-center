@@ -51,16 +51,6 @@ An optional SSH key to add to nodes.
 EOD
 }
 
-# TODO: @memes @JeffGiroux - standardise on path to key or content of key
-# (ssh_key above)
-variable "keyName" {
-  type        = string
-  default     = ""
-  description = <<EOD
-Path to SSH public key for Azure.
-EOD
-}
-
 # AWS specific vars - if these are not empty/null, AWS resources will be created
 variable "awsRegion" {
   description = "aws region"
