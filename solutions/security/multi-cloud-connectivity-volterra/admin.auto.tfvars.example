@@ -15,11 +15,11 @@ ssh_key = "ssh-rsa REDACTED me@my.email"
 awsRegion            = "us-west-2"
 volterraCloudCredAWS = "cloud-cred-aws"
 
-# Azure variables: if these are not null/empty, AWS VPC sites will be created for demo
+# Azure variables: if these are not null/empty, Azure VNET sites will be created for demo
 azureLocation        = "westus2"
 volterraCloudCredAzure = "cloud-cred-azure"
 
-# GCP variables: if these are not null/empty, AWS VPC sites will be created for demo
+# GCP variables: if these are not null/empty, GCP VPC sites will be created for demo
 gcpRegion = "us-west1"
 gcpProjectId = "my-gcp-project-id"
 volterraCloudCredGCP = "cloud-cred-gcp"
