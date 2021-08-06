@@ -116,5 +116,4 @@ module "google" {
   labels              = local.common_labels
   volterraVirtualSite = volterra_virtual_site.site.name
   volterraCloudCred   = var.volterraCloudCredGCP
-  #num_volterra_nodes = 3
 }
