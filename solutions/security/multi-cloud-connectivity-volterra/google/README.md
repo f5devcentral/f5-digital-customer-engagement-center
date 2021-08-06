@@ -63,7 +63,7 @@ changing the deployment.
 
    3. Launch HTTP/HTTPS proxy tunnel via Workstation VM
 
-      > See [Workstation](../../../../modules/google/terraform/workstation/README#using-workstation) docs for more options
+      > See [Workstation](../../../../modules/google/terraform/workstation/README.md#using-workstation) docs for more options
 
       <!-- spell-checker: disable -->
       ```shell
