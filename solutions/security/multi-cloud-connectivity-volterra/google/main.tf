@@ -284,11 +284,12 @@ resource "volterra_gcp_vpc_site" "inside" {
 
 # Instruct Volterra to provision the GCP VPC sites
 resource "volterra_tf_params_action" "inside" {
-  for_each        = volterra_gcp_vpc_site.inside
-  site_name       = each.value.name
-  site_kind       = "gcp_vpc_site"
-  action          = "apply"
-  wait_for_action = true
+  for_each         = volterra_gcp_vpc_site.inside
+  site_name        = each.value.name
+  site_kind        = "gcp_vpc_site"
+  action           = "apply"
+  wait_for_action  = true
+  ignore_on_update = false
   # These shouldn't be necessary, but lifecycle is flaky without them
   depends_on = [module.inside, module.outside, volterra_gcp_vpc_site.inside]
 }
