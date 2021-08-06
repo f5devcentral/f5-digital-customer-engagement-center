@@ -69,7 +69,7 @@ fileignoreconfig:
 - filename: modules/aws/terraform/workstation/templates/startup.sh.tpl
   checksum: 296576d6c29232bf4b2168f2eaa1afe8c835035b23a51369c4b1202628f3043e
 - filename: modules/aws/terraform/workstation/main.tf
-  checksum: 0c46185b90ab9dd29e92ac48a9e3c9030bf88d0690b217d6703ab2a04e28a816
+  checksum: acf0b69eda490f7a01c7f73f32f304e9980116713288eb91f59d14d525b2c7a6
 - filename: solutions/workshop/google/.terraform.lock.hcl
   checksum: 173742541a76307c912f751e5deaa06571bf9bf92b64453f5c8ee75ca116440e
 - filename: solutions/workshop/google/admin.auto.tfvars.example
