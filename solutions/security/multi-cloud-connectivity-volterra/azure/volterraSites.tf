@@ -1,9 +1,4 @@
 locals {
-  # TODO: @JeffGiroux - is this redundant?
-  azure_common_labels = merge(var.labels, {
-    owner = var.resourceOwner
-    demo  = "multi-cloud-connectivity-volterra"
-  })
   volterra_common_labels = merge(var.labels, {
     platform = "azure"
   })
