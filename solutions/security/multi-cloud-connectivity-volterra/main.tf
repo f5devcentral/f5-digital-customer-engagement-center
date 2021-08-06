@@ -82,6 +82,7 @@ module "aws" {
   awsRegion           = var.awsRegion
   volterraTenant      = var.volterraTenant
   volterraCloudCred   = var.volterraCloudCredAWS
+  labels              = local.common_labels
 }
 
 module "azure" {
@@ -97,6 +98,7 @@ module "azure" {
   volterraTenant      = var.volterraTenant
   keyName             = var.keyName
   volterraCloudCred   = var.volterraCloudCredAzure
+  labels              = local.common_labels
 }
 
 module "google" {
