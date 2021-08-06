@@ -120,6 +120,7 @@ changing the deployment.
 
 | Name | Version |
 |------|---------|
+| external | n/a |
 | google | >= 3.77 |
 | random | n/a |
 | volterra | 0.8.1 |
@@ -142,9 +143,11 @@ changing the deployment.
 
 | Name |
 |------|
+| [external_external](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) |
 | [google_compute_firewall](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) |
-| [google_compute_region_instance_group](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_region_instance_group) |
 | [google_compute_zones](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_zones) |
+| [google_dns_managed_zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone) |
+| [google_dns_record_set](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_record_set) |
 | [random_shuffle](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/shuffle) |
 | [volterra_gcp_vpc_site](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/gcp_vpc_site) |
 | [volterra_healthcheck](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/healthcheck) |

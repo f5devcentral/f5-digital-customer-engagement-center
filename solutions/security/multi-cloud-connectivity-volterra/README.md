@@ -98,6 +98,10 @@ module "volterra_sa" {
 
 ## Outputs
 
-No output.
+| Name | Description |
+|------|-------------|
+| aws\_jumphost\_publicIP | AWS Jumphost Public IP in BU1 |
+| azure\_jumphost\_publicIP | Azure Jumphost Public IP in BU11 |
+| connection\_helpers | gcloud connection helpers for GCP workstation(s) |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->
