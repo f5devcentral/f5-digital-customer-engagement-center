@@ -57,7 +57,7 @@ module "jumphost" {
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.main.name
   azureLocation      = var.azureLocation
-  keyName            = var.keyName
+  ssh_key            = var.ssh_key
   mgmtSubnet         = module.azure_network.subnets["mgmt"]
   securityGroup      = azurerm_network_security_group.mgmt.id
 }

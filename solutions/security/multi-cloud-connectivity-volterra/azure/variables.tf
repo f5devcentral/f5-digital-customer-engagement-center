@@ -17,9 +17,9 @@ variable "azureLocation" {
   type        = string
   description = "location where Azure resources are deployed (abbreviated Azure Region name)"
 }
-variable "keyName" {
+variable "ssh_key" {
   type        = string
-  description = "instance key pair name"
+  description = "public key used for authentication in ssh-rsa format"
 }
 
 #Volterra info

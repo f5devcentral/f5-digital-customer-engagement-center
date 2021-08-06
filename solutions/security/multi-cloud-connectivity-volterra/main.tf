@@ -96,7 +96,7 @@ module "azure" {
   resourceOwner       = var.resourceOwner
   azureLocation       = var.azureLocation
   volterraTenant      = var.volterraTenant
-  keyName             = var.keyName
+  ssh_key             = var.ssh_key
   volterraCloudCred   = var.volterraCloudCredAzure
   labels              = local.common_labels
 }

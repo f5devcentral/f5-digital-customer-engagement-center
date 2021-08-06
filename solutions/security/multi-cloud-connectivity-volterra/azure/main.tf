@@ -166,7 +166,7 @@ module "jumphost" {
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.rg[each.key].name
   azureLocation      = azurerm_resource_group.rg[each.key].location
-  keyName            = var.keyName
+  ssh_key            = var.ssh_key
   mgmtSubnet         = each.value["subnet"]
   securityGroup      = azurerm_network_security_group.jumphost[each.key].id
 }
@@ -180,7 +180,7 @@ module "webserver" {
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.rg[each.key].name
   azureLocation      = azurerm_resource_group.rg[each.key].location
-  keyName            = var.keyName
+  ssh_key            = var.ssh_key
   subnet             = each.value["subnet"]
   securityGroup      = azurerm_network_security_group.webserver[each.key].id
 }
