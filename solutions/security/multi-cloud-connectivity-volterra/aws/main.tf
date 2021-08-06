@@ -122,15 +122,15 @@ locals {
   webservers = {
     bu1 = {
       vpcId    = module.vpc["bu1"].vpc_id
-      subnetId = module.vpc["bu1"].intra_subnets[0]
+      subnetId = module.vpc["bu1"].public_subnets[0]
     }
     bu2 = {
       vpcId    = module.vpc["bu2"].vpc_id
-      subnetId = module.vpc["bu2"].intra_subnets[0]
+      subnetId = module.vpc["bu2"].public_subnets[0]
     }
     bu3 = {
       vpcId    = module.vpc["bu3"].vpc_id
-      subnetId = module.vpc["bu3"].intra_subnets[0]
+      subnetId = module.vpc["bu3"].public_subnets[0]
     }
   }
 }
