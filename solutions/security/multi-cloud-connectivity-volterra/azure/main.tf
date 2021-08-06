@@ -53,11 +53,8 @@ module "network" {
     Name      = format("%s-vnet-%s-%s", var.resourceOwner, each.key, var.buildSuffix)
     Terraform = "true"
   }
-  # Emes - I needed this dependency to get the module to function
-  # TODO: @JeffGiroux - is this necessary or because of my Azure perms issue?
-  depends_on = [
-    azurerm_resource_group.rg,
-  ]
+
+  depends_on = [azurerm_resource_group.rg]
 }
 
 ############################ Security Groups - Jumphost, Web Servers ############################
@@ -93,7 +90,7 @@ locals {
 
 # Allow jumphost access
 resource "azurerm_network_security_group" "jumphost" {
-  for_each            = local.jumphosts
+  for_each            = { for k, v in local.jumphosts : k => v if v.create }
   name                = format("%s-nsg-jumphost-%s", var.projectPrefix, var.buildSuffix)
   location            = azurerm_resource_group.rg[each.key].location
   resource_group_name = azurerm_resource_group.rg[each.key].name
