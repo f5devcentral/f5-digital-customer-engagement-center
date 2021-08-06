@@ -1,7 +1,9 @@
+############################ Locals ############################
+
 data "aws_availability_zones" "available" {
   state = "available"
 }
-##################################################################### Locals #############################################################
+
 locals {
   awsAz1 = var.awsAz1 != null ? var.awsAz1 : data.aws_availability_zones.available.names[0]
   awsAz2 = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
@@ -14,188 +16,129 @@ locals {
     provisioner = "terraform"
   }
 }
-##################################################################### Locals #############################################################
 
+############################ Locals for Business Units ############################
 
-
-######################################################BU vpc's########################################
-module "vpcBu1" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 2.0"
-
-  name = "${var.projectPrefix}-vpcBu1-${var.buildSuffix}"
-
-  cidr = "10.1.0.0/16"
-
-  azs            = [local.awsAz1, local.awsAz2]
-  public_subnets = ["10.1.10.0/24", "10.1.110.0/24", "10.1.20.0/24", "10.1.120.0/24"]
-  intra_subnets  = ["10.1.52.0/24", "10.1.152.0/24"]
-
-  enable_dns_hostnames = true
-  tags = {
-    resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-vpcBu1-${var.buildSuffix}"
+locals {
+  business_units = {
+    bu1 = {
+      cidr           = "10.1.0.0/16"
+      azs            = [local.awsAz1, local.awsAz2]
+      public_subnets = ["10.1.10.0/24", "10.1.110.0/24"]
+      intra_subnets  = ["10.1.52.0/24", "10.1.152.0/24"]
+    }
+    bu2 = {
+      cidr           = "10.1.0.0/16"
+      azs            = [local.awsAz1, local.awsAz2]
+      public_subnets = ["10.1.10.0/24", "10.1.110.0/24"]
+      intra_subnets  = ["10.1.52.0/24", "10.1.152.0/24"]
+    }
+    bu3 = {
+      cidr           = "10.1.0.0/16"
+      azs            = [local.awsAz1, local.awsAz2]
+      public_subnets = ["10.1.10.0/24", "10.1.110.0/24"]
+      intra_subnets  = ["10.1.52.0/24", "10.1.152.0/24"]
+    }
   }
-
 }
 
 
-module "vpcBu2" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 2.0"
+############################ VPCs ############################
 
-  name = "${var.projectPrefix}-vpcBu2-${var.buildSuffix}"
-
-  cidr = "10.1.0.0/16"
-
-  azs            = [local.awsAz1, local.awsAz2]
-  public_subnets = ["10.1.10.0/24", "10.1.110.0/24", "10.1.20.0/24", "10.1.120.0/24"]
-  intra_subnets  = ["10.1.52.0/24", "10.1.152.0/24"]
-
+module "vpc" {
+  for_each             = local.business_units
+  source               = "terraform-aws-modules/vpc/aws"
+  version              = "~> 2.0"
+  name                 = format("%s-vpc-%s-%s", var.projectPrefix, each.key, var.buildSuffix)
+  cidr                 = each.value["cidr"]
+  azs                  = each.value["azs"]
+  public_subnets       = each.value["public_subnets"]
+  intra_subnets        = each.value["intra_subnets"]
   enable_dns_hostnames = true
   tags = {
-    resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-vpcBu2-${var.buildSuffix}"
+    Name      = format("%s-vpc-%s-%s", var.resourceOwner, each.key, var.buildSuffix)
+    Terraform = "true"
   }
-
 }
 
-module "vpcAcme" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 2.0"
+############################ Workload Subnet ############################
 
-  name = "${var.projectPrefix}-vpcAcme-${var.buildSuffix}"
+# @JeffGiroux workaround route table association conflict
+# - AWS VPC module creates subnets with RT associations
+# - Volterra tries to create causes RT conflicts and fails site
+# - Create additional subnets for sli and workload without RT for Volterra's use
+resource "aws_subnet" "sli" {
+  for_each          = local.business_units
+  vpc_id            = module.vpc[each.key].vpc_id
+  availability_zone = local.awsAz1
+  cidr_block        = "10.1.20.0/24"
 
-  cidr = "10.1.0.0/16"
-
-  azs            = [local.awsAz1, local.awsAz2]
-  public_subnets = ["10.1.10.0/24", "10.1.110.0/24", "10.1.20.0/24", "10.1.120.0/24"]
-  intra_subnets  = ["10.1.52.0/24", "10.1.152.0/24"]
-
-  enable_dns_hostnames = true
   tags = {
-    resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-vpcAcme-${var.buildSuffix}"
+    Name      = format("%s-site-local-inside-%s-%s", var.resourceOwner, each.key, var.buildSuffix)
+    Terraform = "true"
   }
-
 }
 
-resource "aws_subnet" "bu1VoltSliAz1" {
-  vpc_id            = module.vpcBu1.vpc_id
+resource "aws_subnet" "workload" {
+  for_each          = local.business_units
+  vpc_id            = module.vpc[each.key].vpc_id
   availability_zone = local.awsAz1
   cidr_block        = "10.1.30.0/24"
 
   tags = {
-    resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu1VoltSliAz1-${var.buildSuffix}"
+    Name      = format("%s-workload-%s-%s", var.resourceOwner, each.key, var.buildSuffix)
+    Terraform = "true"
   }
 }
 
-resource "aws_subnet" "bu1VoltWorkloadAz1" {
-  vpc_id            = module.vpcBu1.vpc_id
-  availability_zone = local.awsAz1
-  cidr_block        = "10.1.40.0/24"
+############################ Security Groups - Jumphost, Web Servers ############################
 
-  tags = {
-    resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu1VoltWorkloadAz1-${var.buildSuffix}"
-  }
-}
-
-resource "aws_subnet" "bu2VoltSliAz1" {
-  vpc_id            = module.vpcBu2.vpc_id
-  availability_zone = local.awsAz1
-  cidr_block        = "10.1.30.0/24"
-
-  tags = {
-    resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu2VoltSliAz1-${var.buildSuffix}"
-  }
-}
-
-resource "aws_subnet" "bu2VoltWorkloadAz1" {
-  vpc_id            = module.vpcBu2.vpc_id
-  availability_zone = local.awsAz1
-  cidr_block        = "10.1.40.0/24"
-
-  tags = {
-    resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-bu2VoltWorkloadAz1-${var.buildSuffix}"
-  }
-}
-
-resource "aws_subnet" "acmeVoltSliAz1" {
-  vpc_id            = module.vpcAcme.vpc_id
-  availability_zone = local.awsAz1
-  cidr_block        = "10.1.30.0/24"
-
-  tags = {
-    resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-acmeVoltSliAz1-${var.buildSuffix}"
-  }
-}
-
-resource "aws_subnet" "acmeVoltWorkloadAz1" {
-  vpc_id            = module.vpcAcme.vpc_id
-  availability_zone = local.awsAz1
-  cidr_block        = "10.1.40.0/24"
-
-  tags = {
-    resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-acmeVoltWorkloadAz1-${var.buildSuffix}"
-  }
-}
-
-#Compute
-
+# SSH key
 resource "aws_key_pair" "deployer" {
-  key_name   = "${var.projectPrefix}-key-${var.buildSuffix}"
+  key_name   = format("%s-sshkey-%s", var.projectPrefix, var.buildSuffix)
   public_key = var.ssh_key
 }
 
-#local for spinning up compute resources
+# Set locals
 locals {
-
   jumphosts = {
-
-    vpcBu1Jumphost = {
-      vpcId    = module.vpcBu1.vpc_id
-      subnetId = module.vpcBu1.public_subnets[0]
+    bu1 = {
+      vpcId    = module.vpc["bu1"].vpc_id
+      subnetId = module.vpc["bu1"].public_subnets[0]
+      create   = true
     }
-
-    vpcBu2Jumphost = {
-      vpcId    = module.vpcBu2.vpc_id
-      subnetId = module.vpcBu2.public_subnets[0]
+    bu2 = {
+      vpcId    = module.vpc["bu2"].vpc_id
+      subnetId = module.vpc["bu2"].public_subnets[0]
+      create   = false
     }
-
-    vpcAcmeJumphost = {
-      vpcId    = module.vpcAcme.vpc_id
-      subnetId = module.vpcAcme.public_subnets[0]
+    bu3 = {
+      vpcId    = module.vpc["bu3"].vpc_id
+      subnetId = module.vpc["bu3"].public_subnets[0]
+      create   = false
     }
   }
 
   webservers = {
-    vpcBu1App1 = {
-      vpcId    = module.vpcBu1.vpc_id
-      subnetId = module.vpcBu1.public_subnets[0]
+    bu1 = {
+      vpcId    = module.vpc["bu1"].vpc_id
+      subnetId = module.vpc["bu1"].intra_subnets[0]
     }
-
-    vpcBu2App1 = {
-      vpcId    = module.vpcBu2.vpc_id
-      subnetId = module.vpcBu2.public_subnets[0]
+    bu2 = {
+      vpcId    = module.vpc["bu2"].vpc_id
+      subnetId = module.vpc["bu2"].intra_subnets[0]
     }
-
-    vpcAcmeApp1 = {
-      vpcId    = module.vpcAcme.vpc_id
-      subnetId = module.vpcAcme.public_subnets[0]
+    bu3 = {
+      vpcId    = module.vpc["bu3"].vpc_id
+      subnetId = module.vpc["bu3"].intra_subnets[0]
     }
   }
-
 }
 
-resource "aws_security_group" "secGroupWorkstation" {
+# Jumphost Security Group
+resource "aws_security_group" "jumphost" {
   for_each    = local.jumphosts
-  name        = "secGroupWorkstation"
+  name        = format("%s-sg-jumphost-%s", var.projectPrefix, var.buildSuffix)
   description = "Jumphost workstation security group"
   vpc_id      = each.value["vpcId"]
 
@@ -205,14 +148,12 @@ resource "aws_security_group" "secGroupWorkstation" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
   ingress {
     from_port   = 5800
     to_port     = 5800
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -221,15 +162,16 @@ resource "aws_security_group" "secGroupWorkstation" {
   }
 
   tags = {
-    Name  = "${var.projectPrefix}-secGroupWorkstation"
-    Owner = var.resourceOwner
+    Name      = format("%s-sg-jumphost-%s", var.resourceOwner, var.buildSuffix)
+    Terraform = "true"
   }
 }
 
-resource "aws_security_group" "secGroupWebServers" {
+# Webserver Security Group
+resource "aws_security_group" "webserver" {
   for_each    = local.webservers
-  name        = "secGroupWebServers"
-  description = "webservers  security group"
+  name        = format("%s-sg-webservers-%s", var.projectPrefix, var.buildSuffix)
+  description = "Webservers security group"
   vpc_id      = each.value["vpcId"]
 
   ingress {
@@ -238,14 +180,12 @@ resource "aws_security_group" "secGroupWebServers" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -254,23 +194,27 @@ resource "aws_security_group" "secGroupWebServers" {
   }
 
   tags = {
-    Name  = "${var.projectPrefix}-secGroupwebservers"
-    Owner = var.resourceOwner
+    Name      = format("%s-sg-webservers-%s", var.resourceOwner, var.buildSuffix)
+    Terraform = "true"
   }
 }
 
+############################ Compute ############################
+
+# Create jumphost instances
 module "jumphost" {
-  for_each      = local.jumphosts
+  for_each      = { for k, v in local.jumphosts : k => v if v.create }
   source        = "../../../../modules/aws/terraform/workstation/"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
   vpc           = each.value["vpcId"]
   keyName       = aws_key_pair.deployer.id
   mgmtSubnet    = each.value["subnetId"]
-  securityGroup = aws_security_group.secGroupWorkstation[each.key].id
-  associateEIP  = false
+  securityGroup = aws_security_group.jumphost[each.key].id
+  associateEIP  = true
 }
 
+# Create webserver instances
 module "webserver" {
   for_each      = local.webservers
   source        = "../../../../modules/aws/terraform/workstation/"
@@ -279,6 +223,6 @@ module "webserver" {
   vpc           = each.value["vpcId"]
   keyName       = aws_key_pair.deployer.id
   mgmtSubnet    = each.value["subnetId"]
-  securityGroup = aws_security_group.secGroupWebServers[each.key].id
+  securityGroup = aws_security_group.webserver[each.key].id
   associateEIP  = false
 }
