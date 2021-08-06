@@ -135,6 +135,8 @@ changing the deployment.
 | webserver_tls | ../../../../modules/google/terraform/tls |  |
 | webservers | ../../../../modules/google/terraform/backend |  |
 | workstation | ../../../../modules/google/terraform/workstation |  |
+| workstation_sa | terraform-google-modules/service-accounts/google | 4.0.2 |
+| workstation_tls | ../../../../modules/google/terraform/tls/ |  |
 
 ## Resources
 

@@ -22,8 +22,9 @@ locals {
     provisioner = "terraform"
   }
   # Service account names are predictable; use this to avoid dependencies
-  webserver_sa = format("%s-webserver-%s@%s.iam.gserviceaccount.com", var.projectPrefix, var.buildSuffix, var.gcpProjectId)
-  zones        = random_shuffle.zones.result
+  workstation_sa = format("%s-workstation-%s@%s.iam.gserviceaccount.com", var.projectPrefix, var.buildSuffix, var.gcpProjectId)
+  webserver_sa   = format("%s-webserver-%s@%s.iam.gserviceaccount.com", var.projectPrefix, var.buildSuffix, var.gcpProjectId)
+  zones          = random_shuffle.zones.result
 }
 
 data "google_compute_zones" "zones" {
@@ -37,6 +38,23 @@ resource "random_shuffle" "zones" {
   keepers = {
     gcpProjectId = var.gcpProjectId
   }
+}
+
+# Service account to use with Workstation VMs
+module "workstation_sa" {
+  source       = "terraform-google-modules/service-accounts/google"
+  version      = "4.0.2"
+  project_id   = var.gcpProjectId
+  prefix       = var.projectPrefix
+  names        = [format("workstation-%s", var.buildSuffix)]
+  descriptions = [format("Workstation service account (%s-%s)", var.projectPrefix, var.buildSuffix)]
+  project_roles = [
+    "${var.gcpProjectId}=>roles/logging.logWriter",
+    "${var.gcpProjectId}=>roles/monitoring.metricWriter",
+    "${var.gcpProjectId}=>roles/monitoring.viewer",
+    "${var.gcpProjectId}=>roles/compute.osLogin",
+  ]
+  generate_keys = false
 }
 
 # Service account to use with Webserver VMs
@@ -98,20 +116,32 @@ module "outside" {
   ]
 }
 
+# Create a self-signed TLS certificate for workstations
+module "workstation_tls" {
+  source                  = "../../../../modules/google/terraform/tls/"
+  gcpProjectId            = var.gcpProjectId
+  secret_manager_key_name = format("%s-workstation-tls-%s", var.projectPrefix, var.buildSuffix)
+  secret_accessors = [
+    format("serviceAccount:%s", local.workstation_sa),
+  ]
+}
+
 # Launch a Workstation VM (forward-proxy, ssh jumphost) on inside network of any
 # business unit that has set the 'workstation' flag to true.
 module "workstation" {
-  for_each      = { for k, v in var.business_units : k => v if v.workstation }
-  source        = "../../../../modules/google/terraform/workstation"
-  projectPrefix = var.projectPrefix
-  buildSuffix   = var.buildSuffix
-  gcpProjectId  = var.gcpProjectId
-  gcpRegion     = var.gcpRegion
-  resourceOwner = var.resourceOwner
-  name          = format("%s-%s-workstation-%s", var.projectPrefix, each.key, var.buildSuffix)
-  subnet        = module.inside[each.key].subnets_self_links[0]
-  zone          = local.zones[0]
-  labels        = local.gcp_common_labels
+  for_each        = { for k, v in var.business_units : k => v if v.workstation }
+  source          = "../../../../modules/google/terraform/workstation"
+  projectPrefix   = var.projectPrefix
+  buildSuffix     = var.buildSuffix
+  gcpProjectId    = var.gcpProjectId
+  gcpRegion       = var.gcpRegion
+  resourceOwner   = var.resourceOwner
+  name            = format("%s-%s-workstation-%s", var.projectPrefix, each.key, var.buildSuffix)
+  subnet          = module.inside[each.key].subnets_self_links[0]
+  zone            = local.zones[0]
+  labels          = local.gcp_common_labels
+  service_account = local.workstation_sa
+  tls_secret_key  = module.workstation_tls.tls_secret_key
   # Not using a NAT on the BU spokes, and Volterra gateway takes too long to
   # bootstrap; make sure the workstation gets a public address so it can pull
   # required packages and secrets.
