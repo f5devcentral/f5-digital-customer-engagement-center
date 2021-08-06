@@ -46,7 +46,7 @@ locals {
   }
   deploy_aws    = coalesce(var.awsRegion, "x") != "x" && coalesce(var.volterraCloudCredAWS, "x") != "x"
   deploy_azure  = coalesce(var.azureLocation, "x") != "x" && coalesce(var.volterraCloudCredAzure, "x") != "x"
-  deploy_google = coalesce(var.gcpProjectId, "x") != "x" && coalesce(var.gcpRegion, "x") != "x"
+  deploy_google = coalesce(var.gcpProjectId, "x") != "x" && coalesce(var.gcpRegion, "x") != "x" && coalesce(var.volterraCloudCredGCP, "x") != "x"
 }
 
 
