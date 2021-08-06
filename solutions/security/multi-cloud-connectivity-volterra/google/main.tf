@@ -293,7 +293,7 @@ resource "volterra_healthcheck" "inside" {
 # launched on the inside network.
 resource "volterra_origin_pool" "inside" {
   for_each               = var.business_units
-  name                   = format("%s-%sapp-%s", var.projectPrefix, each.key, var.buildSuffix)
+  name                   = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"
   loadbalancer_algorithm = "LB_OVERRIDE"
@@ -331,7 +331,7 @@ resource "volterra_origin_pool" "inside" {
 # source.
 resource "volterra_http_loadbalancer" "inside" {
   for_each    = var.business_units
-  name        = format("%s-%sapp-%s", var.projectPrefix, each.key, var.buildSuffix)
+  name        = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace   = var.namespace
   description = format("HTTP service LB for %s (%s-%s)", each.key, var.projectPrefix, var.buildSuffix)
   labels = merge(local.volterra_common_labels, {

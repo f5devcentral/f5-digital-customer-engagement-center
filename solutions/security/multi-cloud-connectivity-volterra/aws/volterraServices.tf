@@ -2,7 +2,7 @@
 
 resource "volterra_origin_pool" "app" {
   for_each               = local.business_units
-  name                   = format("%s-app", each.key)
+  name                   = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"
   loadbalancer_algorithm = "LB_OVERRIDE"
@@ -32,7 +32,7 @@ resource "volterra_origin_pool" "app" {
 
 resource "volterra_http_loadbalancer" "app" {
   for_each                        = local.business_units
-  name                            = format("%s-app", each.key)
+  name                            = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace                       = var.namespace
   no_challenge                    = true
   domains                         = [format("%sapp.%s", each.key, var.domain_name)]
