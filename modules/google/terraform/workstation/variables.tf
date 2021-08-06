@@ -168,3 +168,12 @@ Default value is 'false'. Setting value to true is required if the workstation
 is on a VPC network without a NAT gateway.
 EOD
 }
+
+variable "service_account" {
+  type        = string
+  default     = null
+  description = <<EOD
+The service account to use with workstation. If empty (default), a service
+account will be created.
+EOD
+}
