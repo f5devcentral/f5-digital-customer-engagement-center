@@ -24,10 +24,12 @@ changing the deployment.
 ### AWS
 
 Cloud Credentials, awsRegion
+- Reference [Set AWS Environment Variables](aws/README.md#login-to-aws-environment)
 
 ### Azure
 
 Cloud Credentials, awsLocation
+- Reference [Create Azure Service Principal](azure/README.md#login-to-azure-environment)
 
 ## Google
 
