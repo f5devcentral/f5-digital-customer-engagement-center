@@ -1,10 +1,23 @@
-# Description
-Azure accounts with overlapping ip addresses services connectivity
+# Azure multi-cloud Volterra module
+
+This module will create a set of Volterra Azure VNet Sites with ingress/egress gateways
+configured and a virtual site that spans the CE sites.
 
 ## Diagram
 
-![Azure accounts with overlapping ip addresses services connectivity](images/azure-multi-cloud-connectivity.png)
+![azure-multi-cloud-volterra-hla.png](../images/azure-multi-cloud-volterra-hla.png)
+<!-- markdownlint-disable no-inline-html -->
+<p align="center">Figure 1: High-level overview of solution; this module delivers the Azure resources</p>
+<!-- markdownlint-enable no-inline-html -->
 
+HTTP load balancers are created for each business unit service, and are advertised
+on every CE site that match the selector predicate for the Virtual Site. This means
+that existing resources can use DNS discovery via the Volterra gateways without
+changing the deployment.
+
+> See [Scenario](../SCENARIO.md) document for details on why this solution was chosen
+> for a hypothetical customer looking for a minimally invasive solution
+> to multi-cloud networking.
 
 ## Requirements
 
