@@ -99,7 +99,7 @@ curl bu3app.shared.acme.com
 
 3. On your laptop/PC, configure your browser to use 127.0.0.1:3128 as SOCKS v5 proxy and also enable the box "Proxy DNS when using SOCKS v5".
 
-![Proxy Settings](images/proxy-socks5.png)
+![Proxy Settings](images/proxy-socks.png)
 
 4. Browse to the BU sites. AWS will resolve with a basic NGINX page.
 
