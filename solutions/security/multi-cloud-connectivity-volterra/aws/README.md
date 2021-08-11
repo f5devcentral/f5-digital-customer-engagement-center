@@ -3,7 +3,7 @@ AWS accounts with overlapping ip addresses services connectivity
 
 ## Diagram
 
-![Multi cloud accounts with overlapping ip addresses services connectivity](aws-multi-cloud-connectivity.png)
+![AWS accounts with overlapping ip addresses services connectivity](images/aws-multi-cloud-connectivity.png)
 
 
 ## Requirements
@@ -45,7 +45,7 @@ Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click o
 - Clone the repo and open the solution's directory
 ```bash
 git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
-cd f5-digital-customer-engagement-center/solutions/security/multi-cloud-connectivity-volterra/aws/
+cd f5-digital-customer-engagement-center/solutions/security/multi-cloud-connectivity-volterra/
 ```
 
 - Set Volterra environment variables
