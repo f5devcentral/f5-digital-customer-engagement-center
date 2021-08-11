@@ -76,26 +76,46 @@ vi admin.auto.tfvars
 
 ## TEST your setup:
 
-View the created objects in VoltConsole
+1. Connect to the bu1Jumphost via SSH with port forwarding enabled.
 
-ssh to the bu1Jumphost (ip in the terraform output), from there try to access the apps in the other bu's
-
+The IP is in the terraform output. Example SSH command is below. Run this from your laptop terminal. You will use these settings later in your laptop web browser to configure SOCKS v5 proxy.
 
 ```bash
+# run this from your laptop/pc
+ssh -D 3128 ubuntu@x.x.x.x
+# port = 3128
+# user = ubuntu
+# IP = x.x.x.x
+```
+
+2. From the jumphost CLI, test curl commands to each BU site.
+
+```bash
+# run this from the jumphost terminal
 curl bu1app.shared.acme.com
 curl bu2app.shared.acme.com
 curl bu3app.shared.acme.com
 ```
 
-Open VoltConsole, go to the 'HTTP load balancer' tab
+3. On your laptop/PC, configure your browser to use 127.0.0.1:3128 as SOCKS v5 proxy and also enable the box "Proxy DNS when using SOCKS v5".
 
-Click on bu1app and open the 'requests' tab.
+![Proxy Settings](images/proxy-socks5.png)
 
-You should see your request.
+4. Browse to the BU sites. AWS will resolve with a basic NGINX page.
 
-Click on the request and notice it shows the original clientIp and the source site.
+![BU1 app](images/bu1app.png)
 
-![Request log](request_log.png)
+5. Open VoltConsole, go to the 'HTTP Load Balancers' tab
+
+![HTTP LB](images/httplb-tab.png)
+
+6. Click on bu1app and open the 'Requests' tab. You should see your request.
+
+![HTTP LB Requests](images/httplb-requests.png)
+
+7. Click on the request and notice it shows the original clientIp and the source site.
+
+![Request log](images/httplb-client-ip.png)
 
 ## Cleanup
 Use the following command to destroy all of the resources
@@ -109,5 +129,5 @@ Use the following command to destroy all of the resources
 Submit a pull request
 
 # Authors
-Yossi Rosenboim
-Jeff Giroux
+- Yossi Rosenboim
+- Jeff Giroux
