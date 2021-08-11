@@ -1,0 +1,134 @@
+## template: jinja
+#cloud-config
+# yamllint disable rule:document-start rule:line-length
+write_files:
+  - path: /etc/systemd/system/iptables-webapp.service
+    permissions: '0644'
+    owner: root
+    content: |
+      [Unit]
+      Description=Configure iptables for webapp
+      Wants=gcr-online.target
+      After=gcr-online.target
+
+      [Service]
+      Type=oneshot
+      ExecStart=/sbin/iptables -w -A INPUT -p tcp --dport 80 -j ACCEPT
+%{ if tls_secret_key != "" ~}
+      ExecStart=/sbin/iptables -w -A INPUT -p tcp --dport 443 -j ACCEPT
+%{ endif ~}
+  - path: /etc/systemd/system/webapp.service
+    permissions: '0644'
+    owner: root
+    content: |
+      [Unit]
+      Description=Webapp in NGINX
+      Wants=gcr-online.target
+      After=gcr-online.target
+
+      [Service]
+      ExecStart=/usr/bin/docker run --rm --name webapp -p 80:80 %{if tls_secret_key != "" } -p 443:443 %{ endif } -v /var/lib/webapp/html:/usr/share/nginx/html:ro -v /var/lib/webapp/conf.d:/etc/nginx/conf.d:ro nginx:alpine
+      ExecStop=/usr/bin/docker stop webapp
+      ExecStopPost=/usr/bin/docker rm webapp
+%{ if tls_secret_key != "" ~}
+  - path: /run/install-server-tls-certs.sh
+    encoding: gz+b64
+    permissions: '0755'
+    owner: root
+    content: |
+      ${install_server_tls_certs_sh}
+%{ endif ~}
+  - path: /var/lib/webapp/html/index.html
+    permissions: '0644'
+    owner: root
+    content: |
+      <!DOCTYPE html>
+      <html lang="en">
+          <head>
+              <title>Success</title>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <link rel="stylesheet" href="//unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+              <link rel="stylesheet" href="//unpkg.com/purecss@2.0.6/build/grids-responsive-min.css" crossorigin="anonymous">
+              <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" crossorigin="anonymous">
+              <link rel="stylesheet" href="/styles.css">
+          </head>
+          <body>
+              <div class="splash-container">
+                  <div class="splash">
+                      <h1 class="splash-head">F5 on {{ v1.cloud_name | upper }}</h1>
+                      <p class="splash-subhead">
+                          You know it makes sense!
+                      </p>
+                  </div>
+              </div>
+              <div class="content-wrapper">
+                  <div class="ribbon l-box-lrg pure-g">
+                      <div class="l-box-lrg is-center pure-u-1 pure-u-md-1-2 pure-u-lg-2-5">
+                          <img src="/f5-logo-rgb.svg" alt="F5 logo" class="f5-logo">
+                      </div>
+                      <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-3-5">
+                          <h2 class="content-head content-head-ribbon">Server details</h2>
+                          <table class="pure-table">
+                              <thead>
+                                  <tr>
+                                      <th>Field</th>
+                                      <th>Value</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr>
+                                      <td>Hostname</td>
+                                      <td>{{ v1.local_hostname }}</td>
+                                  </tr>
+                                  <tr>
+                                      <td>Zone</td>
+                                      <td>{{ v1.availability_zone }}</td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+                  <div class="footer l-box is-center">
+                      Modified from <a href="https://purecss.io/">Pure CSS</a> Landing Page sample.
+                  </div>
+              </div>
+          </body>
+      </html>
+  - path: /var/lib/webapp/html/styles.css
+    permissions: '0644'
+    owner: root
+    encoding: gz+b64
+    content: |
+      ${styles_css}
+  - path: /var/lib/webapp/html/f5-logo-rgb.svg
+    permissions: '0644'
+    owner: root
+    encoding: gz+b64
+    content: |
+      ${f5_logo_rgb_svg}
+  - path: /var/lib/webapp/conf.d/default.conf
+    permissions: '0644'
+    owner: root
+    content: |
+      server {
+        listen 80 default_server;
+%{ if tls_secret_key != "" ~}
+        listen 443 ssl default_server;
+        ssl_certificate /etc/nginx/conf.d/server.pem;
+        ssl_certificate_key /etc/nginx/conf.d/server.key;
+%{ endif }
+        server_name _;
+        location / {
+          root /usr/share/nginx/html;
+          index index.html;
+        }
+      }
+
+runcmd:
+%{ if tls_secret_key != "" ~}
+  - /run/install-server-tls-certs.sh ${tls_secret_key}
+%{ endif ~}
+  - systemctl daemon-reload
+  - systemctl start iptables-webapp.service
+  - systemctl start webapp.service

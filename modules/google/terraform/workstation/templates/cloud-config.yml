@@ -1,0 +1,157 @@
+## template: jinja
+#cloud-config
+---
+write_files:
+  - path: /etc/skel/.bashrc
+    append: true
+    content: |
+      terraform -version
+      f5 --version
+      gcloud --version
+  - path: /etc/adduser.conf
+    append: true
+    content: |
+      EXTRA_GROUPS="docker"
+      ADD_EXTRA_GROUPS=1
+  - path: /etc/nginx/sites-available/code-server
+    permissions: '0644'
+    owner: root
+    content: |
+      server {
+        listen 80 default_server;
+        listen 443 ssl default_server;
+        ssl_certificate /etc/ssl/certs/workstation.pem;
+        ssl_certificate_key /etc/ssl/private/workstation.key;
+        access_log /var/log/nginx/access.log;
+        error_log /var/log/nginx/error.log;
+        server_name _;
+        location / {
+          proxy_pass http://localhost:8080/;
+          proxy_set_header Host $host;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection upgrade;
+          proxy_set_header Accept-Encoding gzip;
+        }
+      }
+  - path: /etc/skel/.config/code-server/config.yaml
+    permissions: '0644'
+    owner: root
+    content: |
+      bind-addr: 127.0.0.1:8080
+      auth: none
+      cert: false
+  - path: /etc/bash_completion.d/terraform
+    permissions: '0644'
+    owner: root
+    content: |
+      complete -C /usr/local/bin/terraform terraform
+  - path: /usr/local/bin/install-workstation-tls-certs.sh
+    encoding: gz+b64
+    permissions: '0755'
+    owner: root
+    content: |
+      ${install_workstation_tls_certs_sh}
+  - path: /usr/local/bin/install-code-server-extension.sh
+    encoding: gz+b64
+    permissions: '0755'
+    owner: root
+    content: |
+      ${install_code_server_extension_sh}
+  - path: /etc/systemd/user/code-server-extensions.service
+    permissions: '0644'
+    owner: root
+    content: |
+      [Unit]
+      Description=Install code-server extensions
+      After=network.target
+      Before=code-server.service
+      FailureAction=none
+      StartLimitIntervalSec=10
+      StartLimitBurst=5
+
+      [Service]
+      Type=oneshot
+      RestartSec=1
+      Restart=on-failure
+      RemainAfterExit=yes
+%{ for extension_url in code_server_extension_urls ~}
+      ExecStart=/usr/local/bin/install-code-server-extension.sh "${extension_url}"
+%{ endfor ~}
+
+      [Install]
+      WantedBy=default.target
+  - path: /etc/systemd/user/clone-git-repos.service
+    permissions: '0644'
+    owner: root
+    content: |
+      [Unit]
+      Description=Clone git repos
+      After=network.target
+      Before=code-server.service
+      FailureAction=none
+      StartLimitIntervalSec=10
+      StartLimitBurst=5
+
+      [Service]
+      Type=oneshot
+      RestartSec=1
+      Restart=on-failure
+      RemainAfterExit=yes
+%{ for repo_url in git_repos ~}
+      ExecStart=git clone ${repo_url}
+%{ endfor ~}
+
+      [Install]
+      WantedBy=default.target
+
+apt:
+  preserve_sources_list: true
+  disable_suites: []
+  sources:
+    docker-ce.list:
+      source: "deb [arch=amd64] https://download.docker.com/linux/{{ v1.distro }} {{ v1.distro_release }} stable"
+      keyid: 9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88
+
+packages:
+  # These *should* already be installed, but just in case...
+  - curl
+  - wget
+  - git
+  # NGINX OSS will be used for reverse-proxy to coder
+  - nginx
+  # NGINX forward proxy to SSL is unsupported; install tinyproxy as generic forwarding proxy
+  - tinyproxy
+  # Everything else
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - python3-pip
+  - unzip
+  - jq
+
+runcmd:
+  - /usr/local/bin/install-workstation-tls-certs.sh ${tls_secret_key}
+  - rm -f /etc/nginx/sites-enabled/default
+  - ln -s /etc/nginx/sites-available/code-server /etc/nginx/sites-enabled/
+  - sed -i -e '/^Allow /d' /etc/tinyproxy/tinyproxy.conf
+  - pip3 install --system f5-cli
+  - sh -c 'curl -sSLo /var/tmp/terraform.zip https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_amd64.zip && unzip /var/tmp/terraform.zip -d /usr/local/bin/ && chmod 0755 /usr/local/bin/terraform && rm -f /var/tmp/terraform.zip'
+  - sh -c 'curl -sSLo /var/tmp/code-server.deb https://github.com/cdr/code-server/releases/download/v${code_server_version}/code-server_${code_server_version}_amd64.deb && dpkg -i /var/tmp/code-server.deb && rm -f /var/tmp/code-server.deb'
+  - systemctl daemon-reload
+  - systemctl enable --now nginx
+  - systemctl restart nginx
+  - systemctl enable --now tinyproxy
+  - systemctl restart tinyproxy
+  - systemctl --global enable clone-git-repos.service
+  - systemctl --global enable code-server-extensions.service
+  # Start code-server for every user; since we're using a fixed port only the
+  # first user account to login will spawn code server, but any IAP-authorised
+  # user account can connect to that first spawned instance.
+  - systemctl --global enable code-server.service
+%{ if true ~}
+  # For DCEC, prefer to start a Code Server instance for a common user instead
+  # of allowing it to start automatically for first OSLogin user.
+  # Note: not using cloud-init users module as want the account to be certain to
+  # get added to docker group through customisation of /etc/adduser.conf
+  - adduser --gecos 'Code server account' --disabled-login --quiet coder && loginctl enable-linger coder
+%{ endif ~}

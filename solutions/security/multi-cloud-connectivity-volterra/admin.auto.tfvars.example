@@ -1,8 +1,0 @@
-resourceOwner        = "fred"
-awsRegion            = "us-west-2"
-sshPublicKey         = "ssh-rsa AAA"
-projectPrefix        = "multi-cloud"
-volterraTenant       = "example"
-volterraCloudCred    = "example"
-namespace            = "example"
-uniqueVolterraPrefix = "example"
