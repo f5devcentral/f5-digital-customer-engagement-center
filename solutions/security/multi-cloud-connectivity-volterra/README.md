@@ -5,9 +5,9 @@ This module will create a set of Volterra AWS TGW, Azure VNET, and GCP VPC Sites
 with ingress/egress gateways configured and a virtual site that spans the cloud
 sites.
 
-![multi-cloud-volterra-hla.png](images/multi-cloud-volterra-hla.png)
+![summary-multi-cloud-volterra.png](images/summary-multi-cloud-volterra.png)
 <!-- markdownlint-disable no-inline-html -->
-<p align="center">Figure 1: High-level overview of solution; this modu</p>
+<p align="center">Figure 1: High-level overview of solution</p>
 <!-- markdownlint-enable no-inline-html -->
 
 HTTP load balancers are created for each business unit service, and are advertised
