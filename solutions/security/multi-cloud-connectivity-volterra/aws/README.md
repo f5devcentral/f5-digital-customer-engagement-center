@@ -3,7 +3,7 @@ AWS accounts with overlapping ip addresses services connectivity
 
 ## Diagram
 
-![AWS accounts with overlapping ip addresses services connectivity](images/aws-multi-cloud-connectivity.png)
+![AWS accounts with overlapping ip addresses services connectivity](../images/aws-multi-cloud-volterra-hla.png)
 
 
 ## Requirements
