@@ -146,10 +146,11 @@ module "workstation" {
   # bootstrap; make sure the workstation gets a public address so it can pull
   # required packages and secrets.
   public_address = true
-  # depends_on = [
+  depends_on = [
+    module.workstation_sa,
   #  volterra_gcp_vpc_site.inside,
   #  volterra_tf_params_action.inside,
-  # ]
+  ]
 }
 
 # Create a TLS certificate and key pair for webservers
