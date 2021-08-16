@@ -13,8 +13,13 @@ locals {
     owner   = var.resourceOwner
     purpose = "workstation"
   })
-  name = coalesce(var.name, format("%s-workstation-%s", var.projectPrefix, var.buildSuffix))
-  zone = coalesce(var.zone, random_shuffle.zones.result[0])
+  name            = coalesce(var.name, format("%s-wkstn-%s-%s", var.projectPrefix, random_id.nonce.hex, var.buildSuffix))
+  zone            = coalesce(var.zone, random_shuffle.zones.result[0])
+  service_account = coalesce(var.service_account, format("%s-wkstn-%s@%s.iam.gserviceaccount.com", var.projectPrefix, var.buildSuffix, var.gcpProjectId))
+}
+
+resource "random_id" "nonce" {
+  byte_length = 2
 }
 
 data "google_compute_subnetwork" "main" {
@@ -48,6 +53,7 @@ data "google_compute_image" "default" {
 
 # Create a service account for workstation with OSLogin support
 module "sa" {
+  count        = coalesce(var.service_account, "x") == "x" ? 1 : 0
   source       = "terraform-google-modules/service-accounts/google"
   version      = "4.0.0"
   project_id   = var.gcpProjectId
@@ -69,9 +75,9 @@ module "tls_secret" {
   count                   = var.tls_secret_key != "" ? 0 : 1
   source                  = "../tls/"
   gcpProjectId            = var.gcpProjectId
-  secret_manager_key_name = format("%s-workstation-tls-%s", var.projectPrefix, var.buildSuffix)
+  secret_manager_key_name = format("%s-wkstn-tls-%s", var.projectPrefix, var.buildSuffix)
   secret_accessors = [
-    format("serviceAccount:%s-wkstn-%s@%s.iam.gserviceaccount.com", var.projectPrefix, var.buildSuffix, var.gcpProjectId),
+    format("serviceAccount:%s", local.service_account),
   ]
 }
 
@@ -98,7 +104,7 @@ resource "google_compute_instance" "workstation" {
   #min_cpu_platform = var.min_cpu_platform
   machine_type = var.machine_type
   service_account {
-    email = module.sa.email
+    email = local.service_account
     scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
     ]
@@ -130,11 +136,19 @@ resource "google_compute_instance" "workstation" {
   }
 }
 
+data "google_service_account" "sa" {
+  account_id = local.service_account
+  project    = var.gcpProjectId
+  depends_on = [
+    module.sa,
+  ]
+}
+
 # Bind list of workstation users as the *only* ones allowed to act-as workstation
 # service account. Authoritative for *this* service account.
 resource "google_service_account_iam_binding" "workstation" {
   count              = length(var.users) > 0 ? 1 : 0
-  service_account_id = module.sa.service_account.id
+  service_account_id = data.google_service_account.sa.name
   role               = "roles/iam.serviceAccountUser"
   members            = formatlist("user:%s", var.users)
 }
@@ -152,12 +166,12 @@ resource "google_iap_tunnel_instance_iam_binding" "workstation" {
 
 resource "google_compute_firewall" "iap" {
   project = var.gcpProjectId
-  name    = format("%s-iap-wkstn-%s", var.projectPrefix, var.buildSuffix)
+  name    = format("%s-iap-wkstn-%s-%s", var.projectPrefix, random_id.nonce.hex, var.buildSuffix)
   network = data.google_compute_subnetwork.main.network
   source_ranges = [
     "35.235.240.0/20",
   ]
-  target_service_accounts = module.sa.emails_list
+  target_service_accounts = [local.service_account]
 
   allow {
     protocol = "TCP"

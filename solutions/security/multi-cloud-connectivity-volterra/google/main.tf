@@ -12,21 +12,9 @@ terraform {
   }
 }
 
-resource "random_id" "build_suffix" {
-  byte_length = 2
-}
-
 locals {
-  build_suffix = coalesce(var.buildSuffix, random_id.build_suffix.hex)
-  gcp_common_labels = merge(var.labels, {
-    owner = var.resourceOwner
-    demo  = "multi-cloud-connectivity-volterra"
-  })
+  gcp_common_labels = merge(var.labels, {})
   volterra_common_labels = merge(var.labels, {
-    owner    = var.resourceOwner
-    demo     = "multi-cloud-connectivity-volterra"
-    prefix   = var.projectPrefix
-    suffix   = local.build_suffix
     platform = "gcp"
   })
   volterra_common_annotations = {
@@ -34,8 +22,9 @@ locals {
     provisioner = "terraform"
   }
   # Service account names are predictable; use this to avoid dependencies
-  webserver_sa = format("%s-webserver-%s@%s.iam.gserviceaccount.com", var.projectPrefix, local.build_suffix, var.gcpProjectId)
-  zones        = random_shuffle.zones.result
+  workstation_sa = format("%s-workstation-%s@%s.iam.gserviceaccount.com", var.projectPrefix, var.buildSuffix, var.gcpProjectId)
+  webserver_sa   = format("%s-webserver-%s@%s.iam.gserviceaccount.com", var.projectPrefix, var.buildSuffix, var.gcpProjectId)
+  zones          = random_shuffle.zones.result
 }
 
 data "google_compute_zones" "zones" {
@@ -51,16 +40,21 @@ resource "random_shuffle" "zones" {
   }
 }
 
-# Create a service account for Volterra to manage VPC sites and store the
-# GCP credentials in a Cloud Credentials object.
-module "volterra_sa" {
-  source                   = "git::https://github.com/memes/terraform-google-volterra//modules/service-account?ref=0.3.1"
-  gcp_project_id           = var.gcpProjectId
-  gcp_role_name            = replace(format("%s_volterra_site_%s", var.projectPrefix, local.build_suffix), "/[^a-z0-9_.]/", "_")
-  gcp_service_account_name = format("%s-volterra-site-%s", var.projectPrefix, local.build_suffix)
-  cloud_credential_name    = format("%s-gcp-%s", var.projectPrefix, local.build_suffix)
-  labels                   = local.volterra_common_labels
-  annotations              = local.volterra_common_annotations
+# Service account to use with Workstation VMs
+module "workstation_sa" {
+  source       = "terraform-google-modules/service-accounts/google"
+  version      = "4.0.2"
+  project_id   = var.gcpProjectId
+  prefix       = var.projectPrefix
+  names        = [format("workstation-%s", var.buildSuffix)]
+  descriptions = [format("Workstation service account (%s-%s)", var.projectPrefix, var.buildSuffix)]
+  project_roles = [
+    "${var.gcpProjectId}=>roles/logging.logWriter",
+    "${var.gcpProjectId}=>roles/monitoring.metricWriter",
+    "${var.gcpProjectId}=>roles/monitoring.viewer",
+    "${var.gcpProjectId}=>roles/compute.osLogin",
+  ]
+  generate_keys = false
 }
 
 # Service account to use with Webserver VMs
@@ -69,8 +63,8 @@ module "webserver_sa" {
   version      = "4.0.2"
   project_id   = var.gcpProjectId
   prefix       = var.projectPrefix
-  names        = [format("webserver-%s", local.build_suffix)]
-  descriptions = [format("Webserver service account (%s-%s)", var.projectPrefix, local.build_suffix)]
+  names        = [format("webserver-%s", var.buildSuffix)]
+  descriptions = [format("Webserver service account (%s-%s)", var.projectPrefix, var.buildSuffix)]
   project_roles = [
     "${var.gcpProjectId}=>roles/logging.logWriter",
     "${var.gcpProjectId}=>roles/monitoring.metricWriter",
@@ -85,15 +79,15 @@ module "inside" {
   source                                 = "terraform-google-modules/network/google"
   version                                = "3.3.0"
   project_id                             = var.gcpProjectId
-  network_name                           = format("%s-%s-inside-%s", var.projectPrefix, each.key, local.build_suffix)
-  description                            = format("%s inside VPC (%s-%s)", each.key, var.projectPrefix, local.build_suffix)
+  network_name                           = format("%s-%s-inside-%s", var.projectPrefix, each.key, var.buildSuffix)
+  description                            = format("%s inside VPC (%s-%s)", each.key, var.projectPrefix, var.buildSuffix)
   auto_create_subnetworks                = false
   delete_default_internet_gateway_routes = false
   mtu                                    = each.value.mtu
   routing_mode                           = "REGIONAL"
   subnets = [
     {
-      subnet_name           = format("%s-%s-inside-%s", var.projectPrefix, each.key, local.build_suffix)
+      subnet_name           = format("%s-%s-inside-%s", var.projectPrefix, each.key, var.buildSuffix)
       subnet_ip             = each.value.cidr
       subnet_region         = var.gcpRegion
       subnet_private_access = false
@@ -106,15 +100,15 @@ module "outside" {
   source                                 = "terraform-google-modules/network/google"
   version                                = "3.3.0"
   project_id                             = var.gcpProjectId
-  network_name                           = format("%s-outside-%s", var.projectPrefix, local.build_suffix)
-  description                            = format("Shared outside VPC (%s-%s)", var.projectPrefix, local.build_suffix)
+  network_name                           = format("%s-outside-%s", var.projectPrefix, var.buildSuffix)
+  description                            = format("Shared outside VPC (%s-%s)", var.projectPrefix, var.buildSuffix)
   auto_create_subnetworks                = false
   delete_default_internet_gateway_routes = false
   mtu                                    = 1460
   routing_mode                           = "REGIONAL"
   subnets = [
     {
-      subnet_name           = format("%s-outside-%s", var.projectPrefix, local.build_suffix)
+      subnet_name           = format("%s-outside-%s", var.projectPrefix, var.buildSuffix)
       subnet_ip             = var.outside_cidr
       subnet_region         = var.gcpRegion
       subnet_private_access = false
@@ -122,35 +116,48 @@ module "outside" {
   ]
 }
 
+# Create a self-signed TLS certificate for workstations
+module "workstation_tls" {
+  source                  = "../../../../modules/google/terraform/tls/"
+  gcpProjectId            = var.gcpProjectId
+  secret_manager_key_name = format("%s-workstation-tls-%s", var.projectPrefix, var.buildSuffix)
+  secret_accessors = [
+    format("serviceAccount:%s", local.workstation_sa),
+  ]
+}
+
 # Launch a Workstation VM (forward-proxy, ssh jumphost) on inside network of any
 # business unit that has set the 'workstation' flag to true.
 module "workstation" {
-  for_each      = { for k, v in var.business_units : k => v if v.workstation }
-  source        = "../../../../modules/google/terraform/workstation"
-  projectPrefix = var.projectPrefix
-  buildSuffix   = local.build_suffix
-  gcpProjectId  = var.gcpProjectId
-  gcpRegion     = var.gcpRegion
-  resourceOwner = var.resourceOwner
-  name          = format("%s-%s-workstation-%s", var.projectPrefix, each.key, local.build_suffix)
-  subnet        = module.inside[each.key].subnets_self_links[0]
-  zone          = local.zones[0]
-  labels        = local.gcp_common_labels
+  for_each        = { for k, v in var.business_units : k => v if v.workstation }
+  source          = "../../../../modules/google/terraform/workstation"
+  projectPrefix   = var.projectPrefix
+  buildSuffix     = var.buildSuffix
+  gcpProjectId    = var.gcpProjectId
+  gcpRegion       = var.gcpRegion
+  resourceOwner   = var.resourceOwner
+  name            = format("%s-%s-workstation-%s", var.projectPrefix, each.key, var.buildSuffix)
+  subnet          = module.inside[each.key].subnets_self_links[0]
+  zone            = local.zones[0]
+  labels          = local.gcp_common_labels
+  service_account = local.workstation_sa
+  tls_secret_key  = module.workstation_tls.tls_secret_key
   # Not using a NAT on the BU spokes, and Volterra gateway takes too long to
   # bootstrap; make sure the workstation gets a public address so it can pull
   # required packages and secrets.
   public_address = true
-  # depends_on = [
+  depends_on = [
+    module.workstation_sa,
   #  volterra_gcp_vpc_site.inside,
   #  volterra_tf_params_action.inside,
-  # ]
+  ]
 }
 
 # Create a TLS certificate and key pair for webservers
 module "webserver_tls" {
   source                  = "../../../../modules/google/terraform/tls"
   gcpProjectId            = var.gcpProjectId
-  secret_manager_key_name = format("%s-webserver-tls-%s", var.projectPrefix, local.build_suffix)
+  secret_manager_key_name = format("%s-webserver-tls-%s", var.projectPrefix, var.buildSuffix)
   domain_name             = var.domain_name
   secret_accessors = [
     format("serviceAccount:%s", local.webserver_sa)
@@ -161,14 +168,14 @@ module "webserver_tls" {
 # unit. These will be the sources for origin pools in each business unit.
 module "webservers" {
   for_each = { for ws in setproduct(keys(var.business_units), range(0, var.num_servers)) : join("", ws) => {
-    name   = format("%s-%s-web-%s-%d", var.projectPrefix, ws[0], local.build_suffix, tonumber(ws[1]) + 1)
+    name   = format("%s-%s-web-%s-%d", var.projectPrefix, ws[0], var.buildSuffix, tonumber(ws[1]) + 1)
     subnet = module.inside[ws[0]].subnets_self_links[0]
     zone   = element(local.zones, index(keys(var.business_units), ws[0]) * var.num_servers + tonumber(ws[1]))
   } }
   source          = "../../../../modules/google/terraform/backend"
   name            = each.value.name
   projectPrefix   = var.projectPrefix
-  buildSuffix     = local.build_suffix
+  buildSuffix     = var.buildSuffix
   gcpProjectId    = var.gcpProjectId
   resourceOwner   = var.resourceOwner
   service_account = local.webserver_sa
@@ -191,7 +198,7 @@ module "webservers" {
 resource "google_compute_firewall" "inside" {
   for_each  = var.business_units
   project   = var.gcpProjectId
-  name      = format("%s-allow-all-%s-%s", var.projectPrefix, each.key, local.build_suffix)
+  name      = format("%s-allow-all-%s-%s", var.projectPrefix, each.key, var.buildSuffix)
   network   = module.inside[each.key].network_self_link
   direction = "INGRESS"
   source_ranges = [
@@ -217,9 +224,9 @@ module "region_locations" {
 # Create a GCP VPC site for each business unit
 resource "volterra_gcp_vpc_site" "inside" {
   for_each    = var.business_units
-  name        = format("%s-%s-%s", var.projectPrefix, each.key, local.build_suffix)
+  name        = format("%s-%s-gcp-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace   = "system"
-  description = format("%s site (%s-%s)", each.key, var.projectPrefix, local.build_suffix)
+  description = format("%s site (%s-%s)", each.key, var.projectPrefix, var.buildSuffix)
   labels = merge(local.volterra_common_labels, {
     bu = each.key
   })
@@ -230,14 +237,17 @@ resource "volterra_gcp_vpc_site" "inside" {
   #   latitude  = module.region_locations.lookup[var.gcpRegion].latitude
   #   longitude = module.region_locations.lookup[var.gcpRegion].longitude
   # }
+  # MEmes - this demo breaks if assisted mode is used;
+  assisted = false
   cloud_credentials {
-    name      = module.volterra_sa.cloud_credential_name
-    namespace = module.volterra_sa.cloud_credential_namespace
+    name      = var.volterraCloudCred
+    namespace = "system"
+    tenant    = var.volterraTenant
   }
   gcp_region              = var.gcpRegion
   instance_type           = "n1-standard-4"
   logs_streaming_disabled = true
-  ssh_key                 = var.volterra_ssh_key
+  ssh_key                 = var.ssh_key
   ingress_egress_gw {
     gcp_certified_hw = "gcp-byol-multi-nic-voltmesh"
     node_number      = var.num_volterra_nodes
@@ -270,49 +280,32 @@ resource "volterra_gcp_vpc_site" "inside" {
     }
   }
   # These shouldn't be necessary, but lifecycle is flaky without them
-  depends_on = [module.volterra_sa, module.inside, module.outside]
+  depends_on = [module.inside, module.outside]
 }
 
 # Instruct Volterra to provision the GCP VPC sites
 resource "volterra_tf_params_action" "inside" {
-  for_each        = volterra_gcp_vpc_site.inside
-  site_name       = each.value.name
-  site_kind       = "gcp_vpc_site"
-  action          = "apply"
-  wait_for_action = true
+  for_each         = volterra_gcp_vpc_site.inside
+  site_name        = each.value.name
+  site_kind        = "gcp_vpc_site"
+  action           = "apply"
+  wait_for_action  = true
+  ignore_on_update = false
   # These shouldn't be necessary, but lifecycle is flaky without them
-  depends_on = [module.volterra_sa, module.inside, module.outside, volterra_gcp_vpc_site.inside]
-}
-
-# TODO: @yossi-r @JeffGiroux @memes
-# This site should be moved up to the parent folder and have AWS, Azure, and GCP
-# use a common set of labels that we know to aggregate the business units on
-# each cloud.
-resource "volterra_virtual_site" "site" {
-  name        = format("%s-site-%s", var.projectPrefix, local.build_suffix)
-  namespace   = var.volterra_namespace
-  description = format("Virtual site for %s-%s", var.projectPrefix, local.build_suffix)
-  labels      = local.volterra_common_labels
-  annotations = local.volterra_common_annotations
-  site_type   = "CUSTOMER_EDGE"
-  site_selector {
-    expressions = [
-      join(",", [for k, v in local.volterra_common_labels : format("%s = %s", k, v) if k != "platform"])
-    ]
-  }
+  depends_on = [module.inside, module.outside, volterra_gcp_vpc_site.inside]
 }
 
 # Define health checks for the origin pools; HTTP to 80
 resource "volterra_healthcheck" "inside" {
   for_each    = var.business_units
-  name        = format("%s-%s-%s", var.projectPrefix, each.key, local.build_suffix)
-  namespace   = var.volterra_namespace
-  description = format("HTTP healthcheck for service in %s (%s-%s)", each.key, var.projectPrefix, local.build_suffix)
+  name        = format("%s-%s-%s", var.projectPrefix, each.key, var.buildSuffix)
+  namespace   = var.namespace
+  description = format("HTTP healthcheck for service in %s (%s-%s)", each.key, var.projectPrefix, var.buildSuffix)
   labels = merge(var.labels, {
     bu     = each.key
     demo   = "multi-cloud-connectivity-volterra"
     prefix = var.projectPrefix
-    suffix = local.build_suffix
+    suffix = var.buildSuffix
   })
   healthy_threshold   = 1
   interval            = 15
@@ -332,8 +325,8 @@ resource "volterra_healthcheck" "inside" {
 # launched on the inside network.
 resource "volterra_origin_pool" "inside" {
   for_each               = var.business_units
-  name                   = format("%s-%sapp-%s", var.projectPrefix, each.key, local.build_suffix)
-  namespace              = var.volterra_namespace
+  name                   = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
+  namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"
   loadbalancer_algorithm = "LB_OVERRIDE"
   labels = merge(local.volterra_common_labels, {
@@ -351,7 +344,7 @@ resource "volterra_origin_pool" "inside" {
         ip = origin_servers.value
         site_locator {
           site {
-            tenant    = var.volterra_tenant
+            tenant    = var.volterraTenant
             namespace = volterra_gcp_vpc_site.inside[each.key].namespace
             name      = volterra_gcp_vpc_site.inside[each.key].name
           }
@@ -370,9 +363,9 @@ resource "volterra_origin_pool" "inside" {
 # source.
 resource "volterra_http_loadbalancer" "inside" {
   for_each    = var.business_units
-  name        = format("%s-%sapp-%s", var.projectPrefix, each.key, local.build_suffix)
-  namespace   = var.volterra_namespace
-  description = format("HTTP service LB for %s (%s-%s)", each.key, var.projectPrefix, local.build_suffix)
+  name        = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
+  namespace   = var.namespace
+  description = format("HTTP service LB for %s (%s-%s)", each.key, var.projectPrefix, var.buildSuffix)
   labels = merge(local.volterra_common_labels, {
     bu = each.key
   })
@@ -392,9 +385,9 @@ resource "volterra_http_loadbalancer" "inside" {
       virtual_site {
         network = "SITE_NETWORK_INSIDE"
         virtual_site {
-          name      = volterra_virtual_site.site.name
-          namespace = volterra_virtual_site.site.namespace
-          tenant    = var.volterra_tenant
+          name      = var.volterraVirtualSite
+          namespace = var.namespace
+          tenant    = var.volterraTenant
         }
       }
     }
@@ -403,7 +396,7 @@ resource "volterra_http_loadbalancer" "inside" {
     pool {
       name      = volterra_origin_pool.inside[each.key].name
       namespace = volterra_origin_pool.inside[each.key].namespace
-      tenant    = var.volterra_tenant
+      tenant    = var.volterraTenant
     }
   }
 }

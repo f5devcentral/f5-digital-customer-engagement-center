@@ -57,7 +57,7 @@ module "webServer" {
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.main.name
   azureLocation      = var.azureLocation
-  keyName            = var.keyName
+  ssh_key            = var.ssh_key
   subnet             = module.azure_network.subnets["private"]
   securityGroup      = azurerm_network_security_group.web.id
 }

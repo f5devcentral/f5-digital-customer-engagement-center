@@ -4,7 +4,7 @@
 This module will create a set of Volterra GCP VPC Sites with ingress/egress gateways
 configured and a virtual site that spans the CE sites.
 
-![multi-cloud-volterra-hla.png](images/multi-cloud-volterra-hla.png)
+![multi-cloud-volterra-hla.png](../images/google-multi-cloud-volterra-hla.png)
 <!-- markdownlint-disable no-inline-html -->
 <p align="center">Figure 1: High-level overview of solution; this module delivers the GCP resources</p>
 <!-- markdownlint-enable no-inline-html -->
@@ -46,8 +46,9 @@ changing the deployment.
       projectPrefix      = "my-prefix"
       buildSuffix        = "my-suffix"
       domain_name        = "shared.acme.com"
-      volterra_namespace = "my-volterra-ns"
-      volterra_tenant    = "my-tenant-id"
+      namespace          = "my-volterra-ns"
+      volterraTenant     = "my-tenant-id"
+      volterraCloudCreds = "my-gcp-cloud-creds"
       ```
       <!-- spell-checker: enable -->
 
@@ -62,7 +63,7 @@ changing the deployment.
 
    3. Launch HTTP/HTTPS proxy tunnel via Workstation VM
 
-      > See [Workstation](../../../../modules/google/terraform/workstation/README#using-workstation) docs for more options
+      > See [Workstation](../../../../modules/google/terraform/workstation/README.md#using-workstation) docs for more options
 
       <!-- spell-checker: disable -->
       ```shell
@@ -119,6 +120,7 @@ changing the deployment.
 
 | Name | Version |
 |------|---------|
+| external | n/a |
 | google | >= 3.77 |
 | random | n/a |
 | volterra | 0.8.1 |
@@ -127,51 +129,52 @@ changing the deployment.
 
 | Name | Source | Version |
 |------|--------|---------|
-| dns | terraform-google-modules/cloud-dns/google | 3.1.0 |
 | inside | terraform-google-modules/network/google | 3.3.0 |
 | outside | terraform-google-modules/network/google | 3.3.0 |
 | region_locations | git::https://github.com/memes/terraform-google-volterra//modules/region-locations?ref=0.3.1 |  |
-| volterra_sa | git::https://github.com/memes/terraform-google-volterra//modules/service-account?ref=0.3.1 |  |
 | webserver_sa | terraform-google-modules/service-accounts/google | 4.0.2 |
 | webserver_tls | ../../../../modules/google/terraform/tls |  |
 | webservers | ../../../../modules/google/terraform/backend |  |
 | workstation | ../../../../modules/google/terraform/workstation |  |
+| workstation_sa | terraform-google-modules/service-accounts/google | 4.0.2 |
+| workstation_tls | ../../../../modules/google/terraform/tls/ |  |
 
 ## Resources
 
 | Name |
 |------|
+| [external_external](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) |
 | [google_compute_firewall](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) |
-| [google_compute_instance](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_instance) |
-| [google_compute_region_instance_group](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_region_instance_group) |
 | [google_compute_zones](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_zones) |
-| [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
+| [google_dns_managed_zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone) |
+| [google_dns_record_set](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_record_set) |
 | [random_shuffle](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/shuffle) |
 | [volterra_gcp_vpc_site](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/gcp_vpc_site) |
 | [volterra_healthcheck](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/healthcheck) |
 | [volterra_http_loadbalancer](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/http_loadbalancer) |
 | [volterra_origin_pool](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/origin_pool) |
 | [volterra_tf_params_action](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/tf_params_action) |
-| [volterra_virtual_site](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/virtual_site) |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| buildSuffix | random build suffix for resources | `string` | `null` | no |
-| business\_units | The set of VPCs to create with overlapping CIDRs. | <pre>map(object({<br>    cidr        = string<br>    mtu         = number<br>    workstation = bool<br>  }))</pre> | <pre>{<br>  "bu21": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": true<br>  },<br>  "bu22": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  },<br>  "bu23": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  }<br>}</pre> | no |
+| buildSuffix | random build suffix for resources | `string` | n/a | yes |
 | domain\_name | The DNS domain name that will be used as common parent generated DNS name of<br>loadbalancers. | `string` | n/a | yes |
 | gcpProjectId | gcp project id | `string` | n/a | yes |
 | gcpRegion | region where gke is deployed | `string` | n/a | yes |
+| namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
+| projectPrefix | prefix for resources | `string` | n/a | yes |
+| resourceOwner | owner of the deployment, for tagging purposes | `string` | n/a | yes |
+| volterraCloudCred | Name of the Volterra cloud credentials to use with GCP VPC sites | `string` | n/a | yes |
+| volterraTenant | The Volterra tenant to use. | `string` | n/a | yes |
+| volterraVirtualSite | The name of the Volterra virtual site that will receive LB registrations. | `string` | n/a | yes |
+| business\_units | The set of VPCs to create with overlapping CIDRs. | <pre>map(object({<br>    cidr        = string<br>    mtu         = number<br>    workstation = bool<br>  }))</pre> | <pre>{<br>  "bu21": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": true<br>  },<br>  "bu22": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  },<br>  "bu23": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  }<br>}</pre> | no |
 | labels | An optional list of labels to apply to GCP resources. | `map(string)` | `{}` | no |
 | num\_servers | The number of webserver instances to launch in each business unit spoke. Default<br>is 2. | `number` | `2` | no |
 | num\_volterra\_nodes | The number of Volterra gateway instances to launch in each business unit spoke.<br>Default is 1. | `number` | `1` | no |
 | outside\_cidr | The CIDR to assign to shared outside VPC. Default is '100.64.96.0/20'. | `string` | `"100.64.96.0/20"` | no |
-| projectPrefix | prefix for resources | `string` | `"demo"` | no |
-| resourceOwner | owner of the deployment, for tagging purposes | `string` | `"f5-dcec"` | no |
-| volterra\_namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
-| volterra\_ssh\_key | An optional SSH key to add to Volterra nodes. | `string` | `""` | no |
-| volterra\_tenant | The Volterra tenant to use. | `string` | n/a | yes |
+| ssh\_key | An optional SSH key to add to Volterra nodes. | `string` | `""` | no |
 
 ## Outputs
 

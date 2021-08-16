@@ -1,11 +1,11 @@
 #Project info
-resource "random_id" "buildSuffix" {
-  byte_length = 2
+variable "buildSuffix" {
+  type        = string
+  description = "random build suffix for resources"
 }
 variable "projectPrefix" {
   type        = string
   description = "prefix for resources"
-  default     = "demo"
 }
 variable "resourceOwner" {
   type        = string
@@ -17,9 +17,9 @@ variable "azureLocation" {
   type        = string
   description = "location where Azure resources are deployed (abbreviated Azure Region name)"
 }
-variable "keyName" {
+variable "ssh_key" {
   type        = string
-  description = "instance key pair name"
+  description = "public key used for authentication in ssh-rsa format"
 }
 
 #Volterra info
@@ -35,12 +35,26 @@ variable "namespace" {
   description = "Volterra application namespace"
   type        = string
 }
-variable "assisted" {
-  description = "Use Assisted deployment for Volterra Site"
-  default     = false
-}
-variable "volterraUniquePrefix" {
-  description = "Unique prefix to use for System resources in Volterra tenant"
+
+variable "volterraVirtualSite" {
   type        = string
-  default     = "acme"
+  description = <<EOD
+The name of the Volterra virtual site that will receive LB registrations.
+EOD
+}
+
+variable "domain_name" {
+  type        = string
+  description = <<EOD
+The DNS domain name that will be used as common parent generated DNS name of
+loadbalancers.
+EOD
+}
+
+variable "labels" {
+  type        = map(string)
+  default     = {}
+  description = <<EOD
+An optional list of labels to apply to Azure resources.
+EOD
 }

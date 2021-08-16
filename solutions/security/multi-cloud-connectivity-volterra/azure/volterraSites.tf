@@ -1,51 +1,26 @@
-provider "volterra" {
-}
-
 locals {
-  azure_common_labels = {
-    owner = var.resourceOwner
-    demo  = "multi-cloud-connectivity-volterra"
-  }
-  volterra_common_labels = {
-    owner    = var.resourceOwner
-    demo     = "multi-cloud-connectivity-volterra"
-    prefix   = var.projectPrefix
-    suffix   = random_id.buildSuffix.hex
+  volterra_common_labels = merge(var.labels, {
     platform = "azure"
-  }
+  })
   volterra_common_annotations = {
     source      = "git::https://github.com/F5DevCentral/f5-digital-customer-engangement-center"
     provisioner = "terraform"
   }
 }
 
-############################ Volterra Virtual Site ############################
-
-resource "volterra_virtual_site" "vsite" {
-  name        = format("%s-site-%s", var.volterraUniquePrefix, random_id.buildSuffix.hex)
-  namespace   = var.namespace
-  labels      = local.volterra_common_labels
-  annotations = local.volterra_common_annotations
-  site_type   = "CUSTOMER_EDGE"
-  site_selector {
-    expressions = [
-      join(",", [for k, v in local.volterra_common_labels : format("%s = %s", k, v) if k != "platform"])
-    ]
-  }
-}
-
 ############################ Volterra Azure VNet Sites ############################
 
 resource "volterra_azure_vnet_site" "bu" {
-  for_each                = local.vnets
-  name                    = format("%s-%s-azure-%s", var.volterraUniquePrefix, each.key, random_id.buildSuffix.hex)
-  namespace               = "system"
-  labels                  = local.volterra_common_labels
-  annotations             = local.volterra_common_annotations
-  azure_region            = azurerm_resource_group.rg[each.key].location
-  resource_group          = format("%s-%s-volterra-%s", var.volterraUniquePrefix, each.key, random_id.buildSuffix.hex)
-  machine_type            = "Standard_D3_v2"
-  assisted                = var.assisted
+  for_each       = local.vnets
+  name           = format("%s-%s-azure-%s", var.projectPrefix, each.key, var.buildSuffix)
+  namespace      = "system"
+  labels         = local.volterra_common_labels
+  annotations    = local.volterra_common_annotations
+  azure_region   = azurerm_resource_group.rg[each.key].location
+  resource_group = format("%s-%s-volterra-%s", var.projectPrefix, each.key, var.buildSuffix)
+  machine_type   = "Standard_D3_v2"
+  # MEmes - this demo breaks if assisted mode is used;
+  assisted                = false
   logs_streaming_disabled = true
   no_worker_nodes         = true
 
@@ -131,6 +106,6 @@ resource "volterra_tf_params_action" "applyBu" {
 data "azurerm_network_interface" "sli" {
   for_each            = local.vnets
   name                = "master-0-sli"
-  resource_group_name = format("%s-%s-volterra-%s", var.volterraUniquePrefix, each.key, random_id.buildSuffix.hex)
+  resource_group_name = format("%s-%s-volterra-%s", var.projectPrefix, each.key, var.buildSuffix)
   depends_on          = [volterra_tf_params_action.applyBu]
 }

@@ -46,9 +46,9 @@ variable "adminAccountName" {
   description = "admin account name used with instance"
   default     = "ubuntu"
 }
-variable "keyName" {
+variable "ssh_key" {
   type        = string
-  description = "instance key pair name"
+  description = "public key used for authentication in ssh-rsa format"
 }
 variable "coderAccountPassword" {
   type        = string

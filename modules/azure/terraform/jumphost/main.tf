@@ -65,7 +65,7 @@ resource "azurerm_linux_virtual_machine" "jumphost" {
 
   admin_ssh_key {
     username   = var.adminAccountName
-    public_key = file(var.keyName)
+    public_key = var.ssh_key
   }
 
   #custom_data = base64encode(local.onboard)
