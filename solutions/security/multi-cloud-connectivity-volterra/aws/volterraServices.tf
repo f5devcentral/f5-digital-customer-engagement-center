@@ -1,7 +1,7 @@
 ############################ Volterra Origin Pool (backend) ############################
 
 resource "volterra_origin_pool" "app" {
-  for_each               = local.vnets
+  for_each               = local.business_units
   name                   = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"
@@ -11,12 +11,12 @@ resource "volterra_origin_pool" "app" {
 
   origin_servers {
     private_ip {
-      ip = module.webserver[each.key].privateIp
+      ip = module.webserver[each.key].workspaceManagementAddress
       site_locator {
         site {
           tenant    = var.volterraTenant
           namespace = "system"
-          name      = volterra_azure_vnet_site.bu[each.key].name
+          name      = volterra_aws_vpc_site.bu[each.key].name
         }
       }
       inside_network = true
@@ -31,7 +31,7 @@ resource "volterra_origin_pool" "app" {
 ############################ Volterra HTTP LB ############################
 
 resource "volterra_http_loadbalancer" "app" {
-  for_each                        = local.vnets
+  for_each                        = local.business_units
   name                            = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace                       = var.namespace
   no_challenge                    = true

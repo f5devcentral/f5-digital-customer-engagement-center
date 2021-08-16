@@ -1,10 +1,23 @@
-# Description
-Azure accounts with overlapping ip addresses services connectivity
+# Azure multi-cloud Volterra module
+
+This module will create a set of Volterra Azure VNet Sites with ingress/egress gateways
+configured and a virtual site that spans the CE sites.
 
 ## Diagram
 
-![Azure accounts with overlapping ip addresses services connectivity](azure-multi-cloud-connectivity.png)
+![azure-multi-cloud-volterra-hla.png](../images/azure-multi-cloud-volterra-hla.png)
+<!-- markdownlint-disable no-inline-html -->
+<p align="center">Figure 1: High-level overview of solution; this module delivers the Azure resources</p>
+<!-- markdownlint-enable no-inline-html -->
 
+HTTP load balancers are created for each business unit service, and are advertised
+on every CE site that match the selector predicate for the Virtual Site. This means
+that existing resources can use DNS discovery via the Volterra gateways without
+changing the deployment.
+
+> See [Scenario](../SCENARIO.md) document for details on why this solution was chosen
+> for a hypothetical customer looking for a minimally invasive solution
+> to multi-cloud networking.
 
 ## Requirements
 
@@ -90,7 +103,7 @@ Enter the value of "password" from the previous JSON output and then click on "B
 - Clone the repo and open the solution's directory
 ```bash
 git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
-cd f5-digital-customer-engagement-center/solutions/security/multi-cloud-connectivity-volterra/azure/
+cd f5-digital-customer-engagement-center/solutions/security/multi-cloud-connectivity-volterra/
 ```
 
 - Set Volterra environment variables
@@ -121,26 +134,46 @@ vi admin.auto.tfvars
 
 ## TEST your setup:
 
-View the created objects in VoltConsole
+1. Connect to the bu11Jumphost via SSH with port forwarding enabled.
 
-ssh to the bu11Jumphost (ip in the terraform output), from there try to access the apps in the other bu's
-
+The IP is in the terraform output. Example SSH command is below. Run this from your laptop terminal. You will use these settings later in your laptop web browser to configure SOCKS v5 proxy.
 
 ```bash
+# run this from your laptop/pc
+ssh -D 3128 ubuntu@x.x.x.x
+# port = 3128
+# user = ubuntu
+# IP = x.x.x.x
+```
+
+2. From the jumphost CLI, test curl commands to each BU site.
+
+```bash
+# run this from the jumphost terminal
 curl bu11app.shared.acme.com
 curl bu12app.shared.acme.com
 curl bu13app.shared.acme.com
 ```
 
-Open VoltConsole, go to the 'HTTP load balancer' tab
+3. On your laptop/PC, configure your browser to use 127.0.0.1:3128 as SOCKS v5 proxy and also enable the box "Proxy DNS when using SOCKS v5".
 
-Click on bu11app and open the 'requests' tab.
+![Proxy Settings](images/proxy-socks.png)
 
-You should see your request.
+4. Browse to the BU sites. Azure will resolve with a OWASP Juice Shop page.
 
-Click on the request and notice it shows the original clientIp and the source site.
+![BU1 app](images/bu11app.png)
 
-![Request log](request_log.png)
+5. Open VoltConsole, go to the 'HTTP Load Balancers' tab
+
+![HTTP LB](images/httplb-tab.png)
+
+6. Click on bu11app and open the 'Requests' tab. You should see your request.
+
+![HTTP LB Requests](images/httplb-requests.png)
+
+7. Click on the request and notice it shows the original clientIp and the source site.
+
+![Request log](images/httplb-client-ip.png)
 
 ## Cleanup
 Use the following command to destroy all of the resources
@@ -154,4 +187,4 @@ Use the following command to destroy all of the resources
 Submit a pull request
 
 # Authors
-Jeff Giroux
+- Jeff Giroux

@@ -40,7 +40,7 @@ control 'workstation' do
     it { should_not be_empty }
     its(['project']) { should cmp project_id }
     its(['zone']) { should match(/^#{region}-[a-f]$/) }
-    its(['name']) { should cmp "#{prefix}-wkstn-#{build_suffix}" }
+    its(['name']) { should match(/^#{prefix}-wkstn-[0-9a-f]{4}-#{build_suffix}$/) }
   end
 
   describe google_compute_instance(project: params['project'], zone: params['zone'], name: params['name']) do
