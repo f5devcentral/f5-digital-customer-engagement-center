@@ -34,6 +34,8 @@ Cloud Credentials, awsLocation
 ## Google
 
 Cloud Credentials, gcpProjectId, gcpRegion
+- Reference [Create Google Service Account](google/README.md#login-to-google-environment)
+- Alternatively, you can add this module call to your demo code to create a service account programatically
 
 ```hcl
 module "volterra_sa" {
@@ -44,6 +46,56 @@ module "volterra_sa" {
   cloud_credential_name    = "my-gcp-volterra"
 }
 ```
+
+## Usage example
+
+- Clone the repo and open the solution's directory
+```bash
+git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
+cd f5-digital-customer-engagement-center/solutions/security/multi-cloud-connectivity-volterra/
+```
+
+- Set AWS/Azure/Google cloud credentials. See [Prerequisites](#prerequisites)
+- Set Volterra environment variables
+Create a Volterra credentials p12 file and copy it to a local folder. Follow steps here - https://www.volterra.io/docs/how-to/user-mgmt/credentials
+
+```bash
+export VES_P12_PASSWORD="your_key"
+export VOLT_API_URL="https://<tenant-name>.console.ves.volterra.io/api"
+export VOLT_API_P12_FILE="/var/tmp/<example>.console.ves.volterra.io.api-creds.p12"
+```
+
+- Get the Volterra tenant name
+General namespace in the VoltConsole UI, then Tenant Settings > Tenant overview
+
+- Create the tfvars file and update it with your settings
+
+```bash
+cp admin.auto.tfvars.example admin.auto.tfvars
+# MODIFY TO YOUR SETTINGS
+vi admin.auto.tfvars
+```
+
+- Run the setup script to deploy all of the components into your cloud account(s) (remember that you are responsible for the cost of those components)
+
+```bash
+./setup.sh
+```
+
+## TEST your setup:
+
+Reference each cloud for steps to validate.
+- AWS [Test your setup](aws/README.md#test-your-setup)
+- Azure [Test your setup](azure/README.md#test-your-setup)
+- Google [Test your setup](google/README.md#test-your-setup)
+
+## Cleanup
+Use the following command to destroy all of the resources
+
+```bash
+./destroy.sh
+```
+
 
 <!-- markdownlint-disable no-inline-html -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
