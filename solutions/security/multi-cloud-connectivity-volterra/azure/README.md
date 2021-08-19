@@ -1,5 +1,6 @@
 # Azure multi-cloud Volterra module
 
+<!-- spell-checker: ignore volterra markdownlint tfvars -->
 This module will create a set of Volterra Azure VNet Sites with ingress/egress gateways
 configured and a virtual site that spans the CE sites.
 
