@@ -10,12 +10,12 @@
    - Based on final errors in Terraform shell, now troubleshoot relevant parts (aka Volterra site, bad credentials, etc)
 
 ### Google Credentials Error - 403 error
-- Terraform must have google credentials to pass "terraform plan" even if you are opt NOT to deploy google via commenting cloud credentials. Terraform will still read the module code, and if you do not have your vscode/terminal/ssh session ENV variables saved for Google credentials, then you will receive 403.
+- Terraform must have Google credentials to pass "terraform plan" even if you are opt NOT to deploy google via commenting cloud credentials. Terraform will still read the module code, and if you do not have your vscode/terminal/ssh session ENV variables saved for Google credentials, then you will receive 403.
    - Fix = follow pre-reqs and create service account
    - Alternatives = comment entire module code for Google
 
 ### Azure Credentials Error - 403 error
-- Terraform must have google credentials to pass "terraform plan" even if you are opt NOT to deploy google via commenting cloud credentials. Terraform will still read the module code, and if you do not have your vscode/terminal/ssh session using Azure credentials, then you will receive 403.
+- Terraform must have Azure credentials to pass "terraform plan" even if you are opt NOT to deploy google via commenting cloud credentials. Terraform will still read the module code, and if you do not have your vscode/terminal/ssh session using Azure credentials, then you will receive 403.
    - Fix = follow pre-reqs and create service principal
    - Alternatives = comment entire module code for Azure
 
