@@ -101,37 +101,7 @@ Enter the value of "password" from the previous JSON output and then click on "B
 
 ## Usage example
 
-- Clone the repo and open the solution's directory
-```bash
-git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
-cd f5-digital-customer-engagement-center/solutions/security/multi-cloud-connectivity-volterra/
-```
-
-- Set Volterra environment variables
-Create a Volterra credentials p12 file and copy it to a local folder. Follow steps here - https://www.volterra.io/docs/how-to/user-mgmt/credentials
-
-```bash
-export VES_P12_PASSWORD="your_key"
-export VOLT_API_URL="https://<tenant-name>.console.ves.volterra.io/api"
-export VOLT_API_P12_FILE="/var/tmp/<example>.console.ves.volterra.io.api-creds.p12"
-```
-
-- Get the Volterra tenant name
-General namespace in the VoltConsole UI, then Tenant Settings > Tenant overview
-
-- Create the tfvars file and update it with your settings
-
-```bash
-cp admin.auto.tfvars.example admin.auto.tfvars
-# MODIFY TO YOUR SETTINGS
-vi admin.auto.tfvars
-```
-
-- Run the setup script to deploy all of the components into your Azure account (remember that you are responsible for the cost of those components)
-
-```bash
-./setup.sh
-```
+See parent [README Usage Example](../README.md#usage-example), then come back here to test.
 
 ## TEST your setup:
 
