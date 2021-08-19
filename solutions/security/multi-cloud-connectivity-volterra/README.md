@@ -19,6 +19,9 @@ changing the deployment.
 > for a hypothetical customer looking for a minimally invasive solution
 > to multi-cloud networking.
 
+> See [Troubleshooting](TROUBLESHOOTING.md) document for common issues you might
+> see when deploying this demo along with recommended fixes or alternative actions.
+
 ## Prerequisites
 
 ### AWS
