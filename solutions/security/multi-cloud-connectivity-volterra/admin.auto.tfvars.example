@@ -1,7 +1,6 @@
 # Common variables: these will be used when naming demo resources
 projectPrefix = "my-mcn-demo"
 resourceOwner = "my-name"
-buildSuffix   = "1234"
 
 # Volterra variables: these will be used to standup Volterra resources across clouds
 namespace = "my-namespace"
