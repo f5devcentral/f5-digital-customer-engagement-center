@@ -1,8 +1,9 @@
 # GCP multi-cloud Volterra module
 
 <!-- spell-checker: ignore volterra markdownlint tfvars -->
-This module will create a set of Volterra GCP VPC Sites with ingress/egress gateways
-configured and a virtual site that spans the CE sites.
+This module will create a set of Volterra GCP VPC Sites with ingress/egress gateways configured and a virtual site that spans the CE sites.
+
+## Diagram
 
 ![multi-cloud-volterra-hla.png](../images/google-multi-cloud-volterra-hla.png)
 <!-- markdownlint-disable no-inline-html -->
@@ -14,98 +15,137 @@ on every CE site that match the selector predicate for the Virtual Site. This me
 that existing resources can use DNS discovery via the Volterra gateways without
 changing the deployment.
 
-> See [Scenario](SCENARIO.md) document for details on why this solution was chosen
+> See [Scenario](../SCENARIO.md) document for details on why this solution was chosen
 > for a hypothetical customer looking for a minimally invasive solution
 > to multi-cloud networking.
 
-## FAQs?
+## Requirements
 
-1. Why is there a single `outside` network? Can this work with multiple `outside` networks?
+- Google gcloud CLI
+- Terraform
+- Google Project
+- Google IAM Service Account
+- Volterra account
+- Volterra p12 credential file and api password -  https://www.volterra.io/docs/how-to/user-mgmt/credentials
+- Volterra Cloud Credentials
 
-   For the purposes of this [multi-cloud-connectivity-volterra](../) demo, the
-   module is creating a single VPC for `outside` use to minimise the risk of
-   hitting VPC quota limits on GCP. The solution can function without issue if
-   independent `outside` networks are used; the `outside` network is a requirement
-   to use a 2-NIC Volterra Ingress/Egress gateway that can support routing traffic
-   _from_ an `inside` network.
+## Login to Google Environment
 
-   See [Next Steps](SCENARIO.md#next-steps)
+```bash
+# Login
+gcloud init
 
-2. Can I deploy just this GCP sub-module?
+# Show config
+gcloud config list
+```
 
-   This module is expected to be launched as part of the
-   [multi-cloud-connectivity-volterra](../) demo and is not guaranteed to
-   function correctly as a standalone module. You can still launch it
+## Create Google Service Account
 
-   1. Populate a `terraform.tfvars` file with required values
+When you are deploying Azure resources from VoltConsole you will need to create 
+a Cloud Credential that has access to your Azure Subscription. If you already
+have a service account you can use it. Otherwise you can follow these steps 
+to create one. Note that you must have an "Editor" role within your Google project 
+to create a service account. Reference [Creating IAM Service Accounts](https://cloud.google.com/iam/docs/creating-managing-service-accounts#iam-service-accounts-create-console).
 
-      <!-- spell-checker: disable -->
-      ```ini
-      gcpProjectId       = "my-gcp-project-id"
-      gcpRegion          = "us-central1"
-      projectPrefix      = "my-prefix"
-      buildSuffix        = "my-suffix"
-      domain_name        = "shared.acme.com"
-      namespace          = "my-volterra-ns"
-      volterraTenant     = "my-tenant-id"
-      volterraCloudCreds = "my-gcp-cloud-creds"
-      ```
-      <!-- spell-checker: enable -->
+From the Google Console, navigate to IAM > Service Accounts.
 
-   2. Deploy with Terraform
+Create an account with the following roles:
+- Compute Admin
+- DNS Administrator
+- Service Account Admin
+- Service Account User
+- Project IAM Admin
+- Secret Manager Admin
+- Storage Admin
 
-      <!-- spell-checker: disable -->
-      ```shell
-      terraform init
-      terraform apply -auto-approve
-      ```
-      <!-- spell-checker: enable -->
+Upon save, you will be directed back to Service Account page. Find and select your new service account to edit it.
 
-   3. Launch HTTP/HTTPS proxy tunnel via Workstation VM
+Click the 'Key' tab to create a new key.
 
-      > See [Workstation](../../../../modules/google/terraform/workstation/README.md#using-workstation) docs for more options
+![svc-acct-key1.png](images/svc-acct-key1.png)
 
-      <!-- spell-checker: disable -->
-      ```shell
-      eval $(terraform output connection_helpers | jq -r 'fromjson | .bu21.proxy_tunnel')
-      ```
+Choose JSON format. The file will be saved as JSON to your computer.
 
-      ```text
-      Testing if tunnel connection works.
-      Listening on port [8888].
-      ```
-      <!-- spell-checker: enable -->
+![svc-acct-key2.png](images/svc-acct-key2.png)
 
-   4. Configure browser to use `127.0.0.1:8888` as HTTP and HTTPS proxy
+Copy the JSON output (starting with "{" ending with "}") of this command and keep it safe.
+This credential enables read/write access to your Google Project.
 
-      ![proxy_8888.png](images/proxy_8888.png)
-      <!-- markdownlint-disable no-inline-html -->
-      <p align="center">Figure 2: Configure HTTP/HTTPS proxy in FireFox</p>
-      <!-- markdownlint-enable no-inline-html -->
+Add service account credentials to your Terraform environment. See the [Terraform Google Provider "Adding Credentials"](https://www.terraform.io/docs/providers/google/guides/getting_started.html#adding-credentials). At a high level, you are creating an environment variable that points to the newly downloaded JSON file.
 
-   5. Browse to advertised services; e.g. bu23app.shared.acme.com
 
-      ![bu23app.png](images/bu23app.png)
-      <!-- markdownlint-disable no-inline-html -->
-      <p align="center">Figure 3: Viewing bu23app from Workstation on bu21 VPC</p>
-      <!-- markdownlint-enable no-inline-html -->
+## Create Volterra Cloud Credentials for Google
 
-   6. Cleanup
+In VoltConsole go to the "System" namespace and navigate to "Manage" -> "Site Management" -> "Cloud Credentials".
 
-      `Ctrl-C` to terminate the HTTP/HTTPS proxy tunnel
+Click on "Add Cloud Credential"
 
-      <!-- spell-checker: disable -->
-      ```text
-      Testing if tunnel connection works.
-      Listening on port [8888].
-      ^CServer shutdown complete.
-      ```
+For the name enter "[unique-name]-gcp".
 
-      ```shell
-      terraform destroy -auto-approve
-      ```
-      <!-- spell-checker: enable -->
+For the Cloud Credential Type: "GCP Credentials"
 
+Under GCP Credentials click on "Configure"
+
+Enter the content of the JSON key file then click on "Blindfold". Example...
+
+```
+{
+  "type": "service_account",
+  "project_id": "f5-project123",
+  "private_key_id": "abcxyz",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nREDACTED=\n-----END PRIVATE KEY-----\n",
+  "client_email": "svc-giroux-tf@f5-project123.iam.gserviceaccount.com",
+  "client_id": "123456",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/svc-giroux-tf@f5-project123.iam.gserviceaccount.com"
+}
+```
+
+## Usage example
+
+See parent [README Usage Example](../README.md#usage-example), then come back here to test.
+
+## TEST your setup:
+
+1. Launch HTTP/HTTPS proxy tunnel via Workstation VM.
+
+The connection info is in the terraform output. Example command is below. Run this from your laptop terminal.
+
+   > See [Workstation](../../../../modules/google/terraform/workstation/README.md#using-workstation) docs for more options
+
+   <!-- spell-checker: disable -->
+   ```shell
+   eval $(terraform output connection_helpers | jq -r 'fromjson | .bu21.proxy_tunnel')
+   ```
+
+   ```text
+   Testing if tunnel connection works.
+   Listening on port [8888].
+   ```
+   <!-- spell-checker: enable -->
+
+2. Configure browser to use `127.0.0.1:8888` as HTTP and HTTPS proxy
+
+   ![proxy_8888.png](images/proxy_8888.png)
+   <!-- markdownlint-disable no-inline-html -->
+   <p align="center">Figure 2: Configure HTTP/HTTPS proxy in FireFox</p>
+   <!-- markdownlint-enable no-inline-html -->
+
+3. Browse to advertised services; e.g. bu23app.shared.acme.com
+
+   ![bu23app.png](images/bu23app.png)
+   <!-- markdownlint-disable no-inline-html -->
+   <p align="center">Figure 3: Viewing bu23app from Workstation on bu21 VPC</p>
+   <!-- markdownlint-enable no-inline-html -->
+
+## Cleanup
+Use the following command to destroy all of the resources
+
+```bash
+./destroy.sh
+```
 <!-- markdownlint-disable no-inline-html -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -183,3 +223,14 @@ changing the deployment.
 | connection\_helpers | A set of `gcloud` commands to connect to SSH, setup a forward-proxy, and to access<br>Code Server on each workstation, mapped by business unit. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->
+
+## FAQs?
+
+1. Why is there a single `outside` network? Can this work with multiple `outside` networks?
+
+   For the purposes of this [multi-cloud-connectivity-volterra](../) demo, the
+   module is creating a single VPC for `outside` use to minimise the risk of
+   hitting VPC quota limits on GCP. The solution can function without issue if
+   independent `outside` networks are used; the `outside` network is a requirement
+   to use a 2-NIC Volterra Ingress/Egress gateway that can support routing traffic
+   _from_ an `inside` network.
