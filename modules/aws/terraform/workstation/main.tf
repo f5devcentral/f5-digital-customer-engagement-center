@@ -45,13 +45,8 @@ resource "aws_eip" "mgmtEip" {
     Name  = "${var.projectPrefix}-workstation-eip"
     Owner = var.resourceOwner
   }
+  depends_on = [aws_network_interface.mgmtNic]
 }
-#resource "aws_eip_association" "mgmtEipAssoc" {
-#  count         = var.associateEIP ? 1 : 0
-#  instance_id   = aws_instance.workstation.id
-#  allocation_id = aws_eip.mgmtEip[0].id
-#}
-
 
 # instance
 resource "aws_instance" "workstation" {
