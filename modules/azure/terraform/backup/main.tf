@@ -46,8 +46,7 @@ resource "azurerm_linux_virtual_machine" "backend" {
   network_interface_ids = [azurerm_network_interface.this.id]
   size                  = var.instanceType
   admin_username        = var.adminAccountName
-
-  #custom_data = base64encode(local.user_data)
+  custom_data           = base64encode(local.user_data)
 
   admin_ssh_key {
     username   = var.adminAccountName
@@ -69,41 +68,6 @@ resource "azurerm_linux_virtual_machine" "backend" {
 
   tags = {
     Name  = format("%s-backend-%s", var.projectPrefix, var.buildSuffix)
-    Owner = var.resourceOwner
-  }
-}
-
-# Run Startup Scripts
-resource "azurerm_virtual_machine_extension" "docker" {
-  name                 = format("%s-backend-docker-%s", var.projectPrefix, var.buildSuffix)
-  virtual_machine_id   = azurerm_linux_virtual_machine.backend.id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "DockerExtension"
-  type_handler_version = "1.0"
-
-  tags = {
-    Name  = format("%s-backend-docker-%s", var.projectPrefix, var.buildSuffix)
-    Owner = var.resourceOwner
-  }
-}
-
-resource "azurerm_virtual_machine_extension" "onboard" {
-  name                 = format("%s-backend-onboard-%s", var.projectPrefix, var.buildSuffix)
-  virtual_machine_id   = azurerm_linux_virtual_machine.backend.id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.0"
-
-  settings = <<SETTINGS
-    {
-        "script": "${base64encode(local.user_data)}"
-    }
-  SETTINGS
-
-  depends_on = [azurerm_virtual_machine_extension.docker]
-
-  tags = {
-    Name  = format("%s-backend-onboard-%s", var.projectPrefix, var.buildSuffix)
     Owner = var.resourceOwner
   }
 }
