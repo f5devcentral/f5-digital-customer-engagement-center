@@ -9,7 +9,7 @@ This example will create multiple backend instances that are simple web servers 
 
    ```shell
    git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
-   cd f5-digital-customer-engagement-center/modules/azure/terraform/backend/examples
+   cd f5-digital-customer-engagement-center/modules/azure/terraform/backend/examples/count
    ```
 
 2. Copy `admin.auto.tfvars.example` to `admin.auto.tfvars`; edit the values as needed
