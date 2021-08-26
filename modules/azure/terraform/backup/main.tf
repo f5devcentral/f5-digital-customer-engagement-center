@@ -75,7 +75,7 @@ resource "azurerm_linux_virtual_machine" "backend" {
 
 # Run Startup Scripts
 resource "azurerm_virtual_machine_extension" "docker" {
-  name                 = format("%s-backend-onboard-%s", var.projectPrefix, var.buildSuffix)
+  name                 = format("%s-backend-docker-%s", var.projectPrefix, var.buildSuffix)
   virtual_machine_id   = azurerm_linux_virtual_machine.backend.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "DockerExtension"
