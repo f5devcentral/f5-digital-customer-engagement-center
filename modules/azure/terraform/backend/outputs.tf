@@ -4,7 +4,7 @@ output "privateIp" {
 }
 output "publicIp" {
   description = "public ip address of the instance"
-  value       = var.public_address ? azurerm_public_ip.this.public_address : null
+  value       = var.public_address ? azurerm_public_ip.this[0].ip_address : null
 }
 output "backendInfo" {
   description = "VM instance output parameters as documented here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine"

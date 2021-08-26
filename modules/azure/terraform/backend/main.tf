@@ -30,7 +30,7 @@ resource "azurerm_network_interface" "this" {
     name                          = "primary"
     subnet_id                     = var.subnet
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = var.public_address ? azurerm_public_ip.this.id : null
+    public_ip_address_id          = var.public_address ? azurerm_public_ip.this[0].id : null
   }
 
   tags = {
