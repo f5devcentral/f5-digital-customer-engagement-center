@@ -15,6 +15,7 @@ module "backend" {
     ssh_key             = "ssh-rsa AAABC123....."
     subnet              = "someSubnet"
     securityGroup       = "someSecurityGroup"
+    public_address      = false
 }
 ```
 
@@ -47,8 +48,8 @@ module "backend" {
 | adminAccountName | admin account name used with instance | `string` | `"ubuntu"` | no |
 | instanceType | instance type for virtual machine | `string` | `"Standard_B2ms"` | no |
 | projectPrefix | prefix for resources | `string` | `"demo"` | no |
-| public\_address | If true, an ephemeral public IP address will be assigned to the webserver.<br>Default value is 'false'. | `bool` | `false` | no |
-| user\_data | An optional cloud-config definition to apply to the launched instances. If empty<br>(default), a simple webserver will be launched that displays the hostname of the<br>instance that serviced the request. | `string` | `null` | no |
+| public\_address | If true, an ephemeral public IP address will be assigned to the webserver. Default value is 'false'. | `bool` | `false` | no |
+| user\_data | An optional cloud-config definition to apply to the launched instances. If empty (default), a simple webserver will be launched that displays the hostname of the instance that serviced the request. | `string` | `null` | no |
 
 ## Outputs
 

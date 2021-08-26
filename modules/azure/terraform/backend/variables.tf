@@ -43,8 +43,7 @@ variable "public_address" {
   type        = bool
   default     = false
   description = <<EOD
-If true, an ephemeral public IP address will be assigned to the webserver.
-Default value is 'false'.
+If true, an ephemeral public IP address will be assigned to the webserver. Default value is 'false'.
 EOD
 }
 
@@ -64,8 +63,6 @@ variable "user_data" {
   type        = string
   default     = null
   description = <<EOD
-An optional cloud-config definition to apply to the launched instances. If empty
-(default), a simple webserver will be launched that displays the hostname of the
-instance that serviced the request.
+An optional cloud-config definition to apply to the launched instances. If empty (default), a simple webserver will be launched that displays the hostname of the instance that serviced the request.
 EOD
 }
