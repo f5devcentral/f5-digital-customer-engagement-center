@@ -72,7 +72,7 @@ write_files:
                                   </tr>
                                   <tr>
                                       <td>Zone</td>
-                                      <td>{{ v1.availability_zone }}</td>
+                                      <td>${zone}</td>
                                   </tr>
                               </tbody>
                           </table>
