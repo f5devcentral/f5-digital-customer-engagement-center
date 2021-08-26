@@ -62,6 +62,21 @@ This example will create backend instances that are simple web servers listening
 | azurerm | >= 2.73 |
 | random | n/a |
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| backend | ../ |  |
+| vnet | ../../network/min |  |
+
+## Resources
+
+| Name |
+|------|
+| [azurerm_network_security_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group) |
+| [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) |
+| [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -79,6 +94,5 @@ This example will create backend instances that are simple web servers listening
 | backendInfo | VM instance output parameters as documented here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine |
 | backendPrivateIp | private ip address of the instance |
 | backendPublicIp | public ip address of the instance |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->
