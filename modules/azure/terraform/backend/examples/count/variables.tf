@@ -17,7 +17,7 @@ variable "ssh_key" {
 variable "public_address" {
   type        = bool
   default     = false
-  description = "If true, an ephemeral public IP address will be assigned to the webserver. Default value is 'false'. "
+  description = "If true, an ephemeral public IP address will be assigned to the webserver. Default value is 'false'."
 }
 variable "num_servers" {
   type        = number
