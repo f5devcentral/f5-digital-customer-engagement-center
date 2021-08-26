@@ -68,7 +68,7 @@ resource "azurerm_network_security_group" "web" {
     destination_port_range     = "22"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
-  }  
+  }
 
   tags = {
     Name  = format("%s-backend-nsg-%s", var.projectPrefix, random_id.build_suffix.hex)
