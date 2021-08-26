@@ -33,6 +33,7 @@ module "backend" {
 | Name | Version |
 |------|---------|
 | azurerm | ~> 2 |
+| random | n/a |
 
 ## Modules
 
@@ -46,6 +47,7 @@ No Modules.
 | [azurerm_network_interface](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) |
 | [azurerm_network_interface_security_group_association](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface_security_group_association) |
 | [azurerm_public_ip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) |
+| [random_shuffle](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/shuffle) |
 
 ## Inputs
 
@@ -59,10 +61,13 @@ No Modules.
 | ssh\_key | public key used for authentication in ssh-rsa format | `string` | n/a | yes |
 | subnet | subnet for virtual machine | `string` | n/a | yes |
 | adminAccountName | admin account name used with instance | `string` | `"ubuntu"` | no |
+| azureZones | The list of availability zones in a region | `list(any)` | <pre>[<br>  1,<br>  2,<br>  3<br>]</pre> | no |
 | instanceType | instance type for virtual machine | `string` | `"Standard_B2ms"` | no |
+| name | The name to assign to the server VM. If left empty(default), a name will be generated as '{projectPrefix}-backend-{buildSuffix}' where {projectPrefix} and {buildSuffix} will be the values of the respective variables. | `string` | `null` | no |
 | projectPrefix | prefix for resources | `string` | `"demo"` | no |
 | public\_address | If true, an ephemeral public IP address will be assigned to the webserver. Default value is 'false'. | `bool` | `false` | no |
 | user\_data | An optional cloud-config definition to apply to the launched instances. If empty (default), a simple webserver will be launched that displays the hostname of the instance that serviced the request. | `string` | `null` | no |
+| zone | The availability zone where the server will be deployed. If empty (default), instances will be randomly assigned from zones found in variable 'azureZones'. | `string` | `""` | no |
 
 ## Outputs
 

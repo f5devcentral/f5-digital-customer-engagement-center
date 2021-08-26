@@ -20,9 +20,7 @@ resource "random_id" "build_suffix" {
 resource "azurerm_resource_group" "main" {
   name     = format("%s-rg-%s", var.projectPrefix, random_id.build_suffix.hex)
   location = var.azureLocation
-
   tags = {
-    Name  = format("%s-rg-%s", var.projectPrefix, random_id.build_suffix.hex)
     Owner = var.resourceOwner
   }
 }
@@ -35,8 +33,7 @@ module "vnet" {
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.main.name
   azureLocation      = var.azureLocation
-
-  depends_on = [azurerm_resource_group.main]
+  depends_on         = [azurerm_resource_group.main]
 }
 
 # Create Network Security Group and rules
@@ -44,7 +41,6 @@ resource "azurerm_network_security_group" "web" {
   name                = format("%s-backend-nsg-%s", var.projectPrefix, random_id.build_suffix.hex)
   location            = var.azureLocation
   resource_group_name = azurerm_resource_group.main.name
-
   security_rule {
     name                       = "allow_web"
     description                = "Allow Web access"
@@ -69,9 +65,7 @@ resource "azurerm_network_security_group" "web" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
-
   tags = {
-    Name  = format("%s-backend-nsg-%s", var.projectPrefix, random_id.build_suffix.hex)
     Owner = var.resourceOwner
   }
 }
