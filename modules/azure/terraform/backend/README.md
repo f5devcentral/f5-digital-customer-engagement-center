@@ -47,6 +47,7 @@ module "backend" {
 | adminAccountName | admin account name used with instance | `string` | `"ubuntu"` | no |
 | instanceType | instance type for virtual machine | `string` | `"Standard_B2ms"` | no |
 | projectPrefix | prefix for resources | `string` | `"demo"` | no |
+| public\_address | If true, an ephemeral public IP address will be assigned to the webserver.<br>Default value is 'false'. | `bool` | `false` | no |
 | user\_data | An optional cloud-config definition to apply to the launched instances. If empty<br>(default), a simple webserver will be launched that displays the hostname of the<br>instance that serviced the request. | `string` | `null` | no |
 
 ## Outputs
@@ -55,6 +56,7 @@ module "backend" {
 |------|-------------|
 | backendInfo | VM instance output parameters as documented here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine |
 | privateIp | private ip address of the instance |
+| publicIp | public ip address of the instance |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

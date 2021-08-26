@@ -12,22 +12,26 @@ provider "azurerm" {
   features {}
 }
 
+resource "random_id" "build_suffix" {
+  byte_length = 2
+}
+
 # Resource Group
 resource "azurerm_resource_group" "main" {
-  name     = format("%s-rg-%s", var.projectPrefix, var.buildSuffix)
+  name     = format("%s-rg-%s", var.projectPrefix, random_id.build_suffix.hex)
   location = var.azureLocation
 
   tags = {
-    Name  = format("%s-rg-%s", var.projectPrefix, var.buildSuffix)
+    Name  = format("%s-rg-%s", var.projectPrefix, random_id.build_suffix.hex)
     Owner = var.resourceOwner
   }
 }
 
 # Network Module
-module "azure_network" {
+module "vnet" {
   source             = "../../network/min"
   projectPrefix      = var.projectPrefix
-  buildSuffix        = var.buildSuffix
+  buildSuffix        = random_id.build_suffix.hex
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.main.name
   azureLocation      = var.azureLocation
@@ -37,7 +41,7 @@ module "azure_network" {
 
 # Create Network Security Group and rules
 resource "azurerm_network_security_group" "web" {
-  name                = format("%s-backend-nsg-%s", var.projectPrefix, var.buildSuffix)
+  name                = format("%s-backend-nsg-%s", var.projectPrefix, random_id.build_suffix.hex)
   location            = var.azureLocation
   resource_group_name = azurerm_resource_group.main.name
 
@@ -55,7 +59,7 @@ resource "azurerm_network_security_group" "web" {
   }
 
   tags = {
-    Name  = format("%s-backend-nsg-%s", var.projectPrefix, var.buildSuffix)
+    Name  = format("%s-backend-nsg-%s", var.projectPrefix, random_id.build_suffix.hex)
     Owner = var.resourceOwner
   }
 }
@@ -63,11 +67,12 @@ resource "azurerm_network_security_group" "web" {
 module "backend" {
   source             = "../"
   projectPrefix      = var.projectPrefix
-  buildSuffix        = var.buildSuffix
+  buildSuffix        = random_id.build_suffix.hex
   resourceOwner      = var.resourceOwner
   azureResourceGroup = azurerm_resource_group.main.name
   azureLocation      = var.azureLocation
   ssh_key            = var.ssh_key
-  subnet             = module.azure_network.subnets["private"]
+  subnet             = module.vnet.subnets["private"]
   securityGroup      = azurerm_network_security_group.web.id
+  public_address     = false
 }

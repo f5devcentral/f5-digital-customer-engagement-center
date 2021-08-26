@@ -6,6 +6,20 @@ terraform {
   }
 }
 
+# Create Public IP
+resource "azurerm_public_ip" "this" {
+  count               = var.public_address ? 1 : 0
+  name                = format("%s-backend-pip-%s", var.projectPrefix, var.buildSuffix)
+  location            = var.azureLocation
+  resource_group_name = var.azureResourceGroup
+  allocation_method   = "Static"
+
+  tags = {
+    Name  = format("%s-backend-pip-%s", var.projectPrefix, var.buildSuffix)
+    Owner = var.resourceOwner
+  }
+}
+
 # Create NIC
 resource "azurerm_network_interface" "this" {
   name                = format("%s-backend-nic-%s", var.projectPrefix, var.buildSuffix)
@@ -16,6 +30,7 @@ resource "azurerm_network_interface" "this" {
     name                          = "primary"
     subnet_id                     = var.subnet
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = var.public_address ? azurerm_public_ip.this.id : null
   }
 
   tags = {
