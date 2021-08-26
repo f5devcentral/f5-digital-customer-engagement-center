@@ -1,9 +1,12 @@
 output "backendPrivateIp" {
-  value = module.backend.privateIp
+  description = "private ip address of the instance"
+  value       = module.backend.privateIp
 }
 output "backendPublicIp" {
-  value = module.backend.publicIp
+  description = "public ip address of the instance"
+  value       = module.backend.publicIp
 }
 output "backendInfo" {
-  value = module.backend.backendInfo
+  description = "VM instance output parameters as documented here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine"
+  value       = module.backend.backendInfo
 }

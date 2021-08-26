@@ -76,9 +76,9 @@ This example will create backend instances that are simple web servers listening
 
 | Name | Description |
 |------|-------------|
-| backendInfo | n/a |
-| backendPrivateIp | n/a |
-| backendPublicIp | n/a |
+| backendInfo | VM instance output parameters as documented here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine |
+| backendPrivateIp | private ip address of the instance |
+| backendPublicIp | public ip address of the instance |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->
