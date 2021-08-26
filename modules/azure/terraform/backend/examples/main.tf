@@ -57,6 +57,18 @@ resource "azurerm_network_security_group" "web" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+  security_rule {
+    name                       = "allow_ssh"
+    description                = "Allow SSH access"
+    priority                   = 101
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }  
 
   tags = {
     Name  = format("%s-backend-nsg-%s", var.projectPrefix, random_id.build_suffix.hex)
@@ -74,5 +86,5 @@ module "backend" {
   ssh_key            = var.ssh_key
   subnet             = module.vnet.subnets["private"]
   securityGroup      = azurerm_network_security_group.web.id
-  public_address     = false
+  public_address     = true
 }
