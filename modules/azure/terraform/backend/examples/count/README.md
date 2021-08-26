@@ -1,7 +1,7 @@
-# Azure backend example
+# Azure backend example (with count)
 <!-- spell-checker: ignore markdownlint jumphost -->
 
-This example will create backend instances that are simple web servers listening on port 80.
+This example will create multiple backend instances that are simple web servers listening on port 80. This shows an example of using the module with 'count'.
 
 ## Usage example
 
@@ -66,8 +66,8 @@ This example will create backend instances that are simple web servers listening
 
 | Name | Source | Version |
 |------|--------|---------|
-| backend | ../ |  |
-| vnet | ../../network/min |  |
+| backend | ../../ |  |
+| vnet | ../../../network/min |  |
 
 ## Resources
 
@@ -85,6 +85,7 @@ This example will create backend instances that are simple web servers listening
 | projectPrefix | prefix for resources | `string` | n/a | yes |
 | resourceOwner | name of the person or customer running the solution | `string` | n/a | yes |
 | ssh\_key | public key used for authentication in ssh-rsa format | `string` | n/a | yes |
+| num\_servers | number of instances to launch | `number` | `2` | no |
 | public\_address | If true, an ephemeral public IP address will be assigned to the webserver. Default value is 'false'. | `bool` | `false` | no |
 
 ## Outputs

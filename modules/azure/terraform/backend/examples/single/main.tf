@@ -27,7 +27,7 @@ resource "azurerm_resource_group" "main" {
 
 # Network Module
 module "vnet" {
-  source             = "../../network/min"
+  source             = "../../../network/min"
   projectPrefix      = var.projectPrefix
   buildSuffix        = random_id.build_suffix.hex
   resourceOwner      = var.resourceOwner
@@ -71,7 +71,7 @@ resource "azurerm_network_security_group" "web" {
 }
 
 module "backend" {
-  source             = "../"
+  source             = "../../"
   projectPrefix      = var.projectPrefix
   buildSuffix        = random_id.build_suffix.hex
   resourceOwner      = var.resourceOwner
