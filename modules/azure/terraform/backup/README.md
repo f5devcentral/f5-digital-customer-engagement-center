@@ -40,21 +40,21 @@ module "backend" {
 | azureLocation | location where Azure resources are deployed (abbreviated Azure Region name) | `string` | n/a | yes |
 | azureResourceGroup | resource group to create objects in | `string` | n/a | yes |
 | buildSuffix | random build suffix for resources | `string` | n/a | yes |
-| ssh_key | public key used for authentication in ssh-rsa format | `string` | n/a | yes |
 | resourceOwner | name of the person or customer running the solution | `string` | n/a | yes |
 | securityGroup | security group for virtual machine | `string` | n/a | yes |
+| ssh\_key | public key used for authentication in ssh-rsa format | `string` | n/a | yes |
 | subnet | subnet for virtual machine | `string` | n/a | yes |
 | adminAccountName | admin account name used with instance | `string` | `"ubuntu"` | no |
 | instanceType | instance type for virtual machine | `string` | `"Standard_B2ms"` | no |
 | projectPrefix | prefix for resources | `string` | `"demo"` | no |
-| startupCommand | Command to run at boot, used to start the app | `string` | `"docker run -d --restart always -p 80:3000 bkimminich/juice-shop"` | no |
+| user\_data | An optional cloud-config definition to apply to the launched instances. If empty<br>(default), a simple webserver will be launched that displays the hostname of the<br>instance that serviced the request. | `string` | `null` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| privateIp | private ip address of the instance |
 | backendInfo | VM instance output parameters as documented here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine |
+| privateIp | private ip address of the instance |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

@@ -16,7 +16,7 @@ provider "azurerm" {
 resource "azurerm_resource_group" "main" {
   name     = format("%s-rg-%s", var.projectPrefix, var.buildSuffix)
   location = var.azureLocation
-  
+
   tags = {
     Name  = format("%s-rg-%s", var.projectPrefix, var.buildSuffix)
     Owner = var.resourceOwner

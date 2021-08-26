@@ -52,8 +52,12 @@ variable "ssh_key" {
 }
 
 # onboarding
-variable "startupCommand" {
-  description = "Command to run at boot, used to start the app"
+variable "user_data" {
   type        = string
-  default     = "docker run -d --restart always -p 80:3000 bkimminich/juice-shop"
+  default     = null
+  description = <<EOD
+An optional cloud-config definition to apply to the launched instances. If empty
+(default), a simple webserver will be launched that displays the hostname of the
+instance that serviced the request.
+EOD
 }

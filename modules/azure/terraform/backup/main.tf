@@ -32,9 +32,10 @@ resource "azurerm_network_interface_security_group_association" "this" {
 
 # Onboarding script
 locals {
-  onboard = templatefile("${path.module}/templates/startup.sh.tpl", {
-    startupCommand = var.startupCommand
-  })
+  user_data = coalesce(var.user_data, templatefile("${path.module}/templates/cloud-config.yml", {
+    f5_logo_rgb_svg = base64gzip(file("${path.module}/files/f5-logo-rgb.svg"))
+    styles_css      = base64gzip(file("${path.module}/files/styles.css"))
+  }))
 }
 
 # Create VM
@@ -46,12 +47,12 @@ resource "azurerm_linux_virtual_machine" "backend" {
   size                  = var.instanceType
   admin_username        = var.adminAccountName
 
+  #custom_data = base64encode(local.user_data)
+
   admin_ssh_key {
     username   = var.adminAccountName
     public_key = var.ssh_key
   }
-
-  #custom_data = base64encode(local.onboard)
 
   os_disk {
     name                 = format("%s-backend-disk-%s", var.projectPrefix, var.buildSuffix)
@@ -72,7 +73,20 @@ resource "azurerm_linux_virtual_machine" "backend" {
   }
 }
 
-# Run Startup Script
+# Run Startup Scripts
+resource "azurerm_virtual_machine_extension" "docker" {
+  name                 = format("%s-backend-onboard-%s", var.projectPrefix, var.buildSuffix)
+  virtual_machine_id   = azurerm_linux_virtual_machine.backend.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "DockerExtension"
+  type_handler_version = "1.0"
+
+  tags = {
+    Name  = format("%s-backend-docker-%s", var.projectPrefix, var.buildSuffix)
+    Owner = var.resourceOwner
+  }
+}
+
 resource "azurerm_virtual_machine_extension" "onboard" {
   name                 = format("%s-backend-onboard-%s", var.projectPrefix, var.buildSuffix)
   virtual_machine_id   = azurerm_linux_virtual_machine.backend.id
@@ -82,9 +96,11 @@ resource "azurerm_virtual_machine_extension" "onboard" {
 
   settings = <<SETTINGS
     {
-        "script": "${base64encode(local.onboard)}"
+        "script": "${base64encode(local.user_data)}"
     }
   SETTINGS
+
+  depends_on = [azurerm_virtual_machine_extension.docker]
 
   tags = {
     Name  = format("%s-backend-onboard-%s", var.projectPrefix, var.buildSuffix)
