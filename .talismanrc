@@ -258,3 +258,11 @@ fileignoreconfig:
   checksum: a6125d9a879efd830dfa1e37969e032358b806ddb71754af8df36d97847d25bc
 - filename: solutions/security/multi-cloud-connectivity-volterra/aws/main.tf
   checksum: ca79bc6dd74ca2a8dd382161201848fba9d803482c026feb10cbc66963ec8f65
+- filename: solutions/security/multi-cloud-connectivity-volterra/aws/admin.auto.tfvars.example
+  checksum: ab85c77d9e4baaa5dca6708a1206d2c49540d089fccdd587bd5b173a9107ff48
+- filename: solutions/security/multi-cloud-connectivity-volterra/aws/README.md
+  checksum: f60945c92e2c760550f3bb6fe18aa08663a0686ef1eab8bcc0f716c44bc960fe
+- filename: solutions/security/multi-cloud-connectivity-volterra/aws/volterraSites.tf
+  checksum: 1edce90482f47d1d677acb5be0f54fa1d47b8ee33a7aa4418f49e34ca5b0e737
+- filename: solutions/security/multi-cloud-connectivity-volterra/aws/main.tf
+  checksum: e47f6fbad435b3f52ac9496f57ecd2b9b687e72eaa1500c911da9b8f42ecc40a
