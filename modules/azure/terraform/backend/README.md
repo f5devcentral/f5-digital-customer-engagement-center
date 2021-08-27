@@ -1,6 +1,6 @@
 # Azure Backend
 
-This module will create one Azure Virtual Machine (VM), install docker, and run the (TBD) application. The NIC will reside in the 'private' (aka internal) network, and the VM will have a private IP only.
+This module will create one Azure Virtual Machine (VM), install docker, and run a simple web web server listening on port 80.
 
 To use this module within a solutions context:
 
@@ -18,6 +18,12 @@ module "backend" {
     public_address      = false
 }
 ```
+
+The web browser will display a page consisting of the cloud name, server name, and zone. Here is an example:
+
+![webapp1.png](images/webapp1.png)
+
+![webapp2.png](images/webapp2.png)
 
 <!-- markdownlint-disable no-inline-html -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
