@@ -6,7 +6,7 @@ To use this module within a solutions context:
 
 ```hcl
 module "backend" {
-    source              = "../../../../../azure/terraform/backend/"
+    source              = "github.com/f5devcentral/f5-digital-customer-engagement-center//modules/azure/terraform/backend/"
     projectPrefix       = "somePrefix"
     buildSuffix         = "someSuffix"
     resourceOwner       = "someName"
