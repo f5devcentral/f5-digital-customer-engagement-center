@@ -25,7 +25,7 @@ resource "volterra_azure_vnet_site" "bu" {
   no_worker_nodes         = true
 
   azure_cred {
-    name      = var.volterraCloudCred
+    name      = var.volterraCloudCredAzure
     namespace = "system"
     tenant    = var.volterraTenant
   }

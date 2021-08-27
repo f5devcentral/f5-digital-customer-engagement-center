@@ -1,3 +1,8 @@
+###########################provider##########################
+provider "aws" {
+  region = var.awsRegion
+}
+
 ############################ Locals ############################
 
 data "aws_availability_zones" "available" {

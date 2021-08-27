@@ -240,7 +240,7 @@ resource "volterra_gcp_vpc_site" "inside" {
   # MEmes - this demo breaks if assisted mode is used;
   assisted = false
   cloud_credentials {
-    name      = var.volterraCloudCred
+    name      = var.volterraCloudCredGCP
     namespace = "system"
     tenant    = var.volterraTenant
   }

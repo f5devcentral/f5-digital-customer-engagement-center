@@ -49,8 +49,8 @@ variable "volterraTenant" {
   description = "Tenant of Volterra"
   type        = string
 }
-variable "volterraCloudCred" {
-  description = "Name of the volterra cloud credentials"
+variable "volterraCloudCredAWS" {
+  description = "Name of the volterra aws credentials"
   type        = string
   default     = null
 }
@@ -73,6 +73,13 @@ The DNS domain name that will be used as common parent generated DNS name of
 loadbalancers.
 EOD
 }
+
+variable "publicDomain" {
+  type        = string
+  description = "The DNS domain name that will be used as common parent generated DNS name of loadbalancers"
+  default     = ""
+}
+
 
 variable "labels" {
   type        = map(string)

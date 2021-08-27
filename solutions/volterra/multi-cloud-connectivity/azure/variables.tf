@@ -27,7 +27,7 @@ variable "volterraTenant" {
   description = "Tenant of Volterra"
   type        = string
 }
-variable "volterraCloudCred" {
+variable "volterraCloudCredAzure" {
   description = "Name of the volterra cloud credentials"
   type        = string
 }

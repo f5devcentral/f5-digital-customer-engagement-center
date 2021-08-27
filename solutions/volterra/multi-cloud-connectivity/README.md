@@ -1,7 +1,7 @@
 # Multi-cloud Volterra demo
 
 <!-- spell-checker: ignore volterra markdownlint tfvars -->
-This module will create a set of Volterra AWS VPC, Azure VNET, and GCP VPC Sites
+This solution will create a set of Volterra AWS VPC, Azure VNET, and GCP VPC Sites
 with ingress/egress gateways configured and a virtual site that spans the cloud
 sites.
 
@@ -37,7 +37,7 @@ Cloud Credentials, awsLocation
 ## Google
 
 Cloud Credentials, gcpProjectId, gcpRegion
-- Reference [Create Google Service Account](google/README.md#login-to-google-environment)
+- Reference [Create Google Service Account](gcp/README.md#login-to-google-environment)
 - Alternatively, you can add this module call to your demo code to create a service account programatically
 
 ```hcl
@@ -55,7 +55,7 @@ module "volterra_sa" {
 - Clone the repo and open the solution's directory
 ```bash
 git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
-cd f5-digital-customer-engagement-center/solutions/security/multi-cloud-connectivity-volterra/
+cd f5-digital-customer-engagement-center/solutions/volterra/multi-cloud-connectivity/
 ```
 
 - Set AWS/Azure/Google cloud credentials. See [Prerequisites](#prerequisites)
@@ -79,10 +79,18 @@ cp admin.auto.tfvars.example admin.auto.tfvars
 vi admin.auto.tfvars
 ```
 
-- Run the setup script to deploy all of the components into your cloud account(s) (remember that you are responsible for the cost of those components)
+- Run the initial setup script (sets up a random build suffix and a virtual site): 
 
 ```bash
 ./setup.sh
+```
+
+- Run the cloud specifc setup script: (remember that you are responsible for the cost of those components)
+
+```bash
+./aws-setup.sh
+./azure-setup.sh
+./gcp-setup.sh
 ```
 
 ## TEST your setup:
@@ -94,6 +102,15 @@ Reference each cloud for steps to validate.
 
 ## Cleanup
 Use the following command to destroy all of the resources
+
+- Run the cloud specifc destroy script:
+
+```bash
+./aws-destroy.sh
+./azure-destroy.sh
+./gcp-destroy.sh
+```
+- Run the solution destroy script:
 
 ```bash
 ./destroy.sh

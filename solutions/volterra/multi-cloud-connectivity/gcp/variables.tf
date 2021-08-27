@@ -120,7 +120,7 @@ The name of the Volterra virtual site that will receive LB registrations.
 EOD
 }
 
-variable "volterraCloudCred" {
+variable "volterraCloudCredGCP" {
   description = "Name of the Volterra cloud credentials to use with GCP VPC sites"
   type        = string
 }

@@ -16,7 +16,7 @@ resource "volterra_aws_vpc_site" "bu" {
   no_worker_nodes         = true
 
   aws_cred {
-    name      = var.volterraCloudCred
+    name      = var.volterraCloudCredAWS
     namespace = "system"
     tenant    = var.volterraTenant
   }
