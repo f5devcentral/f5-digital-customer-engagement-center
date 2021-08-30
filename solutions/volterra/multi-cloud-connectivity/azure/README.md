@@ -46,10 +46,10 @@ az account set -s <subscriptionId>
 
 ## Create Azure Service Principal
 
-When you are deploying Azure resources from VoltConsole you will need to create 
+When you are deploying Azure resources from VoltConsole you will need to create
 a Cloud Credential that has access to your Azure Subscription. If you already
-have a service principal you can use it. Otherwise you can follow these steps 
-to create one. Note that you must have an "Owner" role for your subscription 
+have a service principal you can use it. Otherwise you can follow these steps
+to create one. Note that you must have an "Owner" role for your subscription
 to create a service principal.
 
 From the Azure Console Bash Cloud Shell, run the following command:
@@ -76,7 +76,7 @@ to list out the name, id, and whether it is your default subscription.
   [
     "f5-AZR_xxxx", <-- name
     "xxx-xxx-xxx", <-- subscription id
-    true           <-- is this the default subscription 
+    true           <-- is this the default subscription
   ]
 ```
 
@@ -88,12 +88,12 @@ Click on "Add Cloud Credential"
 
 For the name enter "[unique-name]-azure".
 
-For the Cloud Credential Type: "Azure Client Secret for Service Principal" and enter the 
+For the Cloud Credential Type: "Azure Client Secret for Service Principal" and enter the
 values based on the JSON output from before.
 
 - Client ID: "appId" from JSON output
-- Subscription ID: output of id from "account show" command 
-- Tenant ID: "tenant" from JSON output 
+- Subscription ID: output of id from "account show" command
+- Tenant ID: "tenant" from JSON output
 
 Under Azure Client Secret click on "Configure"
 

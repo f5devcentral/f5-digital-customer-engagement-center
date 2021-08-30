@@ -148,8 +148,8 @@ module "workstation" {
   public_address = true
   depends_on = [
     module.workstation_sa,
-  #  volterra_gcp_vpc_site.inside,
-  #  volterra_tf_params_action.inside,
+    #  volterra_gcp_vpc_site.inside,
+    #  volterra_tf_params_action.inside,
   ]
 }
 

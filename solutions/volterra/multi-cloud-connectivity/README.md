@@ -79,7 +79,7 @@ cp admin.auto.tfvars.example admin.auto.tfvars
 vi admin.auto.tfvars
 ```
 
-- Run the initial setup script (sets up a random build suffix and a virtual site): 
+- Run the initial setup script (sets up a random build suffix and a virtual site):
 
 ```bash
 ./setup.sh
@@ -124,9 +124,6 @@ Use the following command to destroy all of the resources
 | Name | Version |
 |------|---------|
 | terraform | >= 0.14.5 |
-| aws | >= 3.0 |
-| azurerm | >= 2.69 |
-| google | >= 3.77 |
 | volterra | 0.8.1 |
 
 ## Providers
@@ -135,21 +132,6 @@ Use the following command to destroy all of the resources
 |------|---------|
 | random | n/a |
 | volterra | 0.8.1 |
-
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| aws | ./aws/ |  |
-| azure | ./azure/ |  |
-| google | ./google/ |  |
-
-## Resources
-
-| Name |
-|------|
-| [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
-| [volterra_virtual_site](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/virtual_site) |
 
 ## Inputs
 
@@ -174,8 +156,8 @@ Use the following command to destroy all of the resources
 
 | Name | Description |
 |------|-------------|
-| aws\_jumphost\_publicIP | AWS Jumphost Public IP in BU1 |
-| azure\_jumphost\_publicIP | Azure Jumphost Public IP in BU11 |
-| connection\_helpers | gcloud connection helpers for GCP workstation(s) |
+| buildSuffix | build suffix for the deployment |
+| volterraVirtualSite | name of virtual site across all clouds |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

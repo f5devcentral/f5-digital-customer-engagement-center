@@ -41,10 +41,10 @@ gcloud config list
 
 ## Create Google Service Account
 
-When you are deploying Azure resources from VoltConsole you will need to create 
+When you are deploying Azure resources from VoltConsole you will need to create
 a Cloud Credential that has access to your Azure Subscription. If you already
-have a service account you can use it. Otherwise you can follow these steps 
-to create one. Note that you must have an "Editor" role within your Google project 
+have a service account you can use it. Otherwise you can follow these steps
+to create one. Note that you must have an "Editor" role within your Google project
 to create a service account. Reference [Creating IAM Service Accounts](https://cloud.google.com/iam/docs/creating-managing-service-accounts#iam-service-accounts-create-console).
 
 From the Google Console, navigate to IAM > Service Accounts.
@@ -94,12 +94,12 @@ Enter the content of the JSON key file then click on "Blindfold". Example...
   "project_id": "f5-project123",
   "private_key_id": "abcxyz",
   "private_key": "-----BEGIN PRIVATE KEY-----\nREDACTED=\n-----END PRIVATE KEY-----\n",
-  "client_email": "svc-giroux-tf@f5-project123.iam.gserviceaccount.com",
+  "client_email": "",
   "client_id": "123456",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/svc-giroux-tf@f5-project123.iam.gserviceaccount.com"
+  "client_x509_cert_url": ""
 }
 ```
 
@@ -165,36 +165,6 @@ Use the following command to destroy all of the resources
 | random | n/a |
 | volterra | 0.8.1 |
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| inside | terraform-google-modules/network/google | 3.3.0 |
-| outside | terraform-google-modules/network/google | 3.3.0 |
-| region_locations | git::https://github.com/memes/terraform-google-volterra//modules/region-locations?ref=0.3.1 |  |
-| webserver_sa | terraform-google-modules/service-accounts/google | 4.0.2 |
-| webserver_tls | ../../../../modules/google/terraform/tls |  |
-| webservers | ../../../../modules/google/terraform/backend |  |
-| workstation | ../../../../modules/google/terraform/workstation |  |
-| workstation_sa | terraform-google-modules/service-accounts/google | 4.0.2 |
-| workstation_tls | ../../../../modules/google/terraform/tls/ |  |
-
-## Resources
-
-| Name |
-|------|
-| [external_external](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) |
-| [google_compute_firewall](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) |
-| [google_compute_zones](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_zones) |
-| [google_dns_managed_zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone) |
-| [google_dns_record_set](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_record_set) |
-| [random_shuffle](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/shuffle) |
-| [volterra_gcp_vpc_site](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/gcp_vpc_site) |
-| [volterra_healthcheck](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/healthcheck) |
-| [volterra_http_loadbalancer](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/http_loadbalancer) |
-| [volterra_origin_pool](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/origin_pool) |
-| [volterra_tf_params_action](https://registry.terraform.io/providers/volterraedge/volterra/0.8.1/docs/resources/tf_params_action) |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -206,7 +176,7 @@ Use the following command to destroy all of the resources
 | namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
 | projectPrefix | prefix for resources | `string` | n/a | yes |
 | resourceOwner | owner of the deployment, for tagging purposes | `string` | n/a | yes |
-| volterraCloudCred | Name of the Volterra cloud credentials to use with GCP VPC sites | `string` | n/a | yes |
+| volterraCloudCredGCP | Name of the Volterra cloud credentials to use with GCP VPC sites | `string` | n/a | yes |
 | volterraTenant | The Volterra tenant to use. | `string` | n/a | yes |
 | volterraVirtualSite | The name of the Volterra virtual site that will receive LB registrations. | `string` | n/a | yes |
 | business\_units | The set of VPCs to create with overlapping CIDRs. | <pre>map(object({<br>    cidr        = string<br>    mtu         = number<br>    workstation = bool<br>  }))</pre> | <pre>{<br>  "bu21": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": true<br>  },<br>  "bu22": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  },<br>  "bu23": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  }<br>}</pre> | no |
@@ -221,6 +191,7 @@ Use the following command to destroy all of the resources
 | Name | Description |
 |------|-------------|
 | connection\_helpers | A set of `gcloud` commands to connect to SSH, setup a forward-proxy, and to access<br>Code Server on each workstation, mapped by business unit. |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->
 
