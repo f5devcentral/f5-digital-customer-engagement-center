@@ -98,7 +98,7 @@ vi admin.auto.tfvars
 Reference each cloud for steps to validate.
 - AWS [Test your setup](aws/README.md#test-your-setup)
 - Azure [Test your setup](azure/README.md#test-your-setup)
-- Google [Test your setup](google/README.md#test-your-setup)
+- Google [Test your setup](gcp/README.md#test-your-setup)
 
 ## Cleanup
 Use the following command to destroy all of the resources
