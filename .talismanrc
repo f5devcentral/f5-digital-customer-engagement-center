@@ -258,3 +258,9 @@ fileignoreconfig:
   checksum: a6125d9a879efd830dfa1e37969e032358b806ddb71754af8df36d97847d25bc
 - filename: solutions/security/multi-cloud-connectivity-volterra/aws/main.tf
   checksum: ca79bc6dd74ca2a8dd382161201848fba9d803482c026feb10cbc66963ec8f65
+- filename: modules/azure/terraform/backend/examples/single/admin.auto.tfvars.example
+  checksum: 595400f255c50a43f580d65a55870534bf8f81417bf3c21b2aaea9402d963f49
+- filename: modules/azure/terraform/backend/examples/count/main.tf
+  checksum: 917ff6b25b7560e840b09f42320018fc7e702c53c33e0e3a2ce878eb39542bd4
+- filename: modules/azure/terraform/backend/examples/count/README.md
+  checksum: ab41d052ba71dbe9c7bd39a3d10b0b2301d7b9f6c00878692fd10df4a91765c5

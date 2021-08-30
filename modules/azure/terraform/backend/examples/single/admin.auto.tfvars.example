@@ -1,0 +1,4 @@
+projectPrefix = "demo"
+resourceOwner = "user1"
+azureLocation = "westus2"
+ssh_key       = "ssh-rsa AAABC123....."
