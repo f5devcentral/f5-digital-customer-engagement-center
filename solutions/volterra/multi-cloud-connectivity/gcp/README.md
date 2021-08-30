@@ -93,7 +93,7 @@ Enter the content of the JSON key file then click on "Blindfold". Example...
   "type": "service_account",
   "project_id": "f5-project123",
   "private_key_id": "abcxyz",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nREDACTED=\n-----END PRIVATE KEY-----\n",
+  "private_key": "-----REDACTED=\n",
   "client_email": "",
   "client_id": "123456",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
