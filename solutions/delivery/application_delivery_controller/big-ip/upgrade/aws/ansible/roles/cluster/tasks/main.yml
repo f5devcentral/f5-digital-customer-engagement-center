@@ -1,0 +1,110 @@
+# Create cluster of AWS upgrade BIG-IPs
+
+- name: Check mandatory variables imported from Terraform
+  assert:
+    that:
+      - f5vm01_mgmt_public_ip is defined
+      - f5vm01_mgmt_private_ip is defined
+      - f5vm01_mgmt_private_dns is defined
+      - f5vm02_mgmt_private_ip is defined
+      - f5vm02_mgmt_private_dns is defined
+      - username is defined
+      - generated_password is defined
+    fail_msg: "tf_* variable usually defined in '../../tf_ansible_vars_file.yml' is missing"
+
+- name: Wait a maximum of 10 minutes for BIG-IP 1 to be ready to take configuration
+  bigip_wait:
+    timeout: 600
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Configure device connectivity for BIG-IP 1
+  bigip_device_connectivity:
+    config_sync_ip: "{{f5vm01_int_private_ip}}"
+    mirror_primary_address: "{{f5vm01_int_private_ip}}"
+    unicast_failover:
+      - address: "{{f5vm01_int_private_ip}}"
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Wait a maximum of 10 minutes for BIG-IP 2 to be ready to take configuration
+  bigip_wait:
+    timeout: 600
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm02_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Configure device connectivity for BIG-IP 2
+  bigip_device_connectivity:
+    config_sync_ip: "{{f5vm02_int_private_ip}}"
+    mirror_primary_address: "{{f5vm02_int_private_ip}}"
+    unicast_failover:
+      - address: "{{f5vm02_int_private_ip}}"
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm02_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Add trusts for all peer devices to Active device
+  bigip_device_trust:
+    peer_server: "{{f5vm02_mgmt_private_ip}}"
+    peer_user: "{{username}}"
+    peer_password: "{{generated_password}}"
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Create a sync-failover device group with auto-sync enabled
+  bigip_device_group:
+    name: SyncFailover
+    auto_sync: yes
+    network_failover: yes
+    type: sync-failover
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Add the hosts in the current scope to "SyncFailover"
+  bigip_device_group_member:
+    name: "{{ item }}"
+    device_group: SyncFailover
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  loop:
+     - "{{f5vm01_mgmt_private_ip}}"
+     - "{{f5vm02_mgmt_private_ip}}"
+  run_once: true
+  delegate_to: localhost
+
+- name: Perform an initial sync of a device to a new device group
+  bigip_configsync_action:
+    device_group: SyncFailover
+    sync_device_to_group: yes
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
