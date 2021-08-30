@@ -18,5 +18,6 @@
 /modules/google/terraform/infra @memes
 /modules/google/terraform/tls @memes
 /modules/google/terraform/workstation @memes
-/modules/azure/terraform/jumphost/ @JeffGiroux
-/modules/azure/terraform/webServer/ @JeffGiroux
+/modules/azure/terraform/jumphost @JeffGiroux
+/modules/azure/terraform/webServer @JeffGiroux
+/modules/azure/terraform/backend @JeffGiroux
