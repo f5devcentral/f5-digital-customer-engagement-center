@@ -52,7 +52,6 @@ variable "volterraTenant" {
 variable "volterraCloudCredAWS" {
   description = "Name of the volterra aws credentials"
   type        = string
-  default     = null
 }
 variable "namespace" {
   description = "Volterra application namespace"
@@ -72,7 +71,7 @@ variable "domain_name" {
 The DNS domain name that will be used as common parent generated DNS name of
 loadbalancers.
 EOD
-  default = "shared.acme.com"
+  default     = "shared.acme.com"
 }
 
 variable "publicDomain" {
