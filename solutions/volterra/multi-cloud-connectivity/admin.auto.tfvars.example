@@ -3,6 +3,7 @@ projectPrefix = "my-mcn-demo"
 resourceOwner = "my-name"
 # a domain name that was delegated to volterra, uncomment and change if you want external services and have a delegated domain.
 #publicDomain = "publicsomething.f5communitydemos.com"
+domain_name = shared.acme.com
 
 # Volterra variables: these will be used to standup Volterra resources across clouds
 namespace = "my-namespace"

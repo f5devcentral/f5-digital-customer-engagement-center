@@ -49,6 +49,7 @@ variable "domain_name" {
 The DNS domain name that will be used as common parent generated DNS name of
 loadbalancers.
 EOD
+  default = "shared.acme.com"
 }
 
 variable "labels" {
