@@ -29,9 +29,9 @@ locals {
 # Create a virtual site that will identify services deployed in AWS, Azure, and
 # GCP.
 resource "volterra_virtual_site" "site" {
-  name        = format("%s-site-%s", var.projectPrefix, local.build_suffix)
+  name        = format("%s-site-%s", var.projectPrefix, random_id.build_suffix.hex)
   namespace   = var.namespace
-  description = format("Virtual site for %s-%s", var.projectPrefix, local.build_suffix)
+  description = format("Virtual site for %s-%s", var.projectPrefix, random_id.build_suffix.hex)
   labels      = local.common_labels
   annotations = {
     source      = "git::https://github.com/F5DevCentral/f5-digital-customer-engangement-center"
