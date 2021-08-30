@@ -38,6 +38,8 @@ curl <volterra-sli-IP> -H "Host: bu1app.shared.acme.com"
 
 ## Error: deleting Subnet - happens during a "terraform destroy"
 - When you destroy an cloud environment, some times the dependent cloud objects like NICs and other items need to be removed first. In this case, Volterra site is still pending deletion but the cloud is trying to delete the subnet. You will see an error similar to below.
+   - Fix = Re-run terraform again by running the destroy script that recently failed
+
 ```
 Error: deleting Subnet: (Name "external" / Virtual Network Name "demo-mcn-vnet-bu13-92e2" / Resource Group "demo-mcn-rg-bu13-92e2"): network.SubnetsClient#Delete: Failure sending request: StatusCode=0 -- Original Error: Code="InUseSubnetCannotBeDeleted" Message="Subnet external is in use by /subscriptions/xxxx/resourceGroups/demo-mcn-bu13-volterra-92e2/providers/Microsoft.Network/loadBalancers/xxxx/frontendIPConfigurations/loadbalancer-frontend-slo-ip and cannot be deleted. In order to delete the subnet, delete all the resources within the subnet. See aka.ms/deletesubnet." Details=[]
 ```
