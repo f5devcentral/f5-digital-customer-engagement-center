@@ -1,20 +1,20 @@
-resource "random_id" "buildSuffix" {
-  byte_length = 2
+variable "buildSuffix" {
+  type        = string
+  description = "random build suffix for resources"
 }
 variable "projectPrefix" {
+  type        = string
   description = "projectPrefix name for tagging"
-  default     = "fw-inter-vpc"
 }
 variable "resourceOwner" {
+  type        = string
   description = "Owner of the deployment for tagging purposes"
-  default     = "elsa"
 }
 variable "awsRegion" {
   description = "aws region"
   type        = string
-  default     = "us-east-2"
 }
-variable "sshPublicKey" {
+variable "ssh_key" {
   description = "SSH public key used to create an EC2 keypair"
   type        = string
   default     = null
@@ -48,7 +48,6 @@ variable "volterraUrl" {
 variable "volterraTenant" {
   description = "Tenant of Volterra"
   type        = string
-  default     = null
 }
 variable "volterraCloudCred" {
   description = "Name of the volterra cloud credentials"
@@ -58,13 +57,27 @@ variable "volterraCloudCred" {
 variable "namespace" {
   description = "Volterra application namespace"
   type        = string
-  default     = "default"
 }
-variable "assisted" {
-  description = "Use Assisted deployment for Volterra TGW Site"
-  default     = false
+
+variable "volterraVirtualSite" {
+  type        = string
+  description = <<EOD
+The name of the Volterra virtual site that will receive LB registrations.
+EOD
 }
-variable "volterraUniquePrefix" {
-  description = "Unique prefix to use for System resources in Volterra tenant"
-  default     = "acme"
+
+variable "domain_name" {
+  type        = string
+  description = <<EOD
+The DNS domain name that will be used as common parent generated DNS name of
+loadbalancers.
+EOD
+}
+
+variable "labels" {
+  type        = map(string)
+  default     = {}
+  description = <<EOD
+An optional list of labels to apply to AWS resources.
+EOD
 }

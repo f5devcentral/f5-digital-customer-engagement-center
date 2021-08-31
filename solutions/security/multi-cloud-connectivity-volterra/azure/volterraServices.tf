@@ -2,7 +2,7 @@
 
 resource "volterra_origin_pool" "app" {
   for_each               = local.vnets
-  name                   = format("%s-app", each.key)
+  name                   = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"
   loadbalancer_algorithm = "LB_OVERRIDE"
@@ -22,9 +22,9 @@ resource "volterra_origin_pool" "app" {
       inside_network = true
     }
 
-    labels = {
+    labels = merge(local.volterra_common_labels, {
       "bu" = each.key
-    }
+    })
   }
 }
 
@@ -32,10 +32,10 @@ resource "volterra_origin_pool" "app" {
 
 resource "volterra_http_loadbalancer" "app" {
   for_each                        = local.vnets
-  name                            = format("%s-app", each.key)
+  name                            = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace                       = var.namespace
   no_challenge                    = true
-  domains                         = [format("%sapp.shared.acme.com", each.key)]
+  domains                         = [format("%sapp.%s", each.key, var.domain_name)]
   random                          = true
   disable_rate_limit              = true
   service_policies_from_namespace = true
@@ -47,8 +47,8 @@ resource "volterra_http_loadbalancer" "app" {
       virtual_site {
         network = "SITE_NETWORK_INSIDE"
         virtual_site {
-          name      = volterra_virtual_site.vsite.name
-          namespace = volterra_virtual_site.vsite.namespace
+          name      = var.volterraVirtualSite
+          namespace = var.namespace
           tenant    = var.volterraTenant
         }
       }

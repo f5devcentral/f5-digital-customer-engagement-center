@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: arcadia-main
-          image: sorinboia/arcadia-main:unit
+          image: tonymarfil/arcadia-main:unit
           imagePullPolicy: Always
           ports:
           - containerPort: 8080
@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
         - name: arcadia-backend
-          image: sorinboia/arcadia-backend:unit
+          image: tonymarfil/arcadia-backend:unit
           imagePullPolicy: Always
           ports:
           - containerPort: 8080
@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
         - name: arcadia-app2
-          image: sorinboia/arcadia-app2:unit
+          image: tonymarfil/arcadia-app2:unit
           imagePullPolicy: Always
           ports:
           - containerPort: 8080
@@ -86,7 +86,7 @@ spec:
     spec:
       containers:
         - name: arcadia-app3
-          image: sorinboia/arcadia-app3:unit
+          image: tonymarfil/arcadia-app3:unit
           imagePullPolicy: Always
           ports:
           - containerPort: 8080

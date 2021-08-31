@@ -2,11 +2,9 @@
 variable "projectPrefix" {
   type        = string
   description = "prefix for resources"
-  default     = "demo"
 }
 variable "buildSuffix" {
   type        = string
-  default     = null
   description = "random build suffix for resources"
 }
 variable "gcpRegion" {
@@ -19,8 +17,8 @@ variable "gcpProjectId" {
 }
 
 variable "resourceOwner" {
+  type        = string
   description = "owner of the deployment, for tagging purposes"
-  default     = "f5-dcec"
 }
 
 variable "business_units" {
@@ -93,24 +91,36 @@ An optional list of labels to apply to GCP resources.
 EOD
 }
 
-variable "volterra_namespace" {
+variable "namespace" {
   type        = string
   description = <<EOD
 The Volterra namespace into which Volterra resources will be managed.
 EOD
 }
 
-variable "volterra_tenant" {
+variable "volterraTenant" {
   type        = string
   description = <<EOD
 The Volterra tenant to use.
 EOD
 }
 
-variable "volterra_ssh_key" {
+variable "ssh_key" {
   type        = string
   default     = ""
   description = <<EOD
 An optional SSH key to add to Volterra nodes.
 EOD
+}
+
+variable "volterraVirtualSite" {
+  type        = string
+  description = <<EOD
+The name of the Volterra virtual site that will receive LB registrations.
+EOD
+}
+
+variable "volterraCloudCred" {
+  description = "Name of the Volterra cloud credentials to use with GCP VPC sites"
+  type        = string
 }

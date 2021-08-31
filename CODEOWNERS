@@ -7,9 +7,6 @@
 /solutions/delivery/application_delivery_controller/nginx/kic/aws @jmcalalang
 /solutions/delivery/application_delivery_controller/big-ip/upgrade/aws @jmcalalang
 /solutions/security/multi-cloud-connectivity-volterra @yossi-r @JeffGiroux @memes
-/solutions/security/multi-cloud-connectivity-volterra/aws @yossi-r @JeffGiroux
-/solutions/security/multi-cloud-connectivity-volterra/azure @JeffGiroux
-/solutions/security/multi-cloud-connectivity-volterra/google @memes
 
 # Network module owners
 /modules/aws/terraform/network/ @yossi-r
@@ -22,5 +19,6 @@
 /modules/google/terraform/infra @memes
 /modules/google/terraform/tls @memes
 /modules/google/terraform/workstation @memes
-/modules/azure/terraform/jumphost/ @JeffGiroux
-/modules/azure/terraform/webServer/ @JeffGiroux
+/modules/azure/terraform/jumphost @JeffGiroux
+/modules/azure/terraform/webServer @JeffGiroux
+/modules/azure/terraform/backend @JeffGiroux

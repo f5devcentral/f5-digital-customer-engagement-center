@@ -1,5 +1,5 @@
 output "service_account" {
-  value       = module.sa.email
+  value       = local.service_account
   description = <<EOD
 The service account used by workstation instance.
 EOD

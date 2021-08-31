@@ -1,23 +1,34 @@
-# Description
-AWS accounts with overlapping ip addresses services connectivity
+# AWS multi-cloud Volterra module
+
+This module will create a set of Volterra AWS VPC Sites with ingress/egress gateways
+configured and a virtual site that spans the CE sites.
 
 ## Diagram
 
-![Multi cloud accounts with overlapping ip addresses services connectivity](multi-cloud-connectivity.png)
+![aws-multi-cloud-volterra-hla.png](../images/aws-multi-cloud-volterra-hla.png)
+<!-- markdownlint-disable no-inline-html -->
+<p align="center">Figure 1: High-level overview of solution; this module delivers the AWS resources</p>
+<!-- markdownlint-enable no-inline-html -->
 
+HTTP load balancers are created for each business unit service, and are advertised
+on every CE site that match the selector predicate for the Virtual Site. This means
+that existing resources can use DNS discovery via the Volterra gateways without
+changing the deployment.
+
+> See [Scenario](../SCENARIO.md) document for details on why this solution was chosen
+> for a hypothetical customer looking for a minimally invasive solution
+> to multi-cloud networking.
 
 ## Requirements
 
+- AWS CLI
+- Terraform
 - AWS account, access and secret key
-- Volterra account, p12 credential file and api passowrd -  https://www.volterra.io/docs/how-to/user-mgmt/credentials
-- terraform
-## Usage example
+- Volterra account
+- Volterra p12 credential file and api password -  https://www.volterra.io/docs/how-to/user-mgmt/credentials
+- Volterra Cloud Credentials
 
-- Clone the repo and open the solution's directory
-```bash
-git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
-cd f5-digital-customer-engagement-center/solutions/security/multi-cloud-connectivity-volterra/aws
-```
+## Login to AWS Environment
 
 - Set AWS environment variables
 ```bash
@@ -25,64 +36,81 @@ export AWS_ACCESS_KEY_ID="your_key"
 export AWS_SECRET_ACCESS_KEY="your_secret_key"
 ```
 
-- Set Volterra environment variables
-Create a volterra credentials p12 file and copy it to a local folder. follow steps here - https://www.volterra.io/docs/how-to/user-mgmt/credentials
-```bash
-export VES_P12_PASSWORD="your_key"
-export VOLT_API_URL="https://<tenant-name>.console.ves.volterra.io/api"
-export VOLT_API_P12_FILE="/var/tmp/<example>.console.ves.volterra.io.api-creds.p12"
-```
+## Create Volterra Cloud Credentials for AWS
 
-Get the Volterra tenant name:
-General namespace in the UI, then Tenant Settings > Tenant overview
+In VoltConsole go to the "System" namespace and navigate to "Manage" -> "Site Management" -> "Cloud Credentials".
 
-Create volterra cloud credentials using your AWS access and secret key
+Click on "Add Cloud Credential"
 
-create the vars file and update it with your settings
+For the name enter "[unique-name]-aws".
 
-```bash
-cp admin.auto.tfvars.example admin.auto.tfvars
-# MODIFY TO YOUR SETTINGS
-vi admin.auto.tfvars
-```
+For the Cloud Credential Type: "AWS Programmatic Access Credentials" and enter the values from your AWS access key and secret access key
 
-run the setup script to deploy all of the components into your AWS account (remember that you are responsible for the cost of those components)
+- Access Key ID: This is your IAM user access key (reference AWS_ACCESS_KEY_ID)
+- Secret Access Key: This is your IAM user secret access key (reference AWS_SECRET_ACCESS_KEY)
 
-```bash
-./setup.sh
-```
+Under Secret Access Key click on "Configure"
 
+Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click on "Blindfold"
+
+## Usage example
+
+See parent [README Usage Example](../README.md#usage-example), then come back here to test.
 
 ## TEST your setup:
 
-view the created objects in voltConsole
+1. Connect to the bu1Jumphost via SSH with port forwarding enabled.
 
-ssh to the bu1Jumphost (ip in the terraform output), from there try to access the apps in the other bu's:
-
+The IP is in the terraform output. Example SSH command is below. Run this from your laptop terminal. You will use these settings later in your laptop web browser to configure SOCKS v5 proxy.
 
 ```bash
-curl acmeapp.shared.acme.com
-curl bu2app.shared.acme.com
+# run this from your laptop/pc
+ssh -D 3128 ubuntu@x.x.x.x
+# port = 3128
+# user = ubuntu
+# IP = x.x.x.x
 ```
 
-you should get a default nginx page from the webserver in the other BU's.
-open voltConsole, go to the 'HTTP load balancer' tab
-click on acmeapp and open the 'requests' tab
-you should see your request. click on the request and notice it shows the original clientIp and the source site.
+2. From the jumphost CLI, test curl commands to each BU site.
 
-![Request log](request_log.png)
+```bash
+# run this from the jumphost terminal
+curl bu1app.shared.acme.com
+curl bu2app.shared.acme.com
+curl bu3app.shared.acme.com
+```
+
+3. On your laptop/PC, configure your browser to use 127.0.0.1:3128 as SOCKS v5 proxy and also enable the box "Proxy DNS when using SOCKS v5".
+
+![Proxy Settings](images/proxy-socks.png)
+
+4. Browse to the BU sites. AWS will resolve with a basic NGINX page.
+
+![BU1 app](images/bu1app.png)
+
+5. Open VoltConsole, go to the 'HTTP Load Balancers' tab
+
+![HTTP LB](images/httplb-tab.png)
+
+6. Click on bu1app and open the 'Requests' tab. You should see your request.
+
+![HTTP LB Requests](images/httplb-requests.png)
+
+7. Click on the request and notice it shows the original clientIp and the source site.
+
+![Request log](images/httplb-client-ip.png)
 
 ## Cleanup
-use the following command to destroy all of the resources
+Use the following command to destroy all of the resources
 
 ```bash
 ./destroy.sh
 ```
-
 
 ## How to Contribute
 
 Submit a pull request
 
 # Authors
-Yossi rosenboim
+- Yossi Rosenboim
+- Jeff Giroux
