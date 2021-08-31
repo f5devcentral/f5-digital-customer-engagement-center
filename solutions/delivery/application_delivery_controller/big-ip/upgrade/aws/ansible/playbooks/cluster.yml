@@ -1,0 +1,7 @@
+---
+-
+  hosts: localhost
+  roles:
+    - cluster
+  vars_files:
+    - ../../tf_ansible_vars_file.yml

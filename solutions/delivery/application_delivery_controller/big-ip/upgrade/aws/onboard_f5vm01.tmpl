@@ -1,0 +1,100 @@
+#!/bin/bash
+
+# Script must be non-blocking or run in the background.
+
+mkdir -p /config/cloud
+
+cat << 'EOF' > /config/cloud/startup-script.sh
+
+#!/bin/bash
+
+## 3NIC BIG-IP ONBOARD SCRIPT
+
+## IF THIS SCRIPT IS LAUNCHED EARLY IN BOOT (ex. when from cloud-init), YOU NEED TO RUN IT IN THE BACKGROUND TO NOT BLOCK OTHER STARTUP FUNCTIONS
+# ex. location of interpolated cloud-init script
+#/opt/cloud/instances/i-079ac8a174eb1727a/scripts/part-001
+
+LOG_FILE=/var/log/startup-script.log
+if [ ! -e $LOG_FILE ]
+then
+     touch $LOG_FILE
+     exec &>>$LOG_FILE
+     # nohup $0 0<&- &>/dev/null &
+else
+    #if file exists, exit as only want to run once
+    exit
+fi
+
+
+
+### DOWNLOAD ONBOARDING LIBS
+# Could be pre-packaged or hosted internally
+
+libs_dir="/config/cloud/aws/node_modules"
+mkdir -p $libs_dir
+curl -o /config/cloud/f5-cloud-libs.tar.gz --silent --fail --retry 60 -L https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v3.1.1/dist/f5-cloud-libs.tar.gz
+curl -o /config/cloud/f5-cloud-libs-aws.tar.gz --silent --fail --retry 60 -L https://raw.githubusercontent.com/F5Networks/f5-cloud-libs-aws/v1.3.0/dist/f5-cloud-libs-aws.tar.gz
+tar xvfz /config/cloud/f5-cloud-libs.tar.gz -C $libs_dir
+tar xvfz /config/cloud/f5-cloud-libs-aws.tar.gz -C $libs_dir/f5-cloud-libs/node_modules
+
+
+### BEGIN BASIC ONBOARDING
+
+# WAIT FOR MCPD (DATABASE) TO BE UP TO BEGIN F5 CONFIG
+
+. $libs_dir/f5-cloud-libs/scripts/util.sh
+wait_for_bigip
+
+
+############ BEGIN CUSTOM CONFIG ############
+
+
+# DOWNLOAD SCRIPT FILES
+curl --silent --fail --retry 20 -o /config/cloud/f5.http.v1.2.0.tmpl https://raw.githubusercontent.com/f5devcentral/f5-cloud-init-examples/master/files/iApp/f5.http.v1.2.0.tmpl
+curl --silent --fail --retry 20 -o /config/cloud/appsvcs_integration_v2.1_001.tmpl https://raw.githubusercontent.com/f5devcentral/f5-cloud-init-examples/master/files/iApp/appsvcs_integration_v2.1_001.tmpl
+curl --silent --fail --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://raw.githubusercontent.com/f5devcentral/f5-cloud-init-examples/master/files/iApp/f5.service_discovery.tmpl
+curl --silent --fail --retry 20 -o /config/cloud/f5.analytics.tmpl https://raw.githubusercontent.com/f5devcentral/f5-cloud-init-examples/master/files/iApp/f5.analytics.tmpl
+curl --silent --fail --retry 20 -o /config/cloud/f5.aws_advanced_ha.v1.4.0rc5.tmpl https://raw.githubusercontent.com/F5Networks/f5-aws-cloudformation/main/iApps/f5.aws_advanced_ha.v1.4.0rc5.tmpl
+
+
+# Load iApps
+tmsh load sys application template /config/cloud/f5.http.v1.2.0.tmpl
+tmsh load sys application template /config/cloud/appsvcs_integration_v2.1_001.tmpl
+tmsh load sys application template /config/cloud/f5.service_discovery.tmpl
+tmsh load sys application template /config/cloud/f5.analytics.tmpl
+tmsh load sys application template /config/cloud/f5.aws_advanced_ha.v1.4.0rc5.tmpl
+
+# Advanced Config
+wait_for_bigip
+
+# Create Credential
+tmsh create auth user ${f5_username} password ${f5_password} shell bash partition-access replace-all-with { all-partitions { role admin } }
+
+# Global settings
+HOSTNAME=`curl -s -f --retry 20 http://169.254.169.254/latest/meta-data/hostname`
+tmsh mv cm device bigip1 ${f5vm01_mgmt_private_ip}
+tmsh modify sys global-settings gui-setup disabled
+tmsh modify sys ntp servers add { 0.pool.ntp.org 1.pool.ntp.org }
+tmsh modify sys global-settings aws-access-key ${AWSAccessKey}
+tmsh modify sys global-settings aws-secret-key ${AWSSecretKey}
+
+# Local Network Settings
+tmsh create net vlan external interfaces add { 1.1 }
+tmsh create net self ${f5vm01_ext_private_ip} address ${f5vm01_ext_private_ip}/24 vlan external
+tmsh create net vlan internal interfaces add { 1.2 }
+tmsh create net self ${f5vm01_int_private_ip} address ${f5vm01_int_private_ip}/24 vlan internal
+tmsh modify net self ${f5vm01_int_private_ip} allow-service default
+
+############ END CUSTOM CONFIG ############
+
+tmsh save /sys config
+date
+echo "FINISHED STARTUP SCRIPT"
+
+
+EOF
+
+
+# Now run in the background to not block startup
+chmod 755 /config/cloud/startup-script.sh
+nohup /config/cloud/startup-script.sh &

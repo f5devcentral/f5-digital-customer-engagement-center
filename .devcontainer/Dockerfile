@@ -41,8 +41,8 @@ RUN set -ex \
     dnsutils \
     python3-pip \
     && ln -s /usr/bin/python3 /usr/bin/python \
-    && python3 -m pip install --no-cache-dir --upgrade pip \
-    && ln -s /usr/bin/pip3 /usr/bin/pip
+    && python3 -m pip install --no-cache-dir --upgrade pip
+#    && ln -s /usr/bin/pip3 /usr/bin/pip
 
 # dev
 RUN set -ex \
