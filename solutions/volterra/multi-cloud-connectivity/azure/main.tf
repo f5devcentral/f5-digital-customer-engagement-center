@@ -3,6 +3,9 @@ provider "azurerm" {
   features {}
 }
 
+provider "volterra" {
+  timeout = "90s"
+}
 ############################ Locals for Vnets ############################
 
 locals {

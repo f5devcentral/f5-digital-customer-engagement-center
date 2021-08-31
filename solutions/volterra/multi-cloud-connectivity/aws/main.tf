@@ -1,8 +1,11 @@
-###########################provider##########################
+###########################providers##########################
 provider "aws" {
   region = var.awsRegion
 }
 
+provider "volterra" {
+  timeout = "90s"
+}
 ############################ Locals ############################
 
 data "aws_availability_zones" "available" {
@@ -14,6 +17,10 @@ locals {
   awsAz2 = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
   awsAz3 = var.awsAz3 != null ? var.awsAz1 : data.aws_availability_zones.available.names[2]
   volterra_common_labels = merge(var.labels, {
+    demo   = "multi-cloud-connectivity-volterra"
+    owner  = var.resourceOwner
+    prefix = var.projectPrefix
+    suffix = var.buildSuffix
     platform = "aws"
   })
   volterra_common_annotations = {
