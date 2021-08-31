@@ -47,3 +47,7 @@ Error: deleting Subnet: (Name "external" / Virtual Network Name "demo-mcn-vnet-b
 ## Error when reading or editing Subnetwork: googleapi
 - When you destroy an cloud environment, some times the dependent cloud objects like NICs and other items need to be removed first. In this case, Volterra site is still pending deletion but the cloud is trying to delete the subnet. You will see an error similar to below.
    - Fix = Re-run terraform again by running the destroy script that recently failed
+
+## Error: Error waiting for Deleting Network: The network resource 'projects/xxx/xxx
+- When you destroy an cloud environment, some times the dependent cloud objects like NICs and other items need to be removed first. In this case, Volterra site is still pending deletion but the cloud is trying to delete the subnet. You will see an error similar to below.
+   - Fix = Re-run terraform again by running the destroy script that recently failed
