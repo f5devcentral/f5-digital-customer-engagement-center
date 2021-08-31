@@ -154,7 +154,7 @@ Use the following command to destroy all of the resources
 |------|---------|
 | terraform | >= 0.14.5 |
 | google | >= 3.77 |
-| volterra | 0.8.1 |
+| volterra | 0.10 |
 
 ## Providers
 
@@ -163,14 +163,13 @@ Use the following command to destroy all of the resources
 | external | n/a |
 | google | >= 3.77 |
 | random | n/a |
-| volterra | 0.8.1 |
+| volterra | 0.10 |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | buildSuffix | random build suffix for resources | `string` | n/a | yes |
-| domain\_name | The DNS domain name that will be used as common parent generated DNS name of<br>loadbalancers. | `string` | n/a | yes |
 | gcpProjectId | gcp project id | `string` | n/a | yes |
 | gcpRegion | region where gke is deployed | `string` | n/a | yes |
 | namespace | The Volterra namespace into which Volterra resources will be managed. | `string` | n/a | yes |
@@ -180,6 +179,7 @@ Use the following command to destroy all of the resources
 | volterraTenant | The Volterra tenant to use. | `string` | n/a | yes |
 | volterraVirtualSite | The name of the Volterra virtual site that will receive LB registrations. | `string` | n/a | yes |
 | business\_units | The set of VPCs to create with overlapping CIDRs. | <pre>map(object({<br>    cidr        = string<br>    mtu         = number<br>    workstation = bool<br>  }))</pre> | <pre>{<br>  "bu21": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": true<br>  },<br>  "bu22": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  },<br>  "bu23": {<br>    "cidr": "10.1.0.0/16",<br>    "mtu": 1460,<br>    "workstation": false<br>  }<br>}</pre> | no |
+| domain\_name | The DNS domain name that will be used as common parent generated DNS name of<br>loadbalancers. | `string` | `"shared.acme.com"` | no |
 | labels | An optional list of labels to apply to GCP resources. | `map(string)` | `{}` | no |
 | num\_servers | The number of webserver instances to launch in each business unit spoke. Default<br>is 2. | `number` | `2` | no |
 | num\_volterra\_nodes | The number of Volterra gateway instances to launch in each business unit spoke.<br>Default is 1. | `number` | `1` | no |

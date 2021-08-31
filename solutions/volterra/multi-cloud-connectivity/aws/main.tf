@@ -17,10 +17,10 @@ locals {
   awsAz2 = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
   awsAz3 = var.awsAz3 != null ? var.awsAz1 : data.aws_availability_zones.available.names[2]
   volterra_common_labels = merge(var.labels, {
-    demo   = "multi-cloud-connectivity-volterra"
-    owner  = var.resourceOwner
-    prefix = var.projectPrefix
-    suffix = var.buildSuffix
+    demo     = "multi-cloud-connectivity-volterra"
+    owner    = var.resourceOwner
+    prefix   = var.projectPrefix
+    suffix   = var.buildSuffix
     platform = "aws"
   })
   volterra_common_annotations = {
@@ -34,22 +34,22 @@ locals {
 locals {
   business_units = {
     bu1 = {
-      cidr           = "10.1.0.0/16"
-      azs            = [local.awsAz1, local.awsAz2]
-      public_subnets = ["10.1.10.0/24", "10.1.110.0/24"]
-      intra_subnets  = ["10.1.52.0/24", "10.1.152.0/24"]
+      cidr            = "10.1.0.0/16"
+      azs             = [local.awsAz1, local.awsAz2]
+      public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
+      private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
     }
     bu2 = {
-      cidr           = "10.1.0.0/16"
-      azs            = [local.awsAz1, local.awsAz2]
-      public_subnets = ["10.1.10.0/24", "10.1.110.0/24"]
-      intra_subnets  = ["10.1.52.0/24", "10.1.152.0/24"]
+      cidr            = "10.1.0.0/16"
+      azs             = [local.awsAz1, local.awsAz2]
+      public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
+      private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
     }
     bu3 = {
-      cidr           = "10.1.0.0/16"
-      azs            = [local.awsAz1, local.awsAz2]
-      public_subnets = ["10.1.10.0/24", "10.1.110.0/24"]
-      intra_subnets  = ["10.1.52.0/24", "10.1.152.0/24"]
+      cidr            = "10.1.0.0/16"
+      azs             = [local.awsAz1, local.awsAz2]
+      public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
+      private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
     }
   }
 }
@@ -65,8 +65,10 @@ module "vpc" {
   cidr                 = each.value["cidr"]
   azs                  = each.value["azs"]
   public_subnets       = each.value["public_subnets"]
-  intra_subnets        = each.value["intra_subnets"]
+  private_subnets      = each.value["private_subnets"]
   enable_dns_hostnames = true
+  enable_nat_gateway   = true
+  single_nat_gateway   = true
   tags = {
     Name      = format("%s-vpc-%s-%s", var.resourceOwner, each.key, var.buildSuffix)
     Terraform = "true"
@@ -145,6 +147,20 @@ locals {
       subnetId = module.vpc["bu3"].public_subnets[0]
     }
   }
+  externalWebservers = {
+    bu1 = {
+      vpcId    = module.vpc["bu1"].vpc_id
+      subnetId = module.vpc["bu1"].public_subnets[0]
+    }
+    bu2 = {
+      vpcId    = module.vpc["bu2"].vpc_id
+      subnetId = module.vpc["bu2"].public_subnets[0]
+    }
+    bu3 = {
+      vpcId    = module.vpc["bu3"].vpc_id
+      subnetId = module.vpc["bu3"].public_subnets[0]
+    }
+  }
 }
 
 # Jumphost Security Group
@@ -210,6 +226,7 @@ resource "aws_security_group" "webserver" {
     Terraform = "true"
   }
 }
+
 
 ############################ Compute ############################
 

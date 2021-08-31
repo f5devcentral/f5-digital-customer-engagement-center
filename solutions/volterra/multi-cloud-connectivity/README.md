@@ -124,14 +124,14 @@ Use the following command to destroy all of the resources
 | Name | Version |
 |------|---------|
 | terraform | >= 0.14.5 |
-| volterra | 0.8.1 |
+| volterra | 0.10 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | random | n/a |
-| volterra | 0.8.1 |
+| volterra | 0.10 |
 
 ## Inputs
 

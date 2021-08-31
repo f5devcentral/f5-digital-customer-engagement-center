@@ -1,5 +1,5 @@
 # Description
-AWS transit gateway volterra sites 
+AWS transit gateway volterra sites
 
 ## Diagram
 

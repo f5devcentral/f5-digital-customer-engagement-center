@@ -1,0 +1,121 @@
+## template: jinja
+#cloud-config
+# yamllint disable rule:document-start rule:line-length
+write_files:
+  - path: /var/lib/webapp/html/index.html
+    permissions: '0644'
+    owner: root
+    content: |
+      <!DOCTYPE html>
+      <html lang="en">
+          <head>
+              <title>Success</title>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <link rel="stylesheet" href="//unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+              <link rel="stylesheet" href="//unpkg.com/purecss@2.0.6/build/grids-responsive-min.css" crossorigin="anonymous">
+              <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" crossorigin="anonymous">
+              <link rel="stylesheet" href="/styles.css">
+          </head>
+          <body>
+              <div class="splash-container">
+                  <div class="splash">
+                      <h1 class="splash-head">F5 on {{ v1.cloud_name | upper }}</h1>
+                      <p class="splash-subhead">
+                          You know it makes sense!
+                      </p>
+                  </div>
+              </div>
+              <div class="content-wrapper">
+                  <div class="ribbon l-box-lrg pure-g">
+                      <div class="l-box-lrg is-center pure-u-1 pure-u-md-1-2 pure-u-lg-2-5">
+                          <img src="/f5-logo-rgb.svg" alt="F5 logo" class="f5-logo">
+                      </div>
+                      <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-3-5">
+                          <h2 class="content-head content-head-ribbon">Server details</h2>
+                          <table class="pure-table">
+                              <thead>
+                                  <tr>
+                                      <th>Field</th>
+                                      <th>Value</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr>
+                                      <td>Hostname</td>
+                                      <td>{{ v1.local_hostname }}</td>
+                                  </tr>
+                                  <tr>
+                                      <td>Zone</td>
+                                      <td>{{ v1.availability_zone }}</td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+                  <div class="footer l-box is-center">
+                      Modified from <a href="https://purecss.io/">Pure CSS</a> Landing Page sample.
+                  </div>
+              </div>
+          </body>
+      </html>
+  - path: /var/lib/webapp/html/styles.css
+    permissions: '0644'
+    owner: root
+    encoding: gz+b64
+    content: |
+      ${styles_css}
+  - path: /var/lib/webapp/html/f5-logo-rgb.svg
+    permissions: '0644'
+    owner: root
+    encoding: gz+b64
+    content: |
+      ${f5_logo_rgb_svg}
+  - path: /var/lib/webapp/conf.d/default.conf
+    permissions: '0644'
+    owner: root
+    content: |
+      server {
+        listen 80 default_server;
+        server_name _;
+        location / {
+          root /usr/share/nginx/html;
+          index index.html;
+        }
+        location /bu1app {
+        proxy_pass http://bu1app.shred.acme.com/;
+        }
+        location /bu2app {
+        proxy_pass http://bu2app.shred.acme.com/;
+        }
+        location /bu3app {
+        proxy_pass http://bu3app.shred.acme.com/;
+        }
+        location /bu11app {
+        proxy_pass http://bu11app.shred.acme.com/;
+        }
+        location /bu12app {
+        proxy_pass http://bu12app.shred.acme.com/;
+        }
+        location /bu13app {
+        proxy_pass http://bu13app.shred.acme.com/;
+        }
+        location /bu21app {
+        proxy_pass http://bu21app.shred.acme.com/;
+        }
+        location /bu22app {
+        proxy_pass http://bu22app.shred.acme.com/;
+        }
+        location /bu23app {
+        proxy_pass http://bu23app.shred.acme.com/;
+        }
+      }
+
+runcmd:
+  - apt-get update
+  - apt-get install -y software-properties-common
+  - apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+  - curl -fsSL https://get.docker.com -o get-docker.sh
+  - sh get-docker.sh
+  - while ! docker --version; do echo trying again&sleep 1; done
+  - docker run -d --restart always --rm --name webapp -p 80:80 -v /var/lib/webapp/html:/usr/share/nginx/html:ro -v /var/lib/webapp/conf.d:/etc/nginx/conf.d:ro nginx:alpine

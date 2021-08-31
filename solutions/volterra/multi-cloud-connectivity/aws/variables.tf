@@ -88,3 +88,19 @@ variable "labels" {
 An optional list of labels to apply to AWS resources.
 EOD
 }
+
+variable "externalWebserverBu1" {
+  description = "Controls the deployment of an external webserver group"
+  type = object(
+    {
+      deploy            = bool
+      associatePublicIp = bool
+      desiredCapacity   = number
+    }
+  )
+  default = {
+    deploy            = true
+    associatePublicIp = false
+    desiredCapacity   = 1
+  }
+}

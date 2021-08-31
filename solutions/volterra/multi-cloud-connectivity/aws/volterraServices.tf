@@ -71,33 +71,3 @@ resource "volterra_http_loadbalancer" "app" {
     dns_volterra_managed = false
   }
 }
-
-############################ Volterra HTTPS External LB ############################
-
-resource "volterra_http_loadbalancer" "external-app" {
-  count                           = var.publicDomain != "" ? 1 : 0
-  name                            = format("%s-%s-external-app-%s", var.projectPrefix, "bu1", var.buildSuffix)
-  namespace                       = var.namespace
-  no_challenge                    = true
-  domains                         = [format("external-app.%s", var.publicDomain)]
-  random                          = true
-  disable_rate_limit              = true
-  service_policies_from_namespace = true
-  advertise_on_public_default_vip = true
-  waf {
-    tenant    = var.volterraTenant
-    namespace = var.namespace
-    name      = volterra_waf.waf.name
-  }
-  https_auto_cert {
-    http_redirect = true
-    add_hsts      = false
-    no_mtls       = true
-  }
-
-  default_route_pools {
-    pool {
-      name = volterra_origin_pool.app["bu1"].name
-    }
-  }
-}

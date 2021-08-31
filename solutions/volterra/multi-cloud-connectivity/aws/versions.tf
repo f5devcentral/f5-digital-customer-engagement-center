@@ -10,4 +10,3 @@ terraform {
     aws = ">= 3"
   }
 }
-

@@ -19,10 +19,10 @@ locals {
   gcp_common_labels = merge(var.labels, {})
   volterra_common_labels = merge(var.labels, {
     platform = "gcp"
-    demo   = "multi-cloud-connectivity-volterra"
-    owner  = var.resourceOwner
-    prefix = var.projectPrefix
-    suffix = var.buildSuffix
+    demo     = "multi-cloud-connectivity-volterra"
+    owner    = var.resourceOwner
+    prefix   = var.projectPrefix
+    suffix   = var.buildSuffix
   })
   volterra_common_annotations = {
     source      = "git::https://github.com/F5DevCentral/f5-digital-customer-engangement-center"
