@@ -3,7 +3,7 @@ projectPrefix = "my-mcn-demo"
 resourceOwner = "my-name"
 # a domain name that was delegated to volterra, uncomment and change if you want external services and have a delegated domain.
 #publicDomain = "publicsomething.f5communitydemos.com"
-domain_name = shared.acme.com
+domain_name = "shared.acme.com"
 
 # Volterra variables: these will be used to standup Volterra resources across clouds
 namespace = "my-namespace"
@@ -13,15 +13,15 @@ volterraTenant = "my-volterra-tenant-id"
 # and may be used by AWS/Azure/GCP where an SSH key can be specified
 ssh_key = "ssh-rsa REDACTED me@my.email"
 
-# AWS variables: if these are not null/empty, AWS VPC sites will be created for demo
+# AWS variables
 awsRegion            = "us-west-2"
-#volterraCloudCredAWS = "cloud-cred-aws"
+volterraCloudCredAWS = "cloud-cred-aws"
 
-# Azure variables: if these are not null/empty, Azure VNET sites will be created for demo
+# Azure variables
 azureLocation        = "westus2"
-#volterraCloudCredAzure = "cloud-cred-azure"
+volterraCloudCredAzure = "cloud-cred-azure"
 
-# GCP variables: if these are not null/empty, GCP VPC sites will be created for demo
+# GCP variables
 gcpRegion = "us-west1"
 gcpProjectId = "my-gcp-project-id"
-#volterraCloudCredGCP = "cloud-cred-gcp"
+volterraCloudCredGCP = "cloud-cred-gcp"
