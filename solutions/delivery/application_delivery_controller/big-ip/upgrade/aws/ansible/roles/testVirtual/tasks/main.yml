@@ -1,0 +1,119 @@
+# Create cluster of AWS upgrade BIG-IPs
+
+- name: Check mandatory variables imported from Terraform
+  assert:
+    that:
+      - f5vm01_mgmt_public_ip is defined
+      - username is defined
+      - generated_password is defined
+      - f5vm01_ext_secondary_ip is defined
+      - public_vip_pip is defined
+    fail_msg: "tf_* variable usually defined in '../../tf_ansible_vars_file.yml' is missing"
+
+- name: Wait a maximum of 10 minutes for BIG-IP 1 to be ready to take configuration
+  bigip_wait:
+    timeout: 600
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Add the iRule contained in template irule.tcl to the LTM module
+  bigip_irule:
+    content: "{{ lookup('file', '../files/testingiRule.tcl') }}"
+    module: ltm
+    name: testingiRule
+    state: present
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Create pool
+  bigip_pool:
+    state: present
+    name: my-pool
+    partition: Common
+    lb_method: least-connections-member
+    slow_ramp_time: 120
+    monitors:
+      - https_443
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Add pool members aggregate
+  bigip_pool_member:
+    pool: my-pool
+    aggregate:
+      - fqdn: www.f5.com
+        partition: Common
+        port: 443
+        description: f5 website
+      - fqdn: www.nginx.com
+        partition: Common
+        port: 443
+        description: nginx website
+      - fqdn: www.volterra.io
+        partition: Common
+        port: 443
+        description: volterra website
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Add testing virtual server "{{ f5vm01_ext_secondary_ip }}"
+  bigip_virtual_server:
+    state: present
+    partition: Common
+    name: my-virtual-server-80
+    destination: "{{ f5vm01_ext_secondary_ip }}"
+    port: "80"
+    description: Test 80 Virtual Server
+    profiles:
+      - http
+    enabled_vlans:
+      - /Common/external
+    irules:
+      - /Common/_sys_https_redirect
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
+- name: Add 443 testing virtual server "{{ f5vm01_ext_secondary_ip }}"
+  bigip_virtual_server:
+    state: present
+    partition: Common
+    name: my-virtual-server-443
+    destination: "{{ f5vm01_ext_secondary_ip }}"
+    port: "443"
+    pool: my-pool
+    snat: Automap
+    description: Test 443 Virtual Server
+    profiles:
+      - http
+      - name: clientssl
+        context: client-side
+    enabled_vlans:
+      - /Common/external
+    irules:
+      - testingiRule
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost

@@ -252,6 +252,20 @@ fileignoreconfig:
   checksum: 424197d80aa3923d0c1f6e97b504583d9eb75105e029f12a97e68653f2fe27ac
 - filename: solutions/security/multi-cloud-connectivity-volterra/google/README.md
   checksum: 274459853a09a95b3a3e1987e14b9fd25b7ba3da3ed4fb85bc88697433ba8c8b
+- filename: solutions/delivery/application_delivery_controller/big-ip/upgrade/aws/bigip.tf
+  checksum: 2009c9007f45c9cbe84645756cab2f50f8eafc60f738c8e3e0d0e6e5f7f56c3c
+- filename: solutions/delivery/application_delivery_controller/big-ip/upgrade/aws/main.tf
+  checksum: a736a539557051dbc02bb2945bdc2409921fc5aac6a0c0bd977f2f5f76d945cd
+- filename: solutions/delivery/application_delivery_controller/big-ip/upgrade/aws/outputs.tf
+  checksum: 07ce294f1ed550618f08101d74dd553c2b312cc96d26005a006c644d300acb90
+- filename: solutions/delivery/application_delivery_controller/big-ip/upgrade/aws/ansible/roles/cluster/tasks/main.yml
+  checksum: b406302ceda914826ea61173061f26012fe504c1721e8c0a8032c69d588a06ca
+- filename: solutions/delivery/application_delivery_controller/big-ip/upgrade/aws/admin.auto.tfvars.example
+  checksum: 6da520de660b9853fa16ffa46575a57298d497a87f0cd793ef76ecbeed754e4a
+- filename: docs/solutions/delivery/application_delivery_controller/bigip/upgrade/aws/labSetupAWS.rst
+  checksum: 918090e90430009de096f85b1b445795ed9f31d3794c08f833492c65a8ebc2e2
+- filename: solutions/delivery/application_delivery_controller/big-ip/upgrade/aws/ansible/roles/testVirtual/tasks/main.yml
+  checksum: dac9503719916c02ee4460c987524924a41a404c878b4ec9bb4b1af6edc484a6
 - filename: solutions/security/multi-cloud-connectivity-volterra/admin.auto.tfvars.example
   checksum: d51c8a495a25e87c7e01f6fa8ac2a4a7f9e2af474cb0ba8479f90b50191461ad
 - filename: solutions/security/multi-cloud-connectivity-volterra/aws/volterraSites.tf
