@@ -2,8 +2,9 @@
 
 locals {
   user_data = coalesce(var.user_data, templatefile("${path.module}/templates/cloud-config.yml", {
-    f5_logo_rgb_svg = base64gzip(file("${path.module}/files/f5-logo-rgb.svg"))
-    styles_css      = base64gzip(file("${path.module}/files/styles.css"))
+    index_html      = replace(file("${path.module}/../../../common/files/backend/index.html"), "/[\\n\\r]/", "")
+    f5_logo_rgb_svg = base64gzip(file("${path.module}/../../../common/files/backend/f5-logo-rgb.svg"))
+    styles_css      = base64gzip(file("${path.module}/../../../common/files/backend/styles.css"))
   }))
 }
 
