@@ -23,7 +23,7 @@ variable "ssh_key" {
 }
 variable "num_servers" {
   type        = number
-  default     = 2
+  default     = 1
   description = "number of instances to launch"
 }
 
