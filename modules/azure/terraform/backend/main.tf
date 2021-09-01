@@ -11,7 +11,6 @@ locals {
     index_html      = replace(file("${path.module}/../../../common/files/backend/index.html"), "/[\\n\\r]/", "")
     f5_logo_rgb_svg = base64gzip(file("${path.module}/../../../common/files/backend/f5-logo-rgb.svg"))
     styles_css      = base64gzip(file("${path.module}/../../../common/files/backend/styles.css"))
-    zone            = local.zone
   }))
   name = coalesce(var.name, format("%s-backend-%s", var.projectPrefix, var.buildSuffix))
   zone = coalesce(var.zone, random_shuffle.zones.result[0])
