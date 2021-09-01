@@ -286,3 +286,5 @@ fileignoreconfig:
   checksum: 917ff6b25b7560e840b09f42320018fc7e702c53c33e0e3a2ce878eb39542bd4
 - filename: modules/azure/terraform/backend/examples/count/README.md
   checksum: ab41d052ba71dbe9c7bd39a3d10b0b2301d7b9f6c00878692fd10df4a91765c5
+- filename: modules/common/files/backend/index.html
+  checksum: 83ad641622aa22dac2192da93cfde6160c9ec5245a940e98a524b6c6ef11fd1c

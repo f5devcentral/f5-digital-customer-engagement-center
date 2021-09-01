@@ -23,3 +23,4 @@
 /modules/azure/terraform/jumphost @JeffGiroux
 /modules/azure/terraform/webServer @JeffGiroux
 /modules/azure/terraform/backend @JeffGiroux
+/modules/common/files/backend @yossi-r @JeffGiroux @memes
