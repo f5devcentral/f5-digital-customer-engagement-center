@@ -38,8 +38,16 @@
                                 <td>{{ v1.local_hostname }}</td>
                             </tr>
                             <tr>
+                                <td>Region</td>
+                                <td>{{ v1.region }}</td>
+                            </tr>
+                            <tr>
                                 <td>Zone</td>
                                 <td>{{ v1.availability_zone }}</td>
+                            </tr>
+                            <tr>
+                                <td>Distro</td>
+                                <td>{{ v1.distro }} {{ v1.distro_version }}</td>
                             </tr>
                         </tbody>
                     </table>
