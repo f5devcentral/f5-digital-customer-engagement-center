@@ -17,7 +17,7 @@ resource "volterra_origin_pool" "app" {
         site_locator {
           site {
             tenant    = var.volterraTenant
-            namespace = var.namespace
+            namespace = "system"
             name      = volterra_azure_vnet_site.bu[each.key].name
           }
         }
