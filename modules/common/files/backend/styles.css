@@ -24,6 +24,11 @@ label {
     color: #34495e;
 }
 
+.pure-img-responsive {
+    max-width: 50%;
+    height: auto;
+}
+
 /*
  * -- LAYOUT STYLES --
  * These are some useful classes which I will need
@@ -95,7 +100,7 @@ label {
 .content-wrapper {
     /* These styles are required for the "scroll-over" effect */
     position: absolute;
-    top: 87%;
+    top: 75%;
     width: 100%;
     min-height: 12%;
     z-index: 2;
@@ -173,13 +178,6 @@ label {
     }
 }
 
-/* Emes: set logo to 200px
- */
-.f5-logo {
-    width: 200px;
-    height: auto;
-}
-
 .footer > a {
     color: #1f8dd6;
 }
@@ -188,13 +186,13 @@ label {
    v1.cloud_name instance var lowercased. E.g. aws/azure/gce.
 */
 .aws {
-    background-color: #ff9900 !important;
+    background: #ff9900 !important;
 }
 
 .azure {
-    background-color: #007fff !important;
+    background: #007fff !important;
 }
 
 .gce {
-    background-color: #0f9d58 !important;
+    background: #0f9d58 !important;
 }
