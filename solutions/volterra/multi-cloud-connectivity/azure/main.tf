@@ -82,18 +82,6 @@ locals {
       create = false
     }
   }
-
-  webservers = {
-    bu11 = {
-      subnet = module.network["bu11"].vnet_subnets[1]
-    }
-    bu12 = {
-      subnet = module.network["bu12"].vnet_subnets[1]
-    }
-    bu13 = {
-      subnet = module.network["bu13"].vnet_subnets[1]
-    }
-  }
 }
 
 # Allow jumphost access
@@ -124,7 +112,7 @@ resource "azurerm_network_security_group" "jumphost" {
 
 # Allow webserver access
 resource "azurerm_network_security_group" "webserver" {
-  for_each            = local.webservers
+  for_each            = local.vnets
   name                = format("%s-nsg-webservers-%s", var.projectPrefix, var.buildSuffix)
   location            = azurerm_resource_group.rg[each.key].location
   resource_group_name = azurerm_resource_group.rg[each.key].name
@@ -177,15 +165,23 @@ module "jumphost" {
 }
 
 # Create webserver instances
-module "webserver" {
-  for_each           = local.webservers
-  source             = "../../../../modules/azure/terraform/webServer/"
+module "backend" {
+  for_each = { for ws in setproduct(keys(local.vnets), range(0, var.num_servers)) : join("", ws) => {
+    name     = format("%s-%s-web-%s-%d", var.projectPrefix, ws[0], var.buildSuffix, tonumber(ws[1]) + 1)
+    rg       = azurerm_resource_group.rg[ws[0]].name
+    location = azurerm_resource_group.rg[ws[0]].location
+    subnet   = module.network[ws[0]].vnet_subnets[1]
+    sg       = azurerm_network_security_group.webserver[ws[0]].id
+  } }
+  source             = "../../../../modules/azure/terraform/backend/"
+  name               = each.value["name"]
   projectPrefix      = var.projectPrefix
   buildSuffix        = var.buildSuffix
   resourceOwner      = var.resourceOwner
-  azureResourceGroup = azurerm_resource_group.rg[each.key].name
-  azureLocation      = azurerm_resource_group.rg[each.key].location
+  azureResourceGroup = each.value["rg"]
+  azureLocation      = each.value["location"]
   ssh_key            = var.ssh_key
   subnet             = each.value["subnet"]
-  securityGroup      = azurerm_network_security_group.webserver[each.key].id
+  securityGroup      = each.value["sg"]
+  public_address     = true
 }
