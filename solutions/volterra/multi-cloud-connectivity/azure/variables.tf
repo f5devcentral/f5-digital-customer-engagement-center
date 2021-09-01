@@ -21,6 +21,11 @@ variable "ssh_key" {
   type        = string
   description = "public key used for authentication in ssh-rsa format"
 }
+variable "num_servers" {
+  type        = number
+  default     = 2
+  description = "number of instances to launch"
+}
 
 #Volterra info
 variable "volterraTenant" {

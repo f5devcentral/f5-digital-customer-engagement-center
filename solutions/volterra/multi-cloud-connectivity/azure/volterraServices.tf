@@ -9,22 +9,25 @@ resource "volterra_origin_pool" "app" {
   port                   = 80
   no_tls                 = true
 
-  origin_servers {
-    private_ip {
-      ip = module.webserver[each.key].privateIp
-      site_locator {
-        site {
-          tenant    = var.volterraTenant
-          namespace = "system"
-          name      = volterra_azure_vnet_site.bu[each.key].name
+  dynamic "origin_servers" {
+    for_each = [for ws in setproduct([each.key], range(0, var.num_servers)) : module.backend[join("", ws)].privateIp]
+    content {
+      private_ip {
+        ip = origin_servers.value
+        site_locator {
+          site {
+            tenant    = var.volterraTenant
+            namespace = var.namespace
+            name      = volterra_azure_vnet_site.bu[each.key].name
+          }
         }
+        inside_network = true
       }
-      inside_network = true
-    }
 
-    labels = merge(local.volterra_common_labels, {
-      "bu" = each.key
-    })
+      labels = merge(local.volterra_common_labels, {
+        "bu" = each.key
+      })
+    }
   }
 }
 

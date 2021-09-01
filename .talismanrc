@@ -288,3 +288,7 @@ fileignoreconfig:
   checksum: ab41d052ba71dbe9c7bd39a3d10b0b2301d7b9f6c00878692fd10df4a91765c5
 - filename: modules/common/files/backend/index.html
   checksum: 83ad641622aa22dac2192da93cfde6160c9ec5245a940e98a524b6c6ef11fd1c
+- filename: solutions/volterra/multi-cloud-connectivity/azure/volterraServices.tf
+  checksum: 854582e41d355b198678c5d4e181180a0a93420b33e7604b696f07632a0a0c1c
+- filename: solutions/volterra/multi-cloud-connectivity/azure/main.tf
+  checksum: 034ee58fb6ef26e64ce7994b359f51c466d8c4f3fda62a3825988c14c2ce4899
