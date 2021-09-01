@@ -83,58 +83,58 @@ write_files:
           index index.html;
         }
         location /bu1app {
-            resolver 127.0.0.11 valid=30s;
+            resolver 169.254.169.253 valid=30s;
             # or some other DNS (your company's internal DNS server)
             set $bu1app bu1app.shared.acme.com;
-            proxy_pass http://$bu1app/:80;
+            proxy_pass http://$bu1app/;
         }
         location /bu2app {
-            resolver 127.0.0.11 valid=30s;
+            resolver 169.254.169.253 valid=30s;
             # or some other DNS (your company's internal DNS server)
             set $bu2app bu2app.shared.acme.com;
-            proxy_pass http://$bu2app/:80;
+            proxy_pass http://$bu2app/;
         }
         location /bu3app {
-            resolver 127.0.0.11 valid=30s;
+            resolver 169.254.169.253 valid=30s;
             # or some other DNS (your company's internal DNS server)
             set $bu3app bu3app.shared.acme.com;
-            proxy_pass http://$bu3app/:80;
+            proxy_pass http://$bu3app/;
         }
         location /bu11app {
-            resolver 127.0.0.11 valid=30s;
+            resolver 169.254.169.253 valid=30s;
             # or some other DNS (your company's internal DNS server)
             set $bu11app bu11app.shared.acme.com;
-            proxy_pass http://$bu11app/:80;
+            proxy_pass http://$bu11app/;
         }
         location /bu12app {
-            resolver 127.0.0.11 valid=30s;
+            resolver 169.254.169.253 valid=30s;
             # or some other DNS (your company's internal DNS server)
             set $bu12app bu12app.shared.acme.com;
-            proxy_pass http://$bu12app/:80;
+            proxy_pass http://$bu12app/;
         }
         location /bu13app {
-            resolver 127.0.0.11 valid=30s;
+            resolver 169.254.169.253 valid=30s;
             # or some other DNS (your company's internal DNS server)
             set $bu13app bu13app.shared.acme.com;
-            proxy_pass http://$bu13app/:80;
+            proxy_pass http://$bu13app/;
         }
         location /bu21app {
-            resolver 127.0.0.11 valid=30s;
+            resolver 169.254.169.253 valid=30s;
             # or some other DNS (your company's internal DNS server)
             set $bu21app bu21app.shared.acme.com;
-            proxy_pass http://$bu21app/:80;
+            proxy_pass http://$bu21app/;
         }
         location /bu22app {
-            resolver 127.0.0.11 valid=30s;
+            resolver 169.254.169.253 valid=30s;
             # or some other DNS (your company's internal DNS server)
             set $bu22app bu22app.shared.acme.com;
-            proxy_pass http://$bu22app/:80;
+            proxy_pass http://$bu22app/;
         }
         location /bu23app {
-            resolver 127.0.0.11 valid=30s;
+            resolver 169.254.169.253 valid=30s;
             # or some other DNS (your company's internal DNS server)
             set $bu23app bu23app.shared.acme.com;
-            proxy_pass http://$bu23app/:80;
+            proxy_pass http://$bu23app/;
         }
       }
 

@@ -246,7 +246,7 @@ module "jumphost" {
 # Create webserver instances
 module "webserver" {
   for_each      = local.webservers
-  source        = "../../../../modules/aws/terraform/workstation/"
+  source        = "../../../../modules/aws/terraform/backend/"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
   vpc           = each.value["vpcId"]

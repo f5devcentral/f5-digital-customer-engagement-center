@@ -65,3 +65,12 @@ variable "extraTags" {
     "AdditionalKey" = "additionalValue"
   }
 }
+variable "user_data" {
+  type        = string
+  default     = null
+  description = <<EOD
+An optional cloud-config definition to apply to the launched instances. If empty
+(default), a simple webserver will be launched that displays the hostname of the
+instance that serviced the request.
+EOD
+}

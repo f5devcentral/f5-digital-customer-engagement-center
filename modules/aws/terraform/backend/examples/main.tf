@@ -2,32 +2,12 @@ provider "aws" {
   region = var.awsRegion
 }
 
-data "aws_availability_zones" "available" {
-  state = "available"
-}
-locals {
-  awsAz1 = data.aws_availability_zones.available.names[0]
-  awsAz2 = data.aws_availability_zones.available.names[1]
-}
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 2.0"
-
-  name = "${var.projectPrefix}-vpc-${random_id.buildSuffix.hex}"
-
-  cidr = "10.1.0.0/16"
-
-  azs                  = [local.awsAz1, local.awsAz2]
-  public_subnets       = ["10.1.10.0/24", "10.1.110.0/24"]
-  private_subnets      = ["10.1.20.0/24", "10.1.120.0/24"]
-  enable_dns_hostnames = true
-  enable_nat_gateway   = true
-  tags = {
-    resourceOwner = var.resourceOwner
-    Name          = "${var.projectPrefix}-vpc-${random_id.buildSuffix.hex}"
-  }
-
+module "aws_network" {
+  source        = "../../network/min"
+  projectPrefix = var.projectPrefix
+  resourceOwner = var.resourceOwner
+  awsRegion     = var.awsRegion
+  buildSuffix   = random_id.buildSuffix.hex
 }
 
 resource "aws_key_pair" "deployer" {
@@ -35,9 +15,10 @@ resource "aws_key_pair" "deployer" {
   public_key = var.sshPublicKey
 }
 
-resource "aws_security_group" "secGroupWebapp" {
+resource "aws_security_group" "secGroupWorkstation" {
+  name        = "secGroupWorkstation"
   description = "Jumphost workstation security group"
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = module.aws_network.vpcs["main"]
 
   ingress {
     from_port   = 22
@@ -47,8 +28,8 @@ resource "aws_security_group" "secGroupWebapp" {
   }
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 5800
+    to_port     = 5800
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -67,13 +48,12 @@ resource "aws_security_group" "secGroupWebapp" {
 }
 
 
-module "webApp" {
+module "jumphost" {
   source        = "../"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
-  vpc           = module.vpc.vpc_id
+  vpc           = module.aws_network.vpcs["main"]
   keyName       = aws_key_pair.deployer.id
-  subnets       = [module.vpc.private_subnets[0], module.vpc.private_subnets[1]]
-  albSubnets    = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
-  securityGroup = aws_security_group.secGroupWebapp.id
+  mgmtSubnet    = module.aws_network.subnetsAz1["public"]
+  securityGroup = aws_security_group.secGroupWorkstation.id
 }

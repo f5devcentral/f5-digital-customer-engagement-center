@@ -32,7 +32,7 @@ resource "aws_security_group" "externalWebservers" {
 # Create external facing webserver instances
 module "externalWebserverBu1" {
   count             = var.externalWebserverBu1.deploy ? 1 : 0
-  source            = "../../../../modules/aws/terraform/backend/"
+  source            = "../../../../modules/aws/terraform/webServer/"
   projectPrefix     = var.projectPrefix
   resourceOwner     = var.resourceOwner
   vpc               = module.vpc["bu1"].vpc_id
@@ -41,7 +41,6 @@ module "externalWebserverBu1" {
   securityGroup     = aws_security_group.externalWebservers.id
   associatePublicIp = var.externalWebserverBu1.associatePublicIp
   desiredCapacity   = var.externalWebserverBu1.desiredCapacity
-  startupCommand    = "docker run -d --restart always -p 80:3000 bkimminich/juice-shop"
   albSubnets        = [module.vpc["bu1"].public_subnets[0], module.vpc["bu1"].public_subnets[1]]
 }
 

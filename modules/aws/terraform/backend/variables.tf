@@ -1,70 +1,54 @@
 # project
 variable "projectPrefix" {
-  description = "Prefix used in tags to identify the project"
-  type        = string
-  default     = "f5-dcec"
+  default = "f5-dcec"
 }
 # network
 variable "vpc" {
-  description = "Vpc id in which to deploy the server"
-  type        = string
-  default     = null
 }
 
-variable "subnets" {
-  description = "List of subnet ids in which to deploy the server/s"
-  type        = list(any)
-  default     = null
-}
-variable "albSubnets" {
-  description = "List of subnet ids in which to deploy the alb"
-  type        = list(any)
-  default     = null
+variable "mgmtSubnet" {
 }
 variable "securityGroup" {
-  description = "security group id that will be associated with the server"
-  type        = string
-  default     = null
+  default = null
 }
 # instance
 variable "instanceType" {
-  description = "AWS instance type"
-  type        = string
-  default     = "t3.large"
+  default = "t3.large"
 }
 variable "resourceOwner" {
   description = "tag used to mark instance owner"
-  type        = string
   default     = "f5-dcec-user"
+}
+# admin
+variable "adminAccountName" {
+  description = "admin account name used with instance"
+  default     = null
 }
 variable "keyName" {
   description = "instance key pair name"
-  type        = string
-  default     = null
 }
-variable "associatePublicIp" {
-  description = "choose if you want to associate a public ip to the instance"
-  type        = bool
-  default     = false
+variable "coderAccountPassword" {
+  default = "pleaseUseVault123!!"
 }
 # onboarding
-variable "startupCommand" {
-  description = "Command to run at boot, used to start the app"
-  type        = string
-  default     = "docker run -d --restart always -p 80:3000 bkimminich/juice-shop"
+variable "onboardScript" {
+  description = "URL to userdata onboard script"
+  default     = "https://raw.githubusercontent.com/vinnie357/workspace-onboard-bash-templates/master/terraform/aws/sca/onboard.sh"
 }
-variable "desiredCapacity" {
-  description = "Desired number of server instances"
-  type        = number
-  default     = 1
+variable "repositories" {
+  description = "comma seperated list of git repositories to clone"
+  default     = "https://github.com/vinnie357/aws-tf-workspace.git,https://github.com/f5devcentral/terraform-aws-f5-sca.git"
 }
-variable "extraTags" {
-  description = "Map of additional tags"
-  type        = map(any)
-  default = {
-    "AdditionalKey" = "additionalValue"
-  }
+variable "terraformVersion" {
+  default = "0.14.0"
 }
+
+variable "associateEIP" {
+  description = "choose if you want to associate an EIP to the instance"
+  type        = bool
+  default     = true
+}
+
 variable "user_data" {
   type        = string
   default     = null
