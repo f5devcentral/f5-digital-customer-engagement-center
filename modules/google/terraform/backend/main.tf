@@ -11,8 +11,9 @@ terraform {
 locals {
   user_data = coalesce(var.user_data, templatefile("${path.module}/templates/cloud-config.yml", {
     tls_secret_key              = var.tls_secret_key
-    f5_logo_rgb_svg             = base64gzip(file("${path.module}/files/f5-logo-rgb.svg"))
-    styles_css                  = base64gzip(file("${path.module}/files/styles.css"))
+    index_html                  = replace(file("${path.module}/../../../common/files/backend/index.html"), "/[\\n\\r]/", "")
+    f5_logo_rgb_svg             = base64gzip(file("${path.module}/../../../common/files/backend/f5-logo-rgb.svg"))
+    styles_css                  = base64gzip(file("${path.module}/../../../common/files/backend/styles.css"))
     install_server_tls_certs_sh = base64gzip(file("${path.module}/files/install-server-tls-certs.sh"))
   }))
   name            = coalesce(var.name, format("%s-server-%s", var.projectPrefix, var.buildSuffix))
