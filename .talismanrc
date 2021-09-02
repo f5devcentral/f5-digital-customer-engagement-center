@@ -291,4 +291,4 @@ fileignoreconfig:
 - filename: solutions/volterra/multi-cloud-connectivity/azure/volterraServices.tf
   checksum: 854582e41d355b198678c5d4e181180a0a93420b33e7604b696f07632a0a0c1c
 - filename: solutions/volterra/multi-cloud-connectivity/azure/main.tf
-  checksum: 034ee58fb6ef26e64ce7994b359f51c466d8c4f3fda62a3825988c14c2ce4899
+  checksum: f35945cc6236394993237e8586e61e9695d4afde99bd09b4dc68d9073dcd0218

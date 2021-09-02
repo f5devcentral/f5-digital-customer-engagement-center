@@ -12,6 +12,36 @@ variable "resourceOwner" {
   description = "name of the person or customer running the solution"
 }
 
+variable "business_units" {
+  type = map(object({
+    cidr           = list(any)
+    subnetPrefixes = list(any)
+    subnetNames    = list(any)
+    workstation    = bool
+  }))
+  default = {
+    bu11 = {
+      cidr           = ["10.1.0.0/16"]
+      subnetPrefixes = ["10.1.10.0/24", "10.1.52.0/24"]
+      subnetNames    = ["external", "internal"]
+      workstation    = true
+    }
+    bu12 = {
+      cidr           = ["10.1.0.0/16"]
+      subnetPrefixes = ["10.1.10.0/24", "10.1.52.0/24"]
+      subnetNames    = ["external", "internal"]
+      workstation    = false
+    }
+    bu13 = {
+      cidr           = ["10.1.0.0/16"]
+      subnetPrefixes = ["10.1.10.0/24", "10.1.52.0/24"]
+      subnetNames    = ["external", "internal"]
+      workstation    = false
+    }
+  }
+  description = "The set of VPCs to create with overlapping CIDRs."
+}
+
 #Azure info
 variable "azureLocation" {
   type        = string

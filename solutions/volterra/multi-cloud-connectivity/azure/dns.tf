@@ -1,7 +1,7 @@
 ############################ Private DNS Zones ############################
 
 resource "azurerm_private_dns_zone" "sharedAcme" {
-  for_each            = local.vnets
+  for_each            = var.business_units
   name                = var.domain_name
   resource_group_name = azurerm_resource_group.rg[each.key].name
 
@@ -14,7 +14,7 @@ resource "azurerm_private_dns_zone" "sharedAcme" {
 ############################ Zone Records ############################
 
 resource "azurerm_private_dns_a_record" "inside" {
-  for_each            = local.vnets
+  for_each            = var.business_units
   name                = "inside"
   zone_name           = azurerm_private_dns_zone.sharedAcme[each.key].name
   resource_group_name = azurerm_resource_group.rg[each.key].name
@@ -23,7 +23,7 @@ resource "azurerm_private_dns_a_record" "inside" {
 }
 
 resource "azurerm_private_dns_cname_record" "sharedAcme" {
-  for_each            = local.vnets
+  for_each            = var.business_units
   name                = "*"
   zone_name           = azurerm_private_dns_zone.sharedAcme[each.key].name
   resource_group_name = azurerm_resource_group.rg[each.key].name
@@ -34,7 +34,7 @@ resource "azurerm_private_dns_cname_record" "sharedAcme" {
 ############################ DNS Virtual Network Link ############################
 
 resource "azurerm_private_dns_zone_virtual_network_link" "link" {
-  for_each              = local.vnets
+  for_each              = var.business_units
   name                  = each.key
   resource_group_name   = azurerm_resource_group.rg[each.key].name
   private_dns_zone_name = azurerm_private_dns_zone.sharedAcme[each.key].name

@@ -1,7 +1,7 @@
 ############################ Volterra Origin Pool (backend) ############################
 
 resource "volterra_origin_pool" "app" {
-  for_each               = local.vnets
+  for_each               = var.business_units
   name                   = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"
@@ -34,7 +34,7 @@ resource "volterra_origin_pool" "app" {
 ############################ Volterra HTTP LB ############################
 
 resource "volterra_http_loadbalancer" "app" {
-  for_each                        = local.vnets
+  for_each                        = var.business_units
   name                            = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace                       = var.namespace
   no_challenge                    = true

@@ -15,7 +15,7 @@ locals {
 ############################ Volterra Azure VNet Sites ############################
 
 resource "volterra_azure_vnet_site" "bu" {
-  for_each       = local.vnets
+  for_each       = var.business_units
   name           = format("%s-%s-azure-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace      = "system"
   labels         = local.volterra_common_labels
@@ -94,7 +94,7 @@ resource "volterra_azure_vnet_site" "bu" {
 }
 
 resource "volterra_tf_params_action" "applyBu" {
-  for_each         = local.vnets
+  for_each         = var.business_units
   site_name        = volterra_azure_vnet_site.bu[each.key].name
   site_kind        = "azure_vnet_site"
   action           = "apply"
@@ -108,7 +108,7 @@ resource "volterra_tf_params_action" "applyBu" {
 
 # Collect data for Volterra node "site local inside" NIC
 data "azurerm_network_interface" "sli" {
-  for_each            = local.vnets
+  for_each            = var.business_units
   name                = "master-0-sli"
   resource_group_name = format("%s-%s-volterra-%s", var.projectPrefix, each.key, var.buildSuffix)
   depends_on          = [volterra_tf_params_action.applyBu]
