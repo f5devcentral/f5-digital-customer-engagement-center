@@ -150,11 +150,8 @@ curl bu13app.shared.acme.com
 ![Request log](images/httplb-client-ip.png)
 
 ## Cleanup
-Use the following command to destroy all of the resources
 
-```bash
-./destroy.sh
-```
+See parent [README Cleanup scripts](../README.md#cleanup).
 
 ## How to Contribute
 
