@@ -130,9 +130,12 @@ curl bu13app.shared.acme.com
 
 ![Proxy Settings](images/proxy-socks.png)
 
-4. Browse to the BU sites. Azure will resolve with a OWASP Juice Shop page.
+4. Browse to the BU sites. Azure will resolve with a blue page and instance metadata.
 
-![BU1 app](images/bu11app.png)
+![webapp-top](../../../../modules/azure/terraform/backend/images/webapp-top.png)
+
+![webapp-bottom](../../../../modules/azure/terraform/backend/images/webapp-bottom.png)
+
 
 5. Open VoltConsole, go to the 'HTTP Load Balancers' tab
 
