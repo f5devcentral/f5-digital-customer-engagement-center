@@ -60,7 +60,7 @@ cd f5-digital-customer-engagement-center/solutions/volterra/multi-cloud-connecti
 
 - Set AWS/Azure/Google cloud credentials. See [Prerequisites](#prerequisites)
 - Set Volterra environment variables
-Create a Volterra credentials p12 file and copy it to a local folder. Follow steps here - https://www.volterra.io/docs/how-to/user-mgmt/credentials
+- Create a Volterra credentials p12 file and copy it to a local folder. Follow steps here - https://www.volterra.io/docs/how-to/user-mgmt/credentials
 
 ```bash
 export VES_P12_PASSWORD="your_key"
