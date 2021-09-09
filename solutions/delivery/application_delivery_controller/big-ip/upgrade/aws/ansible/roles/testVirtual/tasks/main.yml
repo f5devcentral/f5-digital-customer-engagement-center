@@ -41,7 +41,7 @@
     lb_method: least-connections-member
     slow_ramp_time: 120
     monitors:
-      - https_443
+      - tcp
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
