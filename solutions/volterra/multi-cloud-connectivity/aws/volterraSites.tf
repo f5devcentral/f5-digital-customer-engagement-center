@@ -1,12 +1,12 @@
 ############################ Volterra AWS VPC Sites ############################
 
 resource "volterra_aws_vpc_site" "bu" {
-  for_each      = local.business_units
+  for_each      = var.awsBusinessUnits
   name          = format("%s-%s-aws-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace     = "system"
   aws_region    = var.awsRegion
-  labels        = local.volterra_common_labels
-  annotations   = local.volterra_common_annotations
+  labels        = local.volterraCommonLabels
+  annotations   = local.volterraCommonAnnotations
   instance_type = "t3.xlarge"
   disk_size     = "80"
   ssh_key       = var.ssh_key

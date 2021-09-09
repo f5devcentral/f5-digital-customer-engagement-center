@@ -28,7 +28,7 @@ resource "volterra_origin_pool" "app" {
       inside_network = true
     }
 
-    labels = merge(local.volterra_common_labels, {
+    labels = merge(local.volterraCommonLabels, {
       "bu" = each.key
     })
   }

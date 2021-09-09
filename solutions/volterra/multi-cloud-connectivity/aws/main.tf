@@ -1,3 +1,16 @@
+###########################Versions##########################
+terraform {
+  required_version = ">= 0.14.5"
+
+  required_providers {
+    volterra = {
+      source  = "volterraedge/volterra"
+      version = "0.10"
+    }
+    aws = ">= 3"
+  }
+}
+
 ###########################providers##########################
 provider "aws" {
   region = var.awsRegion
@@ -16,14 +29,17 @@ locals {
   awsAz1 = var.awsAz1 != null ? var.awsAz1 : data.aws_availability_zones.available.names[0]
   awsAz2 = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
   awsAz3 = var.awsAz3 != null ? var.awsAz1 : data.aws_availability_zones.available.names[2]
-  volterra_common_labels = merge(var.labels, {
+
+  
+  awsCommonLabels = merge(var.awsLabels, {})
+  volterraCommonLabels = merge(var.labels, {
     demo     = "multi-cloud-connectivity-volterra"
     owner    = var.resourceOwner
     prefix   = var.projectPrefix
     suffix   = var.buildSuffix
     platform = "aws"
   })
-  volterra_common_annotations = {
+  volterraCommonAnnotations = {
     source      = "git::https://github.com/F5DevCentral/f5-digital-customer-engangement-center"
     provisioner = "terraform"
   }
@@ -58,21 +74,20 @@ locals {
 ############################ VPCs ############################
 
 module "vpc" {
-  for_each             = local.business_units
+  for_each             = var.awsBusinessUnits
   source               = "terraform-aws-modules/vpc/aws"
   version              = "~> 2.0"
   name                 = format("%s-vpc-%s-%s", var.projectPrefix, each.key, var.buildSuffix)
   cidr                 = each.value["cidr"]
-  azs                  = each.value["azs"]
+  azs                  = [local.awsAz1, local.awsAz2]
   public_subnets       = each.value["public_subnets"]
   private_subnets      = each.value["private_subnets"]
   enable_dns_hostnames = true
   enable_nat_gateway   = true
   single_nat_gateway   = true
-  tags = {
-    Name      = format("%s-vpc-%s-%s", var.resourceOwner, each.key, var.buildSuffix)
-    Terraform = "true"
-  }
+  tags = merge(local.volterraCommonLabels, {
+    bu = each.key
+  })
 }
 
 ############################ Workload Subnet ############################
@@ -197,10 +212,10 @@ resource "aws_security_group" "jumphost" {
 
 # Webserver Security Group
 resource "aws_security_group" "webserver" {
-  for_each    = local.webservers
+  for_each    = var.awsBusinessUnits
   name        = format("%s-sg-webservers-%s", var.projectPrefix, var.buildSuffix)
   description = "Webservers security group"
-  vpc_id      = each.value["vpcId"]
+  vpc_id      = module.vpc[each.key].vpc_id
 
   ingress {
     from_port   = 22
@@ -232,26 +247,30 @@ resource "aws_security_group" "webserver" {
 
 # Create jumphost instances
 module "jumphost" {
-  for_each      = { for k, v in local.jumphosts : k => v if v.create }
+  for_each        = { for k, v in var.awsBusinessUnits : k => v if v.workstation }
   source        = "../../../../modules/aws/terraform/workstation/"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
-  vpc           = each.value["vpcId"]
+  vpc           = module.vpc[each.key].vpc_id
   keyName       = aws_key_pair.deployer.id
-  mgmtSubnet    = each.value["subnetId"]
+  mgmtSubnet    = module.vpc[each.key].public_subnets[0]
   securityGroup = aws_security_group.jumphost[each.key].id
   associateEIP  = true
 }
 
 # Create webserver instances
 module "webserver" {
-  for_each      = local.webservers
+  for_each = { for ws in setproduct(keys(var.awsBusinessUnits), range(0, var.awsNumWebservers)) : join("", ws) => {
+    subnet        = module.vpc[ws[0]].private_subnets[0]
+    vpc           = module.vpc[ws[0]].vpc_id
+    securityGroup = aws_security_group.webserver[ws[0]].id
+  } }
   source        = "../../../../modules/aws/terraform/backend/"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
-  vpc           = each.value["vpcId"]
+  vpc           = each.value.vpc
   keyName       = aws_key_pair.deployer.id
-  mgmtSubnet    = each.value["subnetId"]
-  securityGroup = aws_security_group.webserver[each.key].id
+  mgmtSubnet    = each.value.subnet
+  securityGroup = each.value.securityGroup
   associateEIP  = false
 }
