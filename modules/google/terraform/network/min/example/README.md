@@ -60,16 +60,6 @@ GCP resources given a broad scenario type.
 
 No provider.
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| network | ../ |  |
-
-## Resources
-
-No resources.
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -86,5 +76,6 @@ No resources.
 |------|-------------|
 | subnets | A map of subnetworks created by module, keyed by usage context. |
 | vpcs | A map of VPC networks created by module, keyed by usage context. |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->

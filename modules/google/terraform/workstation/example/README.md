@@ -58,17 +58,6 @@ GCP resources given a broad scenario type.
 
 No provider.
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| network | ../../network/min |  |
-| workstation | ../ |  |
-
-## Resources
-
-No resources.
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -86,5 +75,6 @@ No resources.
 | connection\_helpers | A set of gcloud commands to create IAP tunnels for direct access to Code Server,<br>proxying to protected resources, and starting an SSH session. See the README for<br>details. |
 | self\_link | The fully-qualifed self-link of the workstation instance. |
 | service\_account | The service account used by workstation instance. |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->

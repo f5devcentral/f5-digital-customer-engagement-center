@@ -17,16 +17,6 @@ This folder contains a fixture for testing the GCP
 
 No provider.
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| example | ../../../../../modules/google/terraform/workstation/example/ |  |
-
-## Resources
-
-No resources.
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -53,5 +43,6 @@ No resources.
 | subnets | n/a |
 | users | n/a |
 | vpcs | Inspec - example module does not return this value so send a fake that the controls can use |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->

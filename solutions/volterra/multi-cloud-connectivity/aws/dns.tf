@@ -1,7 +1,7 @@
 ############################ DNS Resolver Endpoint ############################
 
 resource "aws_route53_resolver_endpoint" "bu" {
-  for_each           = local.business_units
+  for_each           = var.awsBusinessUnits
   name               = format("%s-%s-resolver-%s", var.projectPrefix, each.key, var.buildSuffix)
   direction          = "OUTBOUND"
   security_group_ids = [module.vpc[each.key].default_security_group_id]
@@ -22,7 +22,7 @@ resource "aws_route53_resolver_endpoint" "bu" {
 ############################ DNS Resolver Rule (aka delegation) ############################
 
 resource "aws_route53_resolver_rule" "bu" {
-  for_each             = local.business_units
+  for_each             = var.awsBusinessUnits
   name                 = format("%s-%s-route53rule-%s", var.projectPrefix, each.key, var.buildSuffix)
   domain_name          = var.domain_name
   rule_type            = "FORWARD"
@@ -41,7 +41,7 @@ resource "aws_route53_resolver_rule" "bu" {
 ############################ DNS Rule Association ############################
 
 resource "aws_route53_resolver_rule_association" "bu" {
-  for_each         = local.business_units
+  for_each         = var.awsBusinessUnits
   resolver_rule_id = aws_route53_resolver_rule.bu[each.key].id
   vpc_id           = module.vpc[each.key].vpc_id
 }

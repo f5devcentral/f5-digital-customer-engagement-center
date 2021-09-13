@@ -38,19 +38,6 @@ module "network_min" {
 
 No provider.
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| mgmt | terraform-google-modules/network/google | 3.0.1 |
-| nat | terraform-google-modules/cloud-router/google | 0.4.0 |
-| private | terraform-google-modules/network/google | 3.0.1 |
-| public | terraform-google-modules/network/google | 3.0.1 |
-
-## Resources
-
-No resources.
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -67,5 +54,6 @@ No resources.
 |------|-------------|
 | subnets | A map of subnetworks created by module, keyed by usage context. |
 | vpcs | A map of VPC networks created by module, keyed by usage context. |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

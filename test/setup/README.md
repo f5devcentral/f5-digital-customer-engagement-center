@@ -32,18 +32,6 @@ gcpProjectId = "my-gcp-project-id"
 | local | n/a |
 | random | n/a |
 
-## Modules
-
-No Modules.
-
-## Resources
-
-| Name |
-|------|
-| [local_file](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) |
-| [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
-| [random_pet](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/pet) |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -56,5 +44,6 @@ No Modules.
 | Name | Description |
 |------|-------------|
 | harness\_tfvars | The name of the generated harness.tfvars file that will be a common input to all<br>test fixtures. |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->

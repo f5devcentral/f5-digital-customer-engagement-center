@@ -104,3 +104,49 @@ variable "externalWebserverBu1" {
     desiredCapacity   = 1
   }
 }
+variable "awsLabels" {
+  type        = map(string)
+  default     = {}
+  description = "An optional list of labels to apply to AWS resources."
+}
+variable "awsBusinessUnits" {
+  type = map(object({
+    cidr            = string
+    public_subnets  = list(any)
+    private_subnets = list(any)
+    workstation     = bool
+  }))
+  default = {
+    bu1 = {
+      cidr            = "10.1.0.0/16"
+      public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
+      private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
+      workstation     = true
+    }
+    bu2 = {
+      cidr            = "10.1.0.0/16"
+      public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
+      private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
+      workstation     = false
+    }
+    bu3 = {
+      cidr            = "10.1.0.0/16"
+      public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
+      private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
+      workstation     = false
+    }
+  }
+  description = "The set of VPCs to create with overlapping CIDRs."
+}
+
+variable "outside_cidr" {
+  type        = string
+  default     = "100.64.96.0/20"
+  description = "The CIDR to assign to shared outside VPC. Default is '100.64.96.0/20'."
+}
+
+variable "awsNumWebservers" {
+  type        = number
+  default     = 1
+  description = "The number of webserver instances to launch in each business unit spoke."
+}

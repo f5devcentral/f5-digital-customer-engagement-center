@@ -17,6 +17,16 @@ ssh_key = "ssh-rsa REDACTED me@my.email"
 awsRegion            = "us-west-2"
 volterraCloudCredAWS = "cloud-cred-aws"
 
+#control the resources being deployed using the follwoing map
+#awsBusinessUnits = {
+#  bu1 = {
+#    cidr            = "10.1.0.0/16"
+#    public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
+#    private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
+#    workstation     = true
+#  }
+#}
+
 # Azure variables
 azureLocation        = "westus2"
 volterraCloudCredAzure = "cloud-cred-azure"
