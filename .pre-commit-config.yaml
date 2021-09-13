@@ -19,7 +19,16 @@ repos:
       - id: detect-private-key
         #mTLS cert for KIC-NGINX Solution
         exclude: 'solutions/delivery/application_delivery_controller/nginx/kic/templates/client-key.pem'
-  - repo: https://gist.github.com/42f82959d980813c44feeab30a7661f9.git
-    rev: HEAD
+  # Talisman pre-commit hook declaration is broken; pre-commit cannot build from
+  # source. Use the talisman binary installed in container/user environment.
+  - repo: local
     hooks:
-      - id: talisman-commit
+      - id: local-talisman
+        name: talisman
+        entry: talisman --githook pre-commit
+        stages:
+          - commit
+        pass_filenames: false
+        types:
+          - text
+        language: system
