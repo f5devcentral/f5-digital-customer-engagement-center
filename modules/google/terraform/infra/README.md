@@ -89,24 +89,6 @@ module "vpc_override" {
 | google | >= 3.54 |
 | google-beta | n/a |
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| artifacts | terraform-google-modules/cloud-dns/google | 3.1.0 |
-| gcr | terraform-google-modules/cloud-dns/google | 3.1.0 |
-| googleapis | terraform-google-modules/cloud-dns/google | 3.1.0 |
-| nat | terraform-google-modules/cloud-router/google | 0.4.0 |
-| vpc | terraform-google-modules/network/google | 3.0.1 |
-| workstation | ../workstation/ |  |
-
-## Resources
-
-| Name |
-|------|
-| [google-beta_google_artifact_registry_repository](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_artifact_registry_repository) |
-| [google_project_service](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_service) |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -129,5 +111,6 @@ module "vpc_override" {
 | subnets | A map of subnetworks created by module, keyed by usage context. |
 | vpcs | A map of VPC networks created by module, keyed by usage context. |
 | workstation | A JSON object containing workstation attributes and connection helper commands from the embedded<br>workstation module. |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

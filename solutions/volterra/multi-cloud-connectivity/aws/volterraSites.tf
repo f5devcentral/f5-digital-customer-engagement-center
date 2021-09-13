@@ -76,7 +76,7 @@ resource "volterra_aws_vpc_site" "bu" {
 }
 
 resource "volterra_tf_params_action" "applyBu" {
-  for_each         = local.business_units
+  for_each         = var.awsBusinessUnits
   site_name        = volterra_aws_vpc_site.bu[each.key].name
   site_kind        = "aws_vpc_site"
   action           = "apply"
@@ -90,7 +90,7 @@ resource "volterra_tf_params_action" "applyBu" {
 
 # Instance info
 data "aws_instances" "volterra" {
-  for_each             = local.business_units
+  for_each             = var.awsBusinessUnits
   instance_state_names = ["running"]
   instance_tags = {
     "ves.io/site_name" = volterra_aws_vpc_site.bu[each.key].name
@@ -101,7 +101,7 @@ data "aws_instances" "volterra" {
 
 # NIC info
 data "aws_network_interface" "volterra_sli" {
-  for_each = local.business_units
+  for_each = var.awsBusinessUnits
   filter {
     name   = "attachment.instance-id"
     values = [data.aws_instances.volterra[each.key].ids[0]]

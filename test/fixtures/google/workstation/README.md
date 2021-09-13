@@ -17,18 +17,6 @@ This folder contains a fixture for testing the GCP
 
 No provider.
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| nat | terraform-google-modules/cloud-router/google | 0.4.0 |
-| vpc | terraform-google-modules/network/google | 3.0.1 |
-| workstation | ../../../../modules/google/terraform/workstation/ |  |
-
-## Resources
-
-No resources.
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -36,11 +24,11 @@ No resources.
 | buildSuffix | random build suffix for resources | `string` | n/a | yes |
 | gcpProjectId | gcp project id | `string` | n/a | yes |
 | gcpRegion | region where resources are deployed | `string` | n/a | yes |
-| image | Image self-link to override default base for VM | `string` | `""` | no |
 | projectPrefix | prefix for resources | `string` | n/a | yes |
 | resourceOwner | owner of the deployment, for tagging purposes | `string` | n/a | yes |
-| users | list of user emails to grant access to workstation | `list(string)` | `[]` | no |
 | variant | Workstation variant | `string` | n/a | yes |
+| image | Image self-link to override default base for VM | `string` | `""` | no |
+| users | list of user emails to grant access to workstation | `list(string)` | `[]` | no |
 
 ## Outputs
 
@@ -58,5 +46,6 @@ No resources.
 | subnets | n/a |
 | users | n/a |
 | vpcs | Inspec |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->

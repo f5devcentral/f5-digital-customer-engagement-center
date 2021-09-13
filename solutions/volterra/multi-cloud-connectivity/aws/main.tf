@@ -30,7 +30,7 @@ locals {
   awsAz2 = var.awsAz2 != null ? var.awsAz1 : data.aws_availability_zones.available.names[1]
   awsAz3 = var.awsAz3 != null ? var.awsAz1 : data.aws_availability_zones.available.names[2]
 
-  
+
   awsCommonLabels = merge(var.awsLabels, {})
   volterraCommonLabels = merge(var.labels, {
     demo     = "multi-cloud-connectivity-volterra"
@@ -44,32 +44,6 @@ locals {
     provisioner = "terraform"
   }
 }
-
-############################ Locals for Business Units ############################
-
-locals {
-  business_units = {
-    bu1 = {
-      cidr            = "10.1.0.0/16"
-      azs             = [local.awsAz1, local.awsAz2]
-      public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
-      private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
-    }
-    bu2 = {
-      cidr            = "10.1.0.0/16"
-      azs             = [local.awsAz1, local.awsAz2]
-      public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
-      private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
-    }
-    bu3 = {
-      cidr            = "10.1.0.0/16"
-      azs             = [local.awsAz1, local.awsAz2]
-      public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
-      private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
-    }
-  }
-}
-
 
 ############################ VPCs ############################
 
@@ -97,7 +71,7 @@ module "vpc" {
 # - Volterra tries to create causes RT conflicts and fails site
 # - Create additional subnets for sli and workload without RT for Volterra's use
 resource "aws_subnet" "sli" {
-  for_each          = local.business_units
+  for_each          = var.awsBusinessUnits
   vpc_id            = module.vpc[each.key].vpc_id
   availability_zone = local.awsAz1
   cidr_block        = "10.1.20.0/24"
@@ -109,7 +83,7 @@ resource "aws_subnet" "sli" {
 }
 
 resource "aws_subnet" "workload" {
-  for_each          = local.business_units
+  for_each          = var.awsBusinessUnits
   vpc_id            = module.vpc[each.key].vpc_id
   availability_zone = local.awsAz1
   cidr_block        = "10.1.30.0/24"
@@ -128,62 +102,12 @@ resource "aws_key_pair" "deployer" {
   public_key = var.ssh_key
 }
 
-# Set locals
-locals {
-  jumphosts = {
-    bu1 = {
-      vpcId    = module.vpc["bu1"].vpc_id
-      subnetId = module.vpc["bu1"].public_subnets[0]
-      create   = true
-    }
-    bu2 = {
-      vpcId    = module.vpc["bu2"].vpc_id
-      subnetId = module.vpc["bu2"].public_subnets[0]
-      create   = false
-    }
-    bu3 = {
-      vpcId    = module.vpc["bu3"].vpc_id
-      subnetId = module.vpc["bu3"].public_subnets[0]
-      create   = false
-    }
-  }
-
-  webservers = {
-    bu1 = {
-      vpcId    = module.vpc["bu1"].vpc_id
-      subnetId = module.vpc["bu1"].public_subnets[0]
-    }
-    bu2 = {
-      vpcId    = module.vpc["bu2"].vpc_id
-      subnetId = module.vpc["bu2"].public_subnets[0]
-    }
-    bu3 = {
-      vpcId    = module.vpc["bu3"].vpc_id
-      subnetId = module.vpc["bu3"].public_subnets[0]
-    }
-  }
-  externalWebservers = {
-    bu1 = {
-      vpcId    = module.vpc["bu1"].vpc_id
-      subnetId = module.vpc["bu1"].public_subnets[0]
-    }
-    bu2 = {
-      vpcId    = module.vpc["bu2"].vpc_id
-      subnetId = module.vpc["bu2"].public_subnets[0]
-    }
-    bu3 = {
-      vpcId    = module.vpc["bu3"].vpc_id
-      subnetId = module.vpc["bu3"].public_subnets[0]
-    }
-  }
-}
-
 # Jumphost Security Group
 resource "aws_security_group" "jumphost" {
-  for_each    = local.jumphosts
+  for_each    = { for k, v in var.awsBusinessUnits : k => v if v.workstation }
   name        = format("%s-sg-jumphost-%s", var.projectPrefix, var.buildSuffix)
   description = "Jumphost workstation security group"
-  vpc_id      = each.value["vpcId"]
+  vpc_id      = module.vpc[each.key].vpc_id
 
   ingress {
     from_port   = 22
@@ -247,7 +171,7 @@ resource "aws_security_group" "webserver" {
 
 # Create jumphost instances
 module "jumphost" {
-  for_each        = { for k, v in var.awsBusinessUnits : k => v if v.workstation }
+  for_each      = { for k, v in var.awsBusinessUnits : k => v if v.workstation }
   source        = "../../../../modules/aws/terraform/workstation/"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner

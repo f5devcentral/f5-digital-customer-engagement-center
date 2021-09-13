@@ -7,7 +7,7 @@ resource "volterra_waf" "waf" {
 ############################ Volterra Origin Pool (backend) ############################
 
 resource "volterra_origin_pool" "app" {
-  for_each               = local.business_units
+  for_each               = var.awsBusinessUnits
   name                   = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"
@@ -15,29 +15,31 @@ resource "volterra_origin_pool" "app" {
   port                   = 80
   no_tls                 = true
 
-  origin_servers {
-    private_ip {
-      ip = module.webserver[each.key].workspaceManagementAddress
-      site_locator {
-        site {
-          tenant    = var.volterraTenant
-          namespace = "system"
-          name      = volterra_aws_vpc_site.bu[each.key].name
+  dynamic "origin_servers" {
+    for_each = [for ws in setproduct([each.key], range(0, var.awsNumWebservers)) : module.webserver[join("", ws)].workspaceManagementAddress]
+    content {
+      private_ip {
+        ip = origin_servers.value
+        site_locator {
+          site {
+            tenant    = var.volterraTenant
+            namespace = "system"
+            name      = volterra_aws_vpc_site.bu[each.key].name
+          }
         }
+        inside_network = true
       }
-      inside_network = true
+      labels = merge(local.volterraCommonLabels, {
+        bu = each.key
+      })
     }
-
-    labels = merge(local.volterraCommonLabels, {
-      "bu" = each.key
-    })
   }
 }
 
 ############################ Volterra HTTP LB ############################
 
 resource "volterra_http_loadbalancer" "app" {
-  for_each                        = local.business_units
+  for_each                        = var.awsBusinessUnits
   name                            = format("%s-%s-app-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace                       = var.namespace
   no_challenge                    = true

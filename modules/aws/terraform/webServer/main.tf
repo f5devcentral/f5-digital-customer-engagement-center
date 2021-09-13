@@ -2,7 +2,7 @@
 locals {
   user_data = coalesce(var.user_data, templatefile("${path.module}/templates/cloud-config.yml", {
     f5_logo_rgb_svg = base64gzip(file("${path.module}/files/f5-logo-rgb.svg"))
-    styles_css      = base64gzip(file("${path.module}/files/styles.css"))
+    styles_css      = base64gzip(file("${path.module}/../../../common/files/backend/styles.css"))
   }))
 }
 
@@ -106,22 +106,4 @@ module "asg" {
   max_size                  = 5
   desired_capacity          = var.desiredCapacity
   wait_for_capacity_timeout = 0
-
-  tags = [
-    {
-      key                 = "Name"
-      value               = "${var.projectPrefix}-workstation"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "Owner"
-      value               = var.resourceOwner
-      propagate_at_launch = true
-    },
-  ]
-
-  tags_as_map = {
-    extra_tag1 = "extra_value1"
-    extra_tag2 = "extra_value2"
-  }
 }

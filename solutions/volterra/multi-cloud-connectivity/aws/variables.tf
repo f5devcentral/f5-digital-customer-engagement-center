@@ -111,10 +111,10 @@ variable "awsLabels" {
 }
 variable "awsBusinessUnits" {
   type = map(object({
-    cidr                   = string
-    public_subnets         = list(any)
-    private_subnets        = list(any)
-    workstation            = bool
+    cidr            = string
+    public_subnets  = list(any)
+    private_subnets = list(any)
+    workstation     = bool
   }))
   default = {
     bu1 = {

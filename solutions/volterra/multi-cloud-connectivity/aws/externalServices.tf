@@ -1,15 +1,8 @@
-
-
 resource "aws_security_group" "externalWebservers" {
+  count       = var.publicDomain != "" ? 1 : 0
   name        = format("%s-sg-externalWebservers-%s", var.projectPrefix, var.buildSuffix)
   description = "externalWebservers security group"
   vpc_id      = module.vpc["bu1"].vpc_id
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
   ingress {
     from_port   = 80
     to_port     = 80
@@ -31,20 +24,39 @@ resource "aws_security_group" "externalWebservers" {
 
 # Create external facing webserver instances
 module "externalWebserverBu1" {
-  count             = var.externalWebserverBu1.deploy ? 1 : 0
+  count             = var.publicDomain != "" ? 1 : 0
   source            = "../../../../modules/aws/terraform/webServer/"
   projectPrefix     = var.projectPrefix
   resourceOwner     = var.resourceOwner
   vpc               = module.vpc["bu1"].vpc_id
   keyName           = aws_key_pair.deployer.id
   subnets           = [module.vpc["bu1"].private_subnets[0], module.vpc["bu1"].private_subnets[1]]
-  securityGroup     = aws_security_group.externalWebservers.id
+  securityGroup     = aws_security_group.externalWebservers[0].id
   associatePublicIp = var.externalWebserverBu1.associatePublicIp
   desiredCapacity   = var.externalWebserverBu1.desiredCapacity
   albSubnets        = [module.vpc["bu1"].public_subnets[0], module.vpc["bu1"].public_subnets[1]]
 }
 
 ############################ Volterra HTTPS External LB ############################
+
+resource "volterra_origin_pool" "externalPool" {
+  count                  = var.publicDomain != "" ? 1 : 0
+  name                   = format("%s-%s-external-pool-%s", var.projectPrefix, "bu1", var.buildSuffix)
+  namespace              = var.namespace
+  endpoint_selection     = "DISTRIBUTED"
+  loadbalancer_algorithm = "LB_OVERRIDE"
+  port                   = 80
+  no_tls                 = true
+
+  origin_servers {
+    // One of the arguments from this list "private_name consul_service custom_endpoint_object vn_private_name public_ip public_name private_ip k8s_service vn_private_ip" must be set
+
+    public_name {
+      // One of the arguments from this list "inside_network outside_network vk8s_networks" must be set
+      dns_name = module.externalWebserverBu1[0].albDnsName
+    }
+  }
+}
 
 resource "volterra_http_loadbalancer" "external-app" {
   count                           = var.publicDomain != "" ? 1 : 0
@@ -58,7 +70,7 @@ resource "volterra_http_loadbalancer" "external-app" {
   advertise_on_public_default_vip = true
   waf {
     tenant    = var.volterraTenant
-    namespace = var.namespace
+    namespace = "shared"
     name      = volterra_waf.waf.name
   }
   https_auto_cert {
@@ -69,14 +81,14 @@ resource "volterra_http_loadbalancer" "external-app" {
 
   default_route_pools {
     pool {
-      name = volterra_origin_pool.app["bu1"].name
+      name = volterra_origin_pool.externalPool[0].name
     }
   }
 }
 ##################################################output###########################################################################
 ###################################################################################################################################
 
-output "albDnsNameBu1" {
-  description = "albDnsName for the external web app in bu1"
-  value       = var.externalWebserverBu1.deploy ? module.externalWebserverBu1[0].albDnsName : null
+output "publicBu1Name" {
+  description = "public DNS name for the external Bu1App"
+  value       = var.publicDomain != "" ? format("external-app.%s", var.publicDomain) : null
 }
