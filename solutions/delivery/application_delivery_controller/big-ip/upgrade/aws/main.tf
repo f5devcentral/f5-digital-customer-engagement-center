@@ -64,13 +64,13 @@ resource "local_file" "tf_ansible_vars_file" {
 }
 
 resource "null_resource" "run_ansible" {
-  depends_on = [time_sleep.wait_420_seconds]
+  depends_on = [time_sleep.wait_600_seconds]
   provisioner "local-exec" {
     command = "ansible-playbook ansible/playbooks/demo.yml"
   }
 }
 
-resource "time_sleep" "wait_420_seconds" {
+resource "time_sleep" "wait_600_seconds" {
   depends_on      = [aws_instance.f5vm01, aws_instance.f5vm02]
-  create_duration = "420s"
+  create_duration = "600s"
 }
