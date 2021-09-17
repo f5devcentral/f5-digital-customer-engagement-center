@@ -12,6 +12,11 @@ locals {
   }
 }
 
+# Import helper module to determine approximate latitude/longitude of GCP regions
+module "region_locations" {
+  source = "../../../../modules/azure/terraform/region-locations/"
+}
+
 ############################ Volterra Azure VNet Sites ############################
 
 resource "volterra_azure_vnet_site" "bu" {
@@ -27,6 +32,11 @@ resource "volterra_azure_vnet_site" "bu" {
   assisted                = false
   logs_streaming_disabled = true
   no_worker_nodes         = true
+
+  coordinates {
+    latitude  = module.region_locations.lookup[var.azureLocation].latitude
+    longitude = module.region_locations.lookup[var.azureLocation].longitude
+  }
 
   azure_cred {
     name      = var.volterraCloudCredAzure
