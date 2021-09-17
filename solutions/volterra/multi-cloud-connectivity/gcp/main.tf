@@ -238,12 +238,10 @@ resource "volterra_gcp_vpc_site" "inside" {
     bu = each.key
   })
   annotations = local.volterra_common_annotations
-  # TODO: @memes - reenable when upstream provider is fixed
-  # https://github.com/volterraedge/terraform-provider-volterra/issues/61
-  # coordinates {
-  #   latitude  = module.region_locations.lookup[var.gcpRegion].latitude
-  #   longitude = module.region_locations.lookup[var.gcpRegion].longitude
-  # }
+  coordinates {
+    latitude  = module.region_locations.lookup[var.gcpRegion].latitude
+    longitude = module.region_locations.lookup[var.gcpRegion].longitude
+  }
   # MEmes - this demo breaks if assisted mode is used;
   assisted = false
   cloud_credentials {
