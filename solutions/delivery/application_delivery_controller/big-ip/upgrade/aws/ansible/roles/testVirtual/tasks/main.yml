@@ -33,6 +33,19 @@
       validate_certs: no
   delegate_to: localhost
 
+- name: Create custom HTTPS Monitor
+  bigip_monitor_https:
+    name: f5_companies
+    state: present
+    send: "GET /status.html HTTP/1.1\r\nHost: f5.com\r\nConnection: Close\r\n"
+    receive: "available\r\n"
+    provider:
+      password: "{{generated_password}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      user: "{{username}}"
+      validate_certs: no
+  delegate_to: localhost
+
 - name: Create pool
   bigip_pool:
     state: present
@@ -41,7 +54,7 @@
     lb_method: least-connections-member
     slow_ramp_time: 120
     monitors:
-      - tcp
+      - f5_companies
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
@@ -65,6 +78,14 @@
         partition: Common
         port: 443
         description: volterra website
+      - fqdn: www.shapesecurity.com
+        partition: Common
+        port: 443
+        description: shape security website
+      - fqdn: www.aspenmesh.io
+        partition: Common
+        port: 443
+        description: aspen mesh website
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
