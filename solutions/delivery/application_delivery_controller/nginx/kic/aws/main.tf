@@ -81,7 +81,7 @@ module "eks" {
   cluster_endpoint_private_access      = false
   cluster_endpoint_public_access       = true
   cluster_endpoint_public_access_cidrs = [var.adminSourceCidr]
-  kubeconfig_output_path                   = "${path.module}/cluster-config"
+  kubeconfig_output_path                   = "${path.module}/cluster-config/"
 }
 
 // jumphost
