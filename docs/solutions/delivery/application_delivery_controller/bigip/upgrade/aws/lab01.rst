@@ -21,4 +21,4 @@ The environment built in this solution can be upgraded in numerous ways. The aut
 .. _`K38680436: Update and upgrade known issues for August 2021 CVEs`: https://support.f5.com/csp/article/K38680436
 .. _`BIG-IP update and upgrade guide`: https://support.f5.com/csp/article/K84205182
 .. _`Update or upgrade BIG-IP system software using F5 Modules for Ansible`: https://support.f5.com/csp/article/K89192130
-.. _`F5 Upgrade Process`: https://github.com/maniak-academy/f5-ansible-deployments/tree/main/upgrade
+.. _`F5 Upgrade Process`: https://github.com/maniak-academy/f5-ansible-upgrade
