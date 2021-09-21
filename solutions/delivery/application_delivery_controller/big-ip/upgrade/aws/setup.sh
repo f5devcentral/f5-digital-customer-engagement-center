@@ -1,5 +1,5 @@
 #!/bin/bash
-terraform init
+terraform init -upgrade
 terraform fmt
 terraform validate
 # apply
