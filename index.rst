@@ -3,15 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to F5 Digital Customer Engagement Center documentation!
-=================================================================
+Welcome to F5 Digital Customer Engagement Center
+================================================
 
-This is a community project. Use at your own responsability !
+|image01|
 
-Designed to provide a common framework for deploying and developing F5 solutions as code.
+Discover. Build. Solve. Transform.
 
+We are dedicated to creating human connections with our partners and customers no matter where they are. In addition to our physical centers, and the virtual Customer Engagement Center, the digital customer engagement center(DCEC) provides solutions for technology individuals who desire hands on examples.
 
+A great experience of utilizing hands-on examples is our goal. Opening up the DCEC is a single view into different F5 technologies, jump from NGINX to BIG-IP to Volterra, without having to ever leave the environment. Thats the power behind the project.
 
+.. |image01| image:: docs/index/images/image01.jpg
+  :width: 95%
+  :align: middle
 
 .. toctree::
    :maxdepth: 1
@@ -19,9 +24,7 @@ Designed to provide a common framework for deploying and developing F5 solutions
    :caption: User Guide
    :glob:
 
-   /docs/usage/about
-   /docs/usage/getting_started
-   /docs/usage/filing-issues
+   /docs/usage/usage
 
 .. toctree::
    :maxdepth: 1
@@ -32,13 +35,24 @@ Designed to provide a common framework for deploying and developing F5 solutions
 
 .. toctree::
    :maxdepth: 1
-   :caption: Module Reference
+   :caption: Modules
 
-   /modules/modules_by_category
+   /docs/modules/modules
 
 .. toctree::
    :maxdepth: 1
-   :caption: Developer's Guide
+   :caption: Contributions
 
-   /docs/development/getting-involved
-   /docs/development/guidelines
+   /docs/contributions/contributions
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Developer Guide
+
+   /docs/development/development
+
+.. toctree::
+   :maxdepth: 1
+   :caption: About this Project
+
+   /docs/index/about

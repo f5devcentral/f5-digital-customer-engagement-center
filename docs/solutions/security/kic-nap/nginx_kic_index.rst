@@ -18,4 +18,3 @@ NGINX Kubernetes Ingress Controller solution can run on multiple clouds. The doc
    :glob:
 
    labSetup*
-   lab*

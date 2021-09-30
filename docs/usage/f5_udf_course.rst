@@ -1,5 +1,6 @@
-Getting started - F5 UDF Environment Access - Course
-----------------------------------------------------
+**********************************
+F5 UDF Environment Access - Course
+**********************************
 
 F5 has an internal Universal Development Framework (UDF_) with courses containing solutions. The benefit of utilizing UDF courses with blueprints is access to cloud accounts (AWS), clean-up, and cost. It also provides a consistent experience for attendees, with no dependencies installed on a client computer.
 
