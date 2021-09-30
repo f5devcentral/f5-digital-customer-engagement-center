@@ -1,5 +1,6 @@
-Getting started - Public access
-------------------------------------------
+*************************
+Developer Getting started
+*************************
 
 In order to maintain a consistent deployment environemnt the solutions should all be deployed from the project provided container
 the container will run locally on your machine, it inculdes the automation tools required to run the solutions.
@@ -34,7 +35,7 @@ Here are the requirements for deploying solutions from this project:
 
     .. code-block::
 
-    git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center.git
+      git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center.git
 
 2.  Open the repo in visual studio code
 
@@ -59,5 +60,3 @@ Here are the requirements for deploying solutions from this project:
    :maxdepth: 1
    :caption: Solutions
    :glob:
-
-   /docs/solutions/*/*_index

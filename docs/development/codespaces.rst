@@ -81,7 +81,7 @@ If warnings are found from your changes, please address them as needed with the 
 
 Pushing your branch to the project will spawn a new notification on the repo for a Compare and Pull. Ensure you are creating a pull request only from your branch, as others might be in approval.
 
-.. note:: When you commit your branch to the repo, you can link pull requests to issues. This will clean up your issue when the PR is closed on main. pull-to-issue-link_
+.. note:: When you commit your branch to the repo, you can link pull requests to issues. This will clean up your issue when the PR is closed on main. `pull to issue link`_
 
 |image10|
 
@@ -94,9 +94,9 @@ Approvals
 
 Depending on the change you are working through, you might need to get a code owners approval. These are in place to protect parts of the project from accidentally being changed. Code owners are typically module/solution owners. If you are creating a module/solution, make sure you are adding your config to the CODEOWNERS_ file at the root of the repository.
 
-.. _CODEOWNERS: https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue
+.. _CODEOWNERS: https://github.com/f5devcentral/f5-digital-customer-engagement-center/blob/main/CODEOWNERS
 .. _Codespaces: https://code.visualstudio.com/docs/remote/codespaces
-.. _pull-to-issue-link: https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue
+.. _`pull to issue link`: https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue
 
 .. |image01| image:: images/image01.png
 .. |image03| image:: images/image03.png

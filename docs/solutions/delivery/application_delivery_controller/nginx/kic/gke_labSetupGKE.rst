@@ -52,10 +52,8 @@ Google Cloud Platform
 1. Let's confirm you can login to your GCP account and that the prerequisite API permissions have been enabled.
 
    * In your browser, navigate to: https://console.cloud.google.com/
-   |
+   
    * Login with your username and password or register for a new account.
-
-   |
 
    From the GCP console, in the search box at the top, look for **Artifact Registry API**. Confirm the Artifact Registry API is enabled.
 
