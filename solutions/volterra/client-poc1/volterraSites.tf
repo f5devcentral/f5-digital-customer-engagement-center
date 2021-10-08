@@ -43,6 +43,7 @@ resource "volterra_aws_vpc_site" "main" {
     forward_proxy_allow_all  = true
     no_global_network        = true
     no_network_policy        = true
+    no_inside_static_routes  = true
     no_outside_static_routes = true
 
     az_nodes {
