@@ -83,7 +83,7 @@ variable "spokeVPCs" {
       workstation     = false
     }
   }
-  description = "The spoke VPCs with BU specific applications."
+  description = "The spoke VPCs with applications."
 }
 
 variable "sharedVPCs" {
