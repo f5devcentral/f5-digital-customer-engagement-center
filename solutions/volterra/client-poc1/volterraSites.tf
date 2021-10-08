@@ -83,8 +83,8 @@ resource "volterra_aws_tgw_site" "main" {
         custom_static_route {
           subnets {
             ipv4 {
-              prefix = "10.1.0.0"
-              plen   = "16"
+              prefix = "10.0.0.0"
+              plen   = "8"
             }
           }
           nexthop {
