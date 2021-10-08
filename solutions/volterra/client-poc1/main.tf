@@ -121,24 +121,58 @@ resource "aws_subnet" "workload" {
 
 # Transit Gateway
 resource "aws_ec2_transit_gateway" "main" {
-  description                     = "Transit Gateway"
-  default_route_table_association = "disable"
-  default_route_table_propagation = "disable"
+  description = "Transit Gateway"
   tags = {
     Name      = format("%s-tgw-%s", var.resourceOwner, local.buildSuffix)
     Terraform = "true"
   }
 }
 
+# Transit Gateway Attachment for Spoke VPCs
+resource "aws_ec2_transit_gateway_vpc_attachment" "vpc" {
+  for_each           = var.awsBusinessUnits
+  subnet_ids         = module.vpc[each.key].private_subnets
+  transit_gateway_id = aws_ec2_transit_gateway.main.id
+  vpc_id             = module.vpc[each.key].vpc_id
+  tags = {
+    Name      = format("%s-vpcAttach-%s-%s", var.resourceOwner, each.key, local.buildSuffix)
+    Terraform = "true"
+  }
+  depends_on = [aws_ec2_transit_gateway.main]
+}
+
+# Transit Gateway Attachment for Shared VPC
+resource "aws_ec2_transit_gateway_vpc_attachment" "vpcShared" {
+  subnet_ids         = module.vpcShared.private_subnets
+  transit_gateway_id = aws_ec2_transit_gateway.main.id
+  vpc_id             = module.vpcShared.vpc_id
+  tags = {
+    Name      = format("%s-vpcSharedAttach-%s", var.resourceOwner, local.buildSuffix)
+    Terraform = "true"
+  }
+  depends_on = [aws_ec2_transit_gateway.main]
+}
+
 ############################ AWS Routes ############################
 
-# Create Routes so each BU traverses Transit Gateway to access applications
-resource "aws_route" "sharedVPC" {
+# Create Routes in each spoke VPC to reach shared VPC via TGW
+# Flow = spoke VPC > TGW > shared VPC
+resource "aws_route" "dstSharedVPC" {
   for_each               = var.awsBusinessUnits
   route_table_id         = module.vpc[each.key].public_route_table_ids[0]
-  destination_cidr_block = var.sharedVPCs.hub.cidr
+  destination_cidr_block = module.vpcShared.vpc_cidr_block
   transit_gateway_id     = aws_ec2_transit_gateway.main.id
-  depends_on             = [aws_ec2_transit_gateway.main, volterra_tf_params_action.main]
+  depends_on             = [aws_ec2_transit_gateway.main]
+}
+
+# Create Routes in shared VPC to reach spoke VPCs via TGW
+# Flow = shared VPC > TGW > spoke VPC
+resource "aws_route" "dstSpokeVPC" {
+  for_each               = var.awsBusinessUnits
+  route_table_id         = module.vpcShared.public_route_table_ids[0]
+  destination_cidr_block = module.vpc[each.key].vpc_cidr_block
+  transit_gateway_id     = aws_ec2_transit_gateway.main.id
+  depends_on             = [aws_ec2_transit_gateway.main]
 }
 
 ############################ AWS Security Groups - Jumphost, Web Servers ############################

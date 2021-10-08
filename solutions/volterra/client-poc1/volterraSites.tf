@@ -17,33 +17,33 @@ resource "volterra_virtual_site" "site" {
   }
 }
 
-############################ Volterra AWS Transit Gateway Sites ############################
+############################ Volterra AWS VPC Sites ############################
 
-resource "volterra_aws_tgw_site" "main" {
+resource "volterra_aws_vpc_site" "main" {
   name                    = format("%s-aws-%s", var.projectPrefix, local.buildSuffix)
   namespace               = "system"
+  aws_region              = var.awsRegion
   labels                  = local.volterraCommonLabels
   annotations             = local.volterraCommonAnnotations
+  instance_type           = "t3.xlarge"
+  disk_size               = "80"
+  ssh_key                 = var.ssh_key
+  assisted                = false
   logs_streaming_disabled = true
+  no_worker_nodes         = true
 
-  vpc_attachments {
-    vpc_list {
-      vpc_id = module.vpc["bu1"].vpc_id
-    }
-    vpc_list {
-      vpc_id = module.vpc["bu2"].vpc_id
-    }
+  aws_cred {
+    name      = var.volterraCloudCredAWS
+    namespace = "system"
+    tenant    = var.volterraTenant
   }
 
-  aws_parameters {
-    aws_region       = var.awsRegion
-    vpc_id           = module.vpcShared.vpc_id
-    aws_certified_hw = "aws-byol-multi-nic-voltmesh"
-    disk_size        = "80"
-    instance_type    = "t3.xlarge"
-    ssh_key          = var.ssh_key
-    assisted         = false
-    no_worker_nodes  = true
+  ingress_egress_gw {
+    aws_certified_hw         = "aws-byol-multi-nic-voltmesh"
+    forward_proxy_allow_all  = true
+    no_global_network        = true
+    no_network_policy        = true
+    no_outside_static_routes = true
 
     az_nodes {
       aws_az_name            = local.awsAz1
@@ -60,59 +60,21 @@ resource "volterra_aws_tgw_site" "main" {
         existing_subnet_id = aws_subnet.workload.id
       }
     }
-
-    aws_cred {
-      name      = var.volterraCloudCredAWS
-      namespace = "system"
-      tenant    = var.volterraTenant
-    }
-
-    existing_tgw {
-      tgw_id            = aws_ec2_transit_gateway.main.id
-      tgw_asn           = "64512"
-      volterra_site_asn = "64532"
-    }
   }
 
-  vn_config {
-    no_global_network        = true
-    no_outside_static_routes = true
-
-    inside_static_routes {
-      static_route_list {
-        custom_static_route {
-          subnets {
-            ipv4 {
-              prefix = "10.0.0.0"
-              plen   = "8"
-            }
-          }
-          nexthop {
-            type = "NEXT_HOP_USE_CONFIGURED"
-            nexthop_address {
-              ipv4 {
-                addr = "100.64.6.1"
-              }
-            }
-          }
-          attrs = [
-            "ROUTE_ATTR_INSTALL_FORWARDING",
-            "ROUTE_ATTR_INSTALL_HOST"
-          ]
-        }
-      }
-    }
+  vpc {
+    vpc_id = module.vpcShared.vpc_id
   }
 }
 
 resource "volterra_tf_params_action" "main" {
-  site_name        = volterra_aws_tgw_site.main.name
-  site_kind        = "aws_tgw_site"
+  site_name        = volterra_aws_vpc_site.main.name
+  site_kind        = "aws_vpc_site"
   action           = "apply"
   wait_for_action  = true
   ignore_on_update = false
 
-  depends_on = [volterra_aws_tgw_site.main]
+  depends_on = [volterra_aws_vpc_site.main]
 }
 
 ############################ Collect Volterra Info ############################
@@ -121,7 +83,7 @@ resource "volterra_tf_params_action" "main" {
 data "aws_instances" "volterra" {
   instance_state_names = ["running"]
   instance_tags = {
-    "ves.io/site_name" = volterra_aws_tgw_site.main.name
+    "ves.io/site_name" = volterra_aws_vpc_site.main.name
   }
 
   depends_on = [volterra_tf_params_action.main]

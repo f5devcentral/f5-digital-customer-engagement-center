@@ -6,7 +6,7 @@
 3. define use cases for demo
 4. currently ONLY an internal CE use case (client to  Volterra CE > pool)
 
-This demo will deploy an example customer with two VPCs and a shared VPC. The shared VPC will host F5 services such as Volterra and will deploy a AWS Transit Gateway Volterra site with ingress/egress gateway configured. The spoke VPCs will utilize the AWS Transit Gateway for common access to the shared services VPC.
+This demo will deploy an example customer with two spoke VPCs and a shared VPC. The shared VPC will host F5 services such as Volterra and will deploy a Volterra AWS VPC site with ingress/egress gateway configured. The VPCs will be connected to an AWS Transit Gateway, and the spoke VPCs will utilize the AWS Transit Gateway for common access to the shared services VPC.
 
 ## Diagram
 
@@ -82,6 +82,7 @@ Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click o
 |------|
 | [aws_availability_zones](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) |
 | [aws_ec2_transit_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway) |
+| [aws_ec2_transit_gateway_vpc_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_vpc_attachment) |
 | [aws_instances](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/instances) |
 | [aws_key_pair](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) |
 | [aws_network_interface](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/network_interface) |
@@ -89,7 +90,7 @@ Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click o
 | [aws_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) |
 | [aws_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) |
 | [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
-| [volterra_aws_tgw_site](https://registry.terraform.io/providers/volterraedge/volterra/0.10/docs/resources/aws_tgw_site) |
+| [volterra_aws_vpc_site](https://registry.terraform.io/providers/volterraedge/volterra/0.10/docs/resources/aws_vpc_site) |
 | [volterra_http_loadbalancer](https://registry.terraform.io/providers/volterraedge/volterra/0.10/docs/resources/http_loadbalancer) |
 | [volterra_origin_pool](https://registry.terraform.io/providers/volterraedge/volterra/0.10/docs/resources/origin_pool) |
 | [volterra_tf_params_action](https://registry.terraform.io/providers/volterraedge/volterra/0.10/docs/resources/tf_params_action) |

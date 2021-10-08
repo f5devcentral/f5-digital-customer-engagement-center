@@ -18,7 +18,7 @@ resource "volterra_origin_pool" "app" {
           site {
             tenant    = var.volterraTenant
             namespace = "system"
-            name      = volterra_aws_tgw_site.main.name
+            name      = volterra_aws_vpc_site.main.name
           }
         }
         inside_network = true
@@ -60,7 +60,7 @@ resource "volterra_http_loadbalancer" "app" {
     pool {
       name = volterra_origin_pool.app["bu1"].name
     }
-    weight = 10
+    weight = 5
   }
   default_route_pools {
     pool {
