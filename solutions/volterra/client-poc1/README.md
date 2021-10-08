@@ -128,6 +128,7 @@ Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click o
 | backendPrivateIps | Backend Private IPs |
 | testURL | URL to test from jumphost client |
 | volterraInsideIp | Volterra Site Local Inside IP address |
+| volterraOutsideIp | Volterra Site Local Outside IP address |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->
 

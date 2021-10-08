@@ -101,3 +101,14 @@ data "aws_network_interface" "volterra_sli" {
     values = ["site-local-inside"]
   }
 }
+
+data "aws_network_interface" "volterra_outside" {
+  filter {
+    name   = "attachment.instance-id"
+    values = [data.aws_instances.volterra.ids[0]]
+  }
+  filter {
+    name   = "tag:ves.io/interface-type"
+    values = ["site-local-outside"]
+  }
+}

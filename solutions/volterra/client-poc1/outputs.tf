@@ -18,6 +18,10 @@ output "volterraInsideIp" {
   description = "Volterra Site Local Inside IP address"
   value       = data.aws_network_interface.volterra_sli.private_ip
 }
+output "volterraOutsideIp" {
+  description = "Volterra Site Local Outside IP address"
+  value       = data.aws_network_interface.volterra_outside.private_ip
+}
 output "testURL" {
   description = "URL to test from jumphost client"
   value       = "http://${data.aws_network_interface.volterra_sli.private_ip} -H 'Host: app.shared.acme.com'"

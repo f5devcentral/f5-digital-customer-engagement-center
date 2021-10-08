@@ -86,7 +86,7 @@ module "sharedVPC" {
   enable_dns_hostnames = true
 
   tags = {
-    Name      = format("%s-vpcShared-%s", var.projectPrefix, local.buildSuffix)
+    Name      = format("%s-sharedVPC-%s", var.projectPrefix, local.buildSuffix)
     Terraform = "true"
   }
 }
