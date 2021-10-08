@@ -1,5 +1,11 @@
 # Client PoC 1 - Two VPCs with Shared VPC and Shared Services with Volterra
 
+## To Do
+1. Fix LB, currently 503 error
+2. check backend pool connectivity from Volterra node
+3. define use cases for demo
+4. currently ONLY an internal CE use case (client to  Volterra CE > pool)
+
 This demo will deploy an example customer with two VPCs and a shared VPC. The shared VPC will host F5 services such as Volterra and will deploy a AWS Transit Gateway Volterra site with ingress/egress gateway configured. The spoke VPCs will utilize the AWS Transit Gateway for common access to the shared services VPC.
 
 ## Diagram
