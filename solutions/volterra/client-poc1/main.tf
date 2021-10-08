@@ -55,8 +55,8 @@ locals {
 ############################ AWS VPCs ############################
 
 # Business Unit VPC(s) for clients and applications
-module "vpc" {
-  for_each             = var.awsBusinessUnits
+module "spokeVPC" {
+  for_each             = var.spokeVPCs
   source               = "terraform-aws-modules/vpc/aws"
   version              = "~> 2.0"
   name                 = format("%s-vpc-%s-%s", var.projectPrefix, each.key, local.buildSuffix)
@@ -69,16 +69,16 @@ module "vpc" {
   single_nat_gateway   = true
 
   tags = {
-    Name      = format("%s-vpc-%s-%s", var.projectPrefix, each.key, local.buildSuffix)
+    Name      = format("%s-spokeVPC-%s-%s", var.projectPrefix, each.key, local.buildSuffix)
     Terraform = "true"
   }
 }
 
 # Shared VPC for shared services
-module "vpcShared" {
+module "sharedVPC" {
   source               = "terraform-aws-modules/vpc/aws"
   version              = "~> 2.0"
-  name                 = format("%s-vpcShared-%s", var.projectPrefix, local.buildSuffix)
+  name                 = format("%s-sharedVPC-%s", var.projectPrefix, local.buildSuffix)
   cidr                 = var.sharedVPCs.hub.cidr
   azs                  = [local.awsAz1, local.awsAz2, local.awsAz3]
   public_subnets       = var.sharedVPCs.hub.public_subnets
@@ -98,7 +98,7 @@ module "vpcShared" {
 # - Volterra tries to create RT conflicts and fails due to existing RT
 # - Fix = Create additional subnets for sli and workload without RT for Volterra's use
 resource "aws_subnet" "sli" {
-  vpc_id            = module.vpcShared.vpc_id
+  vpc_id            = module.sharedVPC.vpc_id
   availability_zone = local.awsAz1
   cidr_block        = var.sharedVPCs.hub.volterra_inside_subnet
   tags = {
@@ -108,7 +108,7 @@ resource "aws_subnet" "sli" {
 }
 
 resource "aws_subnet" "workload" {
-  vpc_id            = module.vpcShared.vpc_id
+  vpc_id            = module.sharedVPC.vpc_id
   availability_zone = local.awsAz1
   cidr_block        = var.sharedVPCs.hub.volterra_workload_subnet
   tags = {
@@ -129,25 +129,25 @@ resource "aws_ec2_transit_gateway" "main" {
 }
 
 # Transit Gateway Attachment for Spoke VPCs
-resource "aws_ec2_transit_gateway_vpc_attachment" "vpc" {
-  for_each           = var.awsBusinessUnits
-  subnet_ids         = module.vpc[each.key].private_subnets
+resource "aws_ec2_transit_gateway_vpc_attachment" "spokeVPC" {
+  for_each           = var.spokeVPCs
+  subnet_ids         = module.spokeVPC[each.key].private_subnets
   transit_gateway_id = aws_ec2_transit_gateway.main.id
-  vpc_id             = module.vpc[each.key].vpc_id
+  vpc_id             = module.spokeVPC[each.key].vpc_id
   tags = {
-    Name      = format("%s-vpcAttach-%s-%s", var.resourceOwner, each.key, local.buildSuffix)
+    Name      = format("%s-spokeVPC-%s-%s", var.resourceOwner, each.key, local.buildSuffix)
     Terraform = "true"
   }
   depends_on = [aws_ec2_transit_gateway.main]
 }
 
 # Transit Gateway Attachment for Shared VPC
-resource "aws_ec2_transit_gateway_vpc_attachment" "vpcShared" {
-  subnet_ids         = module.vpcShared.private_subnets
+resource "aws_ec2_transit_gateway_vpc_attachment" "sharedVPC" {
+  subnet_ids         = module.sharedVPC.private_subnets
   transit_gateway_id = aws_ec2_transit_gateway.main.id
-  vpc_id             = module.vpcShared.vpc_id
+  vpc_id             = module.sharedVPC.vpc_id
   tags = {
-    Name      = format("%s-vpcSharedAttach-%s", var.resourceOwner, local.buildSuffix)
+    Name      = format("%s-sharedVPC-%s", var.resourceOwner, local.buildSuffix)
     Terraform = "true"
   }
   depends_on = [aws_ec2_transit_gateway.main]
@@ -158,9 +158,9 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpcShared" {
 # Create Routes in each spoke VPC to reach shared VPC via TGW
 # Flow = spoke VPC > TGW > shared VPC
 resource "aws_route" "dstSharedVPC" {
-  for_each               = var.awsBusinessUnits
-  route_table_id         = module.vpc[each.key].public_route_table_ids[0]
-  destination_cidr_block = module.vpcShared.vpc_cidr_block
+  for_each               = var.spokeVPCs
+  route_table_id         = module.spokeVPC[each.key].public_route_table_ids[0]
+  destination_cidr_block = module.sharedVPC.vpc_cidr_block
   transit_gateway_id     = aws_ec2_transit_gateway.main.id
   depends_on             = [aws_ec2_transit_gateway.main]
 }
@@ -168,9 +168,9 @@ resource "aws_route" "dstSharedVPC" {
 # Create Routes in shared VPC to reach spoke VPCs via TGW
 # Flow = shared VPC > TGW > spoke VPC
 resource "aws_route" "dstSpokeVPC" {
-  for_each               = var.awsBusinessUnits
-  route_table_id         = module.vpcShared.public_route_table_ids[0]
-  destination_cidr_block = module.vpc[each.key].vpc_cidr_block
+  for_each               = var.spokeVPCs
+  route_table_id         = module.sharedVPC.public_route_table_ids[0]
+  destination_cidr_block = module.spokeVPC[each.key].vpc_cidr_block
   transit_gateway_id     = aws_ec2_transit_gateway.main.id
   depends_on             = [aws_ec2_transit_gateway.main]
 }
@@ -185,10 +185,10 @@ resource "aws_key_pair" "deployer" {
 
 # Jumphost Security Group
 resource "aws_security_group" "jumphost" {
-  for_each    = { for k, v in var.awsBusinessUnits : k => v if v.workstation }
+  for_each    = { for k, v in var.spokeVPCs : k => v if v.workstation }
   name        = format("%s-sg-jumphost-%s", var.projectPrefix, local.buildSuffix)
   description = "Jumphost workstation security group"
-  vpc_id      = module.vpc[each.key].vpc_id
+  vpc_id      = module.spokeVPC[each.key].vpc_id
 
   ingress {
     from_port   = 22
@@ -217,10 +217,10 @@ resource "aws_security_group" "jumphost" {
 
 # Webserver Security Group
 resource "aws_security_group" "webserver" {
-  for_each    = var.awsBusinessUnits
+  for_each    = var.spokeVPCs
   name        = format("%s-sg-webservers-%s", var.projectPrefix, local.buildSuffix)
   description = "Webservers security group"
-  vpc_id      = module.vpc[each.key].vpc_id
+  vpc_id      = module.spokeVPC[each.key].vpc_id
 
   ingress {
     from_port   = 22
@@ -251,22 +251,22 @@ resource "aws_security_group" "webserver" {
 
 # Create jumphost instances
 module "jumphost" {
-  for_each      = { for k, v in var.awsBusinessUnits : k => v if v.workstation }
+  for_each      = { for k, v in var.spokeVPCs : k => v if v.workstation }
   source        = "../../../modules/aws/terraform/workstation/"
   projectPrefix = var.projectPrefix
   resourceOwner = var.resourceOwner
-  vpc           = module.vpc[each.key].vpc_id
+  vpc           = module.spokeVPC[each.key].vpc_id
   keyName       = aws_key_pair.deployer.id
-  mgmtSubnet    = module.vpc[each.key].public_subnets[0]
+  mgmtSubnet    = module.spokeVPC[each.key].public_subnets[0]
   securityGroup = aws_security_group.jumphost[each.key].id
   associateEIP  = true
 }
 
 # Create webserver instances
 module "webserver" {
-  for_each = { for ws in setproduct(keys(var.awsBusinessUnits), range(0, var.awsNumWebservers)) : join("", ws) => {
-    subnet        = module.vpc[ws[0]].private_subnets[0]
-    vpc           = module.vpc[ws[0]].vpc_id
+  for_each = { for ws in setproduct(keys(var.spokeVPCs), range(0, var.awsNumWebservers)) : join("", ws) => {
+    subnet        = module.spokeVPC[ws[0]].private_subnets[0]
+    vpc           = module.spokeVPC[ws[0]].vpc_id
     securityGroup = aws_security_group.webserver[ws[0]].id
   } }
   source        = "../../../modules/aws/terraform/backend/"

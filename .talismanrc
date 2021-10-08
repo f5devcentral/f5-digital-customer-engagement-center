@@ -297,7 +297,7 @@ fileignoreconfig:
 - filename: solutions/volterra/client-poc1/volterraSites.tf
   checksum: 87ae5560c1718ba9958e73347735a383e7ab9d8a3171e2d4d59b85e69fa89c41
 - filename: solutions/volterra/client-poc1/main.tf
-  checksum: 141954a4cc3b649ff3210efee7c7746061b1e37e46d656fb56f924c9253ef80d
+  checksum: 9dd932cf926e0f4ce210b7f94051b478351024c9ace308f319a83976e84f3531
 - filename: solutions/volterra/client-poc1/README.md
   checksum: a9cb49e0be401deb57085bdbc316c0d0c7bbef20c14dbf01ba3d59c4c9c7c507
 - filename: solutions/volterra/client-poc1/volterraServices.tf

@@ -62,7 +62,7 @@ variable "domain_name" {
   description = "The DNS domain name that will be used as common parent generated DNS name of loadbalancers."
   default     = "shared.acme.com"
 }
-variable "awsBusinessUnits" {
+variable "spokeVPCs" {
   type = map(object({
     cidr            = string
     public_subnets  = list(any)
@@ -83,7 +83,7 @@ variable "awsBusinessUnits" {
       workstation     = false
     }
   }
-  description = "The Business Unit VPCs with BU specific applications."
+  description = "The spoke VPCs with BU specific applications."
 }
 
 variable "sharedVPCs" {
