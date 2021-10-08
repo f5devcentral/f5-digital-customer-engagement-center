@@ -54,7 +54,7 @@ locals {
 
 ############################ AWS VPCs ############################
 
-# Business Unit VPCs for clients and applications
+# Business Unit VPC(s) for clients and applications
 module "vpc" {
   for_each             = var.awsBusinessUnits
   source               = "terraform-aws-modules/vpc/aws"
@@ -127,19 +127,6 @@ resource "aws_ec2_transit_gateway" "main" {
   tags = {
     Name      = format("%s-tgw-%s", var.resourceOwner, local.buildSuffix)
     Terraform = "true"
-  }
-}
-
-# Attach each BU to Transit Gateway
-# Note: vpcShared attachment will be created by Volterra 'apply' action later
-resource "aws_ec2_transit_gateway_vpc_attachment" "bu" {
-  for_each           = var.awsBusinessUnits
-  subnet_ids         = module.vpc[each.key].private_subnets
-  transit_gateway_id = aws_ec2_transit_gateway.main.id
-  vpc_id             = module.vpc[each.key].vpc_id
-  tags = {
-    Name  = format("%s-tgwAttachment-%s-%s", var.projectPrefix, each.key, local.buildSuffix)
-    Owner = var.resourceOwner
   }
 }
 

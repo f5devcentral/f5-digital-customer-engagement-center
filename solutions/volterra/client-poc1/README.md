@@ -76,14 +76,18 @@ Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click o
 |------|
 | [aws_availability_zones](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) |
 | [aws_ec2_transit_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway) |
-| [aws_ec2_transit_gateway_vpc_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_vpc_attachment) |
+| [aws_instances](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/instances) |
 | [aws_key_pair](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) |
+| [aws_network_interface](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/network_interface) |
 | [aws_route](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) |
 | [aws_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) |
 | [aws_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) |
 | [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
 | [volterra_aws_tgw_site](https://registry.terraform.io/providers/volterraedge/volterra/0.10/docs/resources/aws_tgw_site) |
+| [volterra_http_loadbalancer](https://registry.terraform.io/providers/volterraedge/volterra/0.10/docs/resources/http_loadbalancer) |
+| [volterra_origin_pool](https://registry.terraform.io/providers/volterraedge/volterra/0.10/docs/resources/origin_pool) |
 | [volterra_tf_params_action](https://registry.terraform.io/providers/volterraedge/volterra/0.10/docs/resources/tf_params_action) |
+| [volterra_virtual_site](https://registry.terraform.io/providers/volterraedge/volterra/0.10/docs/resources/virtual_site) |
 
 ## Inputs
 

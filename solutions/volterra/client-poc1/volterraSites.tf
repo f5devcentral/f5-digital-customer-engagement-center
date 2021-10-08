@@ -1,20 +1,44 @@
+############################ Volterra Virtual Site ############################
+
+resource "volterra_virtual_site" "site" {
+  name        = format("%s-site-%s", var.projectPrefix, local.buildSuffix)
+  namespace   = var.namespace
+  description = format("Virtual site for %s-%s", var.projectPrefix, local.buildSuffix)
+  labels      = local.volterraCommonLabels
+  annotations = {
+    source      = "git::https://github.com/F5DevCentral/f5-digital-customer-engangement-center"
+    provisioner = "terraform"
+  }
+  site_type = "CUSTOMER_EDGE"
+  site_selector {
+    expressions = [
+      join(",", [for k, v in local.volterraCommonLabels : format("%s = %s", k, v)])
+    ]
+  }
+}
+
 ############################ Volterra AWS Transit Gateway Sites ############################
 
 resource "volterra_aws_tgw_site" "main" {
   name                    = format("%s-aws-%s", var.projectPrefix, local.buildSuffix)
   namespace               = "system"
+  labels                  = local.volterraCommonLabels
+  annotations             = local.volterraCommonAnnotations
   logs_streaming_disabled = true
 
-  vpc_attachments {
-    vpc_list {
-      vpc_id = module.vpcShared.vpc_id
+  dynamic "vpc_attachments" {
+    for_each = values(module.vpc)[*]["vpc_id"]
+    content {
+      vpc_list {
+        vpc_id = vpc_attachments.value
+      }
     }
   }
 
   aws_parameters {
-    aws_certified_hw = "aws-byol-multi-nic-voltmesh"
     aws_region       = var.awsRegion
     vpc_id           = module.vpcShared.vpc_id
+    aws_certified_hw = "aws-byol-multi-nic-voltmesh"
     disk_size        = "80"
     instance_type    = "t3.xlarge"
     ssh_key          = var.ssh_key
@@ -49,6 +73,36 @@ resource "volterra_aws_tgw_site" "main" {
       volterra_site_asn = "64532"
     }
   }
+
+  vn_config {
+    no_global_network        = true
+    no_outside_static_routes = true
+
+    inside_static_routes {
+      static_route_list {
+        custom_static_route {
+          subnets {
+            ipv4 {
+              prefix = "10.1.0.0"
+              plen   = "16"
+            }
+          }
+          nexthop {
+            type = "NEXT_HOP_USE_CONFIGURED"
+            nexthop_address {
+              ipv4 {
+                addr = "100.64.6.1"
+              }
+            }
+          }
+          attrs = [
+            "ROUTE_ATTR_INSTALL_FORWARDING",
+            "ROUTE_ATTR_INSTALL_HOST"
+          ]
+        }
+      }
+    }
+  }
 }
 
 resource "volterra_tf_params_action" "main" {
@@ -59,4 +113,28 @@ resource "volterra_tf_params_action" "main" {
   ignore_on_update = false
 
   depends_on = [volterra_aws_tgw_site.main]
+}
+
+############################ Collect Volterra Info ############################
+
+# Instance info
+data "aws_instances" "volterra" {
+  instance_state_names = ["running"]
+  instance_tags = {
+    "ves.io/site_name" = volterra_aws_tgw_site.main.name
+  }
+
+  depends_on = [volterra_tf_params_action.main]
+}
+
+# NIC info
+data "aws_network_interface" "volterra_sli" {
+  filter {
+    name   = "attachment.instance-id"
+    values = [data.aws_instances.volterra.ids[0]]
+  }
+  filter {
+    name   = "tag:ves.io/interface-type"
+    values = ["site-local-inside"]
+  }
 }
