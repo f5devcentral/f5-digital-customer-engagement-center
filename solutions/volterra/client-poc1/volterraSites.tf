@@ -26,12 +26,12 @@ resource "volterra_aws_tgw_site" "main" {
   annotations             = local.volterraCommonAnnotations
   logs_streaming_disabled = true
 
-  dynamic "vpc_attachments" {
-    for_each = values(module.vpc)[*]["vpc_id"]
-    content {
-      vpc_list {
-        vpc_id = vpc_attachments.value
-      }
+  vpc_attachments {
+    vpc_list {
+      vpc_id = module.vpc["bu1"].vpc_id
+    }
+    vpc_list {
+      vpc_id = module.vpc["bu2"].vpc_id
     }
   }
 
