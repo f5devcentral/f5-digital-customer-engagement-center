@@ -115,7 +115,12 @@ Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click o
 
 | Name | Description |
 |------|-------------|
-| buildSuffix | build suffix for the deployment |
+| JumphostPublicIpBu1 | BU1 Jumphost Public IP |
+| backendPrivateIpBu1 | BU1 Backend Private IP |
+| backendPrivateIpBu2 | BU2 Backend Private IP |
+| backendPrivateIps | Backend Private IPs |
+| testURL | URL to test from jumphost client |
+| volterraInsideIp | Volterra Site Local Inside IP address |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->
 

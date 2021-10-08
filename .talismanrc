@@ -300,3 +300,5 @@ fileignoreconfig:
   checksum: 141954a4cc3b649ff3210efee7c7746061b1e37e46d656fb56f924c9253ef80d
 - filename: solutions/volterra/client-poc1/README.md
   checksum: a9cb49e0be401deb57085bdbc316c0d0c7bbef20c14dbf01ba3d59c4c9c7c507
+- filename: solutions/volterra/client-poc1/volterraServices.tf
+  checksum: 2e5f9f9e76ec54688107cc71f7a86d06cf9270649f9a2199b931c6ca1e08c50b
