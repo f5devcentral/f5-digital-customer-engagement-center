@@ -292,3 +292,11 @@ fileignoreconfig:
   checksum: 854582e41d355b198678c5d4e181180a0a93420b33e7604b696f07632a0a0c1c
 - filename: solutions/volterra/multi-cloud-connectivity/azure/main.tf
   checksum: f35945cc6236394993237e8586e61e9695d4afde99bd09b4dc68d9073dcd0218
+- filename: solutions/volterra/client-poc1/admin.auto.tfvars.example
+  checksum: a509f7a26565a891302e5c628208e7fcf743b6e74b7ecd365a2767181e0cac5e
+- filename: solutions/volterra/client-poc1/volterraSites.tf
+  checksum: b66ce9e7de24cc5225e924bf04aab0a97b6de8bc4e27b33f7ea79539a99fec08
+- filename: solutions/volterra/client-poc1/main.tf
+  checksum: 141954a4cc3b649ff3210efee7c7746061b1e37e46d656fb56f924c9253ef80d
+- filename: solutions/volterra/client-poc1/README.md
+  checksum: a9cb49e0be401deb57085bdbc316c0d0c7bbef20c14dbf01ba3d59c4c9c7c507
