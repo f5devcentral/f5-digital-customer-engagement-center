@@ -100,7 +100,7 @@ module "vpcShared" {
 resource "aws_subnet" "sli" {
   vpc_id            = module.vpcShared.vpc_id
   availability_zone = local.awsAz1
-  cidr_block        = "100.64.6.0/24"
+  cidr_block        = var.sharedVPCs.hub.volterra_inside_subnet
   tags = {
     Name      = format("%s-site-local-inside-%s", var.resourceOwner, local.buildSuffix)
     Terraform = "true"
@@ -110,7 +110,7 @@ resource "aws_subnet" "sli" {
 resource "aws_subnet" "workload" {
   vpc_id            = module.vpcShared.vpc_id
   availability_zone = local.awsAz1
-  cidr_block        = "100.64.7.0/24"
+  cidr_block        = var.sharedVPCs.hub.volterra_workload_subnet
   tags = {
     Name      = format("%s-workload-%s", var.resourceOwner, local.buildSuffix)
     Terraform = "true"
