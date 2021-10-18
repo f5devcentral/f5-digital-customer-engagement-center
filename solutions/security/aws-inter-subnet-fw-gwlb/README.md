@@ -1,5 +1,5 @@
 # Description
-AWS - Insect inter-subnet traffic using BIG-IP security services 
+AWS - Insect inter-subnet traffic using BIG-IP security services
 
 ## Diagram
 
@@ -43,7 +43,7 @@ Password: bigipPassword output value
 
 Please note it takes a few minutes for the BIGIP to complete the onboarding process, once it's done you will be able to ssh into the jumphost.
 
-The BIGIP gets deployed with a forwarding virtual server to route accept the traffic inside the GENEVE tunnel and apply relevant security controls on it. It also comes with a basic AFM policy that logs all packets locally and blocks telnet (tcp port 23). 
+The BIGIP gets deployed with a forwarding virtual server to route accept the traffic inside the GENEVE tunnel and apply relevant security controls on it. It also comes with a basic AFM policy that logs all packets locally and blocks telnet (tcp port 23).
 
 
 ## TEST your setup:
@@ -63,7 +63,7 @@ ssh ubuntu@x.y.z.p
 
 from the public jumphost, try to SSH to the internal Jumphost
 try to telnet the internal jumphost and notice your connection is being rejected (tcp reset)
-monitor the traffic in AFM, you should see traffic between the public jumphost and the internal one. 
+monitor the traffic in AFM, you should see traffic between the public jumphost and the internal one.
 
 ## Cleanup
 use the following command to destroy all of the resources

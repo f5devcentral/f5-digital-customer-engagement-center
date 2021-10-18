@@ -38,14 +38,6 @@ resource "volterra_azure_vnet_site" "site" {
 
 No provider.
 
-## Modules
-
-No Modules.
-
-## Resources
-
-No resources.
-
 ## Inputs
 
 No input.
@@ -55,5 +47,6 @@ No input.
 | Name | Description |
 |------|-------------|
 | lookup | A map of Azure compute region to a coordinate object with latitude and longitude fields. |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->
