@@ -1,5 +1,6 @@
+**********
 Guidelines
-==========
+**********
 
 # AUTO VARS
 ## project
@@ -15,19 +16,21 @@ resourceOwner type string
 ## variables
  these resources will be present in each solutions variables.tf
 
-resource "random_id" "buildSuffix" {
-  keepers = {
-    # Generate a new id each time we switch to a new project name
-    prefix = var.projectPrefix
-  }
-  byte_length = 2
-}
+   .. code-block::
 
-resource "random_password" "password" {
-  length           = 16
-  special          = true
-  override_special = "_%@"
-}
+    resource "random_id" "buildSuffix" {
+      keepers = {
+        # Generate a new id each time we switch to a new project name
+        prefix = var.projectPrefix
+      }
+      byte_length = 2
+    }
+
+    resource "random_password" "password" {
+      length           = 16
+      special          = true
+      override_special = "_%@"
+    }
 
 ## admin
 adminAccountName type string

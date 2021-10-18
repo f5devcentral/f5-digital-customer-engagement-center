@@ -1,2 +1,0 @@
-Securing sensitive information
-==============================

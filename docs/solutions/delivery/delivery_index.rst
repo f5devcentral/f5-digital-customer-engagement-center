@@ -10,3 +10,4 @@ Here are the F5 application delivery solutions that are available to deploy:
    :glob:
 
    application_delivery_controller/nginx/kic/*_index
+   application_delivery_controller/bigip/upgrade/aws/*_index

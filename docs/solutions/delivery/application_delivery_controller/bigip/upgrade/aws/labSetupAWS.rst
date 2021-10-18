@@ -1,17 +1,21 @@
-BIG-IP Upgrade | AWS Environment
---------------------------------
+BIG-IP Upgrade | Environment
+----------------------------
 
-This solution will use AWS services to host the BIG-IPs. Utilizing AWS will dramatically reduce the amount of time needed to build out a solution. Using Terraform and Ansible for building the BIG-IP and AWS services provides a consistent deployment every time.
+This solution uses AWS services to host the BIG-IPs. The solution can be deployed with F5 UDF or any AWS account with rights to the below resources.
 
-Prior knowledge of AWS or Terraform is not needed. The solution aims for a smaller learning curve on infrastructure (with abstractions) in exchange for more time within BIG-IP.
+- Terraform is used for infrastructure management
+- Ansible is used for configuration management
+- AWS is the platform
 
-Terraform_ is an open-source infrastructure as code software tool that provides a consistent CLI workflow to manage hundreds of cloud services. Terraform codifies cloud APIs into declarative configuration files.
+Prior knowledge of Terraform, Ansible, or AWS is not needed. The solution aims for a smaller learning curve on infrastructure/configuration management (with abstractions) in exchange for more time within BIG-IP.
+
+Terraform_ is an open-source infrastructure code software tool that provides a consistent CLI workflow to manage hundreds of cloud services. Terraform codifies cloud APIs into declarative configuration files.
 
 Ansible_ is an open-source software provisioning, configuration management, and application-deployment tool enabling infrastructure as code.
 
-`Visual Studio Code`_ is a streamlined code editor with support for development operations like debugging, task running, and version control.
+`Visual Studio Code`_ is a streamlined code editor supporting development operations like debugging, task running, and version control.
 
-This solution is leveraging Terraform andto create and manage the following products and services. Ansible is used for BIG-IP configuration management after terraform operations are complete.
+This solution leverages Terraform to create and manage the following products and services. Ansible is used for BIG-IP configuration management after Terraform operations are complete.
 
 - Amazon Elastic Compute Cloud (EC2)
 - Amazon Identity and Access Management (IAM)
@@ -19,24 +23,65 @@ This solution is leveraging Terraform andto create and manage the following prod
 - Terraform
 - Ansible
 - VSCode
-
-
 - BIG-IP Build Resources
    * Cloud-init (userdata)
 
-.. note:: Double-clicking in the empty space to the right of **Welcome** tab in VSCode will create a new file that can be used as a digital notepad
+Solution Setup
+##############
 
-1. VSCode is our preferred IDE. This allows an editor and terminal within a single pane, open VSCode, and a new Terminal. If you are in the UDF environment, you can access VSCode through the **coder** access method on the **ubuntuHost** resource. Also, see `F5 UDF Environment Access`_.
+For access to a UDF, environment see `F5 UDF Environment Access`_.
+
+.. warning:: The random BIG-IP password and AWS tokens are stored in cloud-init and the Terraform state file. If this solution is running with any longevity, it is recommended to change the password and tokens.
+.. warning:: Skipping Steps 1-3 will result in a Terraform failure
+
+#. Accessing AWS
+
+   UDF ephemeral accounts have access to subscribe to AWS marketplace images. Unfortunately, there is no way to subscribe to an offering programmatically. Before running this solution, you will need to log in to the aws console and subscribe.
+
+   From the UDF environment, locate your Console URL and generated password. Click the URL to log in to the AWS console.
 
    Example:
 
    |image01|
+   |image02|
 
-2. Set or verify environment AWS credentials
+#. BIG-IP Marketplace
+
+   BIG-IP offerings are licensed by the modules and throughput. For this solution, we will license a **BEST PAYG 200mbps** on version **12.1.6**. This will allow for all BIG-IP modules and 200mbps of tested traffic with an older version to upgrade.
+
+   From the top search bar, search for ``big-ip 200mbps`` and click
+
+   Example:
+
+   |image03|
+
+#. Subscribe to the BIG-IP 200mbps image and accept the terms
+
+   .. note:: You can choose different offerings by changing the default Terraform variable to a different BIG-IP amazon machine image (AMI) search, default is ``F5 Networks Licensed Hourly BIGIP-12.1.6*Best*200MBPS*``
+
+   Example:
+
+   |image04|
+   |image05|
+   |image06|
+
+   .. note:: Once the subscription is processing you can move on to the next step
+
+#. Create a working environment
+
+   VSCode is our preferred IDE. This allows an editor and terminal within a single pane, open VSCode, and create a new Terminal. In the UDF environment, you can access VSCode through the **coder** access method on the **ubuntuHost** resource.
+
+   For access to coder in a UDF (course or blueprint) environment, see `F5 UDF Environment Access`_.
+
+   Example:
+
+   |image07|
+
+#. Set or verify environment AWS credentials
 
    .. note:: AWS Access and Secret keys for the UDF environment are located in the Blueprint or Course Documentation, under section **cloud accounts**
 
-   .. warning:: For UDF users, the region must be ``us-west-2``
+   .. warning:: The default region in Terraform is ``us-west-2``, if you choose a different credential region, make sure to update Terraform
 
    In the terminal window, copy the below text and paste+enter:
 
@@ -52,192 +97,163 @@ This solution is leveraging Terraform andto create and manage the following prod
    AWS Access Key ID     API Key
    AWS Secret Access Key API Secret
    Default region name   us-west-2
-   Default ouput format  json
+   Default output format json
    ===================== ===========================================================
 
    Example:
 
-   |image02|
-
-3. git clone the public repositories containing all code.
-
-   .. note:: Examples are shown pulling the repositories down to the **Desktop** folder. If you choose to change the clone location, be aware of the path
-
-   In the terminal window, copy the below text and paste+enter:
-
-   .. code-block::
-
-      git clone -b 'v1.1.0' --single-branch https://github.com/f5devcentral/f5-digital-customer-engagement-center
-
-   .. code-block::
-
-      git clone -b 'v1.10.0' --single-branch https://github.com/nginxinc/kubernetes-ingress
-
-   Example:
-
-   |image03|
-   |image04|
-
-4. Change directory to the F5 Digital Customer Engagement Center repository
-
-   In the terminal window copy the below text and paste+enter:
-
-   .. code-block::
-
-      cd /home/ubuntu/Desktop/f5-digital-customer-engagement-center/solutions/delivery/application_delivery_controller/nginx/kic/aws
-
-   Example:
-
-   |image05|
-
-5. SSH key for created AWS Resources
-
-   .. note:: For UDF run workshops, an SSH key has already been created for you
-
-   Terraform will need an SSH key for creating resources. If you have one, you can provide it or create a new one.
-
-   In the terminal window, copy the below text and paste+enter:
-
-   .. code-block::
-
-      cat ~/udf_user.pub
-
-   Copy the output to be used in the next step, or provide an SSH key.
-
-   Example:
-
-   |image06|
-
-6. Modify Terraform admin.auto.tfvars file for deployment.
-
-   .. warning:: ``resourceOwner`` is arbitrary. For UDF users, awsRegion must be ``us-west-2``
-
-   In the terminal window copy the below text and paste+enter:
-
-   .. code-block::
-
-      cp admin.auto.tfvars.example admin.auto.tfvars
-
-   .. code-block::
-
-      sudo vi admin.auto.tfvars
-
-   ============== ===========================================================
-   Variable Name   Variable Value
-   ============== ===========================================================
-   resourceOwner  Arbitrary (i.e. johnc)
-   awsRegion      Leave us-west-2
-   awsAz1         Leave us-west-2a
-   awsAz2         Leave us-west-2b
-   sshPublicKey   Copy pasted ssh key from previous step
-   ============== ===========================================================
-
-   save and exit file with ``:wq``
-
-   Example:
-
-   |image07|
-   |image08|
    |image09|
 
-7. Run the setup script - **This will create AWS resource objects**
+#. Clone the public repository of solutions
 
-   In the terminal window copy the below text and paste+enter:
+   .. note:: Examples are shown pulling the repositories down to the **Desktop** folder. If you choose to change the clone location, be aware of the path changes
+
+   In the terminal window, copy the below text and paste+enter:
 
    .. code-block::
 
-      ./setup.sh
+      git clone -b 'main' --single-branch https://github.com/f5devcentral/f5-digital-customer-engagement-center
+
+   Example:
+
+   |image08|
+
+#. Change directory to the F5 Digital Customer Engagement Center repository
+
+   In the terminal window, copy the below text and paste+enter:
+
+   .. code-block::
+
+      cd /home/ubuntu/Desktop/f5-digital-customer-engagement-center/solutions/delivery/application_delivery_controller/big-ip/upgrade/aws
 
    Example:
 
    |image10|
 
-8. Accept the Terraform deployment
+#. Run the setup script **This will create AWS resource objects**
 
-   ``enter`` when needed
+   In the terminal window, copy the below text and paste+enter:
+
+   .. code-block::
+
+      bash setup.sh
 
    Example:
 
    |image11|
 
-9. Terraform Completed
+#. Continue with Terraform when ready
 
-   .. warning:: Terraform is building several services, this can take 10-15 minutes
-
-   .. note:: If you need to see the outputs again later and have not saved them, utilize the ``terraform output`` command.
-
-   The outputs from our Terraform run are in green. We will need this information to access our services and create/publish NGINX into the environment.
-
-   Save the outputs for the next several steps.
+   Press ``enter`` when requested
 
    Example:
 
+   |image13|
+
+#. Enter the AWS api credentials for Terraform
+
+   The BIG-IP uses the AWS credentials to perform an ``API`` failover, moving the secondary IP addresses from one Elastic Network Interface to another. This is used to replicate the failover on-premises from an active BIG-IP to a standby.
+
    |image12|
 
-10. All of the Terraform-created objects are dynamic, so until running the Terraform template they did not exist. Now that the resources are created, we need to apply access to those services.
+#. Terraform and Ansible Completed
 
-   .. warning:: Terraform does not know about the changes in this step. If Terraform must be re-run, this step will need to be repeated.
+   .. warning:: Terraform is building several services, then Ansible will run. This can take 10-15 minutes to complete
 
-    Step 1: Log in to ECR. Change the ``ecrRepositoryURL`` to the terraform output.
+   .. note:: If you need to see the outputs again later and have not saved them, utilize the ``terraform output`` command
 
-    In the terminal window copy the below text and paste+enter:
+   The outputs from our Terraform run are in green. We will need this information to access our BIG-IPs and testing the virtual service.
 
-    .. code-block::
+   Example:
 
-       aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ecrRepositoryURL
+   |image14|
 
-    ECR is used as our registry for the Kubernetes environment. Registries are used to keep container images for  lifecycle and deployments. NGINX Ingress Controller is a container.
+#. The BIG-IP resources
 
-    Example:
+   Terraform created two BIG-IPs. Ansible created the virtual services and the BIG-IP Cluster. Within Terrafroms outputs are the public ip addresses for the management interfaces for both BIG-IPs. Log in to a BIG-IP to see the cluster settings and version of BIG-IP deployed
 
-    |image13|
+   The Terraform outputs have the management public IP address of our BIG-IPs called **f5vm01_mgmt_public_pip** and **f5vm02_mgmt_public_pip**. Since this address is public, it is accessible from anywhere on the internet. Open a browser and browse to the page
 
-    Step 2: Log in to EKS. Change the ``kubernetesClusterName`` to the terraform output.
+   .. note:: The BIG-IP management interfaces use a self-signed certificate. Accept the invalid certificate. If you are using Chrome on the page, you can type ``thisisunsafe`` all one word
 
-    In the terminal window copy the below text and paste+enter:
+   .. code-block::
 
-    .. code-block::
+      https://(f5vm01_mgmt_public_pip) or https://(f5vm02_mgmt_public_pip)
 
-       aws eks --region us-west-2 update-kubeconfig --name kubernetesClusterName
+   Example:
 
-    Kubernetes in this environment will host our application, and we will be using NGINX Ingress Controller to  expose that application.
+   |image15|
 
-    Example:
+#. Log in to the BIG-IP
 
-    |image14|
+   Log in with user ``awsuser``, and the Terraform generated password found in the outputs **generated_password**
 
-    Step 3: Update the Subnet Tags for the EKS cluster. Change the ``kubernetesClusterName``, ``publicSubnetAZ1`` and ``publicSubnetAZ2`` to  the terraform output.
+   Example:
 
-    In the terminal window copy the below text and paste+enter:
+   |image17|
 
-    .. code-block::
+#. Validate the BIG-IP setup
 
-       aws ec2 create-tags \
-          --resources publicSubnetAZ1 publicSubnetAZ2 \
-          --tags Key=kubernetes.io/cluster/kubernetesClusterName,Value=shared   Key=kubernetes.io/role/elb,Value=1
+   A cluster was created, and the TMOS version of the BIG-IP was created with 12.1.6
 
-    For EKS to create an Elastic Load Balancer for our Ingress solution, two tags need to be placed on the public subnets. Ideally, Terraform would add the tags. However, the EKS module from Terraform does not manipulate  those. So, we are doing it manually. These issues can be tracked here.
+   Example:
 
-    - issue01_
-    - issue02_
+   |image19|
 
-    Example:
+   |image18|
 
-    |image15|
+#. Verify that the test service is available
 
-11. The environment has been created, all access has been set.
+   The test service was created with Ansible, a basic virtual server and an irule for 80 to 443 redirect, and another virtual server with FQDN pool members and an irule that gives back client information in the form of an HTML page.
 
-    At this point, we can deploy our services and provide access.
+   The Terraform outputs have the public IP address of our testing virtual service called **public_vip_pip**. Since this address is public, it is accessible from anywhere on the internet. Open a browser and browse to the page
 
-    Proceed to `NGINX Kubernetes Ingress Controller | Deployment`_
+   .. note:: The BIG-IP is performing TLS offload. The certificate is self-signed. Accept the invalid certificate. If you use Chrome, on the page, you can type ``thisisunsafe`` all one word
 
+   .. code-block::
+
+      https://(public_vip_pip)
+
+   Example:
+
+   |image15|
+
+#. The virtual service should be up and available
+
+   .. note:: If the test virtual is not available, failover the BIG-IP cluster
+
+   The irule on the virtual server will present some client information to validate that the service is ready
+
+   Example:
+
+   |image16|
+
+#. The environment has been created, and all access has been set
+
+   At this point, we can utilize our BIG-IPs and test service for upgrades.
+
+   Proceed to `BIG-IP Upgrade | Deployments`_
+
+#. Destroy the AWS environment and all resources **This will destroy AWS resource objects**
+
+   .. note:: Destruction of the AWS environment does not need the API token/key these can be blank
+
+   In the terminal window, copy the below text and paste+enter:
+
+   .. code-block::
+
+      bash cleanup.sh
+
+   Example:
+
+   |image22|
 
 
 .. |image01| image:: images/image01.png
-  :width: 50%
+  :width: 75%
   :align: middle
 .. |image02| image:: images/image02.png
-  :width: 75%
+  :width: 25%
   :align: middle
 .. |image03| image:: images/image03.png
   :width: 75%
@@ -246,38 +262,57 @@ This solution is leveraging Terraform andto create and manage the following prod
   :width: 50%
   :align: middle
 .. |image05| image:: images/image05.png
-  :width: 75%
+  :width: 50%
   :align: middle
 .. |image06| image:: images/image06.png
-  :width: 85%
+  :width: 75%
   :align: middle
 .. |image07| image:: images/image07.png
-  :width: 75%
+  :width: 25%
   :align: middle
 .. |image08| image:: images/image08.png
   :width: 75%
   :align: middle
 .. |image09| image:: images/image09.png
-  :width: 75%
+  :width: 50%
   :align: middle
 .. |image10| image:: images/image10.png
   :width: 75%
   :align: middle
 .. |image11| image:: images/image11.png
-  :width: 40%
+  :width: 100%
   :align: middle
 .. |image12| image:: images/image12.png
-  :width: 75%
+  :width: 50%
   :align: middle
 .. |image13| image:: images/image13.png
+  :width: 50%
   :align: middle
 .. |image14| image:: images/image14.png
+  :width: 50%
   :align: middle
 .. |image15| image:: images/image15.png
+  :width: 50%
   :align: middle
+.. |image16| image:: images/image16.png
+  :width: 35%
+  :align: middle
+.. |image17| image:: images/image17.png
+  :width: 50%
+  :align: middle
+.. |image18| image:: images/image18.png
+  :width: 75%
+  :align: middle
+.. |image19| image:: images/image19.png
+  :width: 75%
+  :align: middle
+.. |image22| image:: images/image22.png
+  :width: 100%
+  :align: middle
+
 
 .. _Terraform: https://www.terraform.io/
 .. _Ansible: https://www.ansible.com/
 .. _`Visual Studio Code`: https://code.visualstudio.com/
-.. _`NGINX Kubernetes Ingress Controller | Deployment`: bigip_upgrade_index.html
-.. _`F5 UDF Environment Access`: ../../../../../usage/f5_udf_getting_started.html
+.. _`F5 UDF Environment Access`: ../../../../../../usage/getting_started.html
+.. _`BIG-IP Upgrade | Deployments`: lab01.html
