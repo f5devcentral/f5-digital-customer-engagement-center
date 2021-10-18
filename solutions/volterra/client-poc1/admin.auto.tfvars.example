@@ -1,0 +1,16 @@
+# Common variables: these will be used when naming demo resources
+projectPrefix = "my-mcn-demo"
+resourceOwner = "my-name"
+domain_name   = "shared.acme.com"
+
+# Volterra variables: these will be used to standup Volterra resources across clouds
+namespace      = "my-namespace"
+volterraTenant = "my-volterra-tenant-id"
+
+# Optional: if provided this public key will allow SSH access to the Volterra gateways
+# and may be used by AWS/Azure/GCP where an SSH key can be specified
+ssh_key = "ssh-rsa REDACTED me@my.email"
+
+# AWS variables
+awsRegion            = "us-west-2"
+volterraCloudCredAWS = "cloud-cred-aws"
