@@ -1,7 +1,7 @@
 ############################ Volterra Origin Pool (backend) ############################
 
 resource "volterra_origin_pool" "app" {
-  for_each               = var.spokeVPCs
+  for_each               = var.spokeVpcs
   name                   = format("%s-%s-app-%s", var.projectPrefix, each.key, local.buildSuffix)
   namespace              = var.namespace
   endpoint_selection     = "DISTRIBUTED"

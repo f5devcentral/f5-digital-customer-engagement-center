@@ -62,7 +62,7 @@ variable "domain_name" {
   description = "The DNS domain name that will be used as common parent generated DNS name of loadbalancers."
   default     = "shared.acme.com"
 }
-variable "spokeVPCs" {
+variable "spokeVpcs" {
   type = map(object({
     cidr            = string
     public_subnets  = list(any)
@@ -86,7 +86,7 @@ variable "spokeVPCs" {
   description = "The spoke VPCs with applications."
 }
 
-variable "sharedVPCs" {
+variable "sharedVpcs" {
   type = map(object({
     cidr                     = string
     public_subnets           = list(any)
