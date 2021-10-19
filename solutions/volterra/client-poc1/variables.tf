@@ -97,8 +97,8 @@ variable "sharedVPCs" {
   default = {
     hub = {
       cidr                     = "100.64.0.0/20"
-      public_subnets           = ["100.64.0.0/24", "100.64.1.0/24", "100.64.2.0/24"]
-      private_subnets          = ["100.64.3.0/24", "100.64.4.0/24", "100.64.5.0/24"]
+      public_subnets           = ["100.64.0.0/24", "100.64.1.0/24"]
+      private_subnets          = ["100.64.3.0/24", "100.64.4.0/24"]
       volterra_inside_subnet   = "100.64.6.0/24"
       volterra_workload_subnet = "100.64.7.0/24"
     }

@@ -55,7 +55,7 @@ Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click o
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.14.5 |
+| terraform | >= 1.0 |
 | aws | >= 3 |
 | volterra | 0.10 |
 
@@ -112,7 +112,7 @@ Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click o
 | awsNumWebservers | The number of webserver instances to launch in each business unit spoke. | `number` | `1` | no |
 | buildSuffix | random build suffix for resources | `string` | `null` | no |
 | domain\_name | The DNS domain name that will be used as common parent generated DNS name of loadbalancers. | `string` | `"shared.acme.com"` | no |
-| sharedVPCs | The shared VPCs with common services like security, firewall, load balancing, and more. | <pre>map(object({<br>    cidr                     = string<br>    public_subnets           = list(any)<br>    private_subnets          = list(any)<br>    volterra_inside_subnet   = string<br>    volterra_workload_subnet = string<br>  }))</pre> | <pre>{<br>  "hub": {<br>    "cidr": "100.64.0.0/20",<br>    "private_subnets": [<br>      "100.64.3.0/24",<br>      "100.64.4.0/24",<br>      "100.64.5.0/24"<br>    ],<br>    "public_subnets": [<br>      "100.64.0.0/24",<br>      "100.64.1.0/24",<br>      "100.64.2.0/24"<br>    ],<br>    "volterra_inside_subnet": "100.64.6.0/24",<br>    "volterra_workload_subnet": "100.64.7.0/24"<br>  }<br>}</pre> | no |
+| sharedVPCs | The shared VPCs with common services like security, firewall, load balancing, and more. | <pre>map(object({<br>    cidr                     = string<br>    public_subnets           = list(any)<br>    private_subnets          = list(any)<br>    volterra_inside_subnet   = string<br>    volterra_workload_subnet = string<br>  }))</pre> | <pre>{<br>  "hub": {<br>    "cidr": "100.64.0.0/20",<br>    "private_subnets": [<br>      "100.64.3.0/24",<br>      "100.64.4.0/24"<br>    ],<br>    "public_subnets": [<br>      "100.64.0.0/24",<br>      "100.64.1.0/24"<br>    ],<br>    "volterra_inside_subnet": "100.64.6.0/24",<br>    "volterra_workload_subnet": "100.64.7.0/24"<br>  }<br>}</pre> | no |
 | spokeVPCs | The spoke VPCs with applications. | <pre>map(object({<br>    cidr            = string<br>    public_subnets  = list(any)<br>    private_subnets = list(any)<br>    workstation     = bool<br>  }))</pre> | <pre>{<br>  "bu1": {<br>    "cidr": "10.1.0.0/16",<br>    "private_subnets": [<br>      "10.1.52.0/24",<br>      "10.1.152.0/24"<br>    ],<br>    "public_subnets": [<br>      "10.1.10.0/24",<br>      "10.1.110.0/24"<br>    ],<br>    "workstation": true<br>  },<br>  "bu2": {<br>    "cidr": "10.2.0.0/16",<br>    "private_subnets": [<br>      "10.2.52.0/24",<br>      "10.2.152.0/24"<br>    ],<br>    "public_subnets": [<br>      "10.2.10.0/24",<br>      "10.2.110.0/24"<br>    ],<br>    "workstation": false<br>  }<br>}</pre> | no |
 | ssh\_key | SSH public key used to create an EC2 keypair | `string` | `null` | no |
 | volterraP12 | Location of volterra p12 file | `string` | `null` | no |

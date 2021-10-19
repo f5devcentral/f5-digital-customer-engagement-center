@@ -1,6 +1,6 @@
 ########################### Versions ##########################
 terraform {
-  required_version = ">= 0.14.5"
+  required_version = ">= 1.0"
 
   required_providers {
     volterra = {
@@ -159,9 +159,16 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "sharedVPC" {
 
 # Create Routes in each spoke VPC to reach shared VPC via TGW
 # Flow = spoke VPC > TGW > shared VPC
-resource "aws_route" "spokeVPC" {
+resource "aws_route" "spokeVpcPublic" {
   for_each               = var.spokeVPCs
   route_table_id         = module.spokeVPC[each.key].public_route_table_ids[0]
+  destination_cidr_block = module.sharedVPC.vpc_cidr_block
+  transit_gateway_id     = aws_ec2_transit_gateway.main.id
+  depends_on             = [aws_ec2_transit_gateway.main]
+}
+resource "aws_route" "spokeVpcPrivate" {
+  for_each               = var.spokeVPCs
+  route_table_id         = module.spokeVPC[each.key].private_route_table_ids[0]
   destination_cidr_block = module.sharedVPC.vpc_cidr_block
   transit_gateway_id     = aws_ec2_transit_gateway.main.id
   depends_on             = [aws_ec2_transit_gateway.main]
