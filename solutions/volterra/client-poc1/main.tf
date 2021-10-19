@@ -80,7 +80,7 @@ module "sharedVpc" {
   version              = "~> 2.0"
   name                 = format("%s-sharedVpc-%s", var.projectPrefix, local.buildSuffix)
   cidr                 = var.sharedVpcs.hub.cidr
-  azs                  = [local.awsAz1, local.awsAz2, local.awsAz3]
+  azs                  = [local.awsAz1, local.awsAz2]
   public_subnets       = var.sharedVpcs.hub.public_subnets
   private_subnets      = var.sharedVpcs.hub.private_subnets
   enable_dns_hostnames = true
