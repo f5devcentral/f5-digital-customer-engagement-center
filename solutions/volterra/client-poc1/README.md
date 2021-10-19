@@ -103,7 +103,7 @@ Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click o
 | awsRegion | aws region | `string` | n/a | yes |
 | namespace | Volterra application namespace | `string` | n/a | yes |
 | projectPrefix | projectPrefix name for tagging | `string` | n/a | yes |
-| resourceOwner | Owner of the deployment for tagging purposes | `string` | n/a | yes |
+| resourceOwner | Owner of the deployment for tagging purposes (ex. name@email) | `string` | n/a | yes |
 | volterraCloudCredAWS | Name of the volterra aws credentials | `string` | n/a | yes |
 | volterraTenant | Tenant of Volterra | `string` | n/a | yes |
 | awsAz1 | Availability zone, will dynamically choose one if left empty | `string` | `null` | no |

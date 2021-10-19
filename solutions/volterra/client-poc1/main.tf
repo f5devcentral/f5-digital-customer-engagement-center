@@ -69,8 +69,8 @@ module "spokeVPC" {
   single_nat_gateway   = true
 
   tags = {
-    Name      = format("%s-spokeVPC-%s-%s", var.projectPrefix, each.key, local.buildSuffix)
-    Terraform = "true"
+    Name  = format("%s-spokeVPC-%s-%s", var.projectPrefix, each.key, local.buildSuffix)
+    Owner = var.resourceOwner
   }
 }
 
@@ -86,8 +86,8 @@ module "sharedVPC" {
   enable_dns_hostnames = true
 
   tags = {
-    Name      = format("%s-sharedVPC-%s", var.projectPrefix, local.buildSuffix)
-    Terraform = "true"
+    Name  = format("%s-sharedVPC-%s", var.projectPrefix, local.buildSuffix)
+    Owner = var.resourceOwner
   }
 }
 
@@ -102,8 +102,8 @@ resource "aws_subnet" "sli" {
   availability_zone = local.awsAz1
   cidr_block        = var.sharedVPCs.hub.volterra_inside_subnet
   tags = {
-    Name      = format("%s-site-local-inside-%s", var.resourceOwner, local.buildSuffix)
-    Terraform = "true"
+    Name  = format("%s-site-local-inside-%s", var.projectPrefix, local.buildSuffix)
+    Owner = var.resourceOwner
   }
 }
 
@@ -112,8 +112,8 @@ resource "aws_subnet" "workload" {
   availability_zone = local.awsAz1
   cidr_block        = var.sharedVPCs.hub.volterra_workload_subnet
   tags = {
-    Name      = format("%s-workload-%s", var.resourceOwner, local.buildSuffix)
-    Terraform = "true"
+    Name  = format("%s-workload-%s", var.projectPrefix, local.buildSuffix)
+    Owner = var.resourceOwner
   }
 }
 
@@ -125,8 +125,8 @@ resource "aws_ec2_transit_gateway" "main" {
   default_route_table_association = "enable"
   default_route_table_propagation = "enable"
   tags = {
-    Name      = format("%s-tgw-%s", var.resourceOwner, local.buildSuffix)
-    Terraform = "true"
+    Name  = format("%s-tgw-%s", var.projectPrefix, local.buildSuffix)
+    Owner = var.resourceOwner
   }
 }
 
@@ -137,8 +137,8 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "spokeVPC" {
   transit_gateway_id = aws_ec2_transit_gateway.main.id
   vpc_id             = module.spokeVPC[each.key].vpc_id
   tags = {
-    Name      = format("%s-spokeVPC-%s-%s", var.resourceOwner, each.key, local.buildSuffix)
-    Terraform = "true"
+    Name  = format("%s-spokeVPC-%s-%s", var.projectPrefix, each.key, local.buildSuffix)
+    Owner = var.resourceOwner
   }
   depends_on = [aws_ec2_transit_gateway.main]
 }
@@ -149,8 +149,8 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "sharedVPC" {
   transit_gateway_id = aws_ec2_transit_gateway.main.id
   vpc_id             = module.sharedVPC.vpc_id
   tags = {
-    Name      = format("%s-sharedVPC-%s", var.resourceOwner, local.buildSuffix)
-    Terraform = "true"
+    Name  = format("%s-sharedVPC-%s", var.projectPrefix, local.buildSuffix)
+    Owner = var.resourceOwner
   }
   depends_on = [aws_ec2_transit_gateway.main]
 }
@@ -212,8 +212,8 @@ resource "aws_security_group" "jumphost" {
   }
 
   tags = {
-    Name      = format("%s-sg-jumphost-%s", var.resourceOwner, local.buildSuffix)
-    Terraform = "true"
+    Name  = format("%s-sg-jumphost-%s", var.projectPrefix, local.buildSuffix)
+    Owner = var.resourceOwner
   }
 }
 
@@ -244,8 +244,8 @@ resource "aws_security_group" "webserver" {
   }
 
   tags = {
-    Name      = format("%s-sg-webservers-%s", var.resourceOwner, local.buildSuffix)
-    Terraform = "true"
+    Name  = format("%s-sg-webservers-%s", var.projectPrefix, local.buildSuffix)
+    Owner = var.resourceOwner
   }
 }
 

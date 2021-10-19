@@ -9,7 +9,7 @@ variable "projectPrefix" {
 }
 variable "resourceOwner" {
   type        = string
-  description = "Owner of the deployment for tagging purposes"
+  description = "Owner of the deployment for tagging purposes (ex. name@email)"
 }
 variable "awsRegion" {
   description = "aws region"
