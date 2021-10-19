@@ -72,14 +72,14 @@ variable "spokeVpcs" {
   default = {
     bu1 = {
       cidr            = "10.1.0.0/16"
-      public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
-      private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
+      public_subnets  = ["10.1.10.0/24"]
+      private_subnets = ["10.1.52.0/24"]
       workstation     = true
     }
     bu2 = {
       cidr            = "10.2.0.0/16"
-      public_subnets  = ["10.2.10.0/24", "10.2.110.0/24"]
-      private_subnets = ["10.2.52.0/24", "10.2.152.0/24"]
+      public_subnets  = ["10.2.10.0/24"]
+      private_subnets = ["10.2.52.0/24"]
       workstation     = false
     }
   }
@@ -88,19 +88,17 @@ variable "spokeVpcs" {
 
 variable "sharedVpcs" {
   type = map(object({
-    cidr                     = string
-    public_subnets           = list(any)
-    private_subnets          = list(any)
-    volterra_inside_subnet   = string
-    volterra_workload_subnet = string
+    cidr                   = string
+    public_subnets         = list(any)
+    private_subnets        = list(any)
+    volterra_inside_subnet = string
   }))
   default = {
     hub = {
-      cidr                     = "100.64.0.0/20"
-      public_subnets           = ["100.64.0.0/24", "100.64.1.0/24"]
-      private_subnets          = ["100.64.3.0/24", "100.64.4.0/24"]
-      volterra_inside_subnet   = "100.64.6.0/24"
-      volterra_workload_subnet = "100.64.7.0/24"
+      cidr                   = "100.64.0.0/20"
+      public_subnets         = ["100.64.0.0/24"]
+      private_subnets        = ["100.64.3.0/24"]
+      volterra_inside_subnet = "100.64.6.0/24"
     }
   }
   description = "The shared VPCs with common services like security, firewall, load balancing, and more."

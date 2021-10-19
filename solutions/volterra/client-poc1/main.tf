@@ -61,7 +61,7 @@ module "spokeVpc" {
   version              = "~> 2.0"
   name                 = format("%s-vpc-%s-%s", var.projectPrefix, each.key, local.buildSuffix)
   cidr                 = each.value["cidr"]
-  azs                  = [local.awsAz1, local.awsAz2]
+  azs                  = [local.awsAz1]
   public_subnets       = each.value["public_subnets"]
   private_subnets      = each.value["private_subnets"]
   enable_dns_hostnames = true
@@ -80,7 +80,7 @@ module "sharedVpc" {
   version              = "~> 2.0"
   name                 = format("%s-sharedVpc-%s", var.projectPrefix, local.buildSuffix)
   cidr                 = var.sharedVpcs.hub.cidr
-  azs                  = [local.awsAz1, local.awsAz2]
+  azs                  = [local.awsAz1]
   public_subnets       = var.sharedVpcs.hub.public_subnets
   private_subnets      = var.sharedVpcs.hub.private_subnets
   enable_dns_hostnames = true
@@ -96,23 +96,13 @@ module "sharedVpc" {
 # @JeffGiroux workaround route table association conflict
 # - AWS VPC module creates subnets with RT associations
 # - Volterra tries to create RT conflicts and fails due to existing RT
-# - Fix = Create additional subnets for sli and workload without RT for Volterra's use
+# - Fix = Create additional subnets for sli without RT for Volterra's use
 resource "aws_subnet" "sli" {
   vpc_id            = module.sharedVpc.vpc_id
   availability_zone = local.awsAz1
   cidr_block        = var.sharedVpcs.hub.volterra_inside_subnet
   tags = {
     Name  = format("%s-site-local-inside-%s", var.projectPrefix, local.buildSuffix)
-    Owner = var.resourceOwner
-  }
-}
-
-resource "aws_subnet" "workload" {
-  vpc_id            = module.sharedVpc.vpc_id
-  availability_zone = local.awsAz1
-  cidr_block        = var.sharedVpcs.hub.volterra_workload_subnet
-  tags = {
-    Name  = format("%s-workload-%s", var.projectPrefix, local.buildSuffix)
     Owner = var.resourceOwner
   }
 }

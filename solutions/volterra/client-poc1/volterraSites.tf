@@ -57,9 +57,6 @@ resource "volterra_aws_vpc_site" "main" {
       outside_subnet {
         existing_subnet_id = module.sharedVpc.public_subnets[0]
       }
-      workload_subnet {
-        existing_subnet_id = aws_subnet.workload.id
-      }
     }
   }
 
