@@ -29,7 +29,7 @@ locals {
   # Allow user to specify a build suffix, but fallback to random as needed.
   buildSuffix = coalesce(var.buildSuffix, random_id.buildSuffix.hex)
   volterraCommonLabels = {
-    owner  = var.resourceOwner
+    #owner  = var.resourceOwner
     prefix = var.projectPrefix
     suffix = local.buildSuffix
   }
@@ -119,7 +119,7 @@ resource "aws_subnet" "workload" {
 
 ############################ AWS Transit Gateway ############################
 
-# Transit Gateway
+# Transit Gateway (TGW)
 resource "aws_ec2_transit_gateway" "main" {
   description                     = "Transit Gateway"
   default_route_table_association = "enable"
@@ -130,7 +130,7 @@ resource "aws_ec2_transit_gateway" "main" {
   }
 }
 
-# Transit Gateway Attachment for Spoke VPCs
+# TGW Attachment for Spoke VPCs
 resource "aws_ec2_transit_gateway_vpc_attachment" "spokeVPC" {
   for_each           = var.spokeVPCs
   subnet_ids         = module.spokeVPC[each.key].private_subnets
@@ -143,7 +143,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "spokeVPC" {
   depends_on = [aws_ec2_transit_gateway.main]
 }
 
-# Transit Gateway Attachment for Shared VPC
+# TGW Attachment for Shared VPC
 resource "aws_ec2_transit_gateway_vpc_attachment" "sharedVPC" {
   subnet_ids         = module.sharedVPC.private_subnets
   transit_gateway_id = aws_ec2_transit_gateway.main.id
