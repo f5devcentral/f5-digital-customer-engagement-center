@@ -121,7 +121,9 @@ resource "aws_subnet" "workload" {
 
 # Transit Gateway
 resource "aws_ec2_transit_gateway" "main" {
-  description = "Transit Gateway"
+  description                     = "Transit Gateway"
+  default_route_table_association = "enable"
+  default_route_table_propagation = "enable"
   tags = {
     Name      = format("%s-tgw-%s", var.resourceOwner, local.buildSuffix)
     Terraform = "true"
@@ -157,7 +159,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "sharedVPC" {
 
 # Create Routes in each spoke VPC to reach shared VPC via TGW
 # Flow = spoke VPC > TGW > shared VPC
-resource "aws_route" "dstSharedVPC" {
+resource "aws_route" "spokeVPC" {
   for_each               = var.spokeVPCs
   route_table_id         = module.spokeVPC[each.key].public_route_table_ids[0]
   destination_cidr_block = module.sharedVPC.vpc_cidr_block
@@ -167,7 +169,7 @@ resource "aws_route" "dstSharedVPC" {
 
 # Create Routes in shared VPC to reach spoke VPCs via TGW
 # Flow = shared VPC > TGW > spoke VPC
-resource "aws_route" "dstSpokeVPC" {
+resource "aws_route" "sharedVPC" {
   for_each               = var.spokeVPCs
   route_table_id         = module.sharedVPC.public_route_table_ids[0]
   destination_cidr_block = module.spokeVPC[each.key].vpc_cidr_block
