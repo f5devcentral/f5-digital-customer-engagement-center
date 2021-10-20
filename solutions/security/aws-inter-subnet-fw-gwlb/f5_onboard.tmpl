@@ -98,6 +98,7 @@ extension_services:
           My_Provisioning:
             class: Provision
             afm: nominal
+            asm: nominal
             ltm: nominal
           My_System:
             class: System
@@ -128,6 +129,15 @@ post_onboard_enabled:
       - tmsh modify security firewall global-rules enforced-policy global
       - tmsh modify security firewall policy global rules add { log_all { place-after last action accept log yes } }
       - tmsh modify security firewall policy global rules add { block_telnet { place-before first action reject ip-protocol tcp destination { ports add { 23 } } log yes } }
+
+      - curl -L -J http://cdn.f5.com/product/blackbox/aws/asm-policy-linux.tar.gz -o /config/cloud/asm-policy-linux.tar.gz
+      - tar -zxvf /config/cloud/asm-policy-linux.tar.gz  -C /config/cloud
+      - tmsh load asm policy file /config/cloud/asm-policy-linux-low.xml
+      - tmsh modify asm policy /Common/linux-low active
+      - tmsh create ltm policy app-ltm-policy strategy first-match legacy
+      - tmsh modify ltm policy app-ltm-policy controls add { asm }
+      - tmsh modify ltm policy app-ltm-policy rules add { associate-asm-policy { actions replace-all-with { 0 { asm request enable policy /Common/linux-low  } } } }
+      - tmsh create ltm virtual waf_vs destination 0.0.0.0:80 vlans-enabled vlans add { geneve } translate-address disabled source-port preserve-strict pool geneve-tunnel mask any policies replace-all-with { app-ltm-policy } profiles replace-all-with { http websecurity } security-log-profiles replace-all-with { "Log all requests" }
       - tmsh save /sys config
 EOF
 
