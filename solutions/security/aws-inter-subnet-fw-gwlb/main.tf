@@ -106,6 +106,8 @@ resource "aws_subnet" "vpcMainSubGwlbeB" {
   }
 }
 
+
+
 #vpc endpoints for GWLB
 
 resource "aws_vpc_endpoint" "vpcMainGwlbeA" {
@@ -138,32 +140,43 @@ resource "aws_internet_gateway" "vpcMainIgw" {
 resource "aws_route_table" "vpcMainAz1Rtb" {
   vpc_id = aws_vpc.vpcMain.id
 
-  route {
-    cidr_block      = "0.0.0.0/0"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeA.id
-  }
-
-  route {
-    cidr_block      = "10.1.10.0/24"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeA.id
-  }
-
-  route {
-    cidr_block      = "10.1.20.0/24"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeA.id
-  }
-  route {
-    cidr_block      = "10.1.120.0/24"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeA.id
-  }
-  route {
-    cidr_block      = "10.1.110.0/24"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeA.id
-  }
   tags = {
     Name  = "${var.projectPrefix}-vpcMainAz1Rtb-${random_id.buildSuffix.hex}"
     Owner = var.resourceOwner
   }
+}
+
+
+# Routes
+
+resource "aws_route" "vpcMainAz1RtDefault" {
+  route_table_id         = aws_route_table.vpcMainAz1Rtb.id
+  destination_cidr_block = "0.0.0.0/0"
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeA.id
+}
+
+resource "aws_route" "vpcMainAz1Rt10" {
+  route_table_id         = aws_route_table.vpcMainAz1Rtb.id
+  destination_cidr_block = "10.1.10.0/24"
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeA.id
+}
+
+resource "aws_route" "vpcMainAz1Rt20" {
+  route_table_id         = aws_route_table.vpcMainAz1Rtb.id
+  destination_cidr_block = "10.1.20.0/24"
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeA.id
+}
+
+resource "aws_route" "vpcMainAz1Rt110" {
+  route_table_id         = aws_route_table.vpcMainAz1Rtb.id
+  destination_cidr_block = "10.1.110.0/24"
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeA.id
+}
+
+resource "aws_route" "vpcMainAz1Rt120" {
+  route_table_id         = aws_route_table.vpcMainAz1Rtb.id
+  destination_cidr_block = "10.1.120.0/24"
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeA.id
 }
 
 resource "aws_route_table" "vpcMainAz2Rtb" {
@@ -230,6 +243,9 @@ resource "aws_route_table" "vpcMainSubGwlbeRtb" {
     Owner = var.resourceOwner
   }
 }
+
+
+
 
 #route table associations
 
@@ -309,6 +325,15 @@ resource "aws_instance" "ubuntuVpcMainSubnetA" {
   key_name                    = aws_key_pair.deployer.id
   associate_public_ip_address = true
   vpc_security_group_ids      = [module.jumphost-security-group.security_group_id]
+    user_data              = <<-EOF
+#!/bin/bash
+sleep 30
+snap install docker
+systemctl enable snap.docker.dockerd
+systemctl start snap.docker.dockerd
+sleep 30
+docker run -d -p 80:80 --net host -e F5DEMO_APP=website -e F5DEMO_NODENAME="AWS Environment (Jumphost)" --restart always --name f5demoapp f5devcentral/f5-demo-httpd:nginx
+              EOF
 
   tags = {
     Name  = "${var.projectPrefix}-ubuntuVpcMainSubnetA-${random_id.buildSuffix.hex}"
