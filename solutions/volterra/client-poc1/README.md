@@ -168,7 +168,22 @@ This will perform 'terraform init' and 'terraform apply'.
 
 ## TEST your setup:
 
-1. TBD
+1. SSH to the jumphost public IP
+2. Perform curl test (use terraform output)
+
+```
+# Example
+curl http://100.64.6.139 -H 'Host: app.shared.acme.com' -I
+
+# Results
+HTTP/1.1 200 OK
+server: volt-adc
+date: Tue, 19 Oct 2021 23:16:27 GMT
+content-type: text/html
+content-length: 2691
+last-modified: Tue, 19 Oct 2021 23:07:35 GMT
+etag: "616f4fb7-a83"
+accept-ranges: bytes
 
 ## Cleanup
 Use the following command to destroy all of the resources
