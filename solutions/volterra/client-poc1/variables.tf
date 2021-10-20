@@ -95,10 +95,10 @@ variable "sharedVpcs" {
   }))
   default = {
     hub = {
-      cidr                   = "100.64.0.0/20"
-      public_subnets         = ["100.64.0.0/24"]
-      private_subnets        = ["100.64.3.0/24"]
-      volterra_inside_subnet = "100.64.6.0/24"
+      cidr                   = "100.64.0.0/16"
+      public_subnets         = ["100.64.10.0/24"]
+      private_subnets        = ["100.64.52.0/24"]
+      volterra_inside_subnet = "100.64.20.0/24"
     }
   }
   description = "The shared VPCs with common services like security, firewall, load balancing, and more."
