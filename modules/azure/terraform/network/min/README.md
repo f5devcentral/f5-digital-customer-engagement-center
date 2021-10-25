@@ -10,7 +10,7 @@ To use this module within a solutions context:
 
 ```hcl
 module "network_min" {
-    source              = "../../../../../azure/terraform/network/min/"
+    source              = "github.com/f5devcentral/f5-digital-customer-engagement-center//modules/azure/terraform/network/min/"
     projectPrefix       = var.projectPrefix
     buildSuffix         = var.buildSuffix
     resourceOwner       = var.resourceOwner
@@ -25,14 +25,30 @@ module "network_min" {
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.14 |
-| azurerm | ~> 2 |
+| terraform | >= 0.14 |
+| azurerm | >= 2.82 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurerm | ~> 2 |
+| azurerm | >= 2.82 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| network | Azure/network/azurerm |  |
+
+## Resources
+
+| Name |
+|------|
+| [azurerm_nat_gateway](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/nat_gateway) |
+| [azurerm_nat_gateway_public_ip_association](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/nat_gateway_public_ip_association) |
+| [azurerm_public_ip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) |
+| [azurerm_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subnet) |
+| [azurerm_subnet_nat_gateway_association](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_nat_gateway_association) |
 
 ## Inputs
 
@@ -56,6 +72,5 @@ module "network_min" {
 | azureVnetName | The Name of the Vnet |
 | subnets | A map of subnetworks created by module, keyed by usage context. |
 | vpcs | A map of VPC networks created by module, keyed by usage context. |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->
