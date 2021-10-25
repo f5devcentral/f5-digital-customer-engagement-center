@@ -182,52 +182,62 @@ resource "aws_route" "vpcMainAz1Rt120" {
 resource "aws_route_table" "vpcMainAz2Rtb" {
   vpc_id = aws_vpc.vpcMain.id
 
-  route {
-    cidr_block      = "0.0.0.0/0"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeB.id
-  }
-
-  route {
-    cidr_block      = "10.1.110.0/24"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeB.id
-  }
-
-  route {
-    cidr_block      = "10.1.120.0/24"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeB.id
-  }
-  route {
-    cidr_block      = "10.1.10.0/24"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeB.id
-  }
-
-  route {
-    cidr_block      = "10.1.20.0/24"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeB.id
-  }
   tags = {
     Name  = "${var.projectPrefix}-vpcMainAz2Rtb-${random_id.buildSuffix.hex}"
     Owner = var.resourceOwner
   }
 }
 
+resource "aws_route" "vpcMainAz2RtDefault" {
+  route_table_id         = aws_route_table.vpcMainAz2Rtb.id
+  destination_cidr_block = "0.0.0.0/0"
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeB.id
+}
+
+resource "aws_route" "vpcMainAz2Rt10" {
+  route_table_id         = aws_route_table.vpcMainAz2Rtb.id
+  destination_cidr_block = "10.1.10.0/24"
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeB.id
+}
+
+resource "aws_route" "vpcMainAz2Rt20" {
+  route_table_id         = aws_route_table.vpcMainAz2Rtb.id
+  destination_cidr_block = "10.1.20.0/24"
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeB.id
+}
+
+resource "aws_route" "vpcMainAz2Rt110" {
+  route_table_id         = aws_route_table.vpcMainAz2Rtb.id
+  destination_cidr_block = "10.1.110.0/24"
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeB.id
+}
+
+resource "aws_route" "vpcMainAz2Rt120" {
+  route_table_id         = aws_route_table.vpcMainAz2Rtb.id
+  destination_cidr_block = "10.1.120.0/24"
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeB.id
+}
+
+
 resource "aws_route_table" "vpcMainIgwRtb" {
   vpc_id = aws_vpc.vpcMain.id
-
-  route {
-    cidr_block      = var.vpcMainSubPubACidr
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeA.id
-  }
-
-  route {
-    cidr_block      = var.vpcMainSubPubBCidr
-    vpc_endpoint_id = aws_vpc_endpoint.vpcMainGwlbeB.id
-  }
 
   tags = {
     Name  = "${var.projectPrefix}-vpcMainIgwRtb-${random_id.buildSuffix.hex}"
     Owner = var.resourceOwner
   }
+}
+
+resource "aws_route" "vpcMainIgwRtPubA" {
+  route_table_id         = aws_route_table.vpcMainIgwRtb.id
+  destination_cidr_block = var.vpcMainSubPubACidr
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeA.id
+}
+
+resource "aws_route" "vpcMainIgwRtPubB" {
+  route_table_id         = aws_route_table.vpcMainIgwRtb.id
+  destination_cidr_block = var.vpcMainSubPubBCidr
+  vpc_endpoint_id        = aws_vpc_endpoint.vpcMainGwlbeB.id
 }
 
 resource "aws_route_table" "vpcMainSubGwlbeRtb" {
@@ -325,7 +335,7 @@ resource "aws_instance" "ubuntuVpcMainSubnetA" {
   key_name                    = aws_key_pair.deployer.id
   associate_public_ip_address = true
   vpc_security_group_ids      = [module.jumphost-security-group.security_group_id]
-    user_data              = <<-EOF
+  user_data                   = <<-EOF
 #!/bin/bash
 sleep 30
 snap install docker
