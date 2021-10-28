@@ -1,0 +1,301 @@
+#!/bin/bash
+
+# Send output to log file and serial console
+mkdir -p  /var/log/cloud /config/cloud /var/config/rest/downloads
+LOG_FILE=/var/log/cloud/startup-script.log
+[[ ! -f $LOG_FILE ]] && touch $LOG_FILE || { echo "Run Only Once. Exiting"; exit; }
+npipe=/tmp/$$.tmp
+trap "rm -f $npipe" EXIT
+mknod $npipe p
+tee <$npipe -a $LOG_FILE /dev/ttyS0 &
+exec 1>&-
+exec 1>$npipe
+exec 2>&1
+echo "$(date +"%Y-%m-%dT%H:%M:%S.%3NZ") : Startup Script Start"
+
+# # create user
+
+# save config
+tmsh save sys config
+
+mkdir -p /config/cloud
+
+cat << 'EOF' > /config/cloud/runtime-init-conf.yaml
+---
+pre_onboard_enabled:
+  - name: provision_rest
+    type: inline
+    commands:
+      - /usr/bin/setdb provision.extramb 1000
+      - /usr/bin/setdb restjavad.useextramb true
+      - /usr/bin/setdb ui.statistics.modulestatistics.localtraffic.persistencerecords true
+runtime_parameters:
+  - name: HOST_NAME
+    type: metadata
+    metadataProvider:
+      type: compute
+      environment: azure
+      field: name
+  - name: BIGIP_PASSWORD
+    type: url
+    query: vmId
+    value: "http://169.254.169.254/metadata/instance/compute?api-version=2017-08-01"
+    headers:
+      - name: Metadata
+        value: true
+  - name: SELF_IP_EXTERNAL
+    type: metadata
+    metadataProvider:
+      type: network
+      environment: azure
+      field: ipv4
+      index: 1
+  - name: SELF_IP_EXTERNAL_ADDRESS
+    type: metadata
+    metadataProvider:
+      type: network
+      environment: azure
+      field: ipv4
+      index: 1
+      ipcalc: address
+bigip_ready_enabled:
+  - name: download asm policy out mgmt int before default gateway gets set
+    type: inline
+    commands:
+      - curl https://raw.githubusercontent.com/f5-applebaum/f5-azure-arm-templates-v2/azure-gateway/examples/agw-provider-vnet/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml -o /config/cloud/asm-policy.xml
+extension_packages:
+  install_operations:
+    - extensionType: do
+      extensionVersion: 1.19.0
+      extensionHash: 15c1b919954a91b9ad1e469f49b7a0915b20de494b7a032da9eb258bbb7b6c49
+    - extensionType: as3
+      extensionVersion: 3.26.0
+      extensionHash: b33a96c84b77cff60249b7a53b6de29cc1e932d7d94de80cc77fb69e0b9a45a0
+    - extensionType: ts
+      extensionVersion: 1.18.0
+      extensionHash: de4c82cafe503e65b751fcacfb2f169912ad5ce1645e13c5135dca972299174a
+    - extensionType: fast
+      extensionVersion: 1.7.0
+      extensionHash: 9c617f5bb1bb0d08ec095ce568a6d5d2ef162e504cd183fe3540586200f9d950
+extension_services:
+  service_operations:
+    - extensionType: do
+      type: inline
+      value:
+        schemaVersion: 1.0.0
+        class: Device
+        async: true
+        label: >-
+          Quickstart 3NIC BIG-IP declaration for Declarative Onboarding with
+          PAYG license
+        Common:
+          class: Tenant
+          My_DbVariables:
+            class: DbVariables
+            provision.extramb: 1000
+            restjavad.useextramb: true
+            ui.advisory.enabled: true
+            ui.advisory.color: blue
+            ui.advisory.text: BIG-IP VE Quickstart
+            config.allow.rfc3927: enable
+            dhclient.mgmt: disable
+          My_Dns:
+            class: DNS
+            nameServers:
+              - 168.63.129.16
+          My_Ntp:
+            class: NTP
+            servers:
+              - 0.pool.ntp.org
+            timezone: UTC
+          My_Provisioning:
+            class: Provision
+            ltm: nominal
+            asm: nominal
+          My_System:
+            class: System
+            autoPhonehome: true
+            hostname: "{{{HOST_NAME}}}.local"
+          HTTPD:
+            class: HTTPD
+            authPamIdleTimeout: 86400
+          quickstart:
+            class: User
+            userType: regular
+            partitionAccess:
+              all-partitions:
+                role: admin
+            password: "${bigip_password}"
+            shell: bash
+          default:
+            class: ManagementRoute
+            gw: ${mgmt_gw}
+            network: default
+          dhclient_route1:
+            class: ManagementRoute
+            gw: ${mgmt_gw}
+            network: 168.63.129.16/32
+          azureMetadata:
+            class: ManagementRoute
+            gw: ${mgmt_gw}
+            network: 169.254.169.254/32
+          defaultRoute:
+            class: Route
+            gw: ${ext_gw}
+            network: default
+          external:
+            class: VLAN
+            tag: 4094
+            mtu: 9001
+            interfaces:
+              - name: "1.1"
+                tagged: false
+          external-self:
+            class: SelfIp
+            address: "{{{SELF_IP_EXTERNAL}}}"
+            vlan: external
+            allowService: all
+            trafficGroup: traffic-group-local-only
+    - extensionType: as3
+      type: inline
+      value:
+        class: ADC
+        schemaVersion: 3.0.0
+        label: Quickstart
+        remark: Quickstart
+        controls:
+          class: Controls
+          logLevel: debug
+        Tenant_1:
+          class: Tenant
+          Shared:
+            class: Application
+            template: shared
+            monitor_respond_200:
+              class: iRule
+              iRule: "when HTTP_REQUEST {\n   HTTP::respond 200 System Responding \n}\n"
+            vs_for_gwlb_monitor:
+              class: Service_HTTP
+              remark: Health check listener for GWLB health checks
+              virtualPort: 80
+              virtualAddresses:
+                - "{{{SELF_IP_EXTERNAL_ADDRESS}}}"
+              iRules:
+                - monitor_respond_200
+            inbound_pool:
+              class: Pool
+              remark: Forward through Internal Tunnel
+              members:
+                - serverAddresses:
+                    - 192.168.2.1
+                  servicePort: 0
+            outbound_pool:
+              class: Pool
+              remark: Forward through Outbound Tunnel
+              members:
+                - serverAddresses:
+                    - 192.168.1.1
+                  servicePort: 0
+          HTTP_Service:
+            class: Application
+            template: http
+            serviceMain:
+              class: Service_HTTP  
+              virtualAddresses:
+                - ${public_lb_frontend_ip}
+              snat: none
+              translateServerAddress: false
+              translateServerPort: false
+              policyWAF:
+                use: WAFPolicy
+              pool: /Tenant_1/Shared/inbound_pool
+            WAFPolicy:
+              class: WAF_Policy
+              file: >-
+                /config/cloud/asm-policy.xml
+              enforcementMode: blocking
+              ignoreChanges: false
+          HTTPS_Service:
+            class: Application
+            template: https
+            serviceMain:
+              class: Service_HTTPS        
+              virtualAddresses:
+                - ${public_lb_frontend_ip}
+              snat: none
+              translateServerAddress: false
+              translateServerPort: false
+              policyWAF:
+                use: WAFPolicy
+              pool: /Tenant_1/Shared/inbound_pool
+              serverTLS:
+                bigip: /Common/clientssl
+              clientTLS:
+                bigip: /Common/serverssl
+              redirect80: false
+            WAFPolicy:
+              class: WAF_Policy
+              file: >-
+                /config/cloud/asm-policy.xml
+              enforcementMode: blocking
+              ignoreChanges: false
+          Inbound_Service:
+            class: Application
+            inbound_vs_tcp:
+              class: Service_TCP         
+              virtualAddresses:
+                - ${public_lb_frontend_ip}
+              virtualPort: 0
+              snat: none
+              translateServerAddress: false
+              translateServerPort: false
+              pool: /Tenant_1/Shared/inbound_pool
+          Outbound_Service:
+            class: Application
+            outbound_vs_80:
+              class: Service_TCP
+              virtualAddresses:
+                - 0.0.0.0
+              virtualPort: 80
+              snat: none
+              translateServerAddress: false
+              translateServerPort: false
+              pool: /Tenant_1/Shared/outbound_pool
+            outbound_vs_443:
+              class: Service_TCP
+              virtualAddresses:
+                - 0.0.0.0
+              virtualPort: 443
+              snat: none
+              translateServerAddress: false
+              translateServerPort: false
+              pool: /Tenant_1/Shared/outbound_pool
+post_onboard_enabled:
+  - name: gwlb_config
+    type: inline
+    commands:
+      - tmsh create net tunnels vxlan gwlb-ext-vxlan-prof port 2001 flooding-type none
+      - tmsh create net tunnels vxlan gwlb-int-vxlan-prof port 2002 flooding-type none
+      - tmsh create net tunnels tunnel gwlb_external_tun key 801 profile gwlb-ext-vxlan-prof local-address {{{SELF_IP_EXTERNAL_ADDRESS}}} remote-address any mtu 1450
+      - tmsh create net tunnels tunnel gwlb_internal_tun key 802 profile gwlb-int-vxlan-prof local-address {{{SELF_IP_EXTERNAL_ADDRESS}}} remote-address any mtu 1450
+      - tmsh create net vlan-group vg1 members add { gwlb_external_tun }
+      - tmsh create net vlan-group vg2 members add { gwlb_internal_tun } bridge-traffic enabled
+      - tmsh create net self vxlan_external_self address 192.168.1.11/28 vlan vg1 allow-service all
+      - tmsh create net self vxlan_internal_self address 192.168.2.11/28 vlan vg2 allow-service all
+      - tmsh create net arp fake_arp_entry_ext ip-address 192.168.1.1 mac-address ff:ff:ff:ff:ff:ff
+      - tmsh create net arp fake_arp_entry_int ip-address 192.168.2.1 mac-address ff:ff:ff:ff:ff:ee
+      - "GATEWAY_ADDRESS=${gwlb_frontend_ip}; tmsh modify net fdb tunnel gwlb_external_tun records add { ff:ff:ff:ff:ff:ee { description fwd_node endpoint $GATEWAY_ADDRESS } }; tmsh modify net fdb tunnel gwlb_internal_tun records add { ff:ff:ff:ff:ff:ee { description fwd_node endpoint $GATEWAY_ADDRESS } }"
+      - tmsh save /sys config
+EOF
+
+# # Download
+PACKAGE_URL='https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.3.2/dist/f5-bigip-runtime-init-1.3.2-1.gz.run'
+for i in {1..30}; do
+    curl -fv --retry 1 --connect-timeout 5 -L $PACKAGE_URL -o "/var/config/rest/downloads/f5-bigip-runtime-init.gz.run" && break || sleep 10
+done
+# Install
+bash /var/config/rest/downloads/f5-bigip-runtime-init.gz.run -- '--cloud azure'
+# Run
+#export F5_BIGIP_RUNTIME_INIT_LOG_LEVEL=silly
+f5-bigip-runtime-init --config-file /config/cloud/runtime-init-conf.yaml
+echo "$(date +"%Y-%m-%dT%H:%M:%S.%3NZ") : Startup Script Finish"
