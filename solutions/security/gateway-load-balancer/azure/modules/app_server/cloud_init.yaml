@@ -1,0 +1,13 @@
+#cloud-config
+
+# Update apt database on first boot (run 'apt-get update').
+package_update: true
+
+# Install additional packages on first boot
+packages:
+ - docker.io
+
+# run commands
+runcmd:
+# - sudo docker run -d -p 80:8080 -p 443:8443 --restart unless-stopped f5devcentral/f5-hello-world
+  - sudo docker run -d -p 80:80 -p 443:443 --restart unless-stopped f5devcentral/f5-demo-httpd:nginx
