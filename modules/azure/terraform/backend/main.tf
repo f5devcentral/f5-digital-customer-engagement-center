@@ -1,16 +1,16 @@
 # Terraform Version Pinning
 terraform {
-  required_version = "~> 0.14"
+  required_version = ">= 0.14"
   required_providers {
-    azurerm = "~> 2"
+    azurerm = ">= 2.82"
   }
 }
 
 locals {
   user_data = coalesce(var.user_data, templatefile("${path.module}/templates/cloud-config.yml", {
-    f5_logo_rgb_svg = base64gzip(file("${path.module}/files/f5-logo-rgb.svg"))
-    styles_css      = base64gzip(file("${path.module}/files/styles.css"))
-    zone            = local.zone
+    index_html      = replace(file("${path.module}/../../../common/files/backend/index.html"), "/[\\n\\r]/", "")
+    f5_logo_rgb_svg = base64gzip(file("${path.module}/../../../common/files/backend/f5-logo-rgb.svg"))
+    styles_css      = base64gzip(file("${path.module}/../../../common/files/backend/styles.css"))
   }))
   name = coalesce(var.name, format("%s-backend-%s", var.projectPrefix, var.buildSuffix))
   zone = coalesce(var.zone, random_shuffle.zones.result[0])

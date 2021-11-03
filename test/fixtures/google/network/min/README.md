@@ -17,16 +17,6 @@ This folder contains a fixture for testing the GCP
 
 No provider.
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| network_min | ../../../../../modules/google/terraform/network/min/ |  |
-
-## Resources
-
-No resources.
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -48,5 +38,6 @@ No resources.
 | resourceOwner | n/a |
 | subnets | n/a |
 | vpcs | n/a |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->

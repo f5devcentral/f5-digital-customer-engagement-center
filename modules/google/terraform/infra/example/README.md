@@ -52,16 +52,6 @@ This example will create a default set of `infra` resources.
 
 No provider.
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| example | ../ |  |
-
-## Resources
-
-No resources.
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -80,5 +70,6 @@ No resources.
 | subnets | A map of subnetworks created by module, keyed by usage context. |
 | vpcs | A map of VPC networks created by module, keyed by usage context. |
 | workstation | A JSON object containing workstation attributes and connection helper commands from the embedded<br>workstation module. |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->

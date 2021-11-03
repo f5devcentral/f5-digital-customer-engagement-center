@@ -1,3 +1,11 @@
+
+locals {
+  user_data = coalesce(var.user_data, templatefile("${path.module}/templates/cloud-config.yml", {
+    f5_logo_rgb_svg = base64gzip(file("${path.module}/files/f5-logo-rgb.svg"))
+    styles_css      = base64gzip(file("${path.module}/../../../common/files/backend/styles.css"))
+  }))
+}
+
 # AMI
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -14,15 +22,6 @@ data "aws_ami" "ubuntu" {
 
   owners = ["099720109477"] # Canonical
 }
-
-data "template_file" "applicationServer" {
-  template = file("${path.module}/templates/cloud-config-base.yaml")
-
-  vars = {
-    startupCommand = var.startupCommand
-  }
-}
-
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
@@ -78,7 +77,7 @@ module "asg" {
   image_id                    = data.aws_ami.ubuntu.id
   instance_type               = var.instanceType
   security_groups             = [var.securityGroup]
-  user_data                   = data.template_file.applicationServer.rendered
+  user_data                   = local.user_data
   key_name                    = var.keyName
   target_group_arns           = module.alb.target_group_arns
   associate_public_ip_address = var.associatePublicIp
@@ -107,22 +106,4 @@ module "asg" {
   max_size                  = 5
   desired_capacity          = var.desiredCapacity
   wait_for_capacity_timeout = 0
-
-  tags = [
-    {
-      key                 = "Name"
-      value               = "${var.projectPrefix}-workstation"
-      propagate_at_launch = true
-    },
-    {
-      key                 = "Owner"
-      value               = var.resourceOwner
-      propagate_at_launch = true
-    },
-  ]
-
-  tags_as_map = {
-    extra_tag1 = "extra_value1"
-    extra_tag2 = "extra_value2"
-  }
 }

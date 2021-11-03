@@ -6,7 +6,7 @@ To use this module within a solutions context:
 
 ```hcl
 module "jumphost" {
-    source              = "../../../../../azure/terraform/jumphost/"
+    source              = "github.com/f5devcentral/f5-digital-customer-engagement-center//modules/azure/terraform/jumphost/"
     projectPrefix       = "somePrefix"
     buildSuffix         = "someSuffix"
     resourceOwner       = "someName"
@@ -24,14 +24,28 @@ module "jumphost" {
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.14 |
-| azurerm | ~> 2 |
+| terraform | >= 0.14 |
+| azurerm | >= 2.82 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurerm | ~> 2 |
+| azurerm | >= 2.82 |
+
+## Modules
+
+No Modules.
+
+## Resources
+
+| Name |
+|------|
+| [azurerm_linux_virtual_machine](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) |
+| [azurerm_network_interface](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) |
+| [azurerm_network_interface_security_group_association](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface_security_group_association) |
+| [azurerm_public_ip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) |
+| [azurerm_virtual_machine_extension](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) |
 
 ## Inputs
 
@@ -40,10 +54,10 @@ module "jumphost" {
 | azureLocation | location where Azure resources are deployed (abbreviated Azure Region name) | `string` | n/a | yes |
 | azureResourceGroup | resource group to create objects in | `string` | n/a | yes |
 | buildSuffix | random build suffix for resources | `string` | n/a | yes |
-| ssh_key | public key used for authentication in ssh-rsa format | `string` | n/a | yes |
 | mgmtSubnet | subnet for virtual machine | `string` | n/a | yes |
 | resourceOwner | name of the person or customer running the solution | `string` | n/a | yes |
 | securityGroup | security group for virtual machine | `string` | n/a | yes |
+| ssh\_key | public key used for authentication in ssh-rsa format | `string` | n/a | yes |
 | adminAccountName | admin account name used with instance | `string` | `"ubuntu"` | no |
 | coderAccountPassword | password used to access VSCode code-server via web | `string` | `"pleaseUseVault123!!"` | no |
 | instanceType | instance type for virtual machine | `string` | `"Standard_DS3_v2"` | no |
@@ -57,6 +71,5 @@ module "jumphost" {
 |------|-------------|
 | jumphostInfo | VM instance output parameters as documented here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine |
 | publicIp | public ip address of the instance |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

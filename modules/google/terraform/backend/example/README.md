@@ -46,19 +46,6 @@ on port 80 (and 443 if a TLS Secret Manager key is provided).
 |------|---------|
 | google | >= 3.54 |
 
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| infra | ../../infra |  |
-| server | ../ |  |
-
-## Resources
-
-| Name |
-|------|
-| [google_compute_firewall](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -76,5 +63,6 @@ on port 80 (and 443 if a TLS Secret Manager key is provided).
 | addresses | The IP address of the server. |
 | self\_link | The fully-qualifed self-link of the server instance. |
 | service\_account | The service account used by the server instances. |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->

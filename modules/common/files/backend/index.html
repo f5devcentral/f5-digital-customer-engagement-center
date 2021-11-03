@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Success</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="//unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+        <link rel="stylesheet" href="//unpkg.com/purecss@2.0.6/build/grids-responsive-min.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="/styles.css">
+    </head>
+    <body>
+        <div class="splash-container {{ v1.cloud_name | lower }}">
+            <div class="splash">
+                <h1 class="splash-head">F5 on {{ v1.cloud_name | upper }}</h1>
+                <p class="splash-subhead">
+                    You know it makes sense!
+                </p>
+            </div>
+        </div>
+        <div class="content-wrapper">
+            <div class="ribbon l-box-lrg pure-g">
+                <div class="l-box-lrg is-center pure-u-1 pure-u-md-1-2 pure-u-lg-2-5">
+                    <img src="/f5-logo-rgb.svg" alt="F5 logo" class="pure-img-responsive">
+                </div>
+                <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-3-5">
+                    <h2 class="content-head content-head-ribbon">Server details</h2>
+                    <table class="pure-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Hostname</td>
+                                <td>{{ v1.local_hostname }}</td>
+                            </tr>
+                            <tr>
+                                <td>Region</td>
+                                <td>{{ v1.region }}</td>
+                            </tr>
+                            <tr>
+                                <td>Zone</td>
+                                <td>{% if v1.cloud_name | lower == 'azure' %}Unknown on Azure{% else %}{{ v1.availability_zone }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <td>Distro</td>
+                                <td>{{ v1.distro | default('Unknown') }} {{ v1.distro_version | default('version') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="ribbon l-box-lrg pure-g"></div>
+            </div>
+            <div class="footer l-box is-center">
+                Modified from <a href="https://purecss.io/">Pure CSS</a> Landing Page sample.
+            </div>
+        </div>
+    </body>
+</html>

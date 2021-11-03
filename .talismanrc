@@ -272,9 +272,33 @@ fileignoreconfig:
   checksum: a6125d9a879efd830dfa1e37969e032358b806ddb71754af8df36d97847d25bc
 - filename: solutions/security/multi-cloud-connectivity-volterra/aws/main.tf
   checksum: ca79bc6dd74ca2a8dd382161201848fba9d803482c026feb10cbc66963ec8f65
+- filename: solutions/security/multi-cloud-connectivity-volterra/aws/admin.auto.tfvars.example
+  checksum: ab85c77d9e4baaa5dca6708a1206d2c49540d089fccdd587bd5b173a9107ff48
+- filename: solutions/security/multi-cloud-connectivity-volterra/aws/README.md
+  checksum: f60945c92e2c760550f3bb6fe18aa08663a0686ef1eab8bcc0f716c44bc960fe
+- filename: solutions/security/multi-cloud-connectivity-volterra/aws/volterraSites.tf
+  checksum: 1edce90482f47d1d677acb5be0f54fa1d47b8ee33a7aa4418f49e34ca5b0e737
+- filename: solutions/security/multi-cloud-connectivity-volterra/aws/main.tf
+  checksum: e47f6fbad435b3f52ac9496f57ecd2b9b687e72eaa1500c911da9b8f42ecc40a
 - filename: modules/azure/terraform/backend/examples/single/admin.auto.tfvars.example
   checksum: 595400f255c50a43f580d65a55870534bf8f81417bf3c21b2aaea9402d963f49
 - filename: modules/azure/terraform/backend/examples/count/main.tf
   checksum: 917ff6b25b7560e840b09f42320018fc7e702c53c33e0e3a2ce878eb39542bd4
 - filename: modules/azure/terraform/backend/examples/count/README.md
   checksum: ab41d052ba71dbe9c7bd39a3d10b0b2301d7b9f6c00878692fd10df4a91765c5
+- filename: modules/common/files/backend/index.html
+  checksum: 83ad641622aa22dac2192da93cfde6160c9ec5245a940e98a524b6c6ef11fd1c
+- filename: solutions/volterra/multi-cloud-connectivity/azure/volterraServices.tf
+  checksum: 854582e41d355b198678c5d4e181180a0a93420b33e7604b696f07632a0a0c1c
+- filename: solutions/volterra/multi-cloud-connectivity/azure/main.tf
+  checksum: f35945cc6236394993237e8586e61e9695d4afde99bd09b4dc68d9073dcd0218
+- filename: solutions/volterra/client-poc1/admin.auto.tfvars.example
+  checksum: a509f7a26565a891302e5c628208e7fcf743b6e74b7ecd365a2767181e0cac5e
+- filename: solutions/volterra/client-poc1/volterraSites.tf
+  checksum: 87ae5560c1718ba9958e73347735a383e7ab9d8a3171e2d4d59b85e69fa89c41
+- filename: solutions/volterra/client-poc1/main.tf
+  checksum: 9dd932cf926e0f4ce210b7f94051b478351024c9ace308f319a83976e84f3531
+- filename: solutions/volterra/client-poc1/README.md
+  checksum: a9cb49e0be401deb57085bdbc316c0d0c7bbef20c14dbf01ba3d59c4c9c7c507
+- filename: solutions/volterra/client-poc1/volterraServices.tf
+  checksum: 2e5f9f9e76ec54688107cc71f7a86d06cf9270649f9a2199b931c6ca1e08c50b

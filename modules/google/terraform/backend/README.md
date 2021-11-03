@@ -20,21 +20,6 @@ on port 80 (and 443 if a TLS Secret Manager key is provided).
 | google | >= 3.54 |
 | random | n/a |
 
-## Modules
-
-No Modules.
-
-## Resources
-
-| Name |
-|------|
-| [google_compute_default_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_default_service_account) |
-| [google_compute_image](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_image) |
-| [google_compute_instance](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) |
-| [google_compute_subnetwork](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_subnetwork) |
-| [google_compute_zones](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_zones) |
-| [random_shuffle](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/shuffle) |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -66,5 +51,6 @@ No Modules.
 | self\_link | The fully-qualifed self-link of the webserver instance. |
 | service\_account | The service account used by the server instances. |
 | zone | The list of zone where the server is deployed. |
+
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable MD033 MD034 -->

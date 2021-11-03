@@ -1,0 +1,8 @@
+resourceOwner        = "fred"
+awsRegion            = "us-west-2"
+sshPublicKey         = "ssh-rsa AAA"
+projectPrefix        = "aws-tgw-sites"
+volterraTenant       = "example"
+volterraCloudCred    = "example"
+namespace            = "example"
+volterraUniquePrefix = "example"

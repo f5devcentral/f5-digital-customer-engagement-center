@@ -398,7 +398,7 @@ module "gwlb-bigip" {
   resourceOwner      = var.resourceOwner
   keyName            = aws_key_pair.deployer.id
   buildSuffix        = random_id.buildSuffix.hex
-  bigipInstanceCount = 2
+  bigipInstanceCount = 1
   vpcGwlbSubPubACidr = "10.252.10.0/24"
   vpcGwlbSubPubBCidr = "10.252.110.0/24"
   subnetGwlbeAz1     = "10.252.54.0/24"

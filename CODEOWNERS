@@ -6,6 +6,7 @@
 /solutions/security/gwlb-ingress-fw @yossi-r
 /solutions/security/gateway-load-balancer/azure @mikeoleary
 /solutions/delivery/application_delivery_controller/nginx/kic/aws @jmcalalang
+/solutions/volterra @yossi-r @JeffGiroux @memes
 /solutions/delivery/application_delivery_controller/big-ip/upgrade/aws @jmcalalang
 /solutions/security/multi-cloud-connectivity-volterra @yossi-r @JeffGiroux @memes
 
@@ -23,3 +24,4 @@
 /modules/azure/terraform/jumphost @JeffGiroux
 /modules/azure/terraform/webServer @JeffGiroux
 /modules/azure/terraform/backend @JeffGiroux
+/modules/common/files/backend @yossi-r @JeffGiroux @memes

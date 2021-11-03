@@ -31,14 +31,14 @@ The web browser will display a page consisting of the cloud name, server name, a
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.14 |
-| azurerm | ~> 2 |
+| terraform | >= 0.14 |
+| azurerm | >= 2.82 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurerm | ~> 2 |
+| azurerm | >= 2.82 |
 | random | n/a |
 
 ## Modules
