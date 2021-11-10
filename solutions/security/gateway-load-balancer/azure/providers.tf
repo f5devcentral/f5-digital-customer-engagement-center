@@ -13,7 +13,7 @@ terraform {
       # backward compatibility for commonly-used providers, but recommended for
       # explicitness.
       source  = "hashicorp/azurerm"
-      version = ">2.28.0"
+      version = ">=2.84.0"
     }
   }
   required_version = "~> 1.0.8"
