@@ -1,0 +1,4 @@
+resourceOwner = "fred"
+awsRegion     = "us-west-2"
+ssh_key  = "ssh-rsa AAA"
+projectPrefix    = "ingress-egress-fw"

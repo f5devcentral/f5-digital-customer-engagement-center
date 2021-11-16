@@ -1,0 +1,7 @@
+resourceOwner = "fred"
+awsRegion     = "us-west-2"
+ssh_key  = "ssh-rsa AAA"
+projectPrefix    = "ingress-egress-volt-fw"
+namespace = "my-namespace"
+volterraTenant = "my-volterra-tenant-id"
+volterraCloudCredAWS = "cloud-cred-aws"

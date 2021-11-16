@@ -1,0 +1,37 @@
+# Common variables: these will be used when naming demo resources
+projectPrefix = "my-mcn-demo"
+resourceOwner = "my-name"
+# a domain name that was delegated to volterra, uncomment and change if you want external services and have a delegated domain.
+#publicDomain = "publicsomething.f5communitydemos.com"
+domain_name = "shared.acme.com"
+
+# Volterra variables: these will be used to standup Volterra resources across clouds
+namespace = "my-namespace"
+volterraTenant = "my-volterra-tenant-id"
+
+# Optional: if provided this public key will allow SSH access to the Volterra gateways
+# and may be used by AWS/Azure/GCP where an SSH key can be specified
+ssh_key = "ssh-rsa REDACTED me@my.email"
+
+# AWS variables
+awsRegion            = "us-west-2"
+volterraCloudCredAWS = "cloud-cred-aws"
+
+#control the resources being deployed using the follwoing map
+#awsBusinessUnits = {
+#  bu1 = {
+#    cidr            = "10.1.0.0/16"
+#    public_subnets  = ["10.1.10.0/24", "10.1.110.0/24"]
+#    private_subnets = ["10.1.52.0/24", "10.1.152.0/24"]
+#    workstation     = true
+#  }
+#}
+
+# Azure variables
+azureLocation        = "westus2"
+volterraCloudCredAzure = "cloud-cred-azure"
+
+# GCP variables
+gcpRegion = "us-west1"
+gcpProjectId = "my-gcp-project-id"
+volterraCloudCredGCP = "cloud-cred-gcp"
