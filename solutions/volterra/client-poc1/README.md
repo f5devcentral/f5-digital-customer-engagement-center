@@ -89,6 +89,7 @@ Enter the value from environment variable AWS_SECRET_ACCESS_KEY and then click o
 | [aws_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) |
 | [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
 | [volterra_aws_vpc_site](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/aws_vpc_site) |
+| [volterra_cloud_site_labels](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/cloud_site_labels) |
 | [volterra_http_loadbalancer](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/http_loadbalancer) |
 | [volterra_origin_pool](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/origin_pool) |
 | [volterra_tf_params_action](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/tf_params_action) |

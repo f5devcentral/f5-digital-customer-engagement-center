@@ -23,7 +23,6 @@ resource "volterra_aws_vpc_site" "main" {
   name                    = format("%s-aws-%s", var.projectPrefix, local.buildSuffix)
   namespace               = "system"
   aws_region              = var.awsRegion
-  labels                  = local.volterraCommonLabels
   annotations             = local.volterraCommonAnnotations
   instance_type           = "t3.xlarge"
   disk_size               = "80"
@@ -63,6 +62,17 @@ resource "volterra_aws_vpc_site" "main" {
   vpc {
     vpc_id = module.sharedVpc.vpc_id
   }
+
+  lifecycle {
+    ignore_changes = [labels]
+  }
+}
+
+resource "volterra_cloud_site_labels" "labels" {
+  name             = volterra_aws_vpc_site.main.name
+  site_type        = "aws_vpc_site"
+  labels           = local.volterraCommonLabels
+  ignore_on_delete = true
 }
 
 resource "volterra_tf_params_action" "main" {
@@ -81,7 +91,7 @@ resource "volterra_tf_params_action" "main" {
 data "aws_instances" "volterra" {
   instance_state_names = ["running"]
   instance_tags = {
-    "ves.io/site_name" = volterra_aws_vpc_site.main.name
+    "ves-io-site-name" = volterra_aws_vpc_site.main.name
   }
 
   depends_on = [volterra_tf_params_action.main]
