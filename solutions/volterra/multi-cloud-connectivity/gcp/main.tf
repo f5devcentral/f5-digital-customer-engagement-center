@@ -3,11 +3,11 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = ">= 3.77"
+      version = ">= 4.10"
     }
     volterra = {
       source  = "volterraedge/volterra"
-      version = "0.10"
+      version = "0.11.4"
     }
   }
 }
@@ -15,6 +15,7 @@ terraform {
 provider "volterra" {
   timeout = "90s"
 }
+
 locals {
   gcp_common_labels = merge(var.labels, {})
   volterra_common_labels = merge(var.labels, {
@@ -234,9 +235,6 @@ resource "volterra_gcp_vpc_site" "inside" {
   name        = format("%s-%s-gcp-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace   = "system"
   description = format("%s site (%s-%s)", each.key, var.projectPrefix, var.buildSuffix)
-  labels = merge(local.volterra_common_labels, {
-    bu = each.key
-  })
   annotations = local.volterra_common_annotations
   coordinates {
     latitude  = module.region_locations.lookup[var.gcpRegion].latitude
@@ -284,8 +282,21 @@ resource "volterra_gcp_vpc_site" "inside" {
       }
     }
   }
+  lifecycle {
+    ignore_changes = [labels]
+  }
   # These shouldn't be necessary, but lifecycle is flaky without them
   depends_on = [module.inside, module.outside]
+}
+
+resource "volterra_cloud_site_labels" "labels" {
+  for_each  = volterra_gcp_vpc_site.inside
+  name      = each.value.name
+  site_type = "gcp_vpc_site"
+  labels = merge(local.volterra_common_labels, {
+    bu = each.key
+  })
+  ignore_on_delete = true
 }
 
 # Instruct Volterra to provision the GCP VPC sites
