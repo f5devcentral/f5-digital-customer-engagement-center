@@ -23,7 +23,6 @@ resource "volterra_azure_vnet_site" "bu" {
   for_each       = var.business_units
   name           = format("%s-%s-azure-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace      = "system"
-  labels         = local.volterra_common_labels
   annotations    = local.volterra_common_annotations
   azure_region   = azurerm_resource_group.rg[each.key].location
   resource_group = format("%s-%s-volterra-%s", var.projectPrefix, each.key, var.buildSuffix)
@@ -101,6 +100,18 @@ resource "volterra_azure_vnet_site" "bu" {
       vnet_name      = module.network[each.key].vnet_name
     }
   }
+
+  lifecycle {
+    ignore_changes = [labels]
+  }
+}
+
+resource "volterra_cloud_site_labels" "labels" {
+  for_each         = var.business_units
+  name             = volterra_azure_vnet_site.bu[each.key].name
+  site_type        = "azure_vnet_site"
+  labels           = local.volterra_common_labels
+  ignore_on_delete = true
 }
 
 resource "volterra_tf_params_action" "applyBu" {
