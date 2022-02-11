@@ -153,7 +153,7 @@ Use the following command to destroy all of the resources
 | Name | Version |
 |------|---------|
 | terraform | >= 0.14.5 |
-| google | >= 4.10 |
+| google | >= 3.77 |
 | volterra | 0.11.4 |
 
 ## Providers
@@ -161,7 +161,7 @@ Use the following command to destroy all of the resources
 | Name | Version |
 |------|---------|
 | external | n/a |
-| google | >= 4.10 |
+| google | >= 3.77 |
 | random | n/a |
 | volterra | 0.11.4 |
 

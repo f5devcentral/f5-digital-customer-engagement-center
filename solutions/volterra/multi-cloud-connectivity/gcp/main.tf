@@ -3,7 +3,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = ">= 4.10"
+      version = ">= 3.77"
     }
     volterra = {
       source  = "volterraedge/volterra"
