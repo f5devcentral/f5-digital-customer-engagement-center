@@ -6,7 +6,7 @@ To use this module within a solutions context:
 
 ```hcl
 module "webServer" {
-    source              = "../../../../../azure/terraform/webServer/"
+    source              = "github.com/f5devcentral/f5-digital-customer-engagement-center//modules/azure/terraform/webServer/"
     projectPrefix       = "somePrefix"
     buildSuffix         = "someSuffix"
     resourceOwner       = "someName"
@@ -24,14 +24,27 @@ module "webServer" {
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.14 |
-| azurerm | ~> 2 |
+| terraform | >= 0.14 |
+| azurerm | >= 2.82 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurerm | ~> 2 |
+| azurerm | >= 2.82 |
+
+## Modules
+
+No Modules.
+
+## Resources
+
+| Name |
+|------|
+| [azurerm_linux_virtual_machine](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) |
+| [azurerm_network_interface](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) |
+| [azurerm_network_interface_security_group_association](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface_security_group_association) |
+| [azurerm_virtual_machine_extension](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension) |
 
 ## Inputs
 
@@ -55,6 +68,5 @@ module "webServer" {
 |------|-------------|
 | privateIp | private ip address of the instance |
 | webServerInfo | VM instance output parameters as documented here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

@@ -5,7 +5,6 @@ resource "volterra_aws_vpc_site" "bu" {
   name          = format("%s-%s-aws-%s", var.projectPrefix, each.key, var.buildSuffix)
   namespace     = "system"
   aws_region    = var.awsRegion
-  labels        = local.volterraCommonLabels
   annotations   = local.volterraCommonAnnotations
   instance_type = "t3.xlarge"
   disk_size     = "80"
@@ -73,6 +72,18 @@ resource "volterra_aws_vpc_site" "bu" {
   vpc {
     vpc_id = module.vpc[each.key].vpc_id
   }
+
+  lifecycle {
+    ignore_changes = [labels]
+  }
+}
+
+resource "volterra_cloud_site_labels" "labels" {
+  for_each         = var.awsBusinessUnits
+  name             = volterra_aws_vpc_site.bu[each.key].name
+  site_type        = "aws_vpc_site"
+  labels           = local.volterraCommonLabels
+  ignore_on_delete = true
 }
 
 resource "volterra_tf_params_action" "applyBu" {
@@ -93,7 +104,7 @@ data "aws_instances" "volterra" {
   for_each             = var.awsBusinessUnits
   instance_state_names = ["running"]
   instance_tags = {
-    "ves.io/site_name" = volterra_aws_vpc_site.bu[each.key].name
+    "ves-io-site-name" = volterra_aws_vpc_site.bu[each.key].name
   }
 
   depends_on = [volterra_tf_params_action.applyBu]

@@ -154,7 +154,7 @@ Use the following command to destroy all of the resources
 |------|---------|
 | terraform | >= 0.14.5 |
 | google | >= 3.77 |
-| volterra | 0.10 |
+| volterra | 0.11.4 |
 
 ## Providers
 
@@ -163,7 +163,38 @@ Use the following command to destroy all of the resources
 | external | n/a |
 | google | >= 3.77 |
 | random | n/a |
-| volterra | 0.10 |
+| volterra | 0.11.4 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| inside | terraform-google-modules/network/google | 3.3.0 |
+| outside | terraform-google-modules/network/google | 3.3.0 |
+| region_locations | git::https://github.com/memes/terraform-google-volterra//modules/region-locations?ref=0.3.1 |  |
+| webserver_sa | terraform-google-modules/service-accounts/google | 4.0.2 |
+| webserver_tls | ../../../../modules/google/terraform/tls |  |
+| webservers | ../../../../modules/google/terraform/backend |  |
+| workstation | ../../../../modules/google/terraform/workstation |  |
+| workstation_sa | terraform-google-modules/service-accounts/google | 4.0.2 |
+| workstation_tls | ../../../../modules/google/terraform/tls/ |  |
+
+## Resources
+
+| Name |
+|------|
+| [external_external](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) |
+| [google_compute_firewall](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) |
+| [google_compute_zones](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_zones) |
+| [google_dns_managed_zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone) |
+| [google_dns_record_set](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_record_set) |
+| [random_shuffle](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/shuffle) |
+| [volterra_cloud_site_labels](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/cloud_site_labels) |
+| [volterra_gcp_vpc_site](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/gcp_vpc_site) |
+| [volterra_healthcheck](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/healthcheck) |
+| [volterra_http_loadbalancer](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/http_loadbalancer) |
+| [volterra_origin_pool](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/origin_pool) |
+| [volterra_tf_params_action](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/tf_params_action) |
 
 ## Inputs
 
@@ -191,7 +222,6 @@ Use the following command to destroy all of the resources
 | Name | Description |
 |------|-------------|
 | connection\_helpers | A set of `gcloud` commands to connect to SSH, setup a forward-proxy, and to access<br>Code Server on each workstation, mapped by business unit. |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->
 

@@ -9,4 +9,5 @@ output "backendPublicIp" {
 output "backendInfo" {
   description = "VM instance output parameters as documented here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine"
   value       = module.backend.*.backendInfo
+  sensitive   = true
 }

@@ -124,14 +124,25 @@ Use the following command to destroy all of the resources
 | Name | Version |
 |------|---------|
 | terraform | >= 0.14.5 |
-| volterra | 0.10 |
+| volterra | 0.11.4 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | random | n/a |
-| volterra | 0.10 |
+| volterra | 0.11.4 |
+
+## Modules
+
+No Modules.
+
+## Resources
+
+| Name |
+|------|
+| [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
+| [volterra_virtual_site](https://registry.terraform.io/providers/volterraedge/volterra/0.11.4/docs/resources/virtual_site) |
 
 ## Inputs
 
@@ -158,6 +169,5 @@ Use the following command to destroy all of the resources
 |------|-------------|
 | buildSuffix | build suffix for the deployment |
 | volterraVirtualSite | name of virtual site across all clouds |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->
