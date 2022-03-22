@@ -1,5 +1,6 @@
-############# WAF##############################
-resource "volterra_waf" "waf" {
+############################ WAF ############################
+
+resource "volterra_app_firewall" "waf" {
   name      = format("%s-waf-%s", var.projectPrefix, var.buildSuffix)
   namespace = "shared"
 }

@@ -71,7 +71,7 @@ resource "volterra_http_loadbalancer" "external-app" {
   waf {
     tenant    = var.volterraTenant
     namespace = "shared"
-    name      = volterra_waf.waf.name
+    name      = volterra_app_firewall.waf.name
   }
   https_auto_cert {
     http_redirect = true
