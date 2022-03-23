@@ -3,16 +3,14 @@ resource "random_id" "buildSuffix" {
 }
 variable "projectPrefix" {
   description = "projectPrefix name for tagging"
-  default     = "fw-inter-vpc"
 }
 variable "resourceOwner" {
   description = "Owner of the deployment for tagging purposes"
-  default     = "elsa"
 }
 variable "awsRegion" {
-  description = "aws region"
+  description = "AWS region"
   type        = string
-  default     = "us-east-2"
+  default     = "us-west-2"
 }
 variable "sshPublicKey" {
   description = "SSH public key used to create an EC2 keypair"
@@ -22,24 +20,23 @@ variable "sshPublicKey" {
 variable "awsAz1" {
   description = "Availability zone, will dynamically choose one if left empty"
   type        = string
-  default     = null
+  default     = "us-west-2a"
 }
 variable "awsAz2" {
   description = "Availability zone, will dynamically choose one if left empty"
   type        = string
-  default     = null
+  default     = "us-west-2b"
 }
 variable "awsAz3" {
   description = "Availability zone, will dynamically choose one if left empty"
   type        = string
-  default     = null
+  default     = "us-west-2c"
 }
 variable "volterraP12" {
   description = "Location of volterra p12 file"
   type        = string
   default     = null
 }
-
 variable "volterraUrl" {
   description = "url of volterra api"
   type        = string
@@ -63,8 +60,4 @@ variable "namespace" {
 variable "assisted" {
   description = "Use Assisted deployment for Volterra TGW Site"
   default     = false
-}
-variable "volterraUniquePrefix" {
-  description = "Unique prefix to use for System resources in Volterra tenant"
-  default     = "acme"
 }
