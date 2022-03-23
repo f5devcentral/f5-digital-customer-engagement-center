@@ -23,22 +23,35 @@ Note: Typical customer environments will consist of multiple spoke VPCs connecte
 
 - AWS CLI
 - Terraform
-- AWS account, access and secret key
-- Volterra account
-- Volterra p12 credential file and api password -  https://www.volterra.io/docs/how-to/user-mgmt/credentials
-- Volterra Cloud Credentials
+- AWS account, access key ID and secret key
+- F5 Distributed Cloud account
+- F5 Distributed Cloud p12 credential file and API password
+- F5 Distributed Cloud "Cloud Credentials"
 
-## Login to AWS Environment
+## Set AWS Environment Variables
 
-- Set AWS environment variables
+- Export the AWS access key ID and the secret access key
+
 ```bash
 export AWS_ACCESS_KEY_ID="your_key"
 export AWS_SECRET_ACCESS_KEY="your_secret_key"
 ```
 
-## Create Volterra Cloud Credentials for AWS
+## Set F5 Distributed Cloud Environment Variables
 
-In VoltConsole go to the "System" namespace and navigate to "Manage" -> "Site Management" -> "Cloud Credentials".
+Create the F5 Distributed Cloud credentials p12 file and copy it to a local folder. Follow steps here - https://docs.cloud.f5.com/docs/how-to/user-mgmt/credentials.
+
+- Export the p12 credential file path, p12 password, and API URL
+
+```bash
+export VES_P12_PASSWORD="your_key"
+export VOLT_API_URL="https://<tenant-name>.console.ves.volterra.io/api"
+export VOLT_API_P12_FILE="/var/tmp/<example>.console.ves.volterra.io.api-creds.p12"
+```
+
+## Create F5 Distributed Cloud "Cloud Credentials" for AWS
+
+In F5 Distributed Cloud Console go to the "Cloud and Edge Sites" and navigate to "Manage" -> "Site Management" -> "Cloud Credentials".
 
 Click on "Add Cloud Credential"
 
@@ -61,23 +74,8 @@ git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
 cd f5-digital-customer-engagement-center/solutions/volterra/aws-tgw
 ```
 
-- Set AWS environment variables
-```bash
-export AWS_ACCESS_KEY_ID="your_key"
-export AWS_SECRET_ACCESS_KEY="your_secret_key"
-```
-
-- Set Volterra environment variables
-- Create a Volterra credentials p12 file and copy it to a local folder. Follow steps here - https://www.volterra.io/docs/how-to/user-mgmt/credentials
-
-```bash
-export VES_P12_PASSWORD="your_key"
-export VOLT_API_URL="https://<tenant-name>.console.ves.volterra.io/api"
-export VOLT_API_P12_FILE="/var/tmp/<example>.console.ves.volterra.io.api-creds.p12"
-```
-
-- Get the Volterra tenant name
-General namespace in the VoltConsole UI, then Tenant Settings > Tenant overview
+- Get the F5 Distributed Cloud tenant name
+General namespace in the F5 Distributed Cloud Console, then Tenant Settings > Tenant overview
 
 - Create the tfvars file and update it with your settings
 
