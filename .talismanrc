@@ -302,3 +302,7 @@ fileignoreconfig:
   checksum: a9cb49e0be401deb57085bdbc316c0d0c7bbef20c14dbf01ba3d59c4c9c7c507
 - filename: solutions/volterra/client-poc1/volterraServices.tf
   checksum: 2e5f9f9e76ec54688107cc71f7a86d06cf9270649f9a2199b931c6ca1e08c50b
+- filename: solutions/volterra/aws-tgw/volterraSites.tf
+  checksum: 51639a24a316adff886c8d711f36fd8d0be02896511e635bea5ac7d27c2fda86
+- filename: solutions/volterra/aws-tgw/README.md
+  checksum: 4d969eaa684d8771703c8189f7f950353f40c817f345e866ecfb4feeaf2f7e27
