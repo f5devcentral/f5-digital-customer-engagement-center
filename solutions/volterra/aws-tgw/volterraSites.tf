@@ -5,7 +5,7 @@ locals {
     demo     = "aws-tgw"
     owner    = var.resourceOwner
     prefix   = var.projectPrefix
-    suffix   = var.buildSuffix
+    suffix   = random_id.buildSuffix.hex
     platform = "aws"
   }
 }
