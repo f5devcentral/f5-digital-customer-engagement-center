@@ -3,7 +3,7 @@
 # Instance info
 data "aws_instances" "VolterraBu1Instances" {
   instance_tags = {
-    "ves.io/site_name" = volterra_aws_tgw_site.acmeBu1.name
+    "ves-io-site-name" = volterra_aws_tgw_site.acmeBu1.name
   }
   instance_state_names = ["running"]
   depends_on           = [volterra_tf_params_action.applyBu1]
@@ -11,7 +11,7 @@ data "aws_instances" "VolterraBu1Instances" {
 
 data "aws_instances" "VolterraBu2Instances" {
   instance_tags = {
-    "ves.io/site_name" = volterra_aws_tgw_site.acmeBu2.name
+    "ves-io-site-name" = volterra_aws_tgw_site.acmeBu2.name
   }
   instance_state_names = ["running"]
   depends_on           = [volterra_tf_params_action.applyBu2]
@@ -19,7 +19,7 @@ data "aws_instances" "VolterraBu2Instances" {
 
 data "aws_instances" "VolterraAcmeInstances" {
   instance_tags = {
-    "ves.io/site_name" = volterra_aws_tgw_site.acmeAcme.name
+    "ves-io-site-name" = volterra_aws_tgw_site.acmeAcme.name
   }
   instance_state_names = ["running"]
   depends_on           = [volterra_tf_params_action.applyAcme]
