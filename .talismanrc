@@ -304,3 +304,5 @@ fileignoreconfig:
   checksum: 2e5f9f9e76ec54688107cc71f7a86d06cf9270649f9a2199b931c6ca1e08c50b
 - filename: solutions/volterra/aws-tgw/volterraSites.tf
   checksum: 51639a24a316adff886c8d711f36fd8d0be02896511e635bea5ac7d27c2fda86
+- filename: solutions/volterra/aws-tgw/README.md
+  checksum: 4dc509937aa5adbca734f76ab8cb9c764a938e66e50fd566f94bda621d00f7f8
