@@ -13,7 +13,7 @@ locals {
 ############################ Volterra AWS TGW Site - BU1 ############################
 
 resource "volterra_aws_tgw_site" "acmeBu1" {
-  name                    = "${var.volterraUniquePrefix}-bu1"
+  name                    = "${var.projectPrefix}-bu1-${random_id.buildSuffix.hex}"
   namespace               = "system"
   logs_streaming_disabled = true
 
@@ -87,7 +87,7 @@ resource "volterra_tf_params_action" "applyBu1" {
 ############################ Volterra AWS TGW Site - BU2 ############################
 
 resource "volterra_aws_tgw_site" "acmeBu2" {
-  name                    = "${var.volterraUniquePrefix}-bu2"
+  name                    = "${var.projectPrefix}-bu2-${random_id.buildSuffix.hex}"
   namespace               = "system"
   logs_streaming_disabled = true
 
@@ -161,7 +161,7 @@ resource "volterra_tf_params_action" "applyBu2" {
 ############################ Volterra AWS TGW Site - Acme ############################
 
 resource "volterra_aws_tgw_site" "acmeAcme" {
-  name                    = "${var.volterraUniquePrefix}-acme"
+  name                    = "${var.projectPrefix}-acme-${random_id.buildSuffix.hex}"
   namespace               = "system"
   logs_streaming_disabled = true
 
