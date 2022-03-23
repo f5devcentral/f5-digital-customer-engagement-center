@@ -1,54 +1,60 @@
-provider "volterra" {
+############################ Locals ############################
+
+locals {
+  volterraCommonLabels = {
+    demo     = "aws-tgw"
+    owner    = var.resourceOwner
+    prefix   = var.projectPrefix
+    suffix   = var.buildSuffix
+    platform = "aws"
+  }
 }
 
-#resource "volterra_http_loadbalancer" "example" {
-#  name      = "acmecorp-web"
-#  namespace = "staging"
-#
-#  // One of the arguments from this list "do_not_advertise advertise_on_public_default_vip advertise_on_public advertise_custom" must be set
-#  advertise_on_public_default_vip = true
-#
-#  // One of the arguments from this list "no_challenge js_challenge captcha_challenge policy_based_challenge" must be set
-#  no_challenge = true
-#
-#  domains = ["www.foo.com"]
-#
-#  // One of the arguments from this list "least_active random source_ip_stickiness cookie_stickiness ring_hash round_robin" must be set
-#  random = true
-#
-#  // One of the arguments from this list "http https_auto_cert https" must be set
-#
-#  http {
-#    dns_volterra_managed = true
-#  }
-#
-#  // One of the arguments from this list "disable_rate_limit rate_limit" must be set
-#
-#  rate_limit {
-#    // One of the arguments from this list "custom_ip_allowed_list no_ip_allowed_list ip_allowed_list" must be set
-#
-#    ip_allowed_list {
-#      prefixes = ["192.168.20.0/24"]
-#    }
-#
-#    // One of the arguments from this list "no_policies policies" must be set
-#    no_policies = true
-#
-#    rate_limiter {
-#      total_number = "total_number"
-#      unit         = "unit"
-#    }
-#  }
-#  // One of the arguments from this list "service_policies_from_namespace no_service_policies active_service_policies" must be set
-#  service_policies_from_namespace = true
-#  // One of the arguments from this list "disable_waf waf waf_rule" must be set
-#  disable_waf = true
-#}
+############################ Volterra AWS TGW Site - BU1 ############################
 
-#Volterra
 resource "volterra_aws_tgw_site" "acmeBu1" {
-  name      = "${var.volterraUniquePrefix}-bu1"
-  namespace = "system"
+  name                    = "${var.volterraUniquePrefix}-bu1"
+  namespace               = "system"
+  logs_streaming_disabled = true
+
+  aws_parameters {
+    aws_certified_hw = "aws-byol-multi-nic-voltmesh"
+    aws_region       = var.awsRegion
+    instance_type    = "t3.xlarge"
+    disk_size        = "80"
+    ssh_key          = var.sshPublicKey
+    assisted         = false
+    no_worker_nodes  = true
+    vpc_id           = module.vpcTransitBu1.vpc_id
+
+    az_nodes {
+      aws_az_name            = local.awsAz1
+      reserved_inside_subnet = false
+      disk_size              = 100
+
+      inside_subnet {
+        existing_subnet_id = aws_subnet.bu1VoltSliAz1.id
+      }
+      outside_subnet {
+        existing_subnet_id = module.vpcTransitBu1.public_subnets[0]
+      }
+      workload_subnet {
+        existing_subnet_id = aws_subnet.bu1VoltWorkloadAz1.id
+      }
+    }
+
+    aws_cred {
+      name      = var.volterraCloudCred
+      namespace = "system"
+      tenant    = var.volterraTenant
+    }
+
+    existing_tgw {
+      tgw_id            = aws_ec2_transit_gateway.tgwBu1.id
+      tgw_asn           = "64512"
+      volterra_site_asn = "64532"
+    }
+  }
 
   vpc_attachments {
     vpc_list {
@@ -56,280 +62,147 @@ resource "volterra_aws_tgw_site" "acmeBu1" {
     }
   }
 
-  aws_parameters {
-    aws_certified_hw = "aws-byol-multi-nic-voltmesh"
-    aws_region       = var.awsRegion
-
-    az_nodes {
-      aws_az_name = local.awsAz1
-
-      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
-      reserved_inside_subnet = false
-      disk_size              = 100
-
-      inside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = aws_subnet.bu1VoltSliAz1.id
-      }
-
-      outside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = module.vpcTransitBu1.public_subnets[0]
-      }
-
-      workload_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = aws_subnet.bu1VoltWorkloadAz1.id
-
-      }
-    }
-
-    #    az_nodes {
-    #      aws_az_name = local.awsAz2
-    #
-    #      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
-    #      reserved_inside_subnet = false
-    #      disk_size              = "disk_size"
-    #
-    #      inside_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = aws_subnet.bu1VoltSliAz2.id
-    #      }
-    #
-    #      outside_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = module.vpcTransitBu1.public_subnets[1]
-    #      }
-    #
-    #      workload_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = aws_subnet.bu1VoltWorkloadAz2.id
-    #
-    #      }
-    #    }
-    #
-    #    az_nodes {
-    #      aws_az_name = local.awsAz3
-    #
-    #      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
-    #      reserved_inside_subnet = false
-    #      disk_size              = "disk_size"
-    #
-    #      inside_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = aws_subnet.bu1VoltSliAz3.id
-    #      }
-    #
-    #      outside_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = module.vpcTransitBu1.public_subnets[2]
-    #      }
-    #
-    #      workload_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = aws_subnet.bu1VoltWorkloadAz3.id
-    #
-    #      }
-    #    }
-
-    // One of the arguments from this list "aws_cred assisted" must be set
-
-    aws_cred {
-      name      = var.volterraCloudCred
-      namespace = "system"
-      tenant    = var.volterraTenant
-    }
-    assisted      = var.assisted
-    disk_size     = "80"
-    instance_type = "t3.xlarge"
-    // One of the arguments from this list "total_nodes no_worker_nodes nodes_per_az" must be set
-    no_worker_nodes = true
-
-    // One of the arguments from this list "new_vpc vpc_id" must be set
-
-    vpc_id = module.vpcTransitBu1.vpc_id
-
-    ssh_key = var.sshPublicKey
-
-    // One of the arguments from this list "new_tgw existing_tgw" must be set
-
-    existing_tgw {
-      // One of the arguments from this list "system_generated user_assigned" must be set
-      tgw_id            = aws_ec2_transit_gateway.tgwBu1.id
-      tgw_asn           = "64512"
-      volterra_site_asn = "64532"
-    }
+  lifecycle {
+    ignore_changes = [labels]
   }
-
-  // One of the arguments from this list "logs_streaming_disabled log_receiver" must be set
-  logs_streaming_disabled = true
 }
 
+resource "volterra_cloud_site_labels" "acmeLabelsBu1" {
+  name             = volterra_aws_tgw_site.acmeBu1.name
+  site_type        = "aws_tgw_site"
+  labels           = local.volterraCommonLabels
+  ignore_on_delete = true
+}
 
 resource "volterra_tf_params_action" "applyBu1" {
-
-  depends_on       = [volterra_aws_tgw_site.acmeBu1]
   site_name        = volterra_aws_tgw_site.acmeBu1.name
   site_kind        = "aws_tgw_site"
   action           = "apply"
   wait_for_action  = true
   ignore_on_update = false
+
+  depends_on = [volterra_aws_tgw_site.acmeBu1]
 }
 
-
-##########################################################################    BU2 site    #################################################################
+############################ Volterra AWS TGW Site - BU2 ############################
 
 resource "volterra_aws_tgw_site" "acmeBu2" {
-  name      = "${var.volterraUniquePrefix}-bu2"
-  namespace = "system"
+  name                    = "${var.volterraUniquePrefix}-bu2"
+  namespace               = "system"
+  logs_streaming_disabled = true
 
-  vpc_attachments {
-    vpc_list {
-      vpc_id = module.vpcBu2.vpc_id
-    }
-  }
   aws_parameters {
     aws_certified_hw = "aws-byol-multi-nic-voltmesh"
     aws_region       = var.awsRegion
+    instance_type    = "t3.xlarge"
+    disk_size        = "80"
+    ssh_key          = var.sshPublicKey
+    assisted         = false
+    no_worker_nodes  = true
+    vpc_id           = module.vpcTransitBu2.vpc_id
 
     az_nodes {
-      aws_az_name = local.awsAz1
-
-      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
+      aws_az_name            = local.awsAz1
       reserved_inside_subnet = false
       disk_size              = 100
 
       inside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
         existing_subnet_id = aws_subnet.bu2VoltSliAz1.id
       }
-
       outside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
         existing_subnet_id = module.vpcTransitBu2.public_subnets[0]
       }
-
       workload_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
         existing_subnet_id = aws_subnet.bu2VoltWorkloadAz1.id
-
       }
     }
-
-    #    az_nodes {
-    #      aws_az_name = local.awsAz2
-    #
-    #      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
-    #      reserved_inside_subnet = false
-    #      disk_size              = "disk_size"
-    #
-    #      inside_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = aws_subnet.bu2VoltSliAz2.id
-    #      }
-    #
-    #      outside_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = module.vpcTransitBu2.public_subnets[1]
-    #      }
-    #
-    #      workload_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = aws_subnet.bu2VoltWorkloadAz2.id
-    #
-    #      }
-    #    }
-    #
-    #    az_nodes {
-    #      aws_az_name = local.awsAz3
-    #
-    #      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
-    #      reserved_inside_subnet = false
-    #      disk_size              = "disk_size"
-    #
-    #      inside_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = aws_subnet.bu2VoltSliAz3.id
-    #      }
-    #
-    #      outside_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = module.vpcTransitBu2.public_subnets[2]
-    #      }
-    #
-    #      workload_subnet {
-    #        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-    #
-    #        existing_subnet_id = aws_subnet.bu2VoltWorkloadAz3.id
-    #
-    #      }
-    #    }
-
-    // One of the arguments from this list "aws_cred assisted" must be set
 
     aws_cred {
       name      = var.volterraCloudCred
       namespace = "system"
       tenant    = var.volterraTenant
     }
-    assisted      = var.assisted
-    disk_size     = "80"
-    instance_type = "t3.xlarge"
-    // One of the arguments from this list "total_nodes no_worker_nodes nodes_per_az" must be set
-    no_worker_nodes = true
-
-    // One of the arguments from this list "new_vpc vpc_id" must be set
-
-    vpc_id = module.vpcTransitBu2.vpc_id
-
-    ssh_key = var.sshPublicKey
-
-    // One of the arguments from this list "new_tgw existing_tgw" must be set
 
     existing_tgw {
-      // One of the arguments from this list "system_generated user_assigned" must be set
       tgw_id            = aws_ec2_transit_gateway.tgwBu2.id
       tgw_asn           = "64512"
       volterra_site_asn = "64533"
     }
   }
 
-  // One of the arguments from this list "logs_streaming_disabled log_receiver" must be set
-  logs_streaming_disabled = true
+  vpc_attachments {
+    vpc_list {
+      vpc_id = module.vpcBu2.vpc_id
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [labels]
+  }
 }
 
+resource "volterra_cloud_site_labels" "acmeLabelsBu2" {
+  name             = volterra_aws_tgw_site.acmeBu2.name
+  site_type        = "aws_tgw_site"
+  labels           = local.volterraCommonLabels
+  ignore_on_delete = true
+}
 
 resource "volterra_tf_params_action" "applyBu2" {
-  depends_on       = [volterra_aws_tgw_site.acmeBu2]
   site_name        = volterra_aws_tgw_site.acmeBu2.name
   site_kind        = "aws_tgw_site"
   action           = "apply"
   wait_for_action  = true
   ignore_on_update = false
+
+  depends_on = [volterra_aws_tgw_site.acmeBu2]
 }
 
-##########################################################################    Acme site    #################################################################
+############################ Volterra AWS TGW Site - Acme ############################
 
 resource "volterra_aws_tgw_site" "acmeAcme" {
-  name      = "${var.volterraUniquePrefix}-acme"
-  namespace = "system"
+  name                    = "${var.volterraUniquePrefix}-acme"
+  namespace               = "system"
+  logs_streaming_disabled = true
+
+  aws_parameters {
+    aws_certified_hw = "aws-byol-multi-nic-voltmesh"
+    aws_region       = var.awsRegion
+    instance_type    = "t3.xlarge"
+    disk_size        = "80"
+    ssh_key          = var.sshPublicKey
+    assisted         = false
+    no_worker_nodes  = true
+    vpc_id           = module.vpcTransitAcme.vpc_id
+
+    az_nodes {
+      aws_az_name            = local.awsAz1
+      reserved_inside_subnet = false
+      disk_size              = 100
+
+      inside_subnet {
+        existing_subnet_id = aws_subnet.acmeVoltSliAz1.id
+      }
+      outside_subnet {
+        existing_subnet_id = module.vpcTransitAcme.public_subnets[0]
+      }
+      workload_subnet {
+        existing_subnet_id = aws_subnet.acmeVoltWorkloadAz1.id
+      }
+    }
+
+    aws_cred {
+      name      = var.volterraCloudCred
+      namespace = "system"
+      tenant    = var.volterraTenant
+    }
+
+    existing_tgw {
+      tgw_id            = aws_ec2_transit_gateway.tgwAcme.id
+      tgw_asn           = "64512"
+      volterra_site_asn = "64534"
+    }
+  }
 
   vpc_attachments {
     vpc_list {
@@ -337,78 +210,24 @@ resource "volterra_aws_tgw_site" "acmeAcme" {
     }
   }
 
-  aws_parameters {
-    aws_certified_hw = "aws-byol-multi-nic-voltmesh"
-    aws_region       = var.awsRegion
-
-    az_nodes {
-      aws_az_name = local.awsAz1
-
-      // One of the arguments from this list "reserved_inside_subnet inside_subnet" must be set
-      reserved_inside_subnet = false
-      disk_size              = 100
-
-      inside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = aws_subnet.acmeVoltSliAz1.id
-      }
-
-      outside_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = module.vpcTransitAcme.public_subnets[0]
-      }
-
-      workload_subnet {
-        // One of the arguments from this list "subnet_param existing_subnet_id" must be set
-
-        existing_subnet_id = aws_subnet.acmeVoltWorkloadAz1.id
-
-      }
-    }
-
-
-    // One of the arguments from this list "aws_cred assisted" must be set
-
-    aws_cred {
-      name      = var.volterraCloudCred
-      namespace = "system"
-      tenant    = var.volterraTenant
-    }
-    assisted      = var.assisted
-    disk_size     = "80"
-    instance_type = "t3.xlarge"
-    // One of the arguments from this list "total_nodes no_worker_nodes nodes_per_az" must be set
-    no_worker_nodes = true
-
-    // One of the arguments from this list "new_vpc vpc_id" must be set
-
-    vpc_id = module.vpcTransitAcme.vpc_id
-
-    ssh_key = var.sshPublicKey
-
-    // One of the arguments from this list "new_tgw existing_tgw" must be set
-
-    existing_tgw {
-      // One of the arguments from this list "system_generated user_assigned" must be set
-      tgw_id            = aws_ec2_transit_gateway.tgwAcme.id
-      tgw_asn           = "64512"
-      volterra_site_asn = "64534"
-    }
+  lifecycle {
+    ignore_changes = [labels]
   }
-
-  // One of the arguments from this list "logs_streaming_disabled log_receiver" must be set
-  logs_streaming_disabled = true
 }
 
+resource "volterra_cloud_site_labels" "acmeLabelsAcme" {
+  name             = volterra_aws_tgw_site.acmeAcme.name
+  site_type        = "aws_tgw_site"
+  labels           = local.volterraCommonLabels
+  ignore_on_delete = true
+}
 
 resource "volterra_tf_params_action" "applyAcme" {
-  count            = var.assisted ? 0 : 1
-  depends_on       = [volterra_aws_tgw_site.acmeAcme]
   site_name        = volterra_aws_tgw_site.acmeAcme.name
   site_kind        = "aws_tgw_site"
   action           = "apply"
   wait_for_action  = true
   ignore_on_update = false
+
+  depends_on = [volterra_aws_tgw_site.acmeAcme]
 }
