@@ -88,14 +88,12 @@ resource "azurerm_lb" "public_lb" {
 }
 
 resource "azurerm_lb_probe" "tcpProbe80" {
-  resource_group_name = azurerm_resource_group.rg.name
   loadbalancer_id     = azurerm_lb.public_lb.id
   name                = "tcpProbe80"
   port                = 80
 }
 
 resource "azurerm_lb_probe" "tcpProbe22" {
-  resource_group_name = azurerm_resource_group.rg.name
   loadbalancer_id     = azurerm_lb.public_lb.id
   name                = "tcpProbe22"
   port                = 22
@@ -108,7 +106,6 @@ resource "azurerm_lb_backend_address_pool" "address_pool" {
 
 resource "azurerm_lb_rule" "rule" {
   for_each                       = toset( var.lb_rules_ports )
-  resource_group_name            = azurerm_resource_group.rg.name
   loadbalancer_id                = azurerm_lb.public_lb.id
   name                           = "LBRule${each.value}"
   protocol                       = "Tcp"
@@ -121,7 +118,6 @@ resource "azurerm_lb_rule" "rule" {
 }
 
 resource "azurerm_lb_outbound_rule" "outbound_rule" {
-  resource_group_name     = azurerm_resource_group.rg.name
   loadbalancer_id         = azurerm_lb.public_lb.id
   name                    = "OutboundRule"
   protocol                = "Tcp"
@@ -163,7 +159,6 @@ resource "azurerm_lb" "gateway_lb" {
 }
 
 resource "azurerm_lb_probe" "gwlbProbe" {
-  resource_group_name = azurerm_resource_group.rg.name
   loadbalancer_id     = azurerm_lb.gateway_lb.id
   name                = "tcpProbe80"
   port                = 80
@@ -189,7 +184,6 @@ resource "azurerm_lb_backend_address_pool" "address_pool_gwlb" {
 }
 
 resource "azurerm_lb_rule" "gwlb_rule" {
-  resource_group_name            = azurerm_resource_group.rg.name
   loadbalancer_id                = azurerm_lb.gateway_lb.id
   name                           = "gwlbRule"
   protocol                       = "All"
