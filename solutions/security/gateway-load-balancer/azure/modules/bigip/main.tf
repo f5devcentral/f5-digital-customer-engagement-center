@@ -215,11 +215,11 @@ resource "azurerm_key_vault_access_policy" "example" {
   object_id    = azurerm_user_assigned_identity.user_identity.principal_id
 
   key_permissions = [
-    "get", "list", "update", "create", "import", "delete", "recover", "backup", "restore",
+    "Get", "List", "Update", "Create", "Import", "Delete", "Recover", "Backup", "Restore",
   ]
 
   secret_permissions = [
-    "get", "list", "set", "delete", "recover", "backup", "restore", "purge"
+    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
   ]
 }
 
@@ -290,7 +290,6 @@ resource "azurerm_public_ip" "mgmt_public_ip" {
   domain_name_label   = format("%s-mgmt-%s", local.instance_prefix, count.index)
   allocation_method   = "Static"   # Static is required due to the use of the Standard sku
   sku                 = "Standard" # the Standard sku is required due to the use of availability zones
-  availability_zone   = var.availabilityZones_public_ip
   tags = {
     Name   = format("%s-pip-mgmt-%s", local.instance_prefix, count.index)
     source = "terraform"
@@ -307,7 +306,6 @@ resource "azurerm_public_ip" "external_public_ip" {
   domain_name_label = format("%s-ext-%s", local.instance_prefix, count.index)
   allocation_method = "Static"   # Static is required due to the use of the Standard sku
   sku               = "Standard" # the Standard sku is required due to the use of availability zones
-  availability_zone = var.availabilityZones_public_ip
   tags = {
     Name   = format("%s-pip-ext-%s", local.instance_prefix, count.index)
     source = "terraform"
@@ -324,7 +322,6 @@ resource "azurerm_public_ip" "secondary_external_public_ip" {
   domain_name_label = format("%s-sec-ext-%s", local.instance_prefix, count.index)
   allocation_method = "Static"   # Static is required due to the use of the Standard sku
   sku               = "Standard" # the Standard sku is required due to the use of availability zones
-  availability_zone = var.availabilityZones_public_ip
   tags = {
     Name   = format("%s-secondary-pip-ext-%s", local.instance_prefix, count.index)
     source = "terraform"
