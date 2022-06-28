@@ -31,12 +31,12 @@ terraform destroy -auto-approve
 ## Prerequisites
 - terraform version ~> 1.0.8
 - az cli installed and authenticated
-The below providers were tested and working with Terraform 1.0.8
-* provider registry.terraform.io/hashicorp/azurerm v2.79.1
-* provider registry.terraform.io/hashicorp/null v3.1.0
+The below providers were tested and working with Terraform 1.1.11
+* provider registry.terraform.io/hashicorp/azurerm v3.11.0
+* provider registry.terraform.io/hashicorp/null v3.1.1
 * provider registry.terraform.io/hashicorp/template v2.2.0
-* provider registry.terraform.io/hashicorp/random v3.1.0
-* provider registry.terraform.io/hashicorp/tls v3.1.0
+* provider registry.terraform.io/hashicorp/random v3.3.2
+* provider registry.terraform.io/hashicorp/tls v3.4.0
 * This solution requires an Azure account that can provision objects described in the solution.
 * This solution requires you to accept any Azure Marketplace "License/Terms and Conditions" for the images used in this solution.
   * By Default, this solution uses f5-bigip-virtual-edition-200m-best-hourly
