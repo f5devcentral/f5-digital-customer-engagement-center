@@ -1,14 +1,14 @@
 
-resource random_id id {
+resource "random_id" "id" {
   byte_length = 2
 }
 
 resource "tls_private_key" "example" {
-  algorithm   = "RSA"
-  rsa_bits = "4096"
+  algorithm = "RSA"
+  rsa_bits  = "4096"
 }
 
-resource azurerm_ssh_public_key f5_key {
+resource "azurerm_ssh_public_key" "f5_key" {
   name                = format("%s-pubkey-%s", var.prefix, random_id.id.hex)
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
@@ -81,22 +81,22 @@ resource "azurerm_lb" "public_lb" {
   sku                 = "Standard"
 
   frontend_ip_configuration {
-    name                 = "myFrontEnd"
-    public_ip_address_id = azurerm_public_ip.public_lb_frontend_ip.id
+    name                                               = "myFrontEnd"
+    public_ip_address_id                               = azurerm_public_ip.public_lb_frontend_ip.id
     gateway_load_balancer_frontend_ip_configuration_id = azurerm_lb.gateway_lb.frontend_ip_configuration[0].id
   }
 }
 
 resource "azurerm_lb_probe" "tcpProbe80" {
-  loadbalancer_id     = azurerm_lb.public_lb.id
-  name                = "tcpProbe80"
-  port                = 80
+  loadbalancer_id = azurerm_lb.public_lb.id
+  name            = "tcpProbe80"
+  port            = 80
 }
 
 resource "azurerm_lb_probe" "tcpProbe22" {
-  loadbalancer_id     = azurerm_lb.public_lb.id
-  name                = "tcpProbe22"
-  port                = 22
+  loadbalancer_id = azurerm_lb.public_lb.id
+  name            = "tcpProbe22"
+  port            = 22
 }
 
 resource "azurerm_lb_backend_address_pool" "address_pool" {
@@ -105,7 +105,7 @@ resource "azurerm_lb_backend_address_pool" "address_pool" {
 }
 
 resource "azurerm_lb_rule" "rule" {
-  for_each                       = toset( var.lb_rules_ports )
+  for_each                       = toset(var.lb_rules_ports)
   loadbalancer_id                = azurerm_lb.public_lb.id
   name                           = "LBRule${each.value}"
   protocol                       = "Tcp"
@@ -128,22 +128,22 @@ resource "azurerm_lb_outbound_rule" "outbound_rule" {
   }
 }
 
-module app_server {
-  count                       = var.instance_count_app
-  source                      = "./modules/app_server/"
-  vm_name                     = "appserver${count.index}"
-  f5_ssh_publickey            = azurerm_ssh_public_key.f5_key.public_key
-  upassword                   = var.upassword
-  resource_group_name         = azurerm_resource_group.rg.name
-  location                    = var.location
-  subnet_id                   = azurerm_subnet.app1Subnet.id
-  }
+module "app_server" {
+  count               = var.instance_count_app
+  source              = "./modules/app_server/"
+  vm_name             = "appserver${count.index}"
+  f5_ssh_publickey    = azurerm_ssh_public_key.f5_key.public_key
+  upassword           = var.upassword
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  subnet_id           = azurerm_subnet.app1Subnet.id
+}
 
- resource "azurerm_network_interface_backend_address_pool_association" "app_backend_pool_association" {
-  count                       = var.instance_count_app
-  network_interface_id        = module.app_server[count.index].network_interface_id
-  ip_configuration_name       = module.app_server[count.index].ip_configuration_name
-  backend_address_pool_id     = azurerm_lb_backend_address_pool.address_pool.id
+resource "azurerm_network_interface_backend_address_pool_association" "app_backend_pool_association" {
+  count                   = var.instance_count_app
+  network_interface_id    = module.app_server[count.index].network_interface_id
+  ip_configuration_name   = module.app_server[count.index].ip_configuration_name
+  backend_address_pool_id = azurerm_lb_backend_address_pool.address_pool.id
 }
 
 resource "azurerm_lb" "gateway_lb" {
@@ -153,34 +153,34 @@ resource "azurerm_lb" "gateway_lb" {
   sku                 = "Gateway"
 
   frontend_ip_configuration {
-    name                 = "myFrontEndGateway"
-    subnet_id            = azurerm_subnet.provider_vnet_subnets["external"].id    
+    name      = "myFrontEndGateway"
+    subnet_id = azurerm_subnet.provider_vnet_subnets["external"].id
   }
 }
 
 resource "azurerm_lb_probe" "gwlbProbe" {
-  loadbalancer_id     = azurerm_lb.gateway_lb.id
-  name                = "tcpProbe80"
-  port                = 80
-  protocol            = "Http"
-  request_path        = "/"
+  loadbalancer_id = azurerm_lb.gateway_lb.id
+  name            = "tcpProbe80"
+  port            = 80
+  protocol        = "Http"
+  request_path    = "/"
 }
 
 resource "azurerm_lb_backend_address_pool" "address_pool_gwlb" {
   loadbalancer_id = azurerm_lb.gateway_lb.id
   name            = "BackEndAddressPool"
   tunnel_interface {
-      identifier = 801
-      port = 2001
-      type = "External"
-      protocol = "VXLAN"
-    }
+    identifier = 801
+    port       = 2001
+    type       = "External"
+    protocol   = "VXLAN"
+  }
   tunnel_interface {
-      identifier = 802
-      port = 2002
-      type = "Internal"
-      protocol = "VXLAN"
-    }
+    identifier = 802
+    port       = 2002
+    type       = "Internal"
+    protocol   = "VXLAN"
+  }
 }
 
 resource "azurerm_lb_rule" "gwlb_rule" {
@@ -258,33 +258,33 @@ resource "azurerm_network_security_rule" "externalNSG" {
 data "template_file" "init" {
   template = file("${path.module}/f5_onboard.tmpl")
   vars = {
-    bigip_password = var.upassword
-    mgmt_gw = cidrhost(var.provider_vnet_subnets_map.mgmt.address_prefixes[0], 1)
-    ext_gw = cidrhost(var.provider_vnet_subnets_map.external.address_prefixes[0], 1)
-    gwlb_frontend_ip = azurerm_lb.gateway_lb.frontend_ip_configuration[0].private_ip_address
+    bigip_password        = var.upassword
+    mgmt_gw               = cidrhost(var.provider_vnet_subnets_map.mgmt.address_prefixes[0], 1)
+    ext_gw                = cidrhost(var.provider_vnet_subnets_map.external.address_prefixes[0], 1)
+    gwlb_frontend_ip      = azurerm_lb.gateway_lb.frontend_ip_configuration[0].private_ip_address
     public_lb_frontend_ip = azurerm_public_ip.public_lb_frontend_ip.ip_address
   }
 }
 
-module bigip {
-   count                       = var.instance_count
-   source                      = "./modules/bigip/"
-   prefix                      = "bigip"
-   f5_ssh_publickey            = azurerm_ssh_public_key.f5_key.public_key
-   resource_group_name         = azurerm_resource_group.rg.name
-   location                    = var.location
-   mgmt_subnet_ids             = [{"subnet_id" = azurerm_subnet.provider_vnet_subnets["mgmt"].id , "public_ip" = true, "private_ip_primary" =  ""}]
-   mgmt_securitygroup_ids      = [azurerm_network_security_group.mgmt.id]
-   external_subnet_ids         = [{"subnet_id" =  azurerm_subnet.provider_vnet_subnets["external"].id, "public_ip" = true,"private_ip_primary" = "", "private_ip_secondary" = "" }]
-   external_securitygroup_ids  = [azurerm_network_security_group.external.id]
-   availabilityZones           = var.availabilityZones
-   custom_user_data            = data.template_file.init.rendered
-   f5_version                   = var.f5_version
- }
+module "bigip" {
+  count                      = var.instance_count
+  source                     = "./modules/bigip/"
+  prefix                     = "bigip"
+  f5_ssh_publickey           = azurerm_ssh_public_key.f5_key.public_key
+  resource_group_name        = azurerm_resource_group.rg.name
+  location                   = var.location
+  mgmt_subnet_ids            = [{ "subnet_id" = azurerm_subnet.provider_vnet_subnets["mgmt"].id, "public_ip" = true, "private_ip_primary" = "" }]
+  mgmt_securitygroup_ids     = [azurerm_network_security_group.mgmt.id]
+  external_subnet_ids        = [{ "subnet_id" = azurerm_subnet.provider_vnet_subnets["external"].id, "public_ip" = true, "private_ip_primary" = "", "private_ip_secondary" = "" }]
+  external_securitygroup_ids = [azurerm_network_security_group.external.id]
+  availabilityZones          = var.availabilityZones
+  custom_user_data           = data.template_file.init.rendered
+  f5_version                 = var.f5_version
+}
 
- resource "azurerm_network_interface_backend_address_pool_association" "gwlb_backend_pool_association" {
-  count                       = var.instance_count
-  network_interface_id        = module.bigip[count.index].ext_eni_id[0]
-  ip_configuration_name       = module.bigip[count.index].ext_eni_ipconfig_name[0]
-  backend_address_pool_id     = azurerm_lb_backend_address_pool.address_pool_gwlb.id
+resource "azurerm_network_interface_backend_address_pool_association" "gwlb_backend_pool_association" {
+  count                   = var.instance_count
+  network_interface_id    = module.bigip[count.index].ext_eni_id[0]
+  ip_configuration_name   = module.bigip[count.index].ext_eni_ipconfig_name[0]
+  backend_address_pool_id = azurerm_lb_backend_address_pool.address_pool_gwlb.id
 }

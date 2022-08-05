@@ -306,3 +306,9 @@ fileignoreconfig:
   checksum: 51639a24a316adff886c8d711f36fd8d0be02896511e635bea5ac7d27c2fda86
 - filename: solutions/volterra/aws-tgw/README.md
   checksum: 4d969eaa684d8771703c8189f7f950353f40c817f345e866ecfb4feeaf2f7e27
+- filename: solutions/security/gateway-load-balancer/azure/variables.tf
+  checksum: 1d8f4275c03d317c92547feb205adacb3d1a264b4778d6e73c3ea9618f5596b8
+- filename: solutions/security/gateway-load-balancer/azure/main.tf
+  checksum: 32d128ccabc3aab691ef3e5e05ea89041291a3e7795e10829149a6a88d38b92d
+- filename: solutions/security/gateway-load-balancer/azure/README.md
+  checksum: 0abde22562e9161fa4757f02f6fce88791819b0e283c4221e1d84901ea864d7e
