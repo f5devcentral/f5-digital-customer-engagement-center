@@ -78,6 +78,11 @@ runtime_parameters:
   - name: TIMEZONE
     type: static
     value: ${timezone}
+bigip_ready_enabled:
+  - name: download asm policy from mgmt interface before default gateway is set
+    type: inline
+    commands:
+      - curl https://raw.githubusercontent.com/F5Networks/f5-azure-arm-templates-v2/main/examples/failover/bigip-configurations/Rapid_Deployment_Policy_13_1.xml -o /config/cloud/asm-policy.xml
 pre_onboard_enabled:
   - name: provision_rest
     type: inline
