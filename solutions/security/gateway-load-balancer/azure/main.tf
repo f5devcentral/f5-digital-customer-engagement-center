@@ -128,7 +128,7 @@ module "nsg-app" {
   source                = "Azure/network-security-group/azurerm"
   resource_group_name   = azurerm_resource_group.rg.name
   location              = azurerm_resource_group.rg.location
-  security_group_name   = format("%s-nsg-mgmt-%s", var.prefix, random_id.buildSuffix.hex)
+  security_group_name   = format("%s-nsg-app-%s", var.prefix, random_id.buildSuffix.hex)
   source_address_prefix = [var.adminSrcAddr]
 
   custom_rules = [
@@ -434,9 +434,24 @@ module "bigip" {
   custom_user_data           = local.f5_onboard1
 }
 
+# Note: JeffGiroux (REMOVE LATER)
+#       https://github.com/F5Networks/terraform-azure-bigip-module/issues/29
+#
+#       BIG-IP module currently does NOT export network interface ID.
+#       As a workaround, use the BIG-IP device ID to parse the name and
+#       use that to query the data azurerm_network_interface.
+#       Once output in module is fixed, data resource can be deleted.
+
+# Retrieve NIC Info
+data "azurerm_network_interface" "bigip-ext" {
+  count               = var.instance_count
+  name                = format("%s-ext-nic-public-0", element(split("-f5vm01", element(split("/", module.bigip[count.index].bigip_instance_ids), 8)), 0))
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
 resource "azurerm_network_interface_backend_address_pool_association" "gwlb_backend_pool_association" {
   count                   = var.instance_count
-  network_interface_id    = module.bigip[count.index].ext_eni_id[0]
-  ip_configuration_name   = module.bigip[count.index].ext_eni_ipconfig_name[0]
+  network_interface_id    = data.azurerm_network_interface.bigip-ext[count.index].id
+  ip_configuration_name   = data.azurerm_network_interface.bigip-ext[count.index].ip_configuration[0].name
   backend_address_pool_id = azurerm_lb_backend_address_pool.address_pool_gwlb.id
 }
