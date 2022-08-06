@@ -312,3 +312,5 @@ fileignoreconfig:
   checksum: 32d128ccabc3aab691ef3e5e05ea89041291a3e7795e10829149a6a88d38b92d
 - filename: solutions/security/gateway-load-balancer/azure/README.md
   checksum: 0abde22562e9161fa4757f02f6fce88791819b0e283c4221e1d84901ea864d7e
+- filename: solutions/security/gateway-load-balancer/azure/admin.auto.tfvars.example
+  checksum: 0c7c270423e093798571f71a813820950c6c0540aac7b76e6a6b1b730b370959
