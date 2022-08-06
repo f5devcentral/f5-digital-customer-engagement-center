@@ -128,6 +128,7 @@ Use the following command to destroy all of the resources
 | instance\_count\_app | Number of demo web app servers to deploy behind public Load Balancer | `string` | `"1"` | no |
 | lb\_rules\_ports | List of ports to be opened by LB rules on public-facing LB. | `list(any)` | <pre>[<br>  "22",<br>  "80",<br>  "443"<br>]</pre> | no |
 | location | Azure Location of the deployment | `string` | `"westus2"` | no |
+| owner | This is a tag used for object creation. Example is last name. | `string` | `null` | no |
 | prefix | This value is inserted at the beginning of each Azure object (alpha-numeric, no special character) | `string` | `"demo"` | no |
 
 ## Outputs

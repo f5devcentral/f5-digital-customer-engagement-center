@@ -61,3 +61,8 @@ variable "availabilityZones_public_ip" {
   type        = string
   default     = "Zone-Redundant"
 }
+variable "owner" {
+  type        = string
+  default     = null
+  description = "This is a tag used for object creation. Example is last name."
+}
