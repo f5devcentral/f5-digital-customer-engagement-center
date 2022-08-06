@@ -3,62 +3,207 @@ resource "random_id" "id" {
   byte_length = 2
 }
 
-resource "tls_private_key" "example" {
-  algorithm = "RSA"
-  rsa_bits  = "4096"
+############################ Locals ############################
+
+locals {
+  vnets = {
+    consumer = {
+      location       = var.location
+      addressSpace   = ["192.168.0.0/16"]
+      subnetPrefixes = ["192.168.1.0/24"]
+      subnetNames    = ["app"]
+    }
+    provider = {
+      location       = var.location
+      addressSpace   = ["10.0.0.0/16"]
+      subnetPrefixes = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+      subnetNames    = ["mgmt", "external", "internal"]
+    }
+  }
 }
 
-resource "azurerm_ssh_public_key" "f5_key" {
-  name                = format("%s-pubkey-%s", var.prefix, random_id.id.hex)
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  public_key          = tls_private_key.example.public_key_openssh
-}
+############################ Resource Groups ############################
 
 resource "azurerm_resource_group" "rg" {
-  name     = var.rg_name
+  name     = format("%s-rg-%s", var.prefix, random_id.buildSuffix.hex)
   location = var.location
+
+  tags = {
+    Name      = format("%s-rg-%s", var.owner, random_id.buildSuffix.hex)
+    Terraform = "true"
+  }
 }
 
-resource "azurerm_virtual_network" "consumer_vnet" {
-  name                = "${var.rg_name}-consumer-vnet"
-  location            = var.location
+############################ Network Security Groups ############################
+
+# Create Mgmt NSG
+module "nsg-mgmt" {
+  source                = "Azure/network-security-group/azurerm"
+  resource_group_name   = azurerm_resource_group.rg.name
+  location              = azurerm_resource_group.rg.location
+  security_group_name   = format("%s-nsg-mgmt-%s", var.prefix, random_id.buildSuffix.hex)
+  source_address_prefix = [var.adminSrcAddr]
+
+  custom_rules = [
+    {
+      name                   = "allow_http"
+      priority               = "100"
+      direction              = "Inbound"
+      access                 = "Allow"
+      protocol               = "Tcp"
+      destination_port_range = "80"
+    },
+    {
+      name                   = "allow_https"
+      priority               = "110"
+      direction              = "Inbound"
+      access                 = "Allow"
+      protocol               = "Tcp"
+      destination_port_range = "443"
+    },
+    {
+      name                   = "allow_ssh"
+      priority               = "120"
+      direction              = "Inbound"
+      access                 = "Allow"
+      protocol               = "Tcp"
+      destination_port_range = "22"
+    }
+  ]
+
+  tags = {
+    Name      = format("%s-nsg-mgmt-%s", var.owner, random_id.buildSuffix.hex)
+    Terraform = "true"
+  }
+}
+
+# Create External NSG
+module "nsg-external" {
+  source                = "Azure/network-security-group/azurerm"
+  resource_group_name   = azurerm_resource_group.rg.name
+  location              = azurerm_resource_group.rg.location
+  security_group_name   = format("%s-nsg-external-%s", var.prefix, random_id.buildSuffix.hex)
+  source_address_prefix = ["*"]
+
+  custom_rules = [
+    {
+      name                   = "allow_http"
+      priority               = "100"
+      direction              = "Inbound"
+      access                 = "Allow"
+      protocol               = "Tcp"
+      destination_port_range = "80"
+    },
+    {
+      name                   = "allow_https"
+      priority               = "110"
+      direction              = "Inbound"
+      access                 = "Allow"
+      protocol               = "Tcp"
+      destination_port_range = "443"
+    }
+  ]
+
+  tags = {
+    Name      = format("%s-nsg-external-%s", var.owner, random_id.buildSuffix.hex)
+    Terraform = "true"
+  }
+}
+
+# Create Internal NSG
+module "nsg-internal" {
+  source              = "Azure/network-security-group/azurerm"
   resource_group_name = azurerm_resource_group.rg.name
-  address_space       = [var.network_cidr_consumer]
-}
-
-resource "azurerm_subnet" "app1Subnet" {
-  name                 = "app1Subnet"
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.consumer_vnet.name
-  address_prefixes     = [var.app1_subnet_prefix]
-}
-
-#Create NSG and rules for app1Subnet
-resource "azurerm_network_security_group" "app1Subnet" {
-  name                = format("%s-app1-nsg-%s", var.prefix, random_id.id.hex)
   location            = azurerm_resource_group.rg.location
+  security_group_name = format("%s-nsg-internal-%s", var.prefix, random_id.buildSuffix.hex)
+
+  tags = {
+    Name      = format("%s-nsg-internal-%s", var.owner, random_id.buildSuffix.hex)
+    Terraform = "true"
+  }
+}
+
+# Create App NSG (Consumer)
+module "nsg-app" {
+  source                = "Azure/network-security-group/azurerm"
+  resource_group_name   = azurerm_resource_group.rg.name
+  location              = azurerm_resource_group.rg.location
+  security_group_name   = format("%s-nsg-mgmt-%s", var.prefix, random_id.buildSuffix.hex)
+  source_address_prefix = [var.adminSrcAddr]
+
+  custom_rules = [
+    {
+      name                   = "allow_http"
+      priority               = "100"
+      direction              = "Inbound"
+      access                 = "Allow"
+      protocol               = "Tcp"
+      destination_port_range = "80"
+    },
+    {
+      name                   = "allow_https"
+      priority               = "110"
+      direction              = "Inbound"
+      access                 = "Allow"
+      protocol               = "Tcp"
+      destination_port_range = "443"
+    },
+    {
+      name                   = "allow_ssh"
+      priority               = "120"
+      direction              = "Inbound"
+      access                 = "Allow"
+      protocol               = "Tcp"
+      destination_port_range = "22"
+    }
+  ]
+
+  tags = {
+    Name      = format("%s-nsg-app-%s", var.owner, random_id.buildSuffix.hex)
+    Terraform = "true"
+  }
+}
+
+############################ VNets ############################
+
+# Create Provider VNet
+module "vnetProvider" {
+  source              = "Azure/vnet/azurerm"
   resource_group_name = azurerm_resource_group.rg.name
+  vnet_name           = format("%s-vnetProvider-%s", var.prefix, random_id.buildSuffix.hex)
+  address_space       = locals.vnets.provider.address_space
+  subnet_prefixes     = locals.vnets.provider.subnetPrefixes
+  subnet_names        = locals.vnets.provider.subnetNames
+
+  nsg_ids = {
+    external = module.nsg-external.network_security_group_id
+    internal = module.nsg-internal.network_security_group_id
+    mgmt     = module.nsg-mgmt.network_security_group_id
+  }
+
+  tags = {
+    Name      = format("%s-vnetProvider-%s", var.owner, random_id.buildSuffix.hex)
+    Terraform = "true"
+  }
 }
 
-resource "azurerm_network_security_rule" "app1SubnetNSG" {
-  for_each                    = var.nsg_rules_ports_app1Subnet
-  name                        = each.value.name
-  priority                    = each.value.priority
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = each.value.protocol
-  source_port_range           = "*"
-  destination_port_range      = each.value.destination_port
-  destination_address_prefix  = "*"
-  source_address_prefixes     = var.AllowedIPs
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.app1Subnet.name
-}
+# Create Consumer VNet
+module "vnetConsumer" {
+  source              = "Azure/vnet/azurerm"
+  resource_group_name = azurerm_resource_group.rg.name
+  vnet_name           = format("%s-vnetConsumer-%s", var.prefix, random_id.buildSuffix.hex)
+  address_space       = locals.vnets.consumer.address_space
+  subnet_prefixes     = locals.vnets.consumer.subnetPrefixes
+  subnet_names        = locals.vnets.consumer.subnetNames
 
-resource "azurerm_subnet_network_security_group_association" "app1Subnet_nsg_association" {
-  subnet_id                 = azurerm_subnet.app1Subnet.id
-  network_security_group_id = azurerm_network_security_group.app1Subnet.id
+  nsg_ids = {
+    app = module.nsg-app.network_security_group_id
+  }
+
+  tags = {
+    Name      = format("%s-vnetConsumer-%s", var.owner, random_id.buildSuffix.hex)
+    Terraform = "true"
+  }
 }
 
 resource "azurerm_public_ip" "public_lb_frontend_ip" {

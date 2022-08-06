@@ -79,7 +79,6 @@ Use the following command to destroy all of the resources
 | azurerm | >= 3 |
 | random | n/a |
 | template | n/a |
-| tls | n/a |
 
 ## Modules
 
@@ -87,6 +86,12 @@ Use the following command to destroy all of the resources
 |------|--------|---------|
 | app_server | ./modules/app_server/ |  |
 | bigip | ./modules/bigip/ |  |
+| nsg-app | Azure/network-security-group/azurerm |  |
+| nsg-external | Azure/network-security-group/azurerm |  |
+| nsg-internal | Azure/network-security-group/azurerm |  |
+| nsg-mgmt | Azure/network-security-group/azurerm |  |
+| vnetConsumer | Azure/vnet/azurerm |  |
+| vnetProvider | Azure/vnet/azurerm |  |
 
 ## Resources
 
@@ -102,37 +107,28 @@ Use the following command to destroy all of the resources
 | [azurerm_network_security_rule](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule) |
 | [azurerm_public_ip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) |
 | [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) |
-| [azurerm_ssh_public_key](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/ssh_public_key) |
 | [azurerm_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet) |
-| [azurerm_subnet_network_security_group_association](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_network_security_group_association) |
 | [azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) |
 | [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
 | [template_file](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) |
-| [tls_private_key](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| AllowedIPs | List of source address prefixes. Tags may not be used. | `list(any)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
-| app1\_subnet\_prefix | variable "external\_subnet\_gw" {default = "10.0.2.1"} variable "mgmt\_subnet\_gw" {default = "10.0.1.1"} | `string` | `"192.168.1.0/24"` | no |
+| f5\_ssh\_publickey | instance key pair name (e.g. /.ssh/id\_rsa.pub) | `string` | n/a | yes |
+| adminSrcAddr | Allowed Admin source IP prefix | `string` | `"0.0.0.0/0"` | no |
 | availabilityZones | If you want the VM placed in an Azure Availability Zone, and the Azure region you are deploying to supports it, specify the numbers of the existing Availability Zone you want to use. | `list(any)` | <pre>[<br>  1<br>]</pre> | no |
 | availabilityZones\_public\_ip | The availability zone to allocate the Public IP in. Possible values are Zone-Redundant, 1, 2, 3, and No-Zone. | `string` | `"Zone-Redundant"` | no |
-| f5\_version | n/a | `string` | `"latest"` | no |
+| f5\_instance\_type | Azure instance type to be used for the BIG-IP VE | `string` | `"Standard_DS4_v2"` | no |
+| f5\_password | Password for the Virtual Machine | `string` | `"Default12345!"` | no |
+| f5\_username | The admin username of the F5 BIG-IP that will be deployed | `string` | `"azureuser"` | no |
+| f5\_version | BIG-IP Version | `string` | `"16.1.301000"` | no |
 | instance\_count | Number of F5 BIG-IP appliances to deploy behind Gateway Load Balancer | `string` | `"2"` | no |
 | instance\_count\_app | Number of demo web app servers to deploy behind public Load Balancer | `string` | `"1"` | no |
 | lb\_rules\_ports | List of ports to be opened by LB rules on public-facing LB. | `list(any)` | <pre>[<br>  "22",<br>  "80",<br>  "443"<br>]</pre> | no |
-| location | n/a | `string` | `"East US 2"` | no |
-| network\_cidr | Network variables | `string` | `"10.0.0.0/16"` | no |
-| network\_cidr\_consumer | n/a | `string` | `"192.168.0.0/16"` | no |
-| nsg\_rules\_ports\_app1Subnet | n/a | `map(any)` | <pre>{<br>  "allow_http": {<br>    "destination_port": "80",<br>    "name": "allow_http",<br>    "priority": 201,<br>    "protocol": "Tcp"<br>  },<br>  "allow_https": {<br>    "destination_port": "443",<br>    "name": "allow_https",<br>    "priority": 202,<br>    "protocol": "Tcp"<br>  },<br>  "allow_ssh": {<br>    "destination_port": "22",<br>    "name": "allow_ssh",<br>    "priority": 200,<br>    "protocol": "Tcp"<br>  }<br>}</pre> | no |
-| nsg\_rules\_ports\_external | n/a | `map(any)` | <pre>{<br>  "allow_all": {<br>    "destination_port": "*",<br>    "name": "allow_all",<br>    "priority": 200,<br>    "protocol": "Tcp"<br>  }<br>}</pre> | no |
-| nsg\_rules\_ports\_mgmt | n/a | `map(any)` | <pre>{<br>  "allow_https": {<br>    "destination_port": "443",<br>    "name": "allow_https",<br>    "priority": 202,<br>    "protocol": "Tcp"<br>  },<br>  "allow_ssh": {<br>    "destination_port": "22",<br>    "name": "allow_ssh",<br>    "priority": 200,<br>    "protocol": "Tcp"<br>  }<br>}</pre> | no |
-| prefix | n/a | `string` | `"mydemo"` | no |
-| provider\_vnet\_subnets\_map | n/a | `map(any)` | <pre>{<br>  "external": {<br>    "address_prefixes": [<br>      "10.0.2.0/24"<br>    ],<br>    "name": "external"<br>  },<br>  "internal": {<br>    "address_prefixes": [<br>      "10.0.3.0/24"<br>    ],<br>    "name": "internal"<br>  },<br>  "mgmt": {<br>    "address_prefixes": [<br>      "10.0.1.0/24"<br>    ],<br>    "name": "mgmt"<br>  }<br>}</pre> | no |
-| rg\_name | Azure variables | `string` | `"my-demo-resource-group"` | no |
-| uname | n/a | `string` | `"azureuser"` | no |
-| upassword | n/a | `string` | `"DefaultPass12345!"` | no |
+| location | Azure Location of the deployment | `string` | `"westus2"` | no |
+| prefix | This value is inserted at the beginning of each Azure object (alpha-numeric, no special character) | `string` | `"demo"` | no |
 
 ## Outputs
 
