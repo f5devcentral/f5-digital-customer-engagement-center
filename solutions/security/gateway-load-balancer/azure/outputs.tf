@@ -18,10 +18,10 @@ output "bigip_mgmt_public_ip_addresses" {
 }
 output "bigip_mgmt_username" {
   description = "username for bigip mgmt console"
-  value       = "quickstart"
+  value       = var.f5_username
 }
 
 output "bigip_password" {
   description = "password for bigip mgmt console"
-  value       = var.upassword
+  value       = var.f5_password
 }
