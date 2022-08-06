@@ -78,14 +78,13 @@ Use the following command to destroy all of the resources
 |------|---------|
 | azurerm | >= 3 |
 | random | n/a |
-| template | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | app_server | ./modules/app_server/ |  |
-| bigip | ./modules/bigip/ |  |
+| bigip | github.com/F5Networks/terraform-azure-bigip-module |  |
 | nsg-app | Azure/network-security-group/azurerm |  |
 | nsg-external | Azure/network-security-group/azurerm |  |
 | nsg-internal | Azure/network-security-group/azurerm |  |
@@ -107,7 +106,6 @@ Use the following command to destroy all of the resources
 | [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) |
 | [azurerm_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subnet) |
 | [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
-| [template_file](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) |
 
 ## Inputs
 
