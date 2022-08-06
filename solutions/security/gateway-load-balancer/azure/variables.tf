@@ -50,12 +50,11 @@ variable "lb_rules_ports" {
   default     = ["22", "80", "443"]
   description = "List of ports to be opened by LB rules on public-facing LB."
 }
-variable "availabilityZones" {
+variable "availability_zone" {
+  type        = string
   description = "If you want the VM placed in an Azure Availability Zone, and the Azure region you are deploying to supports it, specify the numbers of the existing Availability Zone you want to use."
-  type        = list(any)
-  default     = [1]
+  default     = 1
 }
-
 variable "availabilityZones_public_ip" {
   description = "The availability zone to allocate the Public IP in. Possible values are Zone-Redundant, 1, 2, 3, and No-Zone."
   type        = string

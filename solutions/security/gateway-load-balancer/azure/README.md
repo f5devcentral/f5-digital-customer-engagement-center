@@ -115,8 +115,8 @@ Use the following command to destroy all of the resources
 |------|-------------|------|---------|:--------:|
 | f5\_ssh\_publickey | instance key pair name (e.g. /.ssh/id\_rsa.pub) | `string` | n/a | yes |
 | adminSrcAddr | Allowed Admin source IP prefix | `string` | `"0.0.0.0/0"` | no |
-| availabilityZones | If you want the VM placed in an Azure Availability Zone, and the Azure region you are deploying to supports it, specify the numbers of the existing Availability Zone you want to use. | `list(any)` | <pre>[<br>  1<br>]</pre> | no |
 | availabilityZones\_public\_ip | The availability zone to allocate the Public IP in. Possible values are Zone-Redundant, 1, 2, 3, and No-Zone. | `string` | `"Zone-Redundant"` | no |
+| availability\_zone | If you want the VM placed in an Azure Availability Zone, and the Azure region you are deploying to supports it, specify the numbers of the existing Availability Zone you want to use. | `string` | `1` | no |
 | f5\_instance\_type | Azure instance type to be used for the BIG-IP VE | `string` | `"Standard_DS4_v2"` | no |
 | f5\_password | Password for the Virtual Machine | `string` | `"Default12345!"` | no |
 | f5\_username | The admin username of the F5 BIG-IP that will be deployed | `string` | `"azureuser"` | no |
