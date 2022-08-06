@@ -207,7 +207,7 @@ extension_services:
               remark: Health check listener for GWLB health checks
               virtualPort: 80
               virtualAddresses:
-                - "{{{SELF_IP_EXTERNAL_ADDRESS}}}"
+                - "{{{SELF_IP_EXTERNAL}}}"
               iRules:
                 - monitor_respond_200
             inbound_pool:
@@ -304,8 +304,8 @@ post_onboard_enabled:
     commands:
       - tmsh create net tunnels vxlan gwlb-ext-vxlan-prof port 2001 flooding-type none
       - tmsh create net tunnels vxlan gwlb-int-vxlan-prof port 2002 flooding-type none
-      - tmsh create net tunnels tunnel gwlb_external_tun key 801 profile gwlb-ext-vxlan-prof local-address {{{ SELF_IP_EXTERNAL_ADDRESS }}} remote-address any mtu 1450
-      - tmsh create net tunnels tunnel gwlb_internal_tun key 802 profile gwlb-int-vxlan-prof local-address {{{ SELF_IP_EXTERNAL_ADDRESS }}} remote-address any mtu 1450
+      - tmsh create net tunnels tunnel gwlb_external_tun key 801 profile gwlb-ext-vxlan-prof local-address {{{ SELF_IP_EXTERNAL }}} remote-address any mtu 1450
+      - tmsh create net tunnels tunnel gwlb_internal_tun key 802 profile gwlb-int-vxlan-prof local-address {{{ SELF_IP_EXTERNAL }}} remote-address any mtu 1450
       - tmsh create net vlan-group vg1 members add { gwlb_external_tun }
       - tmsh create net vlan-group vg2 members add { gwlb_internal_tun } bridge-traffic enabled
       - tmsh create net self vxlan_external_self address 192.168.1.11/28 vlan vg1 allow-service all
