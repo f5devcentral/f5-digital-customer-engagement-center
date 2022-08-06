@@ -1,7 +1,12 @@
-#!/bin/bash
+#!/bin/bash -x
 
-# Send output to log file and serial console
+# NOTE: Startup Script is run once / initialization only (Cloud-Init behavior vs. typical re-entrant for Azure Custom Script Extension )
+# For 15.1+ and above, Cloud-Init will run the script directly and can remove Azure Custom Script Extension
+
+
 mkdir -p  /var/log/cloud /config/cloud /var/config/rest/downloads
+
+
 LOG_FILE=/var/log/cloud/startup-script.log
 [[ ! -f $LOG_FILE ]] && touch $LOG_FILE || { echo "Run Only Once. Exiting"; exit; }
 npipe=/tmp/$$.tmp
@@ -11,72 +16,87 @@ tee <$npipe -a $LOG_FILE /dev/ttyS0 &
 exec 1>&-
 exec 1>$npipe
 exec 2>&1
-echo "$(date +"%Y-%m-%dT%H:%M:%S.%3NZ") : Startup Script Start"
 
-# # create user
 
-# save config
-tmsh save sys config
-
-mkdir -p /config/cloud
+### write_files:
+# Download or Render BIG-IP Runtime Init Config
 
 cat << 'EOF' > /config/cloud/runtime-init-conf.yaml
 ---
+runtime_parameters:
+  - name: HOST_NAME
+    type: metadata
+    metadataProvider:
+      environment: azure
+      type: compute
+      field: name
+  - name: REGION
+    type: url
+    value: http://169.254.169.254/metadata/instance/compute/location?api-version=2021-05-01&format=text
+    headers:
+      - name: Metadata
+        value: true
+  - name: USER_NAME
+    type: static
+    value: ${f5_username}
+  - name: ADMIN_PASS
+    type: static
+    value: ${f5_password}
+  - name: SSH_KEYS
+    type: static
+    value: ${ssh_keypair}
+  - name: GATEWAY_EXTERNAL
+    type: metadata
+    metadataProvider:
+      environment: azure
+      type: network
+      field: ipv4
+      index: 1
+      ipcalc: first
+  - name: SELF_IP_EXTERNAL
+    type: metadata
+    metadataProvider:
+      environment: azure
+      type: network
+      field: ipv4
+      index: 1
+      ipcalc: address
+  - name: SELF_IP_INTERNAL
+    type: metadata
+    metadataProvider:
+      environment: azure
+      type: network
+      field: ipv4
+      index: 2
+      ipcalc: address
+  - name: DNS_SERVER
+    type: static
+    value: ${dns_server}
+  - name: NTP_SERVER
+    type: static
+    value: ${ntp_server}
+  - name: TIMEZONE
+    type: static
+    value: ${timezone}
 pre_onboard_enabled:
   - name: provision_rest
     type: inline
     commands:
       - /usr/bin/setdb provision.extramb 1000
       - /usr/bin/setdb restjavad.useextramb true
-      - /usr/bin/setdb ui.statistics.modulestatistics.localtraffic.persistencerecords true
-runtime_parameters:
-  - name: HOST_NAME
-    type: metadata
-    metadataProvider:
-      type: compute
-      environment: azure
-      field: name
-  - name: BIGIP_PASSWORD
-    type: url
-    query: vmId
-    value: "http://169.254.169.254/metadata/instance/compute?api-version=2017-08-01"
-    headers:
-      - name: Metadata
-        value: true
-  - name: SELF_IP_EXTERNAL
-    type: metadata
-    metadataProvider:
-      type: network
-      environment: azure
-      field: ipv4
-      index: 1
-  - name: SELF_IP_EXTERNAL_ADDRESS
-    type: metadata
-    metadataProvider:
-      type: network
-      environment: azure
-      field: ipv4
-      index: 1
-      ipcalc: address
-bigip_ready_enabled:
-  - name: download asm policy out mgmt int before default gateway gets set
-    type: inline
-    commands:
-      - curl https://raw.githubusercontent.com/f5-applebaum/f5-azure-arm-templates-v2/azure-gateway/examples/agw-provider-vnet/bigip-configurations/Rapid_Depolyment_Policy_13_1.xml -o /config/cloud/asm-policy.xml
+      - /usr/bin/setdb setup.run false
+      - /usr/bin/setdb config.allow.rfc3927 enable
 extension_packages:
   install_operations:
     - extensionType: do
-      extensionVersion: 1.19.0
-      extensionHash: 15c1b919954a91b9ad1e469f49b7a0915b20de494b7a032da9eb258bbb7b6c49
+      extensionVersion: ${DO_VER}
+      extensionUrl: ${DO_URL}
     - extensionType: as3
-      extensionVersion: 3.26.0
-      extensionHash: b33a96c84b77cff60249b7a53b6de29cc1e932d7d94de80cc77fb69e0b9a45a0
+      extensionVersion: ${AS3_VER}
+      extensionUrl: ${AS3_URL}
     - extensionType: ts
-      extensionVersion: 1.18.0
-      extensionHash: de4c82cafe503e65b751fcacfb2f169912ad5ce1645e13c5135dca972299174a
-    - extensionType: fast
-      extensionVersion: 1.7.0
-      extensionHash: 9c617f5bb1bb0d08ec095ce568a6d5d2ef162e504cd183fe3540586200f9d950
+      extensionVersion: ${TS_VER}
+      extensionUrl: ${TS_URL}
 extension_services:
   service_operations:
     - extensionType: do
@@ -85,77 +105,80 @@ extension_services:
         schemaVersion: 1.0.0
         class: Device
         async: true
-        label: >-
-          Quickstart 3NIC BIG-IP declaration for Declarative Onboarding with
-          PAYG license
+        label: Onboard BIG-IP standalone
         Common:
           class: Tenant
-          My_DbVariables:
+          dbVars:
             class: DbVariables
-            provision.extramb: 1000
             restjavad.useextramb: true
+            provision.extramb: 1000
+            config.allow.rfc3927: enable
             ui.advisory.enabled: true
             ui.advisory.color: blue
-            ui.advisory.text: BIG-IP VE Quickstart
-            config.allow.rfc3927: enable
-            dhclient.mgmt: disable
-          My_Dns:
-            class: DNS
-            nameServers:
-              - 168.63.129.16
-          My_Ntp:
-            class: NTP
-            servers:
-              - 0.pool.ntp.org
-            timezone: UTC
-          My_Provisioning:
-            class: Provision
-            ltm: nominal
-            asm: nominal
-          My_System:
-            class: System
+            ui.advisory.text: '{{{ HOST_NAME }}}.example.com'
+          mySystem:
             autoPhonehome: true
-            hostname: "{{{HOST_NAME}}}.local"
-          HTTPD:
-            class: HTTPD
-            authPamIdleTimeout: 86400
-          quickstart:
+            class: System
+            hostname: '{{{ HOST_NAME }}}.example.com'
+          '{{{ USER_NAME }}}':
             class: User
-            userType: regular
             partitionAccess:
               all-partitions:
                 role: admin
-            password: "${bigip_password}"
+            password: '{{{ ADMIN_PASS }}}'
             shell: bash
-          default:
-            class: ManagementRoute
-            gw: ${mgmt_gw}
-            network: default
-          dhclient_route1:
-            class: ManagementRoute
-            gw: ${mgmt_gw}
-            network: 168.63.129.16/32
-          azureMetadata:
-            class: ManagementRoute
-            gw: ${mgmt_gw}
-            network: 169.254.169.254/32
-          defaultRoute:
-            class: Route
-            gw: ${ext_gw}
-            network: default
+            userType: regular
+            keys:
+              - '{{{ SSH_KEYS }}}'
+          myDns:
+            class: DNS
+            nameServers:
+              - '{{{ DNS_SERVER }}}'
+              - 2001:4860:4860::8844
+            search:
+              - f5.com
+          myNtp:
+            class: NTP
+            servers:
+              - '{{{ NTP_SERVER }}}'
+              - 1.pool.ntp.org
+              - 2.pool.ntp.org
+            timezone: '{{{ TIMEZONE }}}'
+          myProvisioning:
+            class: Provision
+            ltm: nominal
+            asm: nominal
           external:
             class: VLAN
             tag: 4094
             mtu: 9001
             interfaces:
-              - name: "1.1"
+              - name: 1.1
                 tagged: false
           external-self:
             class: SelfIp
-            address: "{{{SELF_IP_EXTERNAL}}}"
+            address: '{{{ SELF_IP_EXTERNAL }}}/24'
             vlan: external
             allowService: all
             trafficGroup: traffic-group-local-only
+          internal:
+            class: VLAN
+            tag: 4093
+            mtu: 1500
+            interfaces:
+              - name: 1.2
+                tagged: false
+          internal-localself:
+            class: SelfIp
+            address: '{{{ SELF_IP_INTERNAL }}}/24'
+            vlan: internal
+            allowService: default
+            trafficGroup: traffic-group-local-only
+          default:
+            class: Route
+            gw: '{{{ GATEWAY_EXTERNAL }}}'
+            network: default
+            mtu: 1500
     - extensionType: as3
       type: inline
       value:
@@ -200,7 +223,7 @@ extension_services:
             class: Application
             template: http
             serviceMain:
-              class: Service_HTTP  
+              class: Service_HTTP
               virtualAddresses:
                 - ${public_lb_frontend_ip}
               snat: none
@@ -219,7 +242,7 @@ extension_services:
             class: Application
             template: https
             serviceMain:
-              class: Service_HTTPS        
+              class: Service_HTTPS
               virtualAddresses:
                 - ${public_lb_frontend_ip}
               snat: none
@@ -242,7 +265,7 @@ extension_services:
           Inbound_Service:
             class: Application
             inbound_vs_tcp:
-              class: Service_TCP         
+              class: Service_TCP
               virtualAddresses:
                 - ${public_lb_frontend_ip}
               virtualPort: 0
@@ -276,8 +299,8 @@ post_onboard_enabled:
     commands:
       - tmsh create net tunnels vxlan gwlb-ext-vxlan-prof port 2001 flooding-type none
       - tmsh create net tunnels vxlan gwlb-int-vxlan-prof port 2002 flooding-type none
-      - tmsh create net tunnels tunnel gwlb_external_tun key 801 profile gwlb-ext-vxlan-prof local-address {{{SELF_IP_EXTERNAL_ADDRESS}}} remote-address any mtu 1450
-      - tmsh create net tunnels tunnel gwlb_internal_tun key 802 profile gwlb-int-vxlan-prof local-address {{{SELF_IP_EXTERNAL_ADDRESS}}} remote-address any mtu 1450
+      - tmsh create net tunnels tunnel gwlb_external_tun key 801 profile gwlb-ext-vxlan-prof local-address {{{ SELF_IP_EXTERNAL_ADDRESS }}} remote-address any mtu 1450
+      - tmsh create net tunnels tunnel gwlb_internal_tun key 802 profile gwlb-int-vxlan-prof local-address {{{ SELF_IP_EXTERNAL_ADDRESS }}} remote-address any mtu 1450
       - tmsh create net vlan-group vg1 members add { gwlb_external_tun }
       - tmsh create net vlan-group vg2 members add { gwlb_internal_tun } bridge-traffic enabled
       - tmsh create net self vxlan_external_self address 192.168.1.11/28 vlan vg1 allow-service all
@@ -288,14 +311,17 @@ post_onboard_enabled:
       - tmsh save /sys config
 EOF
 
-# # Download
-PACKAGE_URL='https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.3.2/dist/f5-bigip-runtime-init-1.3.2-1.gz.run'
+# Download BIG-IP Runtime Init
 for i in {1..30}; do
-    curl -fv --retry 1 --connect-timeout 5 -L $PACKAGE_URL -o "/var/config/rest/downloads/f5-bigip-runtime-init.gz.run" && break || sleep 10
+    curl -fv --retry 1 --connect-timeout 5 -L ${INIT_URL} -o "/var/config/rest/downloads/f5-bigip-runtime.gz.run" && break || sleep 10
 done
-# Install
-bash /var/config/rest/downloads/f5-bigip-runtime-init.gz.run -- '--cloud azure'
-# Run
+
+# Remove comment to do silly debugging on BIG-IP Runtime init
 #export F5_BIGIP_RUNTIME_INIT_LOG_LEVEL=silly
+#export F5_BIGIP_RUNTIME_EXTENSION_INSTALL_DELAY_IN_MS=60000
+
+# Install BIG-IP Runtime Init
+bash /var/config/rest/downloads/f5-bigip-runtime.gz.run -- '--cloud azure'
+
+# Run BIG-IP Runtime Init and Process YAML
 f5-bigip-runtime-init --config-file /config/cloud/runtime-init-conf.yaml
-echo "$(date +"%Y-%m-%dT%H:%M:%S.%3NZ") : Startup Script Finish"
