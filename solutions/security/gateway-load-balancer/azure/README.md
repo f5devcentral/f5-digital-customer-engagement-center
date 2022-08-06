@@ -148,6 +148,7 @@ Use the following command to destroy all of the resources
 
 | Name | Description |
 |------|-------------|
+| bigip\_instance\_ids | Instance IDs for each BIG-IP |
 | bigip\_mgmt\_public\_ip\_addresses | public ip for bigip mgmt console |
 | bigip\_mgmt\_username | username for bigip mgmt console |
 | bigip\_password | password for bigip mgmt console |

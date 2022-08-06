@@ -25,3 +25,7 @@ output "bigip_password" {
   description = "password for bigip mgmt console"
   value       = var.f5_password
 }
+output "bigip_instance_ids" {
+  description = "Instance IDs for each BIG-IP"
+  value       = module.bigip.*.bigip_instance_ids
+}
