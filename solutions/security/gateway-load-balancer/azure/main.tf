@@ -1,5 +1,5 @@
 
-resource "random_id" "id" {
+resource "random_id" "buildSuffix" {
   byte_length = 2
 }
 
@@ -171,9 +171,9 @@ module "vnetProvider" {
   source              = "Azure/vnet/azurerm"
   resource_group_name = azurerm_resource_group.rg.name
   vnet_name           = format("%s-vnetProvider-%s", var.prefix, random_id.buildSuffix.hex)
-  address_space       = locals.vnets.provider.address_space
-  subnet_prefixes     = locals.vnets.provider.subnetPrefixes
-  subnet_names        = locals.vnets.provider.subnetNames
+  address_space       = local.vnets.provider["addressSpace"]
+  subnet_prefixes     = local.vnets.provider["subnetPrefixes"]
+  subnet_names        = local.vnets.provider["subnetNames"]
 
   nsg_ids = {
     external = module.nsg-external.network_security_group_id
@@ -192,9 +192,9 @@ module "vnetConsumer" {
   source              = "Azure/vnet/azurerm"
   resource_group_name = azurerm_resource_group.rg.name
   vnet_name           = format("%s-vnetConsumer-%s", var.prefix, random_id.buildSuffix.hex)
-  address_space       = locals.vnets.consumer.address_space
-  subnet_prefixes     = locals.vnets.consumer.subnetPrefixes
-  subnet_names        = locals.vnets.consumer.subnetNames
+  address_space       = local.vnets.consumer["addressSpace"]
+  subnet_prefixes     = local.vnets.consumer["subnetPrefixes"]
+  subnet_names        = local.vnets.consumer["subnetNames"]
 
   nsg_ids = {
     app = module.nsg-app.network_security_group_id
@@ -205,6 +205,40 @@ module "vnetConsumer" {
     Terraform = "true"
   }
 }
+
+############################ Subnet Info ############################
+
+# Retrieve Provider Subnet Data
+data "azurerm_subnet" "mgmtSubnet" {
+  name                 = "mgmt"
+  virtual_network_name = module.vnetProvider.vnet_name
+  resource_group_name  = azurerm_resource_group.rg.name
+  depends_on           = [module.vnetProvider.vnet_subnets]
+}
+
+data "azurerm_subnet" "externalSubnet" {
+  name                 = "external"
+  virtual_network_name = module.vnetProvider.vnet_name
+  resource_group_name  = azurerm_resource_group.rg.name
+  depends_on           = [module.vnetProvider.vnet_subnets]
+}
+
+data "azurerm_subnet" "internalSubnet" {
+  name                 = "internal"
+  virtual_network_name = module.vnetProvider.vnet_name
+  resource_group_name  = azurerm_resource_group.rg.name
+  depends_on           = [module.vnetProvider.vnet_subnets]
+}
+
+# Retrieve Provider Subnet Data
+data "azurerm_subnet" "appSubnet" {
+  name                 = "app"
+  virtual_network_name = module.vnetConsumer.vnet_name
+  resource_group_name  = azurerm_resource_group.rg.name
+  depends_on           = [module.vnetConsumer.vnet_subnets]
+}
+
+############################ Azure LB ############################
 
 resource "azurerm_public_ip" "public_lb_frontend_ip" {
   name                = "MyPublicIP"
@@ -273,15 +307,17 @@ resource "azurerm_lb_outbound_rule" "outbound_rule" {
   }
 }
 
+############################ App Server ############################
+
 module "app_server" {
   count               = var.instance_count_app
   source              = "./modules/app_server/"
   vm_name             = "appserver${count.index}"
-  f5_ssh_publickey    = azurerm_ssh_public_key.f5_key.public_key
-  upassword           = var.upassword
+  f5_ssh_publickey    = file(var.f5_ssh_publickey)
+  upassword           = var.f5_password
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
-  subnet_id           = azurerm_subnet.app1Subnet.id
+  subnet_id           = data.azurerm_subnet.appSubnet.id
 }
 
 resource "azurerm_network_interface_backend_address_pool_association" "app_backend_pool_association" {
@@ -290,6 +326,8 @@ resource "azurerm_network_interface_backend_address_pool_association" "app_backe
   ip_configuration_name   = module.app_server[count.index].ip_configuration_name
   backend_address_pool_id = azurerm_lb_backend_address_pool.address_pool.id
 }
+
+############################ Azure GWLB ############################
 
 resource "azurerm_lb" "gateway_lb" {
   name                = "MyGatewayLoadBalancer"
@@ -339,66 +377,7 @@ resource "azurerm_lb_rule" "gwlb_rule" {
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.address_pool_gwlb.id]
 }
 
-resource "azurerm_virtual_network" "provider_vnet" {
-  name                = "${var.rg_name}-provider-vnet"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  address_space       = [var.network_cidr]
-}
-
-resource "azurerm_subnet" "provider_vnet_subnets" {
-  for_each             = var.provider_vnet_subnets_map
-  name                 = each.value.name
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.provider_vnet.name
-  address_prefixes     = each.value.address_prefixes
-}
-
-#Create NSG and rules for mgmt NIC
-resource "azurerm_network_security_group" "mgmt" {
-  name                = format("%s-mgmt-nsg-%s", var.prefix, random_id.id.hex)
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-}
-
-resource "azurerm_network_security_rule" "mgmtNSG" {
-  for_each                    = var.nsg_rules_ports_mgmt
-  name                        = each.value.name
-  priority                    = each.value.priority
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = each.value.protocol
-  source_port_range           = "*"
-  destination_port_range      = each.value.destination_port
-  destination_address_prefix  = "*"
-  source_address_prefixes     = var.AllowedIPs
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.mgmt.name
-}
-
-#
-# Create NSG and rules for external NIC
-#
-resource "azurerm_network_security_group" "external" {
-  name                = format("%s-external-nsg-%s", var.prefix, random_id.id.hex)
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-}
-
-resource "azurerm_network_security_rule" "externalNSG" {
-  for_each                    = var.nsg_rules_ports_external
-  name                        = each.value.name
-  priority                    = each.value.priority
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = each.value.protocol
-  source_port_range           = "*"
-  destination_port_range      = each.value.destination_port
-  destination_address_prefix  = "*"
-  source_address_prefixes     = var.AllowedIPs
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.external.name
-}
+############################ BIG-IP ############################
 
 data "template_file" "init" {
   template = file("${path.module}/f5_onboard.tmpl")
