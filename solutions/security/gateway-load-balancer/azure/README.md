@@ -114,9 +114,24 @@ Use the following command to destroy all of the resources
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | f5\_ssh\_publickey | instance key pair name (e.g. /.ssh/id\_rsa.pub) | `string` | n/a | yes |
+| AS3\_URL | URL to download the BIG-IP Application Service Extension 3 (AS3) module | `string` | `"https://github.com/F5Networks/f5-appsvcs-extension/releases/download/v3.38.0/f5-appsvcs-3.38.0-4.noarch.rpm"` | no |
+| DO\_URL | URL to download the BIG-IP Declarative Onboarding module | `string` | `"https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.31.0/f5-declarative-onboarding-1.31.0-6.noarch.rpm"` | no |
+| FAST\_URL | URL to download the BIG-IP FAST module | `string` | `"https://github.com/F5Networks/f5-appsvcs-templates/releases/download/v1.19.0/f5-appsvcs-templates-1.19.0-1.noarch.rpm"` | no |
+| INIT\_URL | URL to download the BIG-IP runtime init | `string` | `"https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.5.1/dist/f5-bigip-runtime-init-1.5.1-1.gz.run"` | no |
+| TS\_URL | URL to download the BIG-IP Telemetry Streaming module | `string` | `"https://github.com/F5Networks/f5-telemetry-streaming/releases/download/v1.30.0/f5-telemetry-1.30.0-1.noarch.rpm"` | no |
 | adminSrcAddr | Allowed Admin source IP prefix | `string` | `"0.0.0.0/0"` | no |
 | availabilityZones\_public\_ip | The availability zone to allocate the Public IP in. Possible values are Zone-Redundant, 1, 2, 3, and No-Zone. | `string` | `"Zone-Redundant"` | no |
 | availability\_zone | If you want the VM placed in an Azure Availability Zone, and the Azure region you are deploying to supports it, specify the numbers of the existing Availability Zone you want to use. | `string` | `1` | no |
+| bigIqHost | This is the BIG-IQ License Manager host name or IP address | `string` | `""` | no |
+| bigIqHypervisor | BIG-IQ hypervisor | `string` | `"azure"` | no |
+| bigIqLicensePool | BIG-IQ license pool name | `string` | `""` | no |
+| bigIqLicenseType | BIG-IQ license type | `string` | `"licensePool"` | no |
+| bigIqPassword | Admin Password for BIG-IQ | `string` | `"Default12345!"` | no |
+| bigIqSkuKeyword1 | BIG-IQ license SKU keyword 1 | `string` | `"key1"` | no |
+| bigIqSkuKeyword2 | BIG-IQ license SKU keyword 2 | `string` | `"key2"` | no |
+| bigIqUnitOfMeasure | BIG-IQ license unit of measure | `string` | `"hourly"` | no |
+| bigIqUsername | Admin name for BIG-IQ | `string` | `"azureuser"` | no |
+| dns\_server | Leave the default DNS server the BIG-IP uses, or replace the default DNS server with the one you want to use | `string` | `"8.8.8.8"` | no |
 | f5\_instance\_type | Azure instance type to be used for the BIG-IP VE | `string` | `"Standard_DS4_v2"` | no |
 | f5\_password | Password for the Virtual Machine | `string` | `"Default12345!"` | no |
 | f5\_username | The admin username of the F5 BIG-IP that will be deployed | `string` | `"azureuser"` | no |
@@ -124,9 +139,12 @@ Use the following command to destroy all of the resources
 | instance\_count | Number of F5 BIG-IP appliances to deploy behind Gateway Load Balancer | `string` | `"2"` | no |
 | instance\_count\_app | Number of demo web app servers to deploy behind public Load Balancer | `string` | `"1"` | no |
 | lb\_rules\_ports | List of ports to be opened by LB rules on public-facing LB. | `list(any)` | <pre>[<br>  "22",<br>  "80",<br>  "443"<br>]</pre> | no |
+| libs\_dir | Directory on the BIG-IP to download the A&O Toolchain into | `string` | `"/config/cloud/azure/node_modules"` | no |
 | location | Azure Location of the deployment | `string` | `"westus2"` | no |
+| ntp\_server | Leave the default NTP server the BIG-IP uses, or replace the default NTP server with the one you want to use | `string` | `"0.us.pool.ntp.org"` | no |
 | owner | This is a tag used for object creation. Example is last name. | `string` | `null` | no |
 | prefix | This value is inserted at the beginning of each Azure object (alpha-numeric, no special character) | `string` | `"demo"` | no |
+| timezone | If you would like to change the time zone the BIG-IP uses, enter the time zone you want to use. This is based on the tz database found in /usr/share/zoneinfo (see the full list [here](https://github.com/F5Networks/f5-azure-arm-templates/blob/master/azure-timezone-list.md)). Example values: UTC, US/Pacific, US/Eastern, Europe/London or Asia/Singapore. | `string` | `"UTC"` | no |
 
 ## Outputs
 
