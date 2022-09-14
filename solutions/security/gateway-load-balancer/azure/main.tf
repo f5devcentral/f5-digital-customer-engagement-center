@@ -20,6 +20,10 @@ locals {
       subnetNames    = ["mgmt", "external", "internal"]
     }
   }
+  # Custom tags
+  tags = {
+    Owner = var.owner
+  }
 }
 
 ############################ Resource Groups ############################
@@ -419,6 +423,12 @@ module "bigip" {
   source                     = "github.com/F5Networks/terraform-azure-bigip-module"
   prefix                     = var.prefix
   resource_group_name        = azurerm_resource_group.rg.name
+  f5_instance_type           = var.f5_instance_type
+  f5_image_name              = var.f5_image_name
+  f5_product_name            = var.f5_product
+  f5_version                 = var.f5_version
+  f5_username                = var.f5_username
+  f5_ssh_publickey           = file(var.f5_ssh_publickey)
   mgmt_subnet_ids            = [{ "subnet_id" = data.azurerm_subnet.mgmtSubnet.id, "public_ip" = true, "private_ip_primary" = "" }]
   mgmt_securitygroup_ids     = [module.nsg-mgmt.network_security_group_id]
   external_subnet_ids        = [{ "subnet_id" = data.azurerm_subnet.externalSubnet.id, "public_ip" = true, "private_ip_primary" = "", "private_ip_secondary" = "" }]
@@ -426,12 +436,10 @@ module "bigip" {
   internal_subnet_ids        = [{ "subnet_id" = data.azurerm_subnet.internalSubnet.id, "public_ip" = false, "private_ip_primary" = "" }]
   internal_securitygroup_ids = [module.nsg-internal.network_security_group_id]
   availability_zone          = var.availability_zone
-  f5_ssh_publickey           = file(var.f5_ssh_publickey)
-  f5_username                = var.f5_username
-  f5_password                = var.f5_password
-  f5_instance_type           = var.f5_instance_type
-  f5_version                 = var.f5_version
   custom_user_data           = local.f5_onboard1
+  sleep_time                 = "30s"
+  tags                       = local.tags
+  #az_user_identity           = var.user_identity
 }
 
 # Note: JeffGiroux (REMOVE LATER)

@@ -131,8 +131,10 @@ Use the following command to destroy all of the resources
 | bigIqUnitOfMeasure | BIG-IQ license unit of measure | `string` | `"hourly"` | no |
 | bigIqUsername | Admin name for BIG-IQ | `string` | `"azureuser"` | no |
 | dns\_server | Leave the default DNS server the BIG-IP uses, or replace the default DNS server with the one you want to use | `string` | `"8.8.8.8"` | no |
+| f5\_image\_name | F5 SKU (image) to deploy. Note: The disk size of the VM will be determined based on the option you select.  **Important**: If intending to provision multiple modules, ensure the appropriate value is selected, such as ****AllTwoBootLocations or AllOneBootLocation****. | `string` | `"f5-big-best-plus-hourly-200mbps"` | no |
 | f5\_instance\_type | Azure instance type to be used for the BIG-IP VE | `string` | `"Standard_DS4_v2"` | no |
 | f5\_password | Password for the Virtual Machine | `string` | `"Default12345!"` | no |
+| f5\_product | Azure BIG-IP VE Offer | `string` | `"f5-big-ip-best"` | no |
 | f5\_username | The admin username of the F5 BIG-IP that will be deployed | `string` | `"azureuser"` | no |
 | f5\_version | BIG-IP Version | `string` | `"16.1.301000"` | no |
 | instance\_count | Number of F5 BIG-IP appliances to deploy behind Gateway Load Balancer | `string` | `"2"` | no |
