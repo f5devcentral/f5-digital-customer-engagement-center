@@ -27,7 +27,6 @@ resource "volterra_aws_vpc_site" "main" {
   instance_type           = "t3.xlarge"
   disk_size               = "80"
   ssh_key                 = var.ssh_key
-  assisted                = false
   logs_streaming_disabled = true
   no_worker_nodes         = true
 
