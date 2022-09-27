@@ -5,9 +5,9 @@ terraform {
   required_providers {
     volterra = {
       source  = "volterraedge/volterra"
-      version = "0.11.4"
+      version = "0.11.12"
     }
-    aws = ">= 3"
+    aws = ">= 4"
   }
 }
 
