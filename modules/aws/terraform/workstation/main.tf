@@ -18,14 +18,14 @@ data "aws_ami" "ubuntu" {
 #security group
 
 # bash script template
-data "template_file" "onboard" {
-  template = file("${path.module}/templates/startup.sh.tpl")
-  vars = {
+locals {
+  onboard = templatefile("${path.module}/templates/startup.sh.tpl", {
     repositories         = var.repositories
     coderAccountPassword = var.coderAccountPassword
     terraformVersion     = var.terraformVersion
-  }
+  })
 }
+
 
 # interface external
 resource "aws_network_interface" "mgmtNic" {
@@ -53,8 +53,7 @@ resource "aws_instance" "workstation" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instanceType
   key_name      = var.keyName
-  #user_data_base64 = "${data.template_cloudinit_config.config.rendered}"
-  user_data = data.template_file.onboard.rendered
+  user_data     = local.onboard.rendered
   network_interface {
     network_interface_id = aws_network_interface.mgmtNic.id
     device_index         = 0
