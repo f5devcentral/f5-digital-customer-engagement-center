@@ -53,7 +53,7 @@ resource "aws_instance" "workstation" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instanceType
   key_name      = var.keyName
-  user_data     = local.onboard.rendered
+  user_data     = local.onboard
   network_interface {
     network_interface_id = aws_network_interface.mgmtNic.id
     device_index         = 0
