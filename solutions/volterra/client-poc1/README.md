@@ -1,10 +1,10 @@
-# Client PoC 1 - Two VPCs with Shared VPC and Shared Services with Volterra
+# Client PoC 1 - Two VPCs with Shared VPC and Shared Services with F5 Distributed Cloud (XC)
 
 ## To Do
 1. define use cases for demo
-2. currently ONLY an internal CE use case (client to  Volterra CE > pool)
+2. currently ONLY an internal CE use case (client to XC CE > pool)
 
-This demo will deploy an example customer with two spoke VPCs and a shared VPC. The shared VPC will host F5 services such as Volterra and will deploy a Volterra AWS VPC site with ingress/egress gateway configured. The VPCs will be connected to an AWS Transit Gateway, and the spoke VPCs will utilize the AWS Transit Gateway for common access to the shared services VPC.
+This demo will deploy an example customer with two spoke VPCs and a shared VPC. The shared VPC will host F5 services and will deploy an AWS VPC site with ingress/egress gateway configured. The VPCs will be connected to an AWS Transit Gateway, and the spoke VPCs will utilize the AWS Transit Gateway for common access to the shared services VPC.
 
 ## Diagram
 
@@ -18,9 +18,9 @@ This demo will deploy an example customer with two spoke VPCs and a shared VPC. 
 - AWS CLI
 - Terraform
 - AWS account, access and secret key
-- Volterra account
-- Volterra p12 credential file and api password -  https://www.volterra.io/docs/how-to/user-mgmt/credentials
-- Volterra Cloud Credentials
+- F5 Distributed Cloud account
+- F5 Distributed Cloud p12 credential file and api password - https://docs.cloud.f5.com/docs/how-to/user-mgmt/credentials
+- F5 Distributed Cloud Cloud Credentials
 
 ## Login to AWS Environment
 
@@ -30,9 +30,9 @@ export AWS_ACCESS_KEY_ID="your_key"
 export AWS_SECRET_ACCESS_KEY="your_secret_key"
 ```
 
-## Create Volterra Cloud Credentials for AWS
+## Create F5 Distributed Cloud Credentials for AWS
 
-In VoltConsole go to the "System" namespace and navigate to "Manage" -> "Site Management" -> "Cloud Credentials".
+In F5 Distributed Cloud Console go to "Cloud and Edge Sites" and navigate to "Manage" -> "Site Management" -> "Cloud Credentials".
 
 Click on "Add Cloud Credential"
 
@@ -140,8 +140,8 @@ cd f5-digital-customer-engagement-center/solutions/volterra/client-poc1/
 ```
 
 - Set AWS cloud credentials. See [Login to AWS Environment](#Login-to-AWS-Environment)
-- Set Volterra environment variables
-- Create a Volterra credentials p12 file and copy it to a local folder. Follow steps here - https://www.volterra.io/docs/how-to/user-mgmt/credentials
+- Set F5 Distributed Cloud environment variables
+- Create an F5 Distributed Cloud credentials p12 file and copy it to a local folder. Follow steps here - https://docs.cloud.f5.com/docs/how-to/user-mgmt/credentials
 
 ```bash
 export VES_P12_PASSWORD="your_key"
@@ -149,8 +149,8 @@ export VOLT_API_URL="https://<tenant-name>.console.ves.volterra.io/api"
 export VOLT_API_P12_FILE="/var/tmp/<example>.console.ves.volterra.io.api-creds.p12"
 ```
 
-- Get the Volterra tenant name
-General namespace in the VoltConsole UI, then Tenant Settings > Tenant overview
+- Get the F5 Distributed Cloud tenant name
+In F5 Distributed Cloud Console go to "Adminstration" and navigate to "Tenant Settings" > "Tenant Overview".
 
 - Create the tfvars file and update it with your settings
 
