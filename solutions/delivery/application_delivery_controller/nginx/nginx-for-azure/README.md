@@ -2,7 +2,7 @@
 
 ## To Do
 
-- Add NGINX for Azure Terraform code (TBD...waiting for GA release)
+- Add F5 NGINX for Azure Terraform code (TBD...waiting for GA release)
 
 ## Issues
 
@@ -18,7 +18,7 @@
 
 ## Introduction
 
-This solution will create an [F5 NGINX for Azure](https://docs.nginx.com/nginx-for-azure) (N4A) deployment and a set of Azure VNets for a demo application hosted in multiple Azure regions. The application will be running in the West and East regions, and NGINX for Azure will provide traffic management, security, and high availability across regions.
+This solution will create an [F5 NGINX for Azure](https://docs.nginx.com/nginx-for-azure) (N4A) deployment and a set of Azure VNets for a demo application hosted in multiple Azure regions. The application will be running in the West and East regions, and N4A will provide traffic management, security, and high availability across regions.
 
 The resulting deployment will consist of the following:
 
