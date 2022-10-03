@@ -92,18 +92,21 @@ The examples based on URL path routing are dependent upon the nginx.conf applied
 
 ```
 http {
-  upstream app-west {
-    server app-west.shared.acme.com:80;
+  upstream app1 {
+    server app1-west.shared.acme.com:80;
+    server app1-east.shared.acme.com:80 backup;
   }
-  upstream app-east {
-    server app-east.shared.acme.com:80;
+  upstream app1-west {
+    server app1-west.shared.acme.com:80;
+  }
+  upstream app1-east {
+    server app1-east.shared.acme.com:80;
   }
 
   server {
     listen 80 default_server;
     location / {
-            default_type text/html;
-            return 200 '<!DOCTYPE html><h2>Welcome to Azure!</h2>\n';
+            proxy_pass http://app1/;
     }
     location /west/ {
             proxy_pass http://app-west/;
