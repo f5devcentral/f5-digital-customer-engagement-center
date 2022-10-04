@@ -125,9 +125,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "appWest" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "22_04-lts"
+    publisher = "canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
     version   = "latest"
   }
 
@@ -171,9 +171,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "appEast" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "22_04-lts"
+    publisher = "canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
     version   = "latest"
   }
 
