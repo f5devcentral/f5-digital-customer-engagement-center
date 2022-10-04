@@ -19,7 +19,7 @@ variable "vnets" {
       cidr           = ["10.255.0.0/16"]
       subnetPrefixes = ["10.255.0.0/24"]
       subnetNames    = ["default"]
-      location       = "westus"
+      location       = "eastus2"
     }
     appWest = {
       cidr           = ["10.100.0.0/16"]
