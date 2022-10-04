@@ -1,0 +1,68 @@
+## template: jinja
+#cloud-config
+# yamllint disable rule:document-start rule:line-length
+groups:
+  - docker
+users:
+  - default
+  # the docker service account
+  - name: docker-service
+    groups: docker
+package_upgrade: true
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg-agent
+  - software-properties-common
+write_files:
+  - path: /etc/systemd/system/webapp.service
+    permissions: '0644'
+    owner: root
+    content: |
+      [Unit]
+      Description=Webapp in NGINX
+
+      [Service]
+      ExecStart=/usr/bin/docker run --rm --name webapp -p 80:80 -v /var/lib/webapp/html:/usr/share/nginx/html:ro -v /var/lib/webapp/conf.d:/etc/nginx/conf.d:ro nginx:alpine
+      ExecStop=/usr/bin/docker stop webapp
+      ExecStopPost=/usr/bin/docker rm webapp
+  - path: /var/lib/webapp/html/index.html
+    permissions: '0644'
+    owner: root
+    content: |
+      ${index_html}
+  - path: /var/lib/webapp/html/styles.css
+    permissions: '0644'
+    owner: root
+    encoding: gz+b64
+    content: |
+      ${styles_css}
+  - path: /var/lib/webapp/html/f5-logo-rgb.svg
+    permissions: '0644'
+    owner: root
+    encoding: gz+b64
+    content: |
+      ${f5_logo_rgb_svg}
+  - path: /var/lib/webapp/conf.d/default.conf
+    permissions: '0644'
+    owner: root
+    content: |
+      server {
+        listen 80 default_server;
+        server_name _;
+        location / {
+          root /usr/share/nginx/html;
+          index index.html;
+        }
+      }
+runcmd:
+  # install docker following the guide: https://docs.docker.com/install/linux/docker-ce/ubuntu/
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get -y update
+  - sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+  - sudo systemctl enable docker
+  # install webapp service
+  - systemctl daemon-reload
+  - systemctl start webapp.service

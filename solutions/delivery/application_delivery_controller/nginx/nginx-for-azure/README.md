@@ -147,6 +147,54 @@ Submit a pull request
 
 <!-- markdownlint-disable no-inline-html -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
 
+| Name | Version |
+|------|---------|
+| terraform | >= 1.2.0 |
+| azurerm | >= 3 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| azurerm | >= 3 |
+| random | n/a |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| network | Azure/vnet/azurerm |  |
+
+## Resources
+
+| Name |
+|------|
+| [azurerm_linux_virtual_machine_scale_set](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine_scale_set) |
+| [azurerm_network_security_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group) |
+| [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) |
+| [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| projectPrefix | prefix for resources | `string` | n/a | yes |
+| resourceOwner | name of the person or customer running the solution | `string` | n/a | yes |
+| sshPublicKey | public key used for authentication in ssh-rsa format | `string` | n/a | yes |
+| adminName | admin account name used with app server instance | `string` | `"azureuser"` | no |
+| domain\_name | The DNS domain name that will be used in Azure private DNZ zone for VM names | `string` | `"shared.acme.com"` | no |
+| num\_servers | number of instances to launch | `number` | `1` | no |
+| vnets | The set of VNets to create | <pre>map(object({<br>    cidr           = list(any)<br>    subnetPrefixes = list(any)<br>    subnetNames    = list(any)<br>    location       = string<br>  }))</pre> | <pre>{<br>  "appEast": {<br>    "cidr": [<br>      "10.101.0.0/16"<br>    ],<br>    "location": "eastus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.101.0.0/24"<br>    ]<br>  },<br>  "appWest": {<br>    "cidr": [<br>      "10.100.0.0/16"<br>    ],<br>    "location": "westus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.100.0.0/24"<br>    ]<br>  },<br>  "shared": {<br>    "cidr": [<br>      "10.255.0.0/16"<br>    ],<br>    "location": "westus",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.255.0.0/24"<br>    ]<br>  }<br>}</pre> | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| appEastIds | appEast Spoke Subnet IDs |
+| appWestIds | appWest Spoke Subnet IDs |
+| sharedSubnetIds | Shared Services Subnet IDs |
+| vnetIds | VNet IDs |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

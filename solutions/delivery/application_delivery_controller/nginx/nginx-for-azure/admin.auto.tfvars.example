@@ -1,0 +1,3 @@
+resourceOwner = "fred"
+sshPublicKey  = "ssh-rsa AAA"
+projectPrefix = "aws-tgw-sites"
