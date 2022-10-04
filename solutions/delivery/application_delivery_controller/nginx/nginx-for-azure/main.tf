@@ -41,6 +41,37 @@ module "network" {
   depends_on = [azurerm_resource_group.rg]
 }
 
+############################ VNet Peering ############################
+
+locals {
+  spokeHubPeerings = {
+    appWest = {
+    }
+    appEast = {
+    }
+  }
+}
+
+# Create hub to spoke peerings
+resource "azurerm_virtual_network_peering" "hubToSpoke" {
+  for_each                  = local.spokeHubPeerings
+  name                      = format("hub-to-%s", each.key)
+  resource_group_name       = azurerm_resource_group.rg["shared"].name
+  virtual_network_name      = module.network["shared"].vnet_name
+  remote_virtual_network_id = module.network[each.key].vnet_id
+  depends_on                = [module.network]
+}
+
+# Create spoke to hub peerings
+resource "azurerm_virtual_network_peering" "spokeToHub" {
+  for_each                  = local.spokeHubPeerings
+  name                      = format("%s-to-hub", each.key)
+  resource_group_name       = azurerm_resource_group.rg[each.key].name
+  virtual_network_name      = module.network[each.key].vnet_name
+  remote_virtual_network_id = module.network["shared"].vnet_id
+  depends_on                = [module.network]
+}
+
 ############################ Security Groups - Jumphost, Web Servers ############################
 
 # Allow webserver access
