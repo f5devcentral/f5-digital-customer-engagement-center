@@ -307,7 +307,7 @@ fileignoreconfig:
 - filename: solutions/volterra/aws-tgw/README.md
   checksum: 4d969eaa684d8771703c8189f7f950353f40c817f345e866ecfb4feeaf2f7e27
 - filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/README.md
-  checksum: 64acbf542f7c953c885041f48cdfca8feaf2529d668b8b61a81b2d734e38e9c2
+  checksum: 1418c1d5dc2663332041f9a0214db3bfb46bdb8c8bf8bc723de9eee24a0912fd
 - filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/admin.auto.tfvars.example
   checksum: 561c6bca99031a9f2bf62476bed23a7abe15285dde574a5da44500836b2785f2
 - filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/main.tf
