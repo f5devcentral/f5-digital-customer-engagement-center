@@ -8,7 +8,8 @@ resource "azurerm_lb" "appWest" {
   resource_group_name = azurerm_resource_group.appWest.name
 
   frontend_ip_configuration {
-    name = "listener"
+    name      = "listener"
+    subnet_id = azurerm_subnet.appWest.id
   }
   tags = {
     Name = format("%s-lb-appWest-%s", var.resourceOwner, random_id.buildSuffix.hex)
@@ -23,7 +24,8 @@ resource "azurerm_lb" "appEast" {
   resource_group_name = azurerm_resource_group.appEast.name
 
   frontend_ip_configuration {
-    name = "listener"
+    name      = "listener"
+    subnet_id = azurerm_subnet.appEast.id
   }
   tags = {
     Name = format("%s-lb-appEast-%s", var.resourceOwner, random_id.buildSuffix.hex)
