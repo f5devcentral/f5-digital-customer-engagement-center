@@ -31,6 +31,7 @@ The resulting deployment will consist of the following:
   - 1x App VNet in West region
   - 1x App VNet in East region
   - VM Scale Sets for each region
+  - Azure LBs for each region
 - VNet peering
   - Hub to/from App-West VNet
   - Hub to/from App-East VNet
