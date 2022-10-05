@@ -71,7 +71,7 @@ vi admin.auto.tfvars
 
 ## Test your setup:
 
-1. Copy the public IP from the NGINX Deployment.
+1. Copy the public IP from the NGINX Deployment. This value can also be found in Terraform outputs as 'public_IP_n4a'.
 
 ![N4A IP address](images/nginx-ip-address.png)
 
@@ -89,7 +89,7 @@ Note: Depending on health checks and client request, you will either get the "We
 
 ![Demo App East Region](images/test-site-east.png)
 
-The examples based on URL path routing are dependent upon the nginx.conf applied to the N4A deployment. In this demo, the example configuration is applied which allows for URL path routing and multiple upstream selections.
+The examples based on URL path routing are dependent upon the nginx.conf. In this demo, the example configuration below is applied which allows for URL path routing and multiple upstream selections. See [templates/nginx.conf](templates/nginx.conf).
 
 ```
 http {
@@ -179,7 +179,9 @@ No Modules.
 | [azurerm_private_dns_a_record](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_a_record) |
 | [azurerm_private_dns_zone](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone) |
 | [azurerm_private_dns_zone_virtual_network_link](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone_virtual_network_link) |
+| [azurerm_public_ip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) |
 | [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) |
+| [azurerm_resource_group_template_deployment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_template_deployment) |
 | [azurerm_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet) |
 | [azurerm_subnet_network_security_group_association](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_network_security_group_association) |
 | [azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) |
@@ -202,11 +204,6 @@ No Modules.
 
 | Name | Description |
 |------|-------------|
-| appEastSubnetId | App East Region Subnet ID |
-| appEastVnetId | App East Region VNet ID |
-| appWestSubnetId | App West Region Subnet ID |
-| appWestVnetId | App West Region VNet ID |
-| sharedSubnetId | Shared Services Subnet ID |
-| sharedVnetId | Shared VNet ID |
+| public\_IP\_n4a | Public IP address of the N4A deployment |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->

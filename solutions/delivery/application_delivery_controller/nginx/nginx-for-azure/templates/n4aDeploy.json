@@ -1,0 +1,104 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources"
+            }
+        },
+        "nginxDeploymentName": {
+            "type": "string",
+            "defaultValue": "myDeployment",
+            "metadata": {
+                "description": "Name of your NGINX deployment resource"
+            }
+        },
+        "sku": {
+            "type": "string",
+            "defaultValue": "publicpreview_Monthly_gmz7xq9ge3py",
+            "metadata": {
+                "description": "SKU of NGINX deployment"
+            }
+        },
+        "publicIPName": {
+            "type": "string",
+            "defaultValue": "myPublicIP",
+            "metadata": {
+                "description": "Name of public IP"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of public subnet"
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of customer virtual network"
+            }
+        },
+        "rootConfigFilePath": {
+            "type": "string",
+            "defaultValue": "nginx.conf",
+            "metadata": {
+                "description": "The file path of the root NGINX configuration file"
+            }
+        },
+        "rootConfigContent": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The based64 encoded content of the root NGINX configuration file"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "NGINX.NGINXPLUS/nginxDeployments",
+            "apiVersion": "2021-05-01-preview",
+            "name": "[parameters('nginxDeploymentName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('sku')]"
+            },
+            "properties": {
+                "enableDiagnosticsSupport": false,
+                "networkProfile": {
+                    "frontEndIPConfiguration": {
+                        "publicIPAddresses": [
+                            {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPName'))]"
+                            }
+                        ],
+                        "privateIPAddresses": []
+                    },
+                    "networkInterfaceConfiguration": {
+                        "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "NGINX.NGINXPLUS/nginxDeployments/configurations",
+            "apiVersion": "2021-05-01-preview",
+            "name": "[concat(parameters('nginxDeploymentName'), '/default')]",
+            "properties": {
+                "rootFile": "[parameters('rootConfigFilePath')]",
+                "files": [
+                    {
+                        "content": "[parameters('rootConfigContent')]",
+                        "virtualPath": "[parameters('rootConfigFilePath')]"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('NGINX.NGINXPLUS/nginxDeployments/', parameters('nginxDeploymentName'))]"
+            ]
+        }
+    ]
+}
