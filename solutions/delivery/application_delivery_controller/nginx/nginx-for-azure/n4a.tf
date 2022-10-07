@@ -24,8 +24,6 @@ resource "azurerm_resource_group_template_deployment" "n4a" {
     "publicIPName"        = { value = format("%s-pip-n4a-%s", var.projectPrefix, random_id.buildSuffix.hex) }
     "subnetName"          = { value = azurerm_subnet.shared.name }
     "virtualNetworkName"  = { value = azurerm_virtual_network.shared.name }
-    "rootConfigFilePath"  = { value = "/etc/nginx/nginx.conf" }
-    "rootConfigContent"   = { value = base64encode(templatefile("${path.module}/templates/nginx.conf", {})) }
   })
   template_content = templatefile("${path.module}/templates/n4aDeploy.json", {})
 }

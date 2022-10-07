@@ -94,26 +94,26 @@ The examples based on URL path routing are dependent upon the nginx.conf. In thi
 ```
 http {
   upstream app1 {
-    server app1-west.shared.acme.com:80;
-    server app1-east.shared.acme.com:80 backup;
+    server 10.100.0.5:80;
+    server 10.101.0.5:80 backup;
   }
   upstream app1-west {
-    server app1-west.shared.acme.com:80;
+    server 10.100.0.5:80;
   }
   upstream app1-east {
-    server app1-east.shared.acme.com:80;
+    server 10.101.0.5:80;
   }
 
   server {
     listen 80 default_server;
     location / {
-            proxy_pass http://app1/;
+      proxy_pass http://app1/;
     }
     location /west/ {
-            proxy_pass http://app1-west/;
+      proxy_pass http://app1-west/;
     }
     location /east/ {
-            proxy_pass http://app1-east/;
+      proxy_pass http://app1-east/;
     }
   }
 }

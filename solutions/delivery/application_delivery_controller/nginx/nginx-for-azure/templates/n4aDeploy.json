@@ -41,20 +41,6 @@
             "metadata": {
                 "description": "Name of customer virtual network"
             }
-        },
-        "rootConfigFilePath": {
-            "type": "string",
-            "defaultValue": "nginx.conf",
-            "metadata": {
-                "description": "The file path of the root NGINX configuration file"
-            }
-        },
-        "rootConfigContent": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "The based64 encoded content of the root NGINX configuration file"
-            }
         }
     },
     "resources": [
@@ -82,23 +68,6 @@
                     }
                 }
             }
-        },
-        {
-            "type": "NGINX.NGINXPLUS/nginxDeployments/configurations",
-            "apiVersion": "2021-05-01-preview",
-            "name": "[concat(parameters('nginxDeploymentName'), '/default')]",
-            "properties": {
-                "rootFile": "[parameters('rootConfigFilePath')]",
-                "files": [
-                    {
-                        "content": "[parameters('rootConfigContent')]",
-                        "virtualPath": "[parameters('rootConfigFilePath')]"
-                    }
-                ]
-            },
-            "dependsOn": [
-                "[resourceId('NGINX.NGINXPLUS/nginxDeployments/', parameters('nginxDeploymentName'))]"
-            ]
         }
     ]
 }
