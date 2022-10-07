@@ -17,7 +17,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "appWest" {
   location             = azurerm_resource_group.appWest.location
   resource_group_name  = azurerm_resource_group.appWest.name
   sku                  = "Standard_B2ms"
-  instances            = var.num_servers
+  instances            = var.numServers
   admin_username       = var.adminName
   computer_name_prefix = "${var.projectPrefix}appWest"
   custom_data          = base64encode(local.user_data)
@@ -58,7 +58,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "appEast" {
   location             = azurerm_resource_group.appEast.location
   resource_group_name  = azurerm_resource_group.appEast.name
   sku                  = "Standard_B2ms"
-  instances            = var.num_servers
+  instances            = var.numServers
   admin_username       = var.adminName
   computer_name_prefix = "${var.projectPrefix}appEast"
   custom_data          = base64encode(local.user_data)
