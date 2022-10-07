@@ -21,38 +21,32 @@ resource "azurerm_linux_virtual_machine_scale_set" "appWest" {
   admin_username       = var.adminName
   computer_name_prefix = "${var.projectPrefix}appWest"
   custom_data          = base64encode(local.user_data)
-
   admin_ssh_key {
     public_key = var.sshPublicKey
     username   = var.adminName
   }
-
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-
   source_image_reference {
     publisher = "canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts-gen2"
     version   = "latest"
   }
-
   network_interface {
     name    = "external"
     primary = true
     ip_configuration {
-      name                                   = "primary"
-      primary                                = true
-      subnet_id                              = azurerm_subnet.appWest.id
-      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.appWest.id]
+      name      = "primary"
+      primary   = true
+      subnet_id = azurerm_subnet.appWest.id
       public_ip_address {
         name = "pip"
       }
     }
   }
-
   tags = {
     Name = format("%s-vmss-appWest-%s", var.resourceOwner, random_id.buildSuffix.hex)
   }
@@ -68,39 +62,92 @@ resource "azurerm_linux_virtual_machine_scale_set" "appEast" {
   admin_username       = var.adminName
   computer_name_prefix = "${var.projectPrefix}appEast"
   custom_data          = base64encode(local.user_data)
-
   admin_ssh_key {
     public_key = var.sshPublicKey
     username   = var.adminName
   }
-
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-
   source_image_reference {
     publisher = "canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts-gen2"
     version   = "latest"
   }
-
   network_interface {
     name    = "external"
     primary = true
     ip_configuration {
-      name                                   = "primary"
-      primary                                = true
-      subnet_id                              = azurerm_subnet.appEast.id
-      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.appEast.id]
+      name      = "primary"
+      primary   = true
+      subnet_id = azurerm_subnet.appEast.id
       public_ip_address {
         name = "pip"
       }
     }
   }
-
   tags = {
     Name = format("%s-vmss-appEast-%s", var.resourceOwner, random_id.buildSuffix.hex)
+  }
+}
+
+############################ Autoscaling Monitor and Settings ############################
+
+# Create Autoscale settings for West region app servers
+resource "azurerm_monitor_autoscale_setting" "appWest" {
+  name                = "autoscale"
+  resource_group_name = azurerm_resource_group.appWest.name
+  location            = azurerm_resource_group.appWest.location
+  target_resource_id  = azurerm_linux_virtual_machine_scale_set.appWest.id
+  profile {
+    name = "default"
+    capacity {
+      default = 1
+      minimum = 1
+      maximum = 3
+    }
+    rule {
+      metric_trigger {
+        metric_name        = "Percentage CPU"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.appWest.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "GreaterThan"
+        threshold          = 75
+      }
+      scale_action {
+        direction = "Increase"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
+    rule {
+      metric_trigger {
+        metric_name        = "Percentage CPU"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.appWest.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 25
+      }
+      scale_action {
+        direction = "Decrease"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
+  }
+  notification {
+    webhook {
+      service_uri = "https://test"
+    }
   }
 }
