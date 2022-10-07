@@ -46,13 +46,8 @@ variable "sshPublicKey" {
   type        = string
   description = "public key used for authentication in ssh-rsa format"
 }
-variable "num_servers" {
+variable "numServers" {
   type        = number
   default     = 1
-  description = "number of instances to launch"
-}
-variable "domain_name" {
-  type        = string
-  description = "The DNS domain name that will be used in Azure private DNZ zone for VM names"
-  default     = "shared.acme.com"
+  description = "number of app server instances to launch in each autoscale group"
 }
