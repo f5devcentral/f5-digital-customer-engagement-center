@@ -316,3 +316,7 @@ fileignoreconfig:
   checksum: 0d1a429317571aa05dc9876f662201f4aa155309e3d08d7d7d38a58b7c5c9f7c
 - filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/templates/nginx.conf
   checksum: 439049cc302225c9be47f5f248db0edccdc2afb12a32d8ef8496ed8fe0db2285
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/function.tf
+  checksum: ed55e375f448a43ec6cdd4b0e17fe4f4fa4bc3ffea73538cd74de01559cd1d66
+- filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/templates/vmssFunction.ps1
+  checksum: bb18c2aae39a34f28a4b109401849f7198142dc2857f234c52a0bdb74742107c
