@@ -3,41 +3,41 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
-            "type": "string",
+            "type": "String",
             "defaultValue": "[resourceGroup().location]",
             "metadata": {
                 "description": "Location for all resources"
             }
         },
         "nginxDeploymentName": {
-            "type": "string",
+            "type": "String",
             "defaultValue": "myDeployment",
             "metadata": {
                 "description": "Name of your NGINX deployment resource"
             }
         },
         "sku": {
-            "type": "string",
+            "type": "String",
             "defaultValue": "publicpreview_Monthly_gmz7xq9ge3py",
             "metadata": {
                 "description": "SKU of NGINX deployment"
             }
         },
         "publicIPName": {
-            "type": "string",
+            "type": "String",
             "defaultValue": "myPublicIP",
             "metadata": {
                 "description": "Name of public IP"
             }
         },
         "subnetName": {
-            "type": "string",
+            "type": "String",
             "metadata": {
                 "description": "Name of public subnet"
             }
         },
         "virtualNetworkName": {
-            "type": "string",
+            "type": "String",
             "metadata": {
                 "description": "Name of customer virtual network"
             }
