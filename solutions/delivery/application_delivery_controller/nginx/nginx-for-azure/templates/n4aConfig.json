@@ -3,21 +3,21 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "nginxDeploymentName": {
-            "type": "string",
+            "type": "String",
             "defaultValue": "myDeployment",
             "metadata": {
                 "description": "Name of your NGINX deployment resource"
             }
         },
         "rootConfigFilePath": {
-            "type": "string",
+            "type": "String",
             "defaultValue": "nginx.conf",
             "metadata": {
                 "description": "The file path of the root NGINX configuration file"
             }
         },
         "rootConfigContent": {
-            "type": "string",
+            "type": "String",
             "defaultValue": "",
             "metadata": {
                 "description": "The based64 encoded content of the root NGINX configuration file"
