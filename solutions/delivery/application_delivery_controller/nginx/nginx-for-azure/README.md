@@ -27,11 +27,11 @@ The resulting deployment will consist of the following:
   - Note: hidden, user will not see this
 - Shared VNet and subnets (customer Hub)
   - N4A eNICs for [VNet injection](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-for-azure-services)
+  - Azure Function App with PowerShell code
 - Application VNet and subnets (customer Spoke)
   - 1x App VNet in West region
   - 1x App VNet in East region
   - VM Scale Sets for each region
-  - Azure LBs for each region
 - VNet peering
   - Hub to/from App-West VNet
   - Hub to/from App-East VNet
