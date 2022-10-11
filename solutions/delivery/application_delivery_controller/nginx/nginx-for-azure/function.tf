@@ -150,6 +150,9 @@ data "azurerm_function_app_host_keys" "main" {
 # Trigger function by calling URL
 resource "null_resource" "trigger_function" {
   provisioner "local-exec" {
-    command = "curl -fs ${local.function_url}"
+    command = "curl -s ${local.function_url}"
+  }
+  triggers = {
+    order = null_resource.vmssFunction_publish.id
   }
 }
