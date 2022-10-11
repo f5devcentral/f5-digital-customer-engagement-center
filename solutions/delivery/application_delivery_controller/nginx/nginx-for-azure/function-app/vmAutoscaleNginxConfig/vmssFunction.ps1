@@ -41,11 +41,11 @@ function GetVmssIps {
   }
 }
 
-# Retreive VM IP address in each VMSS
+# Retrieve VM IP address in each VMSS
 $resultAppWest = GetVmssIps -vmssName "${vmssNameWest}" -rgName "${rgNameWest}"
 $resultAppEast = GetVmssIps -vmssName "${vmssNameEast}" -rgName "${rgNameEast}"
 
-# Retreive VM IP address in backup VMSS
+# Retrieve VM IP address in backup VMSS
 $resultAppEastBackup = GetVmssIps -vmssName "${vmssNameEast}" -rgName "${rgNameEast}" -isBackup "true"
 
 ############################ nginx.conf ############################
