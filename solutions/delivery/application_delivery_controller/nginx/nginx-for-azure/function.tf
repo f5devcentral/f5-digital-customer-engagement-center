@@ -65,9 +65,17 @@ resource "azurerm_windows_function_app" "main" {
   }
 }
 
-data "azurerm_function_app_host_keys" "main" {
-  name                = azurerm_windows_function_app.main.name
-  resource_group_name = azurerm_resource_group.shared.name
+############################# Role Assignment ###########################
+
+# Retrieve Subscription info
+data "azurerm_subscription" "main" {
+}
+
+# Create role assignment
+resource "azurerm_role_assignment" "function" {
+  scope                = data.azurerm_subscription.main.id
+  role_definition_name = "Contributor"
+  principal_id         = azurerm_windows_function_app.main.identity[0].principal_id
 }
 
 ############################# Function PowerShell ###########################
@@ -125,20 +133,15 @@ resource "null_resource" "vmssFunction_publish" {
     command = local.publish_code_command
   }
   triggers = {
-    input_json           = filemd5(data.archive_file.vmssFunction.output_path)
-    publish_code_command = local.publish_code_command
+    input_json = filemd5("${path.module}/function-app/vmAutoscaleNginxConfig/vmssFunction.ps1")
   }
 }
 
-############################# Role Assignment ###########################
-
-# Retrieve Subscription info
-data "azurerm_subscription" "main" {
-}
-
-# Create role assignment
-resource "azurerm_role_assignment" "function" {
-  scope                = data.azurerm_subscription.main.id
-  role_definition_name = "Contributor"
-  principal_id         = azurerm_windows_function_app.main.identity[0].principal_id
+# Retrieve Function App keys
+data "azurerm_function_app_host_keys" "main" {
+  name                = azurerm_windows_function_app.main.name
+  resource_group_name = azurerm_resource_group.shared.name
+  depends_on = [
+    null_resource.vmssFunction_publish
+  ]
 }
