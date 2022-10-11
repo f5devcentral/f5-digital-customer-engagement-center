@@ -47,12 +47,12 @@ resource "azurerm_windows_function_app" "main" {
   storage_account_access_key = azurerm_storage_account.main.primary_access_key
   service_plan_id            = azurerm_service_plan.main.id
   app_settings = {
-    "APPINSIGHTS_INSTRUMENTATIONKEY"        = "${azurerm_application_insights.main.instrumentation_key}",
-    "APPLICATIONINSIGHTS_CONNECTION_STRING" = "${azurerm_application_insights.main.connection_string}",
-    "WEBSITE_RUN_FROM_PACKAGE"              = "1",
-    "AzureWebJobsDisableHomepage"           = "true",
+    "WEBSITE_RUN_FROM_PACKAGE"    = "1",
+    "AzureWebJobsDisableHomepage" = "true",
   }
   site_config {
+    application_insights_connection_string = azurerm_application_insights.main.connection_string
+    application_insights_key               = azurerm_application_insights.main.instrumentation_key
     application_stack {
       powershell_core_version = 7.2
     }
@@ -139,6 +139,6 @@ data "azurerm_subscription" "main" {
 # Create role assignment
 resource "azurerm_role_assignment" "function" {
   scope                = data.azurerm_subscription.main.id
-  role_definition_name = "Reader"
+  role_definition_name = "Contributor"
   principal_id         = azurerm_windows_function_app.main.identity[0].principal_id
 }

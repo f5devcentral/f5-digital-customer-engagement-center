@@ -90,9 +90,14 @@ Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
 
 ############################ Deploy ARM Template ############################
 
+# Convert nginx config to base 64
+$convertBytes = [System.Text.Encoding]::UTF8.GetBytes($nginxConfig)
+$nginxConfigEncoded = [Convert]::ToBase64String($convertBytes)
+
+# Deploy nginx Config via ARM template
 New-AzResourceGroupDeployment -Name nginxConfig `
   -ResourceGroupName ${rgNameShared} `
   -TemplateUri "https://raw.githubusercontent.com/nginxinc/nginx-for-azure-snippets/main/snippets/templates/configuration/single-file/azdeploy.json" `
   -nginxDeploymentName ${nginxDeploymentName} `
   -rootConfigFilePath "/etc/nginx/nginx.conf" `
-  -rootConfigContent $nginxConfig
+  -rootConfigContent $nginxConfigEncoded

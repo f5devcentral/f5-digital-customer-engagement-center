@@ -319,4 +319,4 @@ fileignoreconfig:
 - filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/function-app/vmAutoscaleNginxConfig/vmssFunction.ps1
   checksum: acb25336174135e735fb8027a2e0c2ebf0bd5b6e514c4c7051384b8b58dc8d13
 - filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/function.tf
-  checksum: b8d02669336ddd8fbe3a3d6db0552581aef97d134f7d27138a15936502c42e42
+  checksum: 7ab7fe50dd8d63ee6969c23f10727bf23b99cf648d2b001e0bb893e5c1886b82

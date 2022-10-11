@@ -7,6 +7,7 @@ locals {
     f5_logo_rgb_svg = base64gzip(file("${path.module}/../../../../../modules/common/files/backend/f5-logo-rgb.svg"))
     styles_css      = base64gzip(file("${path.module}/../../../../../modules/common/files/backend/styles.css"))
   })
+  function_url = "https://${azurerm_windows_function_app.main.default_hostname}/api/vmAutoscaleNginxConfig?code=${data.azurerm_function_app_host_keys.main.default_function_key}"
 }
 
 ############################ Compute - autoscaling ############################
@@ -147,7 +148,7 @@ resource "azurerm_monitor_autoscale_setting" "appWest" {
   }
   notification {
     webhook {
-      service_uri = "https://${azurerm_windows_function_app.main.default_hostname}/api/vmAutoscaleNginxConfig?code=${data.azurerm_function_app_host_keys.main.default_function_key}"
+      service_uri = local.function_url
     }
   }
 }
@@ -204,7 +205,7 @@ resource "azurerm_monitor_autoscale_setting" "appEast" {
   }
   notification {
     webhook {
-      service_uri = "https://${azurerm_windows_function_app.main.default_hostname}/api/vmAutoscaleNginxConfig?code=${data.azurerm_function_app_host_keys.main.default_function_key}"
+      service_uri = local.function_url
     }
   }
 }
