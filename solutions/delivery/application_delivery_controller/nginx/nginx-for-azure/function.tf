@@ -125,6 +125,7 @@ data "archive_file" "vmssFunction" {
 # Locals to help with code readability
 locals {
   publish_code_command = "az functionapp deployment source config-zip -g ${azurerm_resource_group.shared.name} --name ${azurerm_windows_function_app.main.name} --src ${data.archive_file.vmssFunction.output_path}"
+  function_url         = "https://${azurerm_windows_function_app.main.default_hostname}/api/vmAutoscaleNginxConfig?code=${data.azurerm_function_app_host_keys.main.default_function_key}"
 }
 
 # Upload function package code to Function App
@@ -144,4 +145,11 @@ data "azurerm_function_app_host_keys" "main" {
   depends_on = [
     null_resource.vmssFunction_publish
   ]
+}
+
+# Trigger function by calling URL
+resource "null_resource" "trigger_function" {
+  provisioner "local-exec" {
+    command = "curl -fs ${local.function_url}"
+  }
 }
