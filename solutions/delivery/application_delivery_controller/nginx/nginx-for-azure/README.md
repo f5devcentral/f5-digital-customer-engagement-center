@@ -14,6 +14,7 @@
 - [Configuration Example](#configuration-example)
 - [Requirements](#requirements)
 - [Installation Example](#installation-example)
+- [CI/CD Pipeline nginx.conf with Azure Functions](#ci/cd-pipeline-nginx.conf-with-azure-functions)
 - [Troubleshooting](#troubleshooting)
 
 ## Introduction
@@ -89,9 +90,25 @@ Note: Depending on health checks and client request, you will either get the "We
 
 ![Demo App East Region](images/test-site-east.png)
 
-The examples based on URL path routing are dependent upon the nginx.conf. In this demo, the example configuration below is applied which allows for URL path routing and multiple upstream selections. See [templates/nginx.conf](templates/nginx.conf).
+## CI/CD Pipeline nginx.conf with Azure Functions
+
+The nginx.conf in this demo contains URL path routing and multiple upstream selections. The configuration is sourced from the Azure Function PowerShell file found in [function-app/vmAutoscaleNginxConfig/vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1). The VMSS groups send HTTP triggers via webhook notify messages for each autoscale event, and the nginx.conf is dynamically generated and applied to N4A. You can also modify the nginx.conf portion in the vmssFunction.ps1 file and reapply Terraform.
+
+### Example Workflow #1: Scale In/Out Event
+1. VMSS scale in/out event occurs
+2. VMSS webhook notify sent to Azure Function HTTP trigger
+3. vmssFunction.ps1 collects VM IP addresses, builds nginx.conf
+4. Lastly, vmssFunction.ps1 updates N4A via ARM deployment
+
+### Example Workflow #2: Modify nginx.conf in vmssFunction.ps1
+1. User must add rate limiting
+2. Manually edit [function-app/vmAutoscaleNginxConfig/vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1)
+3. Locate the nginx.conf portion and update with rate limiting directives (see [Module ngx_http_limit_req_module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html))
+4. Save vmssFunction.ps1
+5. Lastly, reapply Terraform to push the config
 
 ```
+# Example nginx.conf
 http {
 
   upstream app1 {
