@@ -14,7 +14,7 @@
 - [Configuration Example](#configuration-example)
 - [Requirements](#requirements)
 - [Installation Example](#installation-example)
-- [CI/CD Pipeline nginx.conf with Azure Functions](#ci/cd-pipeline-nginx.conf-with-azure-functions)
+- [CI/CD Pipeline NGINX Config with Azure Functions](#cicd-pipeline-nginx-config-with-azure-functions)
 - [Troubleshooting](#troubleshooting)
 
 ## Introduction
@@ -90,7 +90,7 @@ Note: Depending on health checks and client request, you will either get the "We
 
 ![Demo App East Region](images/test-site-east.png)
 
-## CI/CD Pipeline nginx.conf with Azure Functions
+## CI/CD Pipeline NGINX Config with Azure Functions
 
 The nginx.conf in this demo contains URL path routing and multiple upstream selections. The configuration is sourced from the Azure Function PowerShell file found in [function-app/vmAutoscaleNginxConfig/vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1). The VMSS groups send HTTP triggers via webhook notify messages for each autoscale event, and the nginx.conf is dynamically generated and applied to N4A. You can also modify the nginx.conf portion in the vmssFunction.ps1 file and reapply Terraform.
 
