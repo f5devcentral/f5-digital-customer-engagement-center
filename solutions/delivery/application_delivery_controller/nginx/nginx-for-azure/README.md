@@ -101,7 +101,7 @@ The nginx.conf in this demo contains URL path routing and multiple upstream sele
 4. Lastly, vmssFunction.ps1 updates N4A via ARM deployment
 
 ### Example Workflow #2: Modify nginx.conf in vmssFunction.ps1
-1. User must add rate limiting
+1. User has a requirement to add rate limiting
 2. Manually edit [function-app/vmAutoscaleNginxConfig/vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1)
 3. Locate the nginx.conf portion and update with rate limiting directives (see [Module ngx_http_limit_req_module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html))
 4. Save vmssFunction.ps1
