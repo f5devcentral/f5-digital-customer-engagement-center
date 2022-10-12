@@ -15,43 +15,24 @@ function GetVmssIps {
   param ($vmssName, $rgName, $isBackup)
   $VMs = Get-AzVmssVM -ResourceGroupName $rgName -VMScaleSetName $vmssName
   $nicName = ($VMs[0].NetworkProfile.NetworkInterfaces[0].Id).Split('/')[-1]
-  $count = $VMs.Length
   foreach ($vm in $VMs)
   {
     $resourceName = $vmssName + "/" + $VM.InstanceId + "/" + $nicName
     $target = Get-AzResource -ResourceGroupName $rgName -ResourceType Microsoft.Compute/virtualMachineScaleSets/virtualMachines/networkInterfaces -ResourceName $resourceName -ApiVersion 2017-03-30
 
     # Build server lines in upstream block
-    #   Examples (adjust to your needs):
-    #   server x.x.x.x 80;
-    #   server x.x.x.x backup;
+    # Examples (adjust to your needs...do not append ';' yet):
+    #   server x.x.x.x:80
+    #   server x.x.x.x:80 weight=5
+    #   server x.x.x.x:8080
     $server = "server " + $target.Properties.ipConfigurations[0].properties.privateIPAddress + ":80"
 
-    # Append 'backup' to server line if flag is set
-    if ($isBackup -eq "true") {
-      $server = $server + " backup;"
+    # Append ';' or 'backup;' to server line depending if flag is set
+    if ($isBackup -ne "true") {
+      $server + ";"
     }
     else {
-      $server = $server + ";"
-    }
-
-    # if only 1 VM, adjust indent
-    if ($VMs.Length -eq 1) {
-      "    " + $server
-    }
-    # if more than 1 VM and loop is last instance, adjust indent
-    elseif ($count -eq 1) {
-      "   " + $server
-    }
-    # if more than 1 VM and loop is first instance, adjust indent, add line feed
-    elseif ($count -eq $VMs.Length) {
-      "    " + $server + "`r`n"
-      $count = $count - 1
-    }
-    # if more than 1 VM and loop is in middle of instances, adjust indent, add line feed
-    else {
-      "   " + $server + "`r`n"
-      $count = $count - 1
+      $server + " backup;"
     }
   }
 }
@@ -71,14 +52,14 @@ $nginxConfig = @"
 http {
 
   upstream app1 {
-$resultAppWest
-$resultAppEastBackup
+    $resultAppWest
+    $resultAppEastBackup
   }
   upstream app1-west {
-$resultAppWest
+    $resultAppWest
   }
   upstream app1-east {
-$resultAppEast
+    $resultAppEast
   }
 
   server {
@@ -97,14 +78,6 @@ $resultAppEast
 }
 "@
 
-############################ PowerShell ############################
-
-# Associate values to output bindings by calling 'Push-OutputBinding'.
-Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
-    StatusCode = [HttpStatusCode]::OK
-    Body = $nginxConfig
-})
-
 ############################ Deploy ARM Template ############################
 
 # Convert nginx config to base 64
@@ -119,3 +92,11 @@ New-AzResourceGroupDeployment -Name nginxConfig `
   -nginxDeploymentName ${nginxDeploymentName} `
   -rootConfigFilePath "/etc/nginx/nginx.conf" `
   -rootConfigContent $nginxConfigEncoded
+
+############################ HTTP Response ############################
+
+# Output HTTP response of nginx.conf
+Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
+    StatusCode = [HttpStatusCode]::OK
+    Body = $nginxConfig
+})
