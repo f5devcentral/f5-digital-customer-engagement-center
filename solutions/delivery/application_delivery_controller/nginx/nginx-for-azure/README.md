@@ -103,13 +103,16 @@ The nginx.conf in this demo contains URL path routing and multiple upstream sele
 ### Example Workflow #2: Modify nginx.conf in vmssFunction.ps1
 1. User has a requirement to add rate limiting
 2. Manually edit [function-app/vmAutoscaleNginxConfig/vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1)
-3. Locate the nginx.conf portion and update with rate limiting directives (see [Module ngx_http_limit_req_module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html))
+3. Locate the nginx.conf portion and update with rate limiting directives (see [Rate Limiting](https://docs.nginx.com/nginx-for-azure/management/rate-limiting/))
 4. Save vmssFunction.ps1
 5. Lastly, reapply Terraform to push the config
+
+Note: Make sure to place a PowerShell escape character ` before the $binary_remote_addr. Otherwise PowerShell will treat it like a variable and try to render the value and fail.
 
 ```
 # Example nginx.conf
 http {
+  limit_req_zone `$binary_remote_addr zone=mylimit:10m rate=1r/s;
 
   upstream app1 {
     server 10.100.0.5:80;
@@ -126,6 +129,7 @@ http {
     listen 80 default_server;
     location / {
       proxy_pass http://app1/;
+      limit_req zone=mylimit;
     }
     location /west/ {
       proxy_pass http://app1-west/;
