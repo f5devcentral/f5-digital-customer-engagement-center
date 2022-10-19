@@ -8,6 +8,8 @@
 /solutions/delivery/application_delivery_controller/nginx/kic/aws @jmcalalang
 /solutions/volterra @yossi-r @JeffGiroux @memes
 /solutions/delivery/application_delivery_controller/big-ip/upgrade/aws @jmcalalang
+/solutions/delivery/application_delivery_controller/nginx/nginx-for-azure @JeffGiroux
+
 
 # modules owners
 /modules/aws @yossi-r @JeffGiroux
