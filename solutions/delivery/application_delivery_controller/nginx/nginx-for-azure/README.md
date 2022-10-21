@@ -51,6 +51,7 @@ The following is an example configuration diagram for this solution deployment.
 - Terraform
 - Azure User with 'Owner' role to deploy resources
 - [Managed Identity](https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) to associate with N4A deployment (monitoring, key vault)
+  - Note: if not supplied, one will be created
 
 ## Installation Example
 
@@ -151,7 +152,7 @@ http {
 ```
 
 ## Monitor and Metrics
-This demo automatically associates the managed identity (supplied by user) to the N4A deployment and enables diagnostics. N4A will publish application telemetry data to Azure Monitor, and you can review/analyze/alert on those metrics. See [Enable NGINX for Azure Monitoring](https://docs.nginx.com/nginx-for-azure/monitoring/enable-monitoring/) for more info.
+This demo automatically associates a managed identity to the N4A deployment and enables diagnostics. N4A will publish application telemetry data to Azure Monitor, and you can review/analyze/alert on those metrics. See [Enable NGINX for Azure Monitoring](https://docs.nginx.com/nginx-for-azure/monitoring/enable-monitoring/) for more info.
 
 ![N4A Azure Monitor Metrics Explorer](./images/n4a-metrics-explorer.png)
 
@@ -217,6 +218,7 @@ No Modules.
 | [azurerm_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet) |
 | [azurerm_subnet_network_security_group_association](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_network_security_group_association) |
 | [azurerm_subscription](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) |
+| [azurerm_user_assigned_identity](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity) |
 | [azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) |
 | [azurerm_virtual_network_peering](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_peering) |
 | [azurerm_windows_function_app](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_function_app) |
@@ -233,7 +235,7 @@ No Modules.
 | adminName | admin account name used with app server instance | `string` | `"azureuser"` | no |
 | enableMetrics | Enable publishing metrics data from NGINX deployment | `bool` | `true` | no |
 | numServers | number of app server instances to launch in each autoscale group | `number` | `1` | no |
-| userAssignedIdentityId | The resource ID of the user-assigned managed identity associated to the NGINX deployment resource | `string` | `""` | no |
+| userAssignedIdentityId | The resource ID of the user-assigned managed identity associated to the NGINX deployment resource | `string` | `null` | no |
 | vnets | The set of VNets to create | <pre>map(object({<br>    cidr           = list(any)<br>    subnetPrefixes = list(any)<br>    subnetNames    = list(any)<br>    location       = string<br>  }))</pre> | <pre>{<br>  "appEast": {<br>    "cidr": [<br>      "10.101.0.0/16"<br>    ],<br>    "location": "eastus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.101.0.0/24"<br>    ]<br>  },<br>  "appWest": {<br>    "cidr": [<br>      "10.100.0.0/16"<br>    ],<br>    "location": "westus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.100.0.0/24"<br>    ]<br>  },<br>  "shared": {<br>    "cidr": [<br>      "10.255.0.0/16"<br>    ],<br>    "location": "eastus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.255.0.0/24"<br>    ]<br>  }<br>}</pre> | no |
 
 ## Outputs
