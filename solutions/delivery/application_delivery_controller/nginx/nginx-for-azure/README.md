@@ -65,6 +65,8 @@ cp admin.auto.tfvars.example admin.auto.tfvars
 vi admin.auto.tfvars
 ```
 
+**Note:**  `projectPrefix` can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long.
+
 - Run the setup script:
 ```bash
 ./setup.sh
