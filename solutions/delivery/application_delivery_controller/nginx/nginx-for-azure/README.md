@@ -237,7 +237,7 @@ No Modules.
 | adminName | admin account name used with app server instance | `string` | `"azureuser"` | no |
 | enableMetrics | Enable publishing metrics data from NGINX deployment | `bool` | `true` | no |
 | numServers | number of app server instances to launch in each autoscale group | `number` | `1` | no |
-| userAssignedIdentityId | The resource ID of the user-assigned managed identity associated to the NGINX deployment resource | `string` | `null` | no |
+| userAssignedIdentityId | The resource ID of the user-assigned managed identity associated to the NGINX deployment resource. If one is not supplied, a user identity resource will automatically be created. | `string` | `null` | no |
 | vnets | The set of VNets to create | <pre>map(object({<br>    cidr           = list(any)<br>    subnetPrefixes = list(any)<br>    subnetNames    = list(any)<br>    location       = string<br>  }))</pre> | <pre>{<br>  "appEast": {<br>    "cidr": [<br>      "10.101.0.0/16"<br>    ],<br>    "location": "eastus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.101.0.0/24"<br>    ]<br>  },<br>  "appWest": {<br>    "cidr": [<br>      "10.100.0.0/16"<br>    ],<br>    "location": "westus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.100.0.0/24"<br>    ]<br>  },<br>  "shared": {<br>    "cidr": [<br>      "10.255.0.0/16"<br>    ],<br>    "location": "eastus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.255.0.0/24"<br>    ]<br>  }<br>}</pre> | no |
 
 ## Outputs

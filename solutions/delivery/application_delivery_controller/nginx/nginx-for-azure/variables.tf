@@ -54,7 +54,7 @@ variable "numServers" {
 variable "userAssignedIdentityId" {
   type        = string
   default     = null
-  description = "The resource ID of the user-assigned managed identity associated to the NGINX deployment resource"
+  description = "The resource ID of the user-assigned managed identity associated to the NGINX deployment resource. If one is not supplied, a user identity resource will automatically be created."
 }
 variable "enableMetrics" {
   type        = bool
