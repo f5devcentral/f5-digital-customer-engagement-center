@@ -41,6 +41,20 @@
             "metadata": {
                 "description": "Name of customer virtual network"
             }
+        },
+        "userAssignedIdentityId": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The resource ID of the user-assigned managed identity associated to the NGINX deployment resource"
+            }
+        },
+        "enableMetrics": {
+            "type": "bool",
+            "defaultValue": true,
+            "metadata": {
+                "description": "Enable publishing metrics data from NGINX deployment"
+            }
         }
     },
     "resources": [
@@ -51,6 +65,12 @@
             "location": "[parameters('location')]",
             "sku": {
                 "name": "[parameters('sku')]"
+            },
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[parameters('userAssignedIdentityId')]": {}
+                }
             },
             "properties": {
                 "enableDiagnosticsSupport": false,
@@ -66,7 +86,8 @@
                     "networkInterfaceConfiguration": {
                         "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
                     }
-                }
+                },
+                "enableDiagnosticsSupport": "[parameters('enableMetrics')]"
             }
         }
     ]

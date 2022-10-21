@@ -15,6 +15,7 @@
 - [Requirements](#requirements)
 - [Installation Example](#installation-example)
 - [CI/CD Pipeline NGINX Config with Azure Functions](#cicd-pipeline-nginx-config-with-azure-functions)
+- [Monitor and Metrics](#monitor-and-metrics)
 - [Troubleshooting](#troubleshooting)
 
 ## Introduction
@@ -29,6 +30,7 @@ The resulting deployment will consist of the following:
 - Shared VNet and subnets (customer Hub)
   - N4A eNICs for [VNet injection](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-for-azure-services)
   - Azure Function App with PowerShell code
+  - NGINX metrics published to Azure Monitor
 - Application VNet and subnets (customer Spoke)
   - 1x App VNet in West region
   - 1x App VNet in East region
@@ -47,8 +49,8 @@ The following is an example configuration diagram for this solution deployment.
 
 - Azure CLI
 - Terraform
-- Azure Subscription
-- Azure User with 'Owner' role
+- Azure User with 'Owner' role to deploy resources
+- [Managed Identity](https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) to associate with N4A deployment (monitoring, key vault)
 
 ## Installation Example
 
@@ -148,6 +150,11 @@ http {
 ./destroy.sh
 ```
 
+## Monitor and Metrics
+This demo automatically associates the managed identity (supplied by user) to the N4A deployment and enables diagnostics. N4A will publish application telemetry data to Azure Monitor, and you can review/analyze/alert on those metrics. See [Enable NGINX for Azure Monitoring](https://docs.nginx.com/nginx-for-azure/monitoring/enable-monitoring/) for more info.
+
+![N4A Azure Monitor Metrics Explorer](./images/n4a-metrics-explorer.png)
+
 ## Troubleshooting
 
 ### Serial Logs of Application Servers (upstreams)
@@ -224,7 +231,9 @@ No Modules.
 | resourceOwner | name of the person or customer running the solution | `string` | n/a | yes |
 | sshPublicKey | public key used for authentication in ssh-rsa format | `string` | n/a | yes |
 | adminName | admin account name used with app server instance | `string` | `"azureuser"` | no |
+| enableMetrics | Enable publishing metrics data from NGINX deployment | `bool` | `true` | no |
 | numServers | number of app server instances to launch in each autoscale group | `number` | `1` | no |
+| userAssignedIdentityId | The resource ID of the user-assigned managed identity associated to the NGINX deployment resource | `string` | `""` | no |
 | vnets | The set of VNets to create | <pre>map(object({<br>    cidr           = list(any)<br>    subnetPrefixes = list(any)<br>    subnetNames    = list(any)<br>    location       = string<br>  }))</pre> | <pre>{<br>  "appEast": {<br>    "cidr": [<br>      "10.101.0.0/16"<br>    ],<br>    "location": "eastus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.101.0.0/24"<br>    ]<br>  },<br>  "appWest": {<br>    "cidr": [<br>      "10.100.0.0/16"<br>    ],<br>    "location": "westus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.100.0.0/24"<br>    ]<br>  },<br>  "shared": {<br>    "cidr": [<br>      "10.255.0.0/16"<br>    ],<br>    "location": "eastus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.255.0.0/24"<br>    ]<br>  }<br>}</pre> | no |
 
 ## Outputs

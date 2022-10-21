@@ -51,3 +51,13 @@ variable "numServers" {
   default     = 1
   description = "number of app server instances to launch in each autoscale group"
 }
+variable "userAssignedIdentityId" {
+  type        = string
+  default     = ""
+  description = "The resource ID of the user-assigned managed identity associated to the NGINX deployment resource"
+}
+variable "enableMetrics" {
+  type        = bool
+  default     = true
+  description = "Enable publishing metrics data from NGINX deployment"
+}
