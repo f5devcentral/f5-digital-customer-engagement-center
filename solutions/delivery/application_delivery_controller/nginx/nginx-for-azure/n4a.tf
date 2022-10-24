@@ -11,6 +11,18 @@ resource "azurerm_public_ip" "n4a" {
   }
 }
 
+############################ Managed Identity ############################
+
+resource "azurerm_user_assigned_identity" "n4a" {
+  count               = var.userAssignedIdentityId == null ? 1 : 0
+  location            = azurerm_resource_group.shared.location
+  name                = format("%s-identity-n4a-%s", var.projectPrefix, random_id.buildSuffix.hex)
+  resource_group_name = azurerm_resource_group.shared.name
+  tags = {
+    Name = format("%s-identity-n4a-%s", var.resourceOwner, random_id.buildSuffix.hex)
+  }
+}
+
 ############################ N4A Deployment ############################
 
 resource "azurerm_resource_group_template_deployment" "n4a" {
@@ -18,12 +30,14 @@ resource "azurerm_resource_group_template_deployment" "n4a" {
   resource_group_name = azurerm_resource_group.shared.name
   deployment_mode     = "Incremental"
   parameters_content = jsonencode({
-    "nginxDeploymentName" = { value = format("%s-n4a-%s", var.projectPrefix, random_id.buildSuffix.hex) }
-    "location"            = { value = azurerm_resource_group.shared.location }
-    "sku"                 = { value = "publicpreview_Monthly_gmz7xq9ge3py" }
-    "publicIPName"        = { value = format("%s-pip-n4a-%s", var.projectPrefix, random_id.buildSuffix.hex) }
-    "subnetName"          = { value = azurerm_subnet.shared.name }
-    "virtualNetworkName"  = { value = azurerm_virtual_network.shared.name }
+    "nginxDeploymentName"    = { value = format("%s-n4a-%s", var.projectPrefix, random_id.buildSuffix.hex) }
+    "location"               = { value = azurerm_resource_group.shared.location }
+    "sku"                    = { value = "publicpreview_Monthly_gmz7xq9ge3py" }
+    "publicIPName"           = { value = format("%s-pip-n4a-%s", var.projectPrefix, random_id.buildSuffix.hex) }
+    "subnetName"             = { value = azurerm_subnet.shared.name }
+    "virtualNetworkName"     = { value = azurerm_virtual_network.shared.name }
+    "userAssignedIdentityId" = { value = var.userAssignedIdentityId == null ? azurerm_user_assigned_identity.n4a[0].id : var.userAssignedIdentityId }
+    "enableMetrics"          = { value = var.enableMetrics }
   })
   template_content = templatefile("${path.module}/templates/n4aDeploy.json", {})
 }
