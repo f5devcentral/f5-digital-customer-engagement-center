@@ -194,6 +194,7 @@ Submit a pull request
 |------|---------|
 | archive | n/a |
 | azurerm | >= 3 |
+| local | n/a |
 | null | n/a |
 | random | n/a |
 
@@ -224,6 +225,7 @@ No Modules.
 | [azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) |
 | [azurerm_virtual_network_peering](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_peering) |
 | [azurerm_windows_function_app](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_function_app) |
+| [local_file](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) |
 | [null_resource](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) |
 | [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
 

@@ -1,17 +1,19 @@
+# File : .github/workflows/nginxForAzureDeploy.yml
+
 name: Sync the NGINX configuration from the GitHub repository to an NGINX for Azure deployment
 on:
   push:
     branches:
-      - nginxConfigMgmt
+      - main
     paths:
-      - configs/**
+      - solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/configs/**
 
 env:
-  NGINX_DEPLOYMENT_NAME: girouxnginx-nginx-eace
+  RESOURCE_GROUP_NAME: ${resourceGroup}
+  NGINX_DEPLOYMENT_NAME: ${nginxDeploymentName}
   NGINX_TRANSFORMED_CONFIG_DIR_PATH: /etc/nginx/
-  NGINX_CONFIG_DIRECTORY_PATH: configs/
+  NGINX_CONFIG_DIRECTORY_PATH: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/configs/
   NGINX_ROOT_CONFIG_FILE: nginx.conf
-  RESOURCE_GROUP_NAME: girouxnginx-rg-shared-eace
 
 permissions:
       id-token: write
@@ -27,14 +29,14 @@ jobs:
     - name: 'Azure Login using OIDC'
       uses: azure/login@v1
       with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client-id: $${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: $${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: $${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: 'Sync NGINX configuration to NGINX for Azure'
       uses: nginxinc/nginx-for-azure-deploy-action@v0.3.0
       with:
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        subscription-id: $${{ secrets.AZURE_SUBSCRIPTION_ID }}
         resource-group-name: $RESOURCE_GROUP_NAME
         nginx-deployment-name: $NGINX_DEPLOYMENT_NAME
         nginx-config-directory-path: $NGINX_CONFIG_DIRECTORY_PATH

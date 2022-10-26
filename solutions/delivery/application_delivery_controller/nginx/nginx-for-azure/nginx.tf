@@ -41,3 +41,19 @@ resource "azurerm_resource_group_template_deployment" "nginx" {
   })
   template_content = templatefile("${path.module}/templates/nginxDeploy.json", {})
 }
+
+############################# GitHub Actions ###########################
+
+# GitHub workflow rendering
+locals {
+  nginxGithubActions = templatefile("${path.module}/templates/nginxGithubActions.yml", {
+    resourceGroup       = azurerm_resource_group.shared.name
+    nginxDeploymentName = azurerm_resource_group_template_deployment.nginx.name
+  })
+}
+
+# GitHub workflow output file
+resource "local_file" "nginxGithubActions" {
+  content  = local.nginxGithubActions
+  filename = "${path.module}/nginxGithubActions.yml"
+}
