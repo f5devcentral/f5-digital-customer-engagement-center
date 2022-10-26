@@ -20,15 +20,15 @@
 
 ## Introduction
 
-This solution will create an [F5 NGINX for Azure](https://docs.nginx.com/nginx-for-azure) (N4A) deployment and a set of Azure VNets for a demo application hosted in multiple Azure regions. The application will be running in the West and East regions, and N4A will provide traffic management, security, and high availability across regions.
+This solution will create an [F5 NGINX for Azure](https://docs.nginx.com/nginx-for-azure) deployment and a set of Azure VNets for a demo application hosted in multiple Azure regions. The application will be running in the West and East regions, and NGINX will provide traffic management, security, and high availability across regions.
 
 The resulting deployment will consist of the following:
 
 - F5 Dataplane Subscription (SaaS)
-  - N4A deployment
+  - NGINX for Azure deployment
   - Note: hidden, user will not see this
 - Shared VNet and subnets (customer Hub)
-  - N4A eNICs for [VNet injection](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-for-azure-services)
+  - NGINX eNICs for [VNet injection](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-for-azure-services)
   - Azure Function App with PowerShell code
   - NGINX metrics published to Azure Monitor
 - Application VNet and subnets (customer Spoke)
@@ -43,14 +43,14 @@ The resulting deployment will consist of the following:
 
 The following is an example configuration diagram for this solution deployment.
 
-![F5 NGINX for Azure](./images/n4a-multiple-region.png)
+![F5 NGINX for Azure](./images/nginx-multiple-region.png)
 
 ## Requirements
 
 - Azure CLI
 - Terraform
 - Azure User with 'Owner' role to deploy resources
-- [Managed Identity](https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) to associate with N4A deployment (monitoring, key vault)
+- [Managed Identity](https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) to associate with NGINX deployment (monitoring, key vault)
   - Note: if not supplied, one will be created
 
 ## Installation Example
@@ -77,9 +77,9 @@ vi admin.auto.tfvars
 
 ## Test your setup:
 
-1. Copy the public IP from the NGINX Deployment. This value can also be found in Terraform outputs as 'public_IP_n4a'.
+1. Copy the public IP from the NGINX Deployment. This value can also be found in Terraform outputs as 'public_IP_nginx'.
 
-![N4A IP address](images/nginx-ip-address.png)
+![NGINX IP address](images/nginx-ip-address.png)
 
 2. On your laptop/PC, open a browser to public IP address.
 
@@ -97,13 +97,13 @@ Note: Depending on health checks and client request, you will either get the "We
 
 ## CI/CD Pipeline NGINX Config with Azure Functions
 
-The nginx.conf in this demo contains URL path routing and multiple upstream selections. The configuration is sourced from the Azure Function PowerShell file found in [function-app/vmAutoscaleNginxConfig/vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1). The VMSS groups send HTTP triggers via webhook notify messages for each autoscale event, and the nginx.conf is dynamically generated and applied to N4A. You can also modify the nginx.conf portion in the vmssFunction.ps1 file and reapply Terraform.
+The nginx.conf in this demo contains URL path routing and multiple upstream selections. The configuration is sourced from the Azure Function PowerShell file found in [function-app/vmAutoscaleNginxConfig/vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1). The VMSS groups send HTTP triggers via webhook notify messages for each autoscale event, and the nginx.conf is dynamically generated and applied to NGINX. You can also modify the nginx.conf portion in the vmssFunction.ps1 file and reapply Terraform.
 
 ### Example Workflow #1: Scale In/Out Event
 1. VMSS scale in/out event occurs
 2. VMSS webhook notify sent to Azure Function HTTP trigger
 3. vmssFunction.ps1 collects VM IP addresses, builds nginx.conf
-4. Lastly, vmssFunction.ps1 updates N4A via ARM deployment
+4. Lastly, vmssFunction.ps1 updates NGINX via ARM deployment
 
 ### Example Workflow #2: Modify nginx.conf in vmssFunction.ps1
 1. User has a requirement to add rate limiting
@@ -147,16 +147,16 @@ http {
 }
 ```
 
+## Monitor and Metrics
+This demo automatically associates a managed identity to the NGINX deployment and enables diagnostics. NGINX will publish application telemetry data to Azure Monitor, and you can review/analyze/alert on those metrics. See [Enable NGINX for Azure Monitoring](https://docs.nginx.com/nginx-for-azure/monitoring/enable-monitoring/) for more info.
+
+![NGINX Azure Monitor Metrics Explorer](./images/nginx-metrics-explorer.png)
+
 ## Cleanup
 - Run the solution destroy script:
 ```bash
 ./destroy.sh
 ```
-
-## Monitor and Metrics
-This demo automatically associates a managed identity to the N4A deployment and enables diagnostics. N4A will publish application telemetry data to Azure Monitor, and you can review/analyze/alert on those metrics. See [Enable NGINX for Azure Monitoring](https://docs.nginx.com/nginx-for-azure/monitoring/enable-monitoring/) for more info.
-
-![N4A Azure Monitor Metrics Explorer](./images/n4a-metrics-explorer.png)
 
 ## Troubleshooting
 
@@ -164,12 +164,12 @@ This demo automatically associates a managed identity to the N4A deployment and 
 Review the serial logs for the Azure virtual machine. Login to the Azure portal, open "Virtual Machines", then locate your instance...click it. Hit Serial Console. Then review the serial logs for errors.
 
 ### NGINX for Azure
-Review the N4A deployment logs and contact support. See the links below...
+Review the NGINX deployment logs and contact support. See the links below...
 - [Troubleshooting NGINX for Azure](https://docs.nginx.com/nginx-for-azure/troubleshooting/troubleshooting/)
 - [FAQ](https://docs.nginx.com/nginx-for-azure/troubleshooting/faq/)
 
 ### Traffic Flows
-Review the high level diagram to see the architecture and understand traffic flows. If the N4A deployment cannot access the application upstream servers, then please validate there arethe necessary Network Seurity Group rules, VNet peering, and DNS entries.
+Review the high level diagram to see the architecture and understand traffic flows. If the NGINX deployment cannot access the application upstream servers, then please validate there arethe necessary Network Seurity Group rules, VNet peering, and DNS entries.
 
 ## How to Contribute
 
@@ -244,6 +244,6 @@ No Modules.
 
 | Name | Description |
 |------|-------------|
-| public\_IP\_n4a | Public IP address of the N4A deployment |
+| public\_IP\_nginx | Public IP address of the NGINX deployment |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 <!-- markdownlint-enable no-inline-html -->
