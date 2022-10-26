@@ -2,7 +2,7 @@ name: Sync the NGINX configuration from the GitHub repository to an NGINX for Az
 on:
   push:
     branches:
-      - configMgmt
+      - nginxConfigMgmt
     paths:
       - configs/**
 
