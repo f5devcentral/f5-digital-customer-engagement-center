@@ -88,7 +88,7 @@ locals {
     vmssNameEast        = azurerm_linux_virtual_machine_scale_set.appEast.name
     rgNameEast          = azurerm_resource_group.appEast.name
     rgNameShared        = azurerm_resource_group.shared.name
-    nginxDeploymentName = azurerm_resource_group_template_deployment.n4a.name
+    nginxDeploymentName = azurerm_resource_group_template_deployment.nginx.name
   })
 }
 

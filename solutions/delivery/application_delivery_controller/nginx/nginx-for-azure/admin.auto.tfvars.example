@@ -1,6 +1,6 @@
 resourceOwner = "fred"
 sshPublicKey  = "ssh-rsa AAA"
-projectPrefix = "myn4a"
+projectPrefix = "mynginx"
 
 # Remove comment and supply value to use existing managed identity
 #userAssignedIdentityId = "/subscriptions/abc-xyz/resourcegroups/myrg1/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity123"

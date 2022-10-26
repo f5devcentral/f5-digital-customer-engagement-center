@@ -82,7 +82,7 @@ resource "azurerm_subnet" "shared" {
   resource_group_name  = azurerm_resource_group.shared.name
   address_prefixes     = var.vnets["shared"].subnetPrefixes
   delegation {
-    name = "n4a"
+    name = "nginx"
     service_delegation {
       name    = "NGINX.NGINXPLUS/nginxDeployments"
       actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
