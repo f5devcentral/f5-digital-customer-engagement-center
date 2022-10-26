@@ -147,16 +147,16 @@ http {
 }
 ```
 
+## Monitor and Metrics
+This demo automatically associates a managed identity to the NGINX deployment and enables diagnostics. NGINX will publish application telemetry data to Azure Monitor, and you can review/analyze/alert on those metrics. See [Enable NGINX for Azure Monitoring](https://docs.nginx.com/nginx-for-azure/monitoring/enable-monitoring/) for more info.
+
+![NGINX Azure Monitor Metrics Explorer](./images/nginx-metrics-explorer.png)
+
 ## Cleanup
 - Run the solution destroy script:
 ```bash
 ./destroy.sh
 ```
-
-## Monitor and Metrics
-This demo automatically associates a managed identity to the NGINX deployment and enables diagnostics. NGINX will publish application telemetry data to Azure Monitor, and you can review/analyze/alert on those metrics. See [Enable NGINX for Azure Monitoring](https://docs.nginx.com/nginx-for-azure/monitoring/enable-monitoring/) for more info.
-
-![NGINX Azure Monitor Metrics Explorer](./images/nginx-metrics-explorer.png)
 
 ## Troubleshooting
 
