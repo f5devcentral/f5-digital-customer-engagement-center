@@ -43,14 +43,14 @@
             }
         },
         "userAssignedIdentityId": {
-            "type": "string",
+            "type": "String",
             "defaultValue": "",
             "metadata": {
                 "description": "The resource ID of the user-assigned managed identity associated to the NGINX deployment resource"
             }
         },
         "enableMetrics": {
-            "type": "bool",
+            "type": "Bool",
             "defaultValue": true,
             "metadata": {
                 "description": "Enable publishing metrics data from NGINX deployment"
