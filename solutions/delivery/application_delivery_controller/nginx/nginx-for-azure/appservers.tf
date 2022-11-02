@@ -145,6 +145,11 @@ resource "azurerm_monitor_autoscale_setting" "appWest" {
       }
     }
   }
+  notification {
+    webhook {
+      service_uri = local.function_url
+    }
+  }
 }
 
 # Create Autoscale settings for East region app servers
@@ -195,6 +200,11 @@ resource "azurerm_monitor_autoscale_setting" "appEast" {
         value     = "1"
         cooldown  = "PT1M"
       }
+    }
+  }
+  notification {
+    webhook {
+      service_uri = local.function_url
     }
   }
 }

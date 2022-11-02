@@ -30,12 +30,9 @@ function GetVmssIps {
 
 ############################ Main ############################
 
-# Get VM IP addresses in VMSS
-Write-Host "Retrieving VMSS IP addresses for each VM instance."
+# Get VM IP addresses in VMSS App West
+Write-Host "Retrieving VMSS IP addresses for App West"
 $resultAppWest = GetVmssIps -vmssName "${vmssAppWest}" -rgName "${rgWest}"
-$resultAppEast = GetVmssIps -vmssName "${vmssAppEast}" -rgName "${rgEast}"
-
-Write-Host "Writing App West IP addresses to conf files"
 foreach ($ip in $resultAppWest)
 {
   # add to app west upstream conf
@@ -44,7 +41,9 @@ foreach ($ip in $resultAppWest)
   $server = "server " + $ip + ":80;" | Out-File $app1VmssConf -Append
 }
 
-Write-Host "Writing App East IP addresses to conf files"
+# Get VM IP addresses in VMSS App East
+Write-Host "Retrieving VMSS IP addresses for App East"
+$resultAppEast = GetVmssIps -vmssName "${vmssAppEast}" -rgName "${rgEast}"
 foreach ($ip in $resultAppEast)
 {
   # add to app east upstream conf
@@ -54,6 +53,7 @@ foreach ($ip in $resultAppEast)
 }
 
 # Validate file contents
+Write-Host "Validating contents"
 cat $app1VmssConf
 cat $app1WestVmssConf
 cat $app1EastVmssConf

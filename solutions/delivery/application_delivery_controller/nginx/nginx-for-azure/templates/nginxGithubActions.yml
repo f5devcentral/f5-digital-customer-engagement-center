@@ -1,0 +1,44 @@
+# File : .github/workflows/nginxForAzureDeploy.yml
+
+name: Sync the NGINX configuration from the GitHub repository to an NGINX for Azure deployment
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/configs/**
+
+env:
+  RESOURCE_GROUP_NAME: ${sharedResourceGroup}
+  NGINX_DEPLOYMENT_NAME: ${nginxDeploymentName}
+  NGINX_TRANSFORMED_CONFIG_DIR_PATH: /etc/nginx/
+  NGINX_CONFIG_DIRECTORY_PATH: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/configs/
+  NGINX_ROOT_CONFIG_FILE: nginx.conf
+
+permissions:
+      id-token: write
+      contents: read
+
+jobs:
+  Deploy-NGINX-Configuration:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout repository'
+      uses: actions/checkout@v2
+
+    - name: 'Azure Login using OIDC'
+      uses: azure/login@v1
+      with:
+        client-id: $${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: $${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: $${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: 'Sync NGINX configuration to NGINX for Azure'
+      uses: nginxinc/nginx-for-azure-deploy-action@v0.3.0
+      with:
+        subscription-id: $${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        resource-group-name: $RESOURCE_GROUP_NAME
+        nginx-deployment-name: $NGINX_DEPLOYMENT_NAME
+        nginx-config-directory-path: $NGINX_CONFIG_DIRECTORY_PATH
+        nginx-root-config-file: $NGINX_ROOT_CONFIG_FILE
+        transformed-nginx-config-directory-path: $NGINX_TRANSFORMED_CONFIG_DIR_PATH
