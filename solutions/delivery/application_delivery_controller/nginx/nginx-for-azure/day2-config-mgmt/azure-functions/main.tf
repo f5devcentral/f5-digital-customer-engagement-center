@@ -1,25 +1,39 @@
+############################# Provider ###########################
+
+provider "azurerm" {
+  features {}
+}
+
+# Set Terraform and provider versions
+terraform {
+  required_version = ">= 1.2.0"
+  required_providers {
+    azurerm = ">= 3"
+  }
+}
+
 ############################# Storage Account ###########################
 
 resource "azurerm_storage_account" "main" {
-  name                     = format("%sstorage%s", var.projectPrefix, random_id.buildSuffix.hex)
-  resource_group_name      = azurerm_resource_group.shared.name
-  location                 = azurerm_resource_group.shared.location
+  name                     = format("%sstorage%s", var.projectPrefix, var.buildSuffix)
+  resource_group_name      = var.rgShared
+  location                 = var.regionShared
   account_tier             = "Standard"
   account_replication_type = "LRS"
   tags = {
-    Name = format("%s-storage-%s", var.resourceOwner, random_id.buildSuffix.hex)
+    Name = format("%s-storage-%s", var.resourceOwner, var.buildSuffix)
   }
 }
 
 ############################# Application Insights ###########################
 
 resource "azurerm_application_insights" "main" {
-  name                = format("%s-app-insights-%s", var.projectPrefix, random_id.buildSuffix.hex)
-  location            = azurerm_resource_group.shared.location
-  resource_group_name = azurerm_resource_group.shared.name
+  name                = format("%s-app-insights-%s", var.projectPrefix, var.buildSuffix)
+  location            = var.regionShared
+  resource_group_name = var.rgShared
   application_type    = "web"
   tags = {
-    Name = format("%s-app-insights-%s", var.resourceOwner, random_id.buildSuffix.hex)
+    Name = format("%s-app-insights-%s", var.resourceOwner, var.buildSuffix)
   }
 }
 
@@ -27,22 +41,22 @@ resource "azurerm_application_insights" "main" {
 
 # Create Consumption plan
 resource "azurerm_service_plan" "main" {
-  name                = format("%s-service-plan-%s", var.projectPrefix, random_id.buildSuffix.hex)
-  resource_group_name = azurerm_resource_group.shared.name
-  location            = azurerm_resource_group.shared.location
+  name                = format("%s-service-plan-%s", var.projectPrefix, var.buildSuffix)
+  resource_group_name = var.rgShared
+  location            = var.regionShared
   os_type             = "Windows"
   sku_name            = "Y1"
   tags = {
-    Name = format("%s-service-plan-%s", var.resourceOwner, random_id.buildSuffix.hex)
+    Name = format("%s-service-plan-%s", var.resourceOwner, var.buildSuffix)
   }
 }
 
 ############################# Function App ###########################
 
 resource "azurerm_windows_function_app" "main" {
-  name                       = format("%s-functionApp-%s", var.projectPrefix, random_id.buildSuffix.hex)
-  resource_group_name        = azurerm_resource_group.shared.name
-  location                   = azurerm_resource_group.shared.location
+  name                       = format("%s-functionApp-%s", var.projectPrefix, var.buildSuffix)
+  resource_group_name        = var.rgShared
+  location                   = var.regionShared
   storage_account_name       = azurerm_storage_account.main.name
   storage_account_access_key = azurerm_storage_account.main.primary_access_key
   service_plan_id            = azurerm_service_plan.main.id
@@ -61,7 +75,7 @@ resource "azurerm_windows_function_app" "main" {
     type = "SystemAssigned"
   }
   tags = {
-    Name = format("%s-functionApp-%s", var.resourceOwner, random_id.buildSuffix.hex)
+    Name = format("%s-functionApp-%s", var.resourceOwner, var.buildSuffix)
   }
 }
 
@@ -83,12 +97,12 @@ resource "azurerm_role_assignment" "function" {
 # PowerShell script variable rendering
 locals {
   vmssFunctionPs1 = templatefile("${path.module}/function-app/vmAutoscaleNginxConfig/vmssFunction.ps1", {
-    vmssNameWest        = azurerm_linux_virtual_machine_scale_set.appWest.name
-    rgNameWest          = azurerm_resource_group.appWest.name
-    vmssNameEast        = azurerm_linux_virtual_machine_scale_set.appEast.name
-    rgNameEast          = azurerm_resource_group.appEast.name
-    rgNameShared        = azurerm_resource_group.shared.name
-    nginxDeploymentName = azurerm_resource_group_template_deployment.nginx.name
+    vmssAppWest         = var.vmssAppWest
+    rgWest              = var.rgAppWest
+    vmssAppEast         = var.vmssAppEast
+    rgEast              = var.rgAppEast
+    rgShared            = var.rgShared
+    nginxDeploymentName = var.nginxDeploymentName
   })
 }
 
@@ -124,7 +138,7 @@ data "archive_file" "vmssFunction" {
 
 # Locals to help with code readability
 locals {
-  publish_code_command = "az functionapp deployment source config-zip -g ${azurerm_resource_group.shared.name} --name ${azurerm_windows_function_app.main.name} --src ${data.archive_file.vmssFunction.output_path}"
+  publish_code_command = "az functionapp deployment source config-zip -g ${var.rgShared} --name ${azurerm_windows_function_app.main.name} --src ${data.archive_file.vmssFunction.output_path}"
   function_url         = "https://${azurerm_windows_function_app.main.default_hostname}/api/vmAutoscaleNginxConfig?code=${data.azurerm_function_app_host_keys.main.default_function_key}"
 }
 
@@ -134,14 +148,15 @@ resource "null_resource" "vmssFunction_publish" {
     command = local.publish_code_command
   }
   triggers = {
-    input_json = filemd5("${path.module}/function-app/vmAutoscaleNginxConfig/vmssFunction.ps1")
+    input_json      = filemd5("${path.module}/function-app/vmAutoscaleNginxConfig/vmssFunction.ps1")
+    archive_file_id = data.archive_file.vmssFunction.id
   }
 }
 
 # Retrieve Function App keys
 data "azurerm_function_app_host_keys" "main" {
   name                = azurerm_windows_function_app.main.name
-  resource_group_name = azurerm_resource_group.shared.name
+  resource_group_name = var.rgShared
   depends_on = [
     null_resource.vmssFunction_publish
   ]
@@ -153,6 +168,44 @@ resource "null_resource" "trigger_function" {
     command = "curl -s ${local.function_url}"
   }
   triggers = {
-    order = null_resource.vmssFunction_publish.id
+    function_publish_id = null_resource.vmssFunction_publish.id
+  }
+}
+
+############################# Autoscale Notify Settings ###########################
+
+# Initialize notifications for VMSS App West
+resource "null_resource" "notifyVmssAppWest" {
+  provisioner "local-exec" {
+    command = "az monitor autoscale update --ids ${var.autoscaleSettingsAppWest} --add notifications '{\"webhooks\":[]}' --query 'notifications'"
+  }
+}
+
+# Initialize notifications for VMSS App East
+resource "null_resource" "notifyVmssAppEast" {
+  provisioner "local-exec" {
+    command = "az monitor autoscale update --ids ${var.autoscaleSettingsAppEast} --add notifications '{\"webhooks\":[]}' --query 'notifications'"
+  }
+}
+
+# Add webhook action for VMSS App West
+resource "null_resource" "webhookVmssAppWest" {
+  provisioner "local-exec" {
+    command = "az monitor autoscale update --ids ${var.autoscaleSettingsAppWest} --add-action webhook ${local.function_url} --query 'notifications'"
+  }
+  triggers = {
+    notify_id           = null_resource.notifyVmssAppWest.id
+    function_publish_id = null_resource.vmssFunction_publish.id
+  }
+}
+
+# Add webhook action for VMSS App East
+resource "null_resource" "webhookVmssAppEast" {
+  provisioner "local-exec" {
+    command = "az monitor autoscale update --ids ${var.autoscaleSettingsAppEast} --add-action webhook ${local.function_url} --query 'notifications'"
+  }
+  triggers = {
+    notify_id           = null_resource.notifyVmssAppEast.id
+    function_publish_id = null_resource.vmssFunction_publish.id
   }
 }

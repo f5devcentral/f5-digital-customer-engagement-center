@@ -39,12 +39,12 @@ function GetVmssIps {
 
 # Get VM IP addresses in VMSS
 Write-Host "Retrieving VMSS IP addresses for each VM instance."
-$resultAppWest = GetVmssIps -vmssName "${vmssNameWest}" -rgName "${rgNameWest}"
-$resultAppEast = GetVmssIps -vmssName "${vmssNameEast}" -rgName "${rgNameEast}"
+$resultAppWest = GetVmssIps -vmssName "${vmssAppWest}" -rgName "${rgWest}"
+$resultAppEast = GetVmssIps -vmssName "${vmssAppEast}" -rgName "${rgEast}"
 
 # Get VM IP addresses in App East VMSS as backup member
 Write-Host "Retrieving VMSS IP addresses for each VM instance as backup member."
-$resultAppEastBackup = GetVmssIps -vmssName "${vmssNameEast}" -rgName "${rgNameEast}" -isBackup "true"
+$resultAppEastBackup = GetVmssIps -vmssName "${vmssAppEast}" -rgName "${rgEast}" -isBackup "true"
 
 ############################ nginx.conf ############################
 
@@ -87,7 +87,7 @@ $nginxConfigEncoded = [Convert]::ToBase64String($convertBytes)
 # Deploy nginx Config via ARM template
 Write-Host "Deploying nginx.conf via ARM template"
 New-AzResourceGroupDeployment -Name nginxConfig `
-  -ResourceGroupName ${rgNameShared} `
+  -ResourceGroupName ${rgShared} `
   -TemplateUri "https://raw.githubusercontent.com/nginxinc/nginx-for-azure-snippets/main/snippets/templates/configuration/single-file/azdeploy.json" `
   -nginxDeploymentName ${nginxDeploymentName} `
   -rootConfigFilePath "/etc/nginx/nginx.conf" `
