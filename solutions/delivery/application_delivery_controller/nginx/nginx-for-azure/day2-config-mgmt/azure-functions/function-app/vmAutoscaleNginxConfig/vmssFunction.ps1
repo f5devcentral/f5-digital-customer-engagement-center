@@ -1,5 +1,3 @@
-############################ Powershell ############################
-
 using namespace System.Net
 
 # Input bindings are passed in via param block.
@@ -8,95 +6,66 @@ param($Request, $TriggerMetadata)
 # Write to the Azure Functions log stream.
 Write-Host "PowerShell HTTP trigger function processed a request."
 
-# Function GetVmssIps
-#     Retrieve VM Ip addresses from VMSS and builds
-#     upstream block for nginx.conf file
+# Initialize Conf Files
+$app1VmssConf = New-TemporaryFile
+$app1WestVmssConf = New-TemporaryFile
+$app1EastVmssConf = New-TemporaryFile
+
+############################ Functions ############################
+
+# Function GetVmssIps: Retrieve VM IP addresses from VMSS
 function GetVmssIps {
-  param ($vmssName, $rgName, $isBackup)
+  param ($vmssName, $rgName)
   $VMs = Get-AzVmssVM -ResourceGroupName $rgName -VMScaleSetName $vmssName
   $nicName = ($VMs[0].NetworkProfile.NetworkInterfaces[0].Id).Split('/')[-1]
   foreach ($vm in $VMs)
   {
-    $resourceName = $vmssName + "/" + $VM.InstanceId + "/" + $nicName
+    $resourceName = $vmssName + "/" + $vm.InstanceId + "/" + $nicName
     $target = Get-AzResource -ResourceGroupName $rgName -ResourceType Microsoft.Compute/virtualMachineScaleSets/virtualMachines/networkInterfaces -ResourceName $resourceName -ApiVersion 2017-03-30
-
-    # Build server lines in upstream block
-    # Examples (adjust to your needs...do not append ';' yet):
-    #   server x.x.x.x:80
-    #   server x.x.x.x:80 weight=5
-    #   server x.x.x.x:8080
-    $server = "server " + $target.Properties.ipConfigurations[0].properties.privateIPAddress + ":80"
-
-    # Append ';' or 'backup;' to server line depending if flag is set
-    if ($isBackup -ne "true") {
-      $server + ";"
-    }
-    else {
-      $server + " backup;"
-    }
+    $ip = $target.Properties.ipConfigurations[0].properties.privateIPAddress
+    # Output IP address for return
+    $ip
   }
 }
+
+############################ Main ############################
 
 # Get VM IP addresses in VMSS
 Write-Host "Retrieving VMSS IP addresses for each VM instance."
 $resultAppWest = GetVmssIps -vmssName "${vmssAppWest}" -rgName "${rgWest}"
 $resultAppEast = GetVmssIps -vmssName "${vmssAppEast}" -rgName "${rgEast}"
 
-# Get VM IP addresses in App East VMSS as backup member
-Write-Host "Retrieving VMSS IP addresses for each VM instance as backup member."
-$resultAppEastBackup = GetVmssIps -vmssName "${vmssAppEast}" -rgName "${rgEast}" -isBackup "true"
-
-############################ nginx.conf ############################
-
-$nginxConfig = @"
-http {
-
-  upstream app1 {
-    $resultAppWest
-    $resultAppEastBackup
-  }
-  upstream app1-west {
-    $resultAppWest
-  }
-  upstream app1-east {
-    $resultAppEast
-  }
-
-  server {
-    listen 80 default_server;
-    location / {
-      proxy_pass http://app1/;
-    }
-    location /west/ {
-      proxy_pass http://app1-west/;
-    }
-    location /east/ {
-      proxy_pass http://app1-east/;
-    }
-  }
-
+Write-Host "Writing App West IP addresses to conf files"
+foreach ($ip in $resultAppWest)
+{
+  # add to app west upstream conf
+  $server = "server " + $ip + ":80;" | Out-File $app1WestVmssConf -Append
+  # add to main app1 upstream conf too
+  $server = "server " + $ip + ":80;" | Out-File $app1VmssConf -Append
 }
-"@
 
-############################ Deploy ARM Template ############################
+Write-Host "Writing App East IP addresses to conf files"
+foreach ($ip in $resultAppEast)
+{
+  # add to app east upstream conf
+  $server = "server " + $ip + ":80;" | Out-File $app1EastVmssConf -Append
+  # add to main app1 upstream conf too as backup member
+  $server = "server " + $ip + ":80 backup;" | Out-File $app1VmssConf -Append
+}
 
-# Convert nginx config to base 64
-$convertBytes = [System.Text.Encoding]::UTF8.GetBytes($nginxConfig)
-$nginxConfigEncoded = [Convert]::ToBase64String($convertBytes)
+# Validate file contents
+cat $app1VmssConf
+cat $app1WestVmssConf
+cat $app1EastVmssConf
 
-# Deploy nginx Config via ARM template
-Write-Host "Deploying nginx.conf via ARM template"
-New-AzResourceGroupDeployment -Name nginxConfig `
-  -ResourceGroupName ${rgShared} `
-  -TemplateUri "https://raw.githubusercontent.com/nginxinc/nginx-for-azure-snippets/main/snippets/templates/configuration/single-file/azdeploy.json" `
-  -nginxDeploymentName ${nginxDeploymentName} `
-  -rootConfigFilePath "/etc/nginx/nginx.conf" `
-  -rootConfigContent $nginxConfigEncoded
+############################ Git ############################
+
+# TBD
 
 ############################ HTTP Response ############################
 
-# Output HTTP response of nginx.conf
+# Output HTTP response
 Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
     StatusCode = [HttpStatusCode]::OK
-    Body = $nginxConfig
+    Body = "Azure Function Completed Successfully. Check GitHub actions!"
 })
