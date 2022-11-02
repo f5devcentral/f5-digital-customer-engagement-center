@@ -6,13 +6,13 @@ on:
     branches:
       - main
     paths:
-      - solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/configs/**
+      - solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/day2-config-mgmt/github-actions/configs/**
 
 env:
   RESOURCE_GROUP_NAME: ${sharedResourceGroup}
   NGINX_DEPLOYMENT_NAME: ${nginxDeploymentName}
   NGINX_TRANSFORMED_CONFIG_DIR_PATH: /etc/nginx/
-  NGINX_CONFIG_DIRECTORY_PATH: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/configs/
+  NGINX_CONFIG_DIRECTORY_PATH: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/day2-config-mgmt/github-actions/configs/
   NGINX_ROOT_CONFIG_FILE: nginx.conf
 
 permissions:
