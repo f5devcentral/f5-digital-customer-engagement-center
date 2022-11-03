@@ -61,3 +61,13 @@ variable "enableMetrics" {
   default     = true
   description = "Enable publishing metrics data from NGINX deployment"
 }
+variable "nginxConfRepo" {
+  type        = string
+  default     = null
+  description = "GitHub repository for NGINX configuration files (ex. https://github.com/User123/app1-nginx-configs.git)"
+}
+variable "userNameGitHubRepo" {
+  type        = string
+  default     = null
+  description = "GitHub username with read-write access to repository for NGINX configuration files"
+}

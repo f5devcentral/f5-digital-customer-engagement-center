@@ -83,6 +83,8 @@ resource "azurerm_role_assignment" "function" {
 # PowerShell script variable rendering
 locals {
   vmssFunctionPs1 = templatefile("${path.module}/function-app/vmAutoscaleNginxConfig/vmssFunction.ps1", {
+    nginxConfRepo       = var.nginxConfRepo
+    userNameGitHubRepo  = var.userNameGitHubRepo
     vmssAppWest         = azurerm_linux_virtual_machine_scale_set.appWest.name
     rgWest              = azurerm_resource_group.appWest.name
     vmssAppEast         = azurerm_linux_virtual_machine_scale_set.appEast.name

@@ -60,7 +60,18 @@ cat $app1EastVmssConf
 
 ############################ Git ############################
 
-# TBD
+$repo="${nginxConfRepo}"
+$username="${userNameGitHubRepo}"
+
+# Set Git config
+git config --global user.email "builduser@dummy.local" # any values will do, if missing commit will fail
+git config --global user.name $username
+
+# Clone repo
+cd c:\home\data
+git clone $repo
+
+
 
 ############################ HTTP Response ############################
 
