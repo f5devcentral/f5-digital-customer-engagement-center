@@ -14,7 +14,7 @@
 - [Configuration Example](#configuration-example)
 - [Requirements](#requirements)
 - [Installation Example](#installation-example)
-- [CI/CD Pipeline NGINX Config with Azure Functions](#cicd-pipeline-nginx-config-with-azure-functions)
+- [CI/CD Pipeline NGINX Configurations](#cicd-pipeline-nginx-configurations)
 - [Monitor and Metrics](#monitor-and-metrics)
 - [Troubleshooting](#troubleshooting)
 
@@ -95,56 +95,43 @@ Note: Depending on health checks and client request, you will either get the "We
 
 ![Demo App East Region](images/test-site-east.png)
 
-## CI/CD Pipeline NGINX Config with Azure Functions
+## CI/CD Pipeline NGINX Configurations
 
-The nginx.conf in this demo contains URL path routing and multiple upstream selections. The configuration is sourced from the Azure Function PowerShell file found in [function-app/vmAutoscaleNginxConfig/vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1). The VMSS groups send HTTP triggers via webhook notify messages for each autoscale event, and the nginx.conf is dynamically generated and applied to NGINX. You can also modify the nginx.conf portion in the vmssFunction.ps1 file and reapply Terraform.
+The NGINX configuration in this demo contains URL path routing and multiple upstream selections. The configuration is stored and managed in a GitHub repository, and it is pushed to the NGINX deployment through GitHub Actions using [NGINX Configuration Automation Workflows](https://docs.nginx.com/nginx-for-azure/management/nginx-configuration/#nginx-configuration-automation-workflows).
 
-### Example Workflow #1: Scale In/Out Event
-1. VMSS scale in/out event occurs
-2. VMSS webhook notify sent to Azure Function HTTP trigger
-3. vmssFunction.ps1 collects VM IP addresses, builds nginx.conf
-4. Lastly, vmssFunction.ps1 updates NGINX via ARM deployment
+This demo also utilizes autoscale notify events to trigger Azure Functions running PowerShell. The PowerShell script collects IP addresses of all VM instances in the autoscale groups...aka the upstream servers. Why is this needed? The current implemementation of NGINX for Azure does not have service discovery. Additionally, the SaaS offering in Azure does not have an API to automatically add VMs to NGINX backend pools similar to how you can easily add VMs as targets to Azure Load Balancer or other Azure services. As a workaround, PowerShell is used to retrieve the IP addresses.
 
-### Example Workflow #2: Modify nginx.conf in vmssFunction.ps1
+There are a few places in which you can adjust NGINX configurations for this demo. Most configuration changes should occur in the nginx.conf file which is in the GitHub repo. However, if you find the need to adjust server line directives, ports, or other upstream settings, then you can also adjust the PowerShell script.
+
+### Example Workflow #1: Modify nginx.conf in GitHub repository
 1. User has a requirement to add rate limiting
-2. Manually edit [function-app/vmAutoscaleNginxConfig/vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1)
-3. Locate the nginx.conf portion and update with rate limiting directives (see [Rate Limiting](https://docs.nginx.com/nginx-for-azure/management/rate-limiting/))
-4. Save vmssFunction.ps1
-5. Lastly, reapply Terraform to push the config
+2. Edit [nginx.conf](configs/nginx.conf) to add rate limiting directives (see [Rate Limiting](https://docs.nginx.com/nginx-for-azure/management/rate-limiting/))
+3. Commit changes to repo
+4. GitHub Actions runs, creates tarball of configs, deploys to NGINX
 
-Note: Make sure to place a PowerShell escape character ` before the $binary_remote_addr. Otherwise PowerShell will treat it like a variable and try to render the value and fail.
+### Example Workflow #2: Scale In/Out Event
+1. VMSS scale in/out event occurs
+2. VMSS webhook notify to Azure Function running PowerShell script [vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1)
+3. PowerShell collects VM IP addresses
+4. Pulls latest GitHub repo
+5. Modifies upstream conf files with server IP addresses
+6. Performs git add, commit, and push
+7. GitHub Actions runs, creates tarball of configs, deploys to NGINX
 
+### Example Workflow #3: Modify upstream server directives
+1. User has a requirement to add upstream [server directive](http://nginx.org/en/docs/http/ngx_http_upstream_module.html#server) weight options
+2. Edit [vmssFunction.ps1](function-app/vmAutoscaleNginxConfig/vmssFunction.ps1)
+3. Locate "server" lines that need modification and add weight parameters
+4. Reapply Terraform
+5. Terraform state sees difference in vmssFunction.ps1 and creates new function-app.zip
+6. Zip package is deployed to Azure Function
+7. Upon next Function trigger, PowerShell runs
+8. Performs git add, commit, and push
+9. GitHub Actions runs, creates tarball of configs, deploys to NGINX
+
+Example below
 ```
-# Example nginx.conf
-http {
-  limit_req_zone `$binary_remote_addr zone=mylimit:10m rate=1r/s;
-
-  upstream app1 {
-    server 10.100.0.5:80;
-    server 10.101.0.5:80 backup;
-  }
-  upstream app1-west {
-    server 10.100.0.5:80;
-  }
-  upstream app1-east {
-    server 10.101.0.5:80;
-  }
-
-  server {
-    listen 80 default_server;
-    location / {
-      proxy_pass http://app1/;
-      limit_req zone=mylimit;
-    }
-    location /west/ {
-      proxy_pass http://app1-west/;
-    }
-    location /east/ {
-      proxy_pass http://app1-east/;
-    }
-  }
-
-}
+  $server = "server " + $ip + ":80 weight=5;" | Out-File $app1WestVmssConf -Append
 ```
 
 ## Monitor and Metrics
