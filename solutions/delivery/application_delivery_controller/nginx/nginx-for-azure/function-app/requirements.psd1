@@ -8,4 +8,5 @@
     'Az.Accounts' = '2.*'
     'Az.Resources' = '6.*'
     'Az.Compute' = '4.*'
+    'Az.KeyVault' = '4.*'
 }
