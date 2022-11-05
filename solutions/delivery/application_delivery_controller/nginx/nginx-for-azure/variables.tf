@@ -36,12 +36,12 @@ variable "vnets" {
   }
   description = "The set of VNets to create"
 }
+
 variable "adminName" {
   type        = string
   description = "admin account name used with app server instance"
   default     = "azureuser"
 }
-
 variable "sshPublicKey" {
   type        = string
   description = "public key used for authentication in ssh-rsa format"
