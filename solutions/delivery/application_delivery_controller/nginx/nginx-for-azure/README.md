@@ -209,6 +209,8 @@ No Modules.
 | [archive_file](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) |
 | [azurerm_application_insights](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights) |
 | [azurerm_function_app_host_keys](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/function_app_host_keys) |
+| [azurerm_key_vault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/key_vault) |
+| [azurerm_key_vault_access_policy](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_access_policy) |
 | [azurerm_linux_virtual_machine_scale_set](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine_scale_set) |
 | [azurerm_monitor_autoscale_setting](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_autoscale_setting) |
 | [azurerm_network_security_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group) |
@@ -238,10 +240,12 @@ No Modules.
 | sshPublicKey | public key used for authentication in ssh-rsa format | `string` | n/a | yes |
 | adminName | admin account name used with app server instance | `string` | `"azureuser"` | no |
 | enableMetrics | Enable publishing metrics data from NGINX deployment | `bool` | `true` | no |
-| nginxConfRepo | GitHub repository for NGINX configuration files (ex. https://github.com/User123/app1-nginx-configs.git) | `string` | `null` | no |
+| gitRepoUrl | GitHub repository for NGINX configuration files (ex. https://github.com/User123/app1-nginx-configs.git) | `string` | `null` | no |
+| gitTokenSecretName | Azure Key Vault secret name that contains the GitHub access token. The secret name will be used during runtime to retrieve the GitHub access token so it is not exposed in scripts. (ex. mySecret123) | `string` | `null` | no |
+| keyVaultName | Name of existing Azure Key Vault (ex. myKv123) | `string` | `null` | no |
+| keyVaultRg | Resource group of existing Azure Key Vault (ex. myKvRg123) | `string` | `null` | no |
 | numServers | number of app server instances to launch in each autoscale group | `number` | `1` | no |
-| userAssignedIdentityId | The resource ID of the user-assigned managed identity associated to the NGINX deployment resource. If one is not supplied, a user identity resource will automatically be created. | `string` | `null` | no |
-| userNameGitHubRepo | GitHub username with read-write access to repository for NGINX configuration files | `string` | `null` | no |
+| userAssignedIdentityId | The resource ID of the user-assigned managed identity associated to the NGINX deployment resource. If one is not supplied, a user identity resource will automatically be created. (ex. /subscriptions/xxxx/resourcegroups/myRg123/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity123) | `string` | `null` | no |
 | vnets | The set of VNets to create | <pre>map(object({<br>    cidr           = list(any)<br>    subnetPrefixes = list(any)<br>    subnetNames    = list(any)<br>    location       = string<br>  }))</pre> | <pre>{<br>  "appEast": {<br>    "cidr": [<br>      "10.101.0.0/16"<br>    ],<br>    "location": "eastus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.101.0.0/24"<br>    ]<br>  },<br>  "appWest": {<br>    "cidr": [<br>      "10.100.0.0/16"<br>    ],<br>    "location": "westus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.100.0.0/24"<br>    ]<br>  },<br>  "shared": {<br>    "cidr": [<br>      "10.255.0.0/16"<br>    ],<br>    "location": "eastus2",<br>    "subnetNames": [<br>      "default"<br>    ],<br>    "subnetPrefixes": [<br>      "10.255.0.0/24"<br>    ]<br>  }<br>}</pre> | no |
 
 ## Outputs
