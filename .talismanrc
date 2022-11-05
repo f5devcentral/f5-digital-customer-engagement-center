@@ -309,7 +309,7 @@ fileignoreconfig:
 - filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/README.md
   checksum: e474127f9e400ac2d7732da1f22dd0e493a073244fec40b5acc2dbec58be735c
 - filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/admin.auto.tfvars.example
-  checksum: 7165ca629f0546b74f856d5250617763982fb1bfeff15e56c05f9a6d66da8a8c
+  checksum: 47b66b1fdf427b9caf8ca48222a5f9595e256b493dd96910dc21bccf80ec87b8
 - filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/main.tf
   checksum: 279caa03045c109985f1976db24bce4f0f5b45a95dfe6fae0d5d6ae7d01c8a42
 - filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/appservers.tf

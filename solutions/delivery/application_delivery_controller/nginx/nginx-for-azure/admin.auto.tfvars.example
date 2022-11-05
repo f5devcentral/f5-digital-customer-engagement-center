@@ -1,8 +1,10 @@
 resourceOwner      = "fred"
 sshPublicKey       = "ssh-rsa AAA"
 projectPrefix      = "mynginx"
-nginxConfRepo      = "https://github.com/exampleUser123/app1-nginx-configs.git"
-userNameGitHubRepo = "exampleUser123"
+gitRepoUrl         = "https://github.com/user123/f5-digital-customer-engagement-center.git"
+gitTokenSecretName = "github-token-secret-name"
+keyVaultName       = "myKv123
+keyVaultRg         = "myKvRg123
 
 # Remove comment and supply value to use existing managed identity
 #userAssignedIdentityId = "/subscriptions/abc-xyz/resourcegroups/myrg1/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity123"
