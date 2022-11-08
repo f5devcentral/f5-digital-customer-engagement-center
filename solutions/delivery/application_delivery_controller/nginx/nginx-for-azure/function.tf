@@ -78,16 +78,41 @@ resource "azurerm_role_assignment" "function" {
   principal_id         = azurerm_windows_function_app.main.identity[0].principal_id
 }
 
+############################# Key Vault ###########################
+
+data "azurerm_key_vault" "main" {
+  name                = var.keyVaultName
+  resource_group_name = var.keyVaultRg
+}
+
+# Allow Key Vault access
+resource "azurerm_key_vault_access_policy" "function" {
+  key_vault_id = data.azurerm_key_vault.main.id
+  tenant_id    = data.azurerm_subscription.main.tenant_id
+  object_id    = azurerm_windows_function_app.main.identity[0].principal_id
+
+  key_permissions = [
+    "Get",
+  ]
+  secret_permissions = [
+    "Get",
+  ]
+}
+
 ############################# Function PowerShell ###########################
 
 # PowerShell script variable rendering
 locals {
   vmssFunctionPs1 = templatefile("${path.module}/function-app/vmAutoscaleNginxConfig/vmssFunction.ps1", {
-    vmssNameWest        = azurerm_linux_virtual_machine_scale_set.appWest.name
-    rgNameWest          = azurerm_resource_group.appWest.name
-    vmssNameEast        = azurerm_linux_virtual_machine_scale_set.appEast.name
-    rgNameEast          = azurerm_resource_group.appEast.name
-    rgNameShared        = azurerm_resource_group.shared.name
+    keyVaultName        = var.keyVaultName
+    keyVaultRg          = var.keyVaultRg
+    gitRepoUrl          = var.gitRepoUrl
+    gitTokenSecretName  = var.gitTokenSecretName
+    vmssAppWest         = azurerm_linux_virtual_machine_scale_set.appWest.name
+    rgWest              = azurerm_resource_group.appWest.name
+    vmssAppEast         = azurerm_linux_virtual_machine_scale_set.appEast.name
+    rgEast              = azurerm_resource_group.appEast.name
+    rgShared            = azurerm_resource_group.shared.name
     nginxDeploymentName = azurerm_resource_group_template_deployment.nginx.name
   })
 }
@@ -134,7 +159,8 @@ resource "null_resource" "vmssFunction_publish" {
     command = local.publish_code_command
   }
   triggers = {
-    input_json = filemd5("${path.module}/function-app/vmAutoscaleNginxConfig/vmssFunction.ps1")
+    input_json      = filemd5("${path.module}/function-app/vmAutoscaleNginxConfig/vmssFunction.ps1")
+    archive_file_id = data.archive_file.vmssFunction.id
   }
 }
 
@@ -153,6 +179,6 @@ resource "null_resource" "trigger_function" {
     command = "curl -s ${local.function_url}"
   }
   triggers = {
-    order = null_resource.vmssFunction_publish.id
+    function_publish_id = null_resource.vmssFunction_publish.id
   }
 }
