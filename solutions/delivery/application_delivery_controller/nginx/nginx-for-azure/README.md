@@ -50,10 +50,39 @@ The following is an example configuration diagram for this solution deployment.
 - Azure CLI
 - Terraform
 - Azure User with 'Owner' role to deploy resources
-- [Managed Identity](https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) to associate with NGINX deployment (monitoring, key vault)
+- [Managed Identity](https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) for the NGINX deployment
+  - NGINX metrics are published to Azure Monitoring
+  - Secrets are retrieved from Key Vault
   - Note: if not supplied, one will be created
+- GitHub repository to store NGINX configs
+- [GitHub access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-fine-grained-personal-access-token)
+- [GitHub Actions to connect to Azure](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows)
+- Azure Key Vault
+  - Secret containing GitHub access token
 
 ## Installation Example
+
+- Authenticate your terminal session with AZ CLI and select subscription
+```bash
+# Login
+az login
+
+# Show subscriptions
+az account show
+{
+  "environmentName": "AzureCloud",
+  "id": "abc-123-xyz",
+...
+  "name": "f5-xyz_Cloud_Sales",
+...
+}
+
+# Set default
+az account set -s <subscriptionId>
+```
+
+- Fork the repo. There are scripts with specific folder path logic, and the demo assumes you forked the repo to meet the requirement 'GitHub repository to store NGINX configs'. Best practice is to have a separate repo containing the NGINX configs only. If you decide to use a new repo and different folders for the NGINX configs, there are some required changes to the PowerShell and GitHub Actions workflow file to match the target folder path and repo name.
+
 
 - Clone the repo and open the solution's directory
 ```bash
@@ -74,6 +103,8 @@ vi admin.auto.tfvars
 ```bash
 ./setup.sh
 ```
+
+- Copy nginxGithubActions.yml to your GitHub repository. Terraform will output a GitHub actions workflow file named 'nginxGithubActions.yml' based on your input and deployment parameters. Add this workflow file to your GitHub repository storing the NGINX configurations. It needs to be saved in the following path: .github/workflows/nginxGithubActions.yml.
 
 ## Test your setup:
 
