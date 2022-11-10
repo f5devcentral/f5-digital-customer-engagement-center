@@ -81,9 +81,6 @@ az account show
 az account set -s <subscriptionId>
 ```
 
-- Fork the repo. There are scripts with specific folder path logic, and the demo assumes you forked the repo to meet the requirement 'GitHub repository to store NGINX configs'. Best practice is to have a separate repo containing the NGINX configs only. If you decide to use a new repo and different folders for the NGINX configs, there are some required changes to the PowerShell and GitHub Actions workflow file to match the target folder path and repo name.
-
-
 - Clone the repo and open the solution's directory
 ```bash
 git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
