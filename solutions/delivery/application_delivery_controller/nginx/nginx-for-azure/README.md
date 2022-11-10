@@ -101,7 +101,10 @@ vi admin.auto.tfvars
 ./setup.sh
 ```
 
-- Copy nginxGithubActions.yml to your GitHub repository. Terraform will output a GitHub actions workflow file named 'nginxGithubActions.yml' based on your input and deployment parameters. Add this workflow file to your GitHub repository storing the NGINX configurations. It needs to be saved in the following path: .github/workflows/nginxGithubActions.yml.
+- Terraform will output a GitHub actions workflow file named 'nginxGithubActions.yml'. Add the workflow file to your GitHub repository storing the NGINX configurations. The workflow file needs to be placed into the following location:
+```
+.github/workflows/nginxGithubActions.yml
+```
 
 ## Test your setup:
 
