@@ -55,6 +55,7 @@ The following is an example configuration diagram for this solution deployment.
   - Secrets are retrieved from Key Vault
   - Note: if not supplied, one will be created
 - GitHub repository to store NGINX configs
+  - Sample here https://github.com/JeffGiroux/nginx_config_examples
 - [GitHub access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-fine-grained-personal-access-token)
 - [GitHub Actions to connect to Azure](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows)
 - Azure Key Vault
