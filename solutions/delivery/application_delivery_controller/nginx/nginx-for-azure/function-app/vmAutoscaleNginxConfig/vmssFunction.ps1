@@ -55,7 +55,7 @@ if (Test-Path -Path $tempFolder\$repoFolder) {
     "Local repo does not exist. Cloning repo."
     New-Item -Path $tempFolder -ItemType "directory"
     Set-Location -Path $tempFolder -PassThru
-    git clone $gitRepoUrl -q
+    git clone --depth=1 $gitRepoUrl -q
 }
 
 # Concatenate for less code later
