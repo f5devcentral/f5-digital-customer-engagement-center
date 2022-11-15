@@ -306,17 +306,3 @@ fileignoreconfig:
   checksum: 51639a24a316adff886c8d711f36fd8d0be02896511e635bea5ac7d27c2fda86
 - filename: solutions/volterra/aws-tgw/README.md
   checksum: 4d969eaa684d8771703c8189f7f950353f40c817f345e866ecfb4feeaf2f7e27
-- filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/README.md
-  checksum: dc4797e6e896a603ddb4b54776916571bdf95943a5f3ba2a7b15650666c02e7e
-- filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/admin.auto.tfvars.example
-  checksum: 47b66b1fdf427b9caf8ca48222a5f9595e256b493dd96910dc21bccf80ec87b8
-- filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/main.tf
-  checksum: 279caa03045c109985f1976db24bce4f0f5b45a95dfe6fae0d5d6ae7d01c8a42
-- filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/appservers.tf
-  checksum: 0d1a429317571aa05dc9876f662201f4aa155309e3d08d7d7d38a58b7c5c9f7c
-- filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/configs/nginx.conf
-  checksum: 441297eb7a9f6f396c07706f914d42288b7dcc7da48f03a7ea15b6837ab81524
-- filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/function-app/vmAutoscaleNginxConfig/vmssFunction.ps1
-  checksum: 457faebf8b616e611f782789d570974a27fc754fa722bbee125bc4b9547a303e
-- filename: solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/function.tf
-  checksum: 44a104a77b4e4b5329d64630cc60d68aa4df5e4558dce2841a08c989a88738a4
