@@ -2,7 +2,7 @@
 
 ## To Do
 
-- Add F5 NGINX for Azure Terraform code (TBD...waiting for GA release)
+- n/a
 
 ## Issues
 
@@ -20,9 +20,9 @@
 
 ## Introduction
 
-This solution will create an [F5 NGINX for Azure](https://docs.nginx.com/nginx-for-azure) deployment and a set of Azure VNets for a demo application hosted in multiple Azure regions. The application will be running in the West and East regions, and NGINX will provide traffic management, security, and high availability across regions.
+This solution will create an [F5 NGINX for Azure](https://docs.nginx.com/nginx-for-azure) deployment and a set of Azure VNets for a demo application hosted in multiple Azure regions. The application will be running in the West and East regions, and NGINX will provide traffic management, security, and high availability across regions. This Terraform deployment uses the concept of "Day 1" for initial deployment and "Day 2" for ongoing operatoins. The former involves deploying infrastructure into Azure. The latter involves NGINX configuration updates.
 
-The resulting deployment will consist of the following:
+The "Day 1" infrastructure deployment will consist of the following:
 
 - F5 Dataplane Subscription (SaaS)
   - NGINX for Azure deployment
@@ -39,6 +39,10 @@ The resulting deployment will consist of the following:
   - Hub to/from App-West VNet
   - Hub to/from App-East VNet
 
+The "Day 2" operations will consist of the following:
+- NGINX configuration files stored in GitHub repository
+- NGINX for Azure configurations updated by GitHub Actions
+
 ## Configuration Example
 
 The following is an example configuration diagram for this solution deployment.
@@ -50,18 +54,21 @@ The following is an example configuration diagram for this solution deployment.
 - Azure CLI
 - Terraform
 - Azure User with 'Owner' role to deploy resources
-- [Managed Identity](https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) for the NGINX deployment
+- GitHub repository to store NGINX configurations
+  - [Sample repo](https://github.com/JeffGiroux/nginx-for-azure-configs) with requirements
+  - GitHub access token
+  - GitHub secrets
+  - Azure Key Vault secret
+- Azure [Managed Identity](https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview) for the NGINX deployment
   - NGINX metrics are published to Azure Monitoring
   - Secrets are retrieved from Key Vault
-  - Note: if not supplied, one will be created
-- GitHub repository to store NGINX configs
-  - Sample here https://github.com/JeffGiroux/nginx_config_examples
-- [GitHub access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-fine-grained-personal-access-token)
-- [GitHub Actions to connect to Azure](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows)
-- Azure Key Vault
-  - Secret containing GitHub access token
+  - **Note:** Optional...if not supplied, one will be created
 
 ## Installation Example
+
+- Create a GitHub repository to store NGINX configurations
+  - [Sample repo](https://github.com/JeffGiroux/nginx-for-azure-configs) with requirements
+  - Complete all requirements from sample repo, then head back here
 
 - Authenticate your terminal session with AZ CLI and select subscription
 ```bash
@@ -88,14 +95,13 @@ git clone https://github.com/f5devcentral/f5-digital-customer-engagement-center
 cd f5-digital-customer-engagement-center/solutions/delivery/application_delivery_controller/nginx/nginx-for-azure/
 ```
 
-- Create the tfvars file and update it with your settings
+- Create the tfvars file and update it with your settings.
+  - **Note:** `projectPrefix` can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long.
 ```bash
 cp admin.auto.tfvars.example admin.auto.tfvars
 # MODIFY TO YOUR SETTINGS
 vi admin.auto.tfvars
 ```
-
-**Note:**  `projectPrefix` can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long.
 
 - Run the setup script:
 ```bash
@@ -129,15 +135,15 @@ Note: Depending on health checks and client request, you will either get the "We
 
 ## CI/CD Pipeline NGINX Configurations
 
-The NGINX configuration in this demo contains URL path routing and multiple upstream selections. The configuration is stored and managed in a GitHub repository, and it is pushed to the NGINX deployment through GitHub Actions using [NGINX Configuration Automation Workflows](https://docs.nginx.com/nginx-for-azure/management/nginx-configuration/#nginx-configuration-automation-workflows).
+The NGINX configuration for this demo contains URL path routing and multiple upstream selections. The configuration is stored and managed in a GitHub repository, and it is pushed to the NGINX deployment through GitHub Actions using [NGINX Configuration Automation Workflows](https://docs.nginx.com/nginx-for-azure/management/nginx-configuration/#nginx-configuration-automation-workflows).
 
 This demo also utilizes autoscale notify events to trigger Azure Functions running PowerShell. The PowerShell script collects IP addresses of all VM instances in the autoscale groups...aka the upstream servers. Why is this needed? The current implemementation of NGINX for Azure does not have service discovery. Additionally, the SaaS offering in Azure does not have an API to automatically add VMs to NGINX backend pools similar to how you can easily add VMs as targets to Azure Load Balancer or other Azure services. As a workaround, PowerShell is used to retrieve the IP addresses.
 
-There are a few places in which you can adjust NGINX configurations for this demo. Most configuration changes should occur in the nginx.conf file which is in the GitHub repo. However, if you find the need to adjust server line directives, ports, or other upstream settings, then you can also adjust the PowerShell script.
+There are a few places in which you can adjust NGINX configurations for this demo. Most configuration changes should occur in the nginx.conf file which is in the GitHub repo. However, if you find the need to adjust server line directives, ports, or other upstream settings, then you can also adjust the PowerShell script and reapply Terraform.
 
 ### Example Workflow #1: Modify nginx.conf in GitHub repository
 1. User has a requirement to add rate limiting
-2. Edit [nginx.conf](configs/nginx.conf) to add rate limiting directives (see [Rate Limiting](https://docs.nginx.com/nginx-for-azure/management/rate-limiting/))
+2. Edit [nginx.conf](https://github.com/JeffGiroux/nginx-for-azure-configs/blob/main/configs/nginx.conf) to add rate limiting directives (see [Rate Limiting](https://docs.nginx.com/nginx-for-azure/management/rate-limiting/))
 3. Commit changes to repo
 4. GitHub Actions runs, creates tarball of configs, deploys to NGINX
 
