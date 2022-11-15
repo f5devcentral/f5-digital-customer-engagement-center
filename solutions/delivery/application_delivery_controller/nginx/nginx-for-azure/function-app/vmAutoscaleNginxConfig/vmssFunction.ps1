@@ -33,7 +33,7 @@ $repoArray = $gitRepoUrl.Split("/")
 $userName = $repoArray[3]
 $repoFolder = $repoArray[4].Split(".")[0]
 $tempFolder = "c:\home\data\temp"
-$nginxUpstreamsFolder = "solutions\delivery\application_delivery_controller\nginx\nginx-for-azure\configs\upstreams"
+$nginxUpstreamsFolder = "configs\upstreams"
 $app1VmssConf = "app1-vmss.conf"
 $app1WestVmssConf = "app1-west-vmss.conf"
 $app1EastVmssConf = "app1-east-vmss.conf"
@@ -55,7 +55,7 @@ if (Test-Path -Path $tempFolder\$repoFolder) {
     "Local repo does not exist. Cloning repo."
     New-Item -Path $tempFolder -ItemType "directory"
     Set-Location -Path $tempFolder -PassThru
-    git clone $gitRepoUrl -q
+    git clone --depth=1 $gitRepoUrl -q
 }
 
 # Concatenate for less code later
