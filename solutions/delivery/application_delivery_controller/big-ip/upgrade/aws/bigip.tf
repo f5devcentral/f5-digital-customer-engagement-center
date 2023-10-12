@@ -37,7 +37,7 @@ locals {
 # Find BIG-IP AMI
 data "aws_ami" "f5_ami" {
   most_recent = true
-  owners      = ["aws-marketplace"]
+  owners      = ["679593333241"]
   filter {
     name   = "name"
     values = [var.f5_ami_search_name]

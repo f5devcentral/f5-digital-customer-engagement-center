@@ -2,8 +2,14 @@
 
 # AWS Environment
 variable "awsRegion" { default = "us-west-2" }
-variable "projectPrefix" { default = "upgrade" }
-variable "resourceOwner" { default = "myname" }
+variable "projectPrefix" {
+  type        = string
+  description = "Creator of upgrade resources"
+}
+variable "resourceOwner" {
+  type        = string
+  description = "Email address of creator"
+}
 variable "AWSAccessKey" {
   type        = string
   description = "AWS Access Key used for API failover"
@@ -17,7 +23,8 @@ variable "allowedIps" { default = "0.0.0.0/0" }
 variable "allowed_mgmt_cidr" { default = "0.0.0.0/0" }
 
 # BIGIP Image
-variable "f5_ami_search_name" { default = "F5 Networks Licensed Hourly BIGIP-12.1.6*Best*200MBPS*" }
+# https://aws.amazon.com/marketplace/server/procurement?productId=15de6562-65b7-414e-a278-7258173d0791
+variable "f5_ami_search_name" { default = "*F5 BIGIP-14.1*Best*200Mbps*" }
 variable "ec2_instance_type" { default = "m4.xlarge" }
 
 # BIGIP Setup

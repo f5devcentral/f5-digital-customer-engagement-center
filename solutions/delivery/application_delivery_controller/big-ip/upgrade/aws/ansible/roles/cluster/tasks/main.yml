@@ -18,8 +18,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Configure device connectivity for BIG-IP 1
@@ -31,8 +33,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Wait a maximum of 10 minutes for BIG-IP 2 to be ready to take configuration
@@ -40,9 +44,11 @@
     timeout: 600
     provider:
       password: "{{generated_password}}"
-      server: "{{f5vm02_mgmt_public_ip}}"
+      server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Configure device connectivity for BIG-IP 2
@@ -54,8 +60,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm02_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Add trusts for all peer devices to Active device
@@ -66,8 +74,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Create a sync-failover device group with auto-sync enabled
@@ -79,8 +89,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Add the hosts in the current scope to "SyncFailover"
@@ -90,8 +102,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   loop:
      - "{{f5vm01_mgmt_private_ip}}"
      - "{{f5vm02_mgmt_private_ip}}"
@@ -105,6 +119,8 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
