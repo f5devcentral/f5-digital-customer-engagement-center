@@ -16,8 +16,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Add the iRule contained in template irule.tcl to the LTM module
@@ -29,8 +31,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Create custom HTTPS Monitor
@@ -42,8 +46,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Create pool
@@ -58,8 +64,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Add pool members aggregate
@@ -89,8 +97,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Add testing virtual server "{{ f5vm01_ext_secondary_ip }}"
@@ -110,8 +120,10 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost
 
 - name: Add 443 testing virtual server "{{ f5vm01_ext_secondary_ip }}"
@@ -135,6 +147,8 @@
     provider:
       password: "{{generated_password}}"
       server: "{{f5vm01_mgmt_public_ip}}"
+      server_port: 443
       user: "{{username}}"
       validate_certs: no
+      no_f5_teem: yes
   delegate_to: localhost

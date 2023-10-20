@@ -2,7 +2,7 @@
 
 # Terraform Version Pinning
 terraform {
-  required_version = "~> 0.14"
+  required_version = "~> 1.5.6"
   required_providers {
     aws = "~> 3"
   }
