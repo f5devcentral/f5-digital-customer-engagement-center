@@ -47,9 +47,9 @@ For access to a UDF, environment see `F5 UDF Environment Access`_.
 
 #. BIG-IP Marketplace
 
-   BIG-IP offerings are licensed by the modules and throughput. For this solution, we will license a **BEST PAYG 200mbps** on version **12.1.6**. This will allow for all BIG-IP modules and 200mbps of tested traffic with an older version to upgrade.
+   BIG-IP offerings are licensed by the modules and throughput. For this solution, we will license a **BEST PAYG 200mbps** on version **14.1**. This will allow for all BIG-IP modules and 200mbps of tested traffic with an older version to upgrade.
 
-   From the top search bar, search for ``big-ip 200mbps`` and click
+   From the top search bar, search for ``F5 BIG-IP BEST with IPI and Threat Campaigns (PAYG, 200Mbps)`` and click
 
    Example:
 
